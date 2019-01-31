@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Skelvy.CodeAnalysis.targets" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.1.2" />
+    <PackageReference Include="MediatR" Version="5.1.0" />
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Skelvy.Domain\Skelvy.Domain.csproj" />
+    <ProjectReference Include="..\Skelvy.Persistence\Skelvy.Persistence.csproj" />
+  </ItemGroup>
+</Project>
