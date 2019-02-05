@@ -11,13 +11,18 @@
     <Rule Id="SA1602" Action="None" />
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1200" Action="None" />
+    <Rule Id="SA1204" Action="None" />
     <Rule Id="SA1309" Action="None" />
     <Rule Id="SA1413" Action="None" />
-    <Rule Id="SA1204" Action="None" />
+    <Rule Id="SA1515" Action="None" />
+    <Rule Id="SA1516" Action="None" />
     <Rule Id="SX1101" Action="Error" />
     <Rule Id="SX1309" Action="Error" />
+    <Rule Id="CA1032" Action="None" />
     <Rule Id="CA1056" Action="None" />
     <Rule Id="CA1308" Action="None" />
+    <Rule Id="CA1305" Action="None" />
+    <Rule Id="CA1710" Action="None" />
     <Rule Id="CA1822" Action="None" />
     <Rule Id="CA2007" Action="None" />
   </Rules>
