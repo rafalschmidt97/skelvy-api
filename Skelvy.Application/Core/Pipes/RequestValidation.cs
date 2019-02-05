@@ -3,24 +3,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using MediatR;
+using MediatR.Pipeline;
 
 namespace Skelvy.Application.Core.Pipes
 {
-  public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+  public class RequestValidation<TRequest> : IRequestPreProcessor<TRequest>
   {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public RequestValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+    public RequestValidation(IEnumerable<IValidator<TRequest>> validators)
     {
       _validators = validators;
     }
 
-    public Task<TResponse> Handle(
-      TRequest request,
-      CancellationToken cancellationToken,
-      RequestHandlerDelegate<TResponse> next)
+    public Task Process(TRequest request, CancellationToken cancellationToken)
     {
       var context = new ValidationContext(request);
 
@@ -35,7 +31,7 @@ namespace Skelvy.Application.Core.Pipes
         throw new ValidationException(failures);
       }
 
-      return next();
+      return Task.CompletedTask;
     }
   }
 }

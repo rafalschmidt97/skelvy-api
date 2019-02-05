@@ -2,15 +2,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using MediatR;
-using Moq;
 using Skelvy.Application.Core.Pipes;
 using Skelvy.Application.Users.Commands.CreateUser;
 using Xunit;
 
 namespace Skelvy.Application.Test.Core.Pipes
 {
-  public class RequestValidationBehaviorTest
+  public class RequestValidationTest
   {
     private const string UserEmail = "user@gmail.com";
     private const string UserName = "User";
@@ -20,10 +18,10 @@ namespace Skelvy.Application.Test.Core.Pipes
     {
       var request = new CreateUserCommand { Email = UserEmail };
       var validators = new List<IValidator<CreateUserCommand>> { new CreateUserCommandValidator() };
-      var behavior = new RequestValidationBehavior<CreateUserCommand, int>(validators);
+      var pipe = new RequestValidation<CreateUserCommand>(validators);
 
       await Assert.ThrowsAsync<ValidationException>(() =>
-        behavior.Handle(request, CancellationToken.None, null));
+        pipe.Process(request, CancellationToken.None));
     }
 
     [Fact]
@@ -31,10 +29,9 @@ namespace Skelvy.Application.Test.Core.Pipes
     {
       var request = new CreateUserCommand { Email = UserEmail, Name = UserName };
       var validators = new List<IValidator<CreateUserCommand>> { new CreateUserCommandValidator() };
-      var behavior = new RequestValidationBehavior<CreateUserCommand, int>(validators);
-      var next = new Mock<RequestHandlerDelegate<int>>();
+      var pipe = new RequestValidation<CreateUserCommand>(validators);
 
-      await behavior.Handle(request, CancellationToken.None, next.Object);
+      await pipe.Process(request, CancellationToken.None);
     }
   }
 }

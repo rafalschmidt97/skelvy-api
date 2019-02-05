@@ -27,7 +27,7 @@ namespace Skelvy.WebAPI
 
     public void ConfigureServices(IServiceCollection services)
     {
-      var applicationAssembly = typeof(RequestLogger<>).GetTypeInfo().Assembly;
+      var applicationAssembly = typeof(RequestLogger<,>).GetTypeInfo().Assembly;
       var infrastructureAssembly = typeof(NotificationService).GetTypeInfo().Assembly;
 
       services.AddDbContext<SkelvyContext>(options =>

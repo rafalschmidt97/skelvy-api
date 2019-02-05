@@ -22,8 +22,6 @@ namespace Skelvy.Application.Users.Commands.CreateUser
 
     public async Task<int> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-      await _notificationService.Send("Hello World");
-
       var entity = new User
       {
         Email = request.Email,
@@ -40,6 +38,7 @@ namespace Skelvy.Application.Users.Commands.CreateUser
 
       _context.Users.Add(entity);
       await _context.SaveChangesAsync(cancellationToken);
+      await _notificationService.Send("Hello World");
 
       return entity.Id;
     }
