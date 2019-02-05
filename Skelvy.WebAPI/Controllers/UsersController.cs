@@ -10,6 +10,13 @@ namespace Skelvy.WebAPI.Controllers
 {
   public class UsersController : BaseController
   {
+    [HttpGet]
+    public async Task<ActionResult<ICollection<User>>> GetAll()
+    {
+      var users = await Mediator.Send(new GetUsersQuery());
+      return Ok(users);
+    }
+
     [HttpPost]
     public async Task<ActionResult<ICollection<User>>> Add(CreateUserCommand request)
     {
