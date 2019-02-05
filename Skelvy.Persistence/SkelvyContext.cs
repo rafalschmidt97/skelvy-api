@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence
 {
@@ -8,6 +9,8 @@ namespace Skelvy.Persistence
       : base(options)
     {
     }
+
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

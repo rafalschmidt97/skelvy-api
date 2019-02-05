@@ -1,3 +1,5 @@
+using Skelvy.Domain.Entities;
+
 namespace Skelvy.Persistence
 {
   public static class SkelvyInitializer
@@ -10,6 +12,20 @@ namespace Skelvy.Persistence
     private static void SeedEverything(SkelvyContext context)
     {
       context.Database.EnsureCreated();
+      SeedUsers(context);
+    }
+
+    private static void SeedUsers(SkelvyContext context)
+    {
+      var users = new[]
+      {
+        new User { Email = "user1@gmail.com", Name = "User1" },
+        new User { Email = "user2@gmail.com", Name = "User2" },
+        new User { Email = "admin@gmail.com", Name = "Admin" }
+      };
+
+      context.Users.AddRange(users);
+      context.SaveChanges();
     }
   }
 }
