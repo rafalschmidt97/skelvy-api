@@ -17,6 +17,13 @@ namespace Skelvy.WebAPI.Controllers
       return Ok(users);
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ICollection<User>>> Get(int id)
+    {
+      var user = await Mediator.Send(new GetUserDetailQuery { Id = id });
+      return Ok(user);
+    }
+
     [HttpPost]
     public async Task<ActionResult<ICollection<User>>> Add(CreateUserCommand request)
     {
