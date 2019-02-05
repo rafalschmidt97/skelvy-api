@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿using System.Reflection;
+using MediatR;
+using MediatR.Pipeline;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Skelvy.Application.Core.Pipes;
 
 namespace Skelvy.WebAPI
 {
@@ -9,16 +12,23 @@ namespace Skelvy.WebAPI
   {
     public void ConfigureServices(IServiceCollection services)
     {
+      var applicationAssembly = typeof(RequestLogger<>).GetTypeInfo().Assembly;
+
+      // Add Mediatr
+      services.Scan(scan =>
+        scan.FromAssemblies(applicationAssembly)
+          .AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<,>)))
+          .AsImplementedInterfaces()
+          .WithTransientLifetime());
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
+      services.AddMediatR(applicationAssembly);
+
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app)
     {
-      if (env.IsDevelopment())
-      {
-        app.UseDeveloperExceptionPage();
-      }
-
       app.UseMvc();
     }
   }
