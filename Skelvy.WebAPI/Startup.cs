@@ -1,11 +1,13 @@
 using System.Reflection;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.Application.Core.Pipes;
+using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI
 {
@@ -28,7 +30,11 @@ namespace Skelvy.WebAPI
       // Add AutoMapper
       services.AddAutoMapper(applicationAssembly);
 
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+      services.AddMvc(options =>
+        {
+          options.Filters.Add(typeof(CustomExceptionFilter));
+        })
+        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
     public void Configure(IApplicationBuilder app)
