@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Skelvy.Persistence;
 
 namespace Skelvy.WebAPI
@@ -24,6 +25,10 @@ namespace Skelvy.WebAPI
 
     private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
       WebHost.CreateDefaultBuilder(args)
+        .UseKestrel()
+        .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+          .ReadFrom.Configuration(hostingContext.Configuration)
+          .Enrich.FromLogContext())
         .UseStartup<Startup>();
   }
 }
