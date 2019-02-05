@@ -5,7 +5,6 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Users.Queries.GetUsers;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
