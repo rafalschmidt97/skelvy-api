@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+  api:
+    container_name: "skelvy-dotnet"
+    image: "skelvy:latest"
+    build:
+      context: .
+      dockerfile: "Skelvy.WebAPI/Dockerfile"
+    depends_on:
+      - db
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Production"
+      - "ASPNETCORE_URLS=http://0.0.0.0:80"
+      - "ConnectionStrings__Database=Server=db; Database=skelvy; MultipleActiveResultSets=true; User Id=sa; Password=zaq1@WSX;"
+    ports:
+      - "80:80"
+
+  db:
+    container_name: "skelvy-sqlserver"
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "zaq1@WSX"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
