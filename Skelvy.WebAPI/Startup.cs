@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.Application.Core.Pipes;
+using Skelvy.Infrastructure.Notifications;
 using Skelvy.Persistence;
 using Skelvy.WebAPI.Filters;
 using Swashbuckle.AspNetCore.Swagger;
@@ -27,6 +28,7 @@ namespace Skelvy.WebAPI
     public void ConfigureServices(IServiceCollection services)
     {
       var applicationAssembly = typeof(RequestLogger<>).GetTypeInfo().Assembly;
+      var infrastructureAssembly = typeof(NotificationService).GetTypeInfo().Assembly;
 
       services.AddDbContext<SkelvyContext>(options =>
         options.UseSqlServer(_configuration.GetConnectionString("Database")));
@@ -59,6 +61,13 @@ namespace Skelvy.WebAPI
           .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
           .AsImplementedInterfaces()
           .WithTransientLifetime());
+
+      // Add Services
+      services.Scan(scan =>
+        scan.FromAssemblies(infrastructureAssembly)
+          .AddClasses()
+          .AsMatchingInterface());
+
       services.AddMvc(options =>
         {
           options.Filters.Add(typeof(CustomExceptionFilter));
