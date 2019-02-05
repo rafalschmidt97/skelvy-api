@@ -30,9 +30,16 @@ namespace Skelvy.WebAPI
       // Add AutoMapper
       services.AddAutoMapper(applicationAssembly);
 
+      // Add Validators
+      services.Scan(scan =>
+        scan.FromAssemblies(applicationAssembly)
+          .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
+          .AsImplementedInterfaces()
+          .WithTransientLifetime());
       services.AddMvc(options =>
         {
           options.Filters.Add(typeof(CustomExceptionFilter));
+          options.AllowValidatingTopLevelNodes = false;
         })
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
