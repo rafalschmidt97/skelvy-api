@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System.Reflection;
+using AutoMapper;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +24,9 @@ namespace Skelvy.WebAPI
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
       services.AddMediatR(applicationAssembly);
+
+      // Add AutoMapper
+      services.AddAutoMapper(applicationAssembly);
 
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
