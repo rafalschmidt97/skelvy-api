@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.Application.Core.Pipes;
 using Skelvy.WebAPI.Filters;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Skelvy.WebAPI
 {
@@ -16,6 +17,15 @@ namespace Skelvy.WebAPI
     public void ConfigureServices(IServiceCollection services)
     {
       var applicationAssembly = typeof(RequestLogger<>).GetTypeInfo().Assembly;
+
+      services.AddSwaggerGen(configuration =>
+      {
+        configuration.SwaggerDoc("v1", new Info
+        {
+          Title = "Skelvy API",
+          Description = "Mobile app for meetings over beer or coffee 🚀"
+        });
+      });
 
       // Add Mediatr
       services.Scan(scan =>
@@ -46,6 +56,9 @@ namespace Skelvy.WebAPI
 
     public void Configure(IApplicationBuilder app)
     {
+      app.UseSwagger();
+      app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
+
       app.UseMvc();
     }
   }
