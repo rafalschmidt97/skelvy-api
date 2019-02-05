@@ -1,3 +1,4 @@
+using System.Linq;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence
@@ -17,6 +18,11 @@ namespace Skelvy.Persistence
 
     private static void SeedUsers(SkelvyContext context)
     {
+      if (context.Users.Any())
+      {
+        return;
+      }
+
       var users = new[]
       {
         new User { Email = "user1@gmail.com", Name = "User1" },
