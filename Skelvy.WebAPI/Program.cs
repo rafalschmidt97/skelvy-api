@@ -1,13 +1,25 @@
-﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Skelvy.Persistence;
 
 namespace Skelvy.WebAPI
 {
-  public static class Program
+  public class Program
   {
     public static void Main(string[] args)
     {
-      CreateWebHostBuilder(args).Build().Run();
+      var host = CreateWebHostBuilder(args).Build();
+
+      using (var scope = host.Services.CreateScope())
+      {
+        var context = scope.ServiceProvider.GetService<SkelvyContext>();
+        context.Database.Migrate();
+        SkelvyInitializer.Initialize(context);
+      }
+
+      host.Run();
     }
 
     private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

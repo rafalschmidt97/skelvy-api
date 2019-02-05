@@ -5,8 +5,11 @@ using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.Application.Core.Pipes;
+using Skelvy.Persistence;
 using Skelvy.WebAPI.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -14,9 +17,19 @@ namespace Skelvy.WebAPI
 {
   public class Startup
   {
+    private readonly IConfiguration _configuration;
+
+    public Startup(IConfiguration configuration)
+    {
+      _configuration = configuration;
+    }
+
     public void ConfigureServices(IServiceCollection services)
     {
       var applicationAssembly = typeof(RequestLogger<>).GetTypeInfo().Assembly;
+
+      services.AddDbContext<SkelvyContext>(options =>
+        options.UseSqlServer(_configuration.GetConnectionString("Database")));
 
       services.AddSwaggerGen(configuration =>
       {
