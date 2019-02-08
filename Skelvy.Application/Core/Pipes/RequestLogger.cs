@@ -46,7 +46,7 @@ namespace Skelvy.Application.Core.Pipes
       }
       catch (CustomException exception)
       {
-        _logger.LogError("Request Custom Exception: {Message}", exception.Message);
+        _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
         responseException = exception;
       }
       catch (Exception exception)
