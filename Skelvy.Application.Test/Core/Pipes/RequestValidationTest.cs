@@ -2,23 +2,22 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Core.Pipes;
-using Skelvy.Application.Users.Commands.CreateUser;
 using Xunit;
 
 namespace Skelvy.Application.Test.Core.Pipes
 {
   public class RequestValidationTest
   {
-    private const string UserEmail = "user@gmail.com";
-    private const string UserName = "User";
+    private const string Token = "Token";
 
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new CreateUserCommand { Email = UserEmail };
-      var validators = new List<IValidator<CreateUserCommand>> { new CreateUserCommandValidator() };
-      var pipe = new RequestValidation<CreateUserCommand>(validators);
+      var request = new SignInWithFacebookCommand();
+      var validators = new List<IValidator<SignInWithFacebookCommand>> { new SignInWithFacebookCommandValidator() };
+      var pipe = new RequestValidation<SignInWithFacebookCommand>(validators);
 
       await Assert.ThrowsAsync<ValidationException>(() =>
         pipe.Process(request, CancellationToken.None));
@@ -27,9 +26,9 @@ namespace Skelvy.Application.Test.Core.Pipes
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new CreateUserCommand { Email = UserEmail, Name = UserName };
-      var validators = new List<IValidator<CreateUserCommand>> { new CreateUserCommandValidator() };
-      var pipe = new RequestValidation<CreateUserCommand>(validators);
+      var request = new SignInWithFacebookCommand { AuthToken = Token };
+      var validators = new List<IValidator<SignInWithFacebookCommand>> { new SignInWithFacebookCommandValidator() };
+      var pipe = new RequestValidation<SignInWithFacebookCommand>(validators);
 
       await pipe.Process(request, CancellationToken.None);
     }

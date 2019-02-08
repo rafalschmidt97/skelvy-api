@@ -1,13 +1,18 @@
 using System.Reflection;
+using System.Text;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Skelvy.Application.Core.Pipes;
 using Skelvy.Infrastructure.Notifications;
 using Skelvy.Persistence;
@@ -68,10 +73,28 @@ namespace Skelvy.WebAPI
           .AddClasses()
           .AsMatchingInterface());
 
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+          options.TokenValidationParameters = new TokenValidationParameters
+          {
+            ValidateIssuer = true,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = _configuration["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
+          };
+        });
+
       services.AddMvc(options =>
         {
           options.Filters.Add(typeof(CustomExceptionFilter));
           options.AllowValidatingTopLevelNodes = false;
+          options.Filters.Add(new AuthorizeFilter(
+            new AuthorizationPolicyBuilder()
+              .RequireAuthenticatedUser()
+              .Build()));
         })
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
@@ -81,6 +104,7 @@ namespace Skelvy.WebAPI
       app.UseSwagger();
       app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
 
+      app.UseAuthentication();
       app.UseMvc();
     }
   }

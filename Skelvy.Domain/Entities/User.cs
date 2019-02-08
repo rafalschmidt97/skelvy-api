@@ -4,5 +4,6 @@ namespace Skelvy.Domain.Entities
   {
     public int Id { get; set; }
     public string Email { get; set; }
+    public string FacebookId { get; set; }
   }
 }
