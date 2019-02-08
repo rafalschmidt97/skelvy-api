@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Skelvy.Application.Core.Infrastructure
+namespace Skelvy.Application.Core.Infrastructure.Notifications
 {
   public interface INotificationService
   {
