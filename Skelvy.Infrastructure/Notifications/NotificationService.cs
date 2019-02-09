@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Skelvy.Application.Core.Infrastructure;
+using Skelvy.Application.Core.Infrastructure.Notifications;
 
 namespace Skelvy.Infrastructure.Notifications
 {

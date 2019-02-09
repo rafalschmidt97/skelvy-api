@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using Destructurama;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,7 @@ namespace Skelvy.WebAPI
         .UseKestrel()
         .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
           .ReadFrom.Configuration(hostingContext.Configuration)
+          .Destructure.UsingAttributes()
           .Enrich.FromLogContext())
         .UseStartup<Startup>();
   }

@@ -9,7 +9,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190201140044_Initial")]
+    [Migration("20190208204746_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,9 +30,7 @@ namespace Skelvy.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(60);
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(60);
+                    b.Property<string>("FacebookId");
 
                     b.HasKey("Id");
 

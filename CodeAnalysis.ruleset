@@ -5,6 +5,7 @@
     <Rule Id="SA0001" Action="None" />
     <Rule Id="SA1027" Action="None" />
     <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1122" Action="None" />
     <Rule Id="SA1124" Action="None" />
     <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="None" />
@@ -18,12 +19,15 @@
     <Rule Id="SA1516" Action="None" />
     <Rule Id="SX1101" Action="Error" />
     <Rule Id="SX1309" Action="Error" />
+    <Rule Id="CA1001" Action="None" />
     <Rule Id="CA1032" Action="None" />
+    <Rule Id="CA1054" Action="None" />
     <Rule Id="CA1056" Action="None" />
     <Rule Id="CA1308" Action="None" />
     <Rule Id="CA1305" Action="None" />
     <Rule Id="CA1710" Action="None" />
     <Rule Id="CA1822" Action="None" />
     <Rule Id="CA2007" Action="None" />
+    <Rule Id="CA2234" Action="None" />
   </Rules>
 </RuleSet>
