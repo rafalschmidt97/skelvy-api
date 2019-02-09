@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Core.Exceptions;
+using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.GetUserDetail;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;

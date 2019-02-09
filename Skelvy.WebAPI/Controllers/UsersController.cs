@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.GetUserDetail;
 
 namespace Skelvy.WebAPI.Controllers

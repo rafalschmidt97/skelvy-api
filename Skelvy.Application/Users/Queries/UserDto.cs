@@ -1,4 +1,4 @@
-namespace Skelvy.Application.Users.Queries.GetUserDetail
+namespace Skelvy.Application.Users.Queries
 {
   public class UserDto
   {
