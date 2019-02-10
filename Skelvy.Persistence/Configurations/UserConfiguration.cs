@@ -8,7 +8,8 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-      builder.Property(e => e.Email).IsRequired().HasMaxLength(60);
+      builder.Property(e => e.Email).IsRequired().HasMaxLength(50);
+      builder.Property(e => e.FacebookId).HasMaxLength(50);
     }
   }
 }
