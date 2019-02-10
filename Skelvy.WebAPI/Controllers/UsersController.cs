@@ -7,6 +7,12 @@ namespace Skelvy.WebAPI.Controllers
 {
   public class UsersController : BaseController
   {
+    [HttpGet("self")]
+    public async Task<UserDto> GetSelf()
+    {
+      return await Mediator.Send(new GetUserQuery { Id = UserId });
+    }
+
     [HttpGet("{id}")]
     public async Task<UserDto> Get(int id)
     {
