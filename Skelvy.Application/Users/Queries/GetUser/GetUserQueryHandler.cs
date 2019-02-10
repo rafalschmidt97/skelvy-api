@@ -8,7 +8,7 @@ using Skelvy.Application.Core.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
-namespace Skelvy.Application.Users.Queries.GetUserDetail
+namespace Skelvy.Application.Users.Queries.GetUser
 {
   public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
   {

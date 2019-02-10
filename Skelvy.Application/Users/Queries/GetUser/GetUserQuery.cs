@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Skelvy.Application.Users.Queries.GetUserDetail
+namespace Skelvy.Application.Users.Queries.GetUser
 {
   public class GetUserQuery : IRequest<UserDto>
   {
