@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using AutoMapper;
@@ -45,6 +47,18 @@ namespace Skelvy.WebAPI
           Title = "Skelvy API",
           Description = "Mobile app for meetings over beer or coffee 🚀"
         });
+
+        configuration.AddSecurityDefinition("Token", new ApiKeyScheme
+        {
+          In = "header",
+          Name = "Authorization",
+          Type = "apiKey"
+        });
+
+        configuration.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+        {
+          { "Token", System.Array.Empty<string>() }
+        });
       });
 
       // Add Mediatr
@@ -87,10 +101,7 @@ namespace Skelvy.WebAPI
           };
         });
 
-      services.Configure<ApiBehaviorOptions>(options =>
-      {
-        options.SuppressModelStateInvalidFilter = true;
-      });
+      services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
       services.AddMvc(options =>
         {
@@ -105,7 +116,14 @@ namespace Skelvy.WebAPI
 
     public void Configure(IApplicationBuilder app)
     {
-      app.UseSwagger();
+      app.UseSwagger(options =>
+      {
+        options.PreSerializeFilters.Add((document, request) =>
+        {
+          document.Paths =
+            document.Paths.ToDictionary(path => path.Key.ToLowerInvariant(), p => p.Value);
+        });
+      });
       app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
 
       app.UseAuthentication();
