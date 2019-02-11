@@ -1,7 +1,10 @@
-using System.Linq;
+using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Common;
 using Skelvy.Application.Core.Infrastructure.Facebook;
 using Skelvy.Application.Core.Infrastructure.Tokens;
 using Skelvy.Domain.Entities;
@@ -29,12 +32,14 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     {
       var verified = await _facebookService.Verify(request.AuthToken);
 
-      var user = _context.Users.FirstOrDefault(x => x.FacebookId == verified.UserId);
+      var user = await _context.Users.FirstOrDefaultAsync(x => x.FacebookId == verified.UserId, cancellationToken);
 
       if (user == null)
       {
-        // TODO: details should also fill profile
-        var details = await _facebookService.GetBody<dynamic>("me", request.AuthToken, "fields=email");
+        var details = await _facebookService.GetBody<dynamic>(
+          "me",
+          request.AuthToken,
+          "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}");
 
         user = new User
         {
@@ -42,6 +47,31 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           FacebookId = verified.UserId
         };
         _context.Users.Add(user);
+
+        var profile = new UserProfile
+        {
+          Name = details.first_name,
+          Birthday = DateTime.ParseExact(
+            (string)details.birthday,
+            "MM/dd/yyyy",
+            CultureInfo.CurrentCulture),
+          Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+          UserId = user.Id
+        };
+
+        _context.UserProfiles.Add(profile);
+
+        if (details.picture != null)
+        {
+          var photo = new UserProfilePhoto
+          {
+            Url = details.picture.data.url,
+            ProfileId = profile.Id
+          };
+
+          _context.UserProfilePhotos.Add(photo);
+        }
+
         await _context.SaveChangesAsync(cancellationToken);
       }
 

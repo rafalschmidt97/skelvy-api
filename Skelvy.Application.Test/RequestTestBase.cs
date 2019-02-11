@@ -33,6 +33,13 @@ namespace Skelvy.Application.Test
       return dbContext;
     }
 
+    protected static SkelvyContext InitializedDbContext()
+    {
+      var context = DbContext();
+      SkelvyInitializer.Initialize(context);
+      return context;
+    }
+
     protected static IMapper Mapper()
     {
       var mapperConfiguration = new MapperConfiguration(configuration =>

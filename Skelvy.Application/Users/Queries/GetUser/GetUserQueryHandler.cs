@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Exceptions;
@@ -23,15 +22,17 @@ namespace Skelvy.Application.Users.Queries.GetUser
 
     public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-      var user = await _context.Users.ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync(value => value.Id == request.Id, cancellationToken);
+      var user = await _context.Users
+        .Include(x => x.Profile)
+        .ThenInclude(x => x.Photos)
+        .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
       if (user == null)
       {
         throw new NotFoundException(nameof(User), request.Id);
       }
 
-      return user;
+      return _mapper.Map<UserDto>(user);
     }
   }
 }

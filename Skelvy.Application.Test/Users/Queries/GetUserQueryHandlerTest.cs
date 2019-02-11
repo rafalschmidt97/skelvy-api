@@ -3,16 +3,12 @@ using System.Threading.Tasks;
 using Skelvy.Application.Core.Exceptions;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.GetUser;
-using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Queries
 {
   public class GetUserQueryHandlerTest : RequestTestBase
   {
-    private const string UserEmail = "user@gmail.com";
-
     [Fact]
     public async Task ShouldReturnUser()
     {
@@ -32,22 +28,6 @@ namespace Skelvy.Application.Test.Users.Queries
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request, CancellationToken.None));
-    }
-
-    private static SkelvyContext InitializedDbContext()
-    {
-      var context = DbContext();
-
-      context.Users.Add(
-        new User
-        {
-          Id = 1,
-          Email = UserEmail
-        });
-
-      context.SaveChanges();
-
-      return context;
     }
   }
 }

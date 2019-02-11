@@ -1,10 +1,10 @@
 namespace Skelvy.Domain.Entities
 {
-  public class User
+  public class UserProfilePhoto
   {
     public int Id { get; set; }
-    public string Email { get; set; }
-    public string FacebookId { get; set; }
+    public string Url { get; set; }
+    public int ProfileId { get; set; }
 
     public UserProfile Profile { get; set; }
   }
