@@ -28,7 +28,7 @@ namespace Skelvy.Persistence
 
       var users = new[]
       {
-        new User { Email = "user@gmail.com" }
+        new User { Email = "user@gmail.com", FacebookId = "1" }
       };
 
       context.Users.AddRange(users);
