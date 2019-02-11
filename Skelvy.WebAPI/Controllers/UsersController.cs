@@ -21,11 +21,10 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPut("self/profile")]
-    public async Task<ActionResult> UpdateSelfProfile(UpdateUserProfileCommand request)
+    public async Task UpdateSelfProfile(UpdateUserProfileCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);
-      return NoContent();
     }
   }
 }
