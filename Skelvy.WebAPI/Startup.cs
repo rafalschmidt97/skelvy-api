@@ -126,6 +126,7 @@ namespace Skelvy.WebAPI
       });
       app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
 
+      app.UseStaticFiles();
       app.UseAuthentication();
       app.UseMvc();
     }
