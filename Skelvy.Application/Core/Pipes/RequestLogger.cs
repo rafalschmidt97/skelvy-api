@@ -52,7 +52,7 @@ namespace Skelvy.Application.Core.Pipes
       catch (Exception exception)
       {
         _logger.LogCritical(exception, "Unexpected Server Exception:");
-        responseException = exception;
+        responseException = new InternalServerErrorException();
       }
 
       _timer.Stop();

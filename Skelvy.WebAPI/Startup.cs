@@ -87,10 +87,14 @@ namespace Skelvy.WebAPI
           };
         });
 
+      services.Configure<ApiBehaviorOptions>(options =>
+      {
+        options.SuppressModelStateInvalidFilter = true;
+      });
+
       services.AddMvc(options =>
         {
           options.Filters.Add(typeof(CustomExceptionFilter));
-          options.AllowValidatingTopLevelNodes = false;
           options.Filters.Add(new AuthorizeFilter(
             new AuthorizationPolicyBuilder()
               .RequireAuthenticatedUser()
