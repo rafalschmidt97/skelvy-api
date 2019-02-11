@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Common;
 using Skelvy.Application.Core.Infrastructure.Facebook;
 using Skelvy.Application.Core.Infrastructure.Tokens;
@@ -32,14 +32,14 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     {
       var verified = await _facebookService.Verify(request.AuthToken);
 
-      var user = _context.Users.FirstOrDefault(x => x.FacebookId == verified.UserId);
+      var user = await _context.Users.FirstOrDefaultAsync(x => x.FacebookId == verified.UserId, cancellationToken);
 
       if (user == null)
       {
         var details = await _facebookService.GetBody<dynamic>(
           "me",
           request.AuthToken,
-          "fields=id,birthday,email,first_name,gender,picture.width(512).height(512){url}");
+          "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}");
 
         user = new User
         {
