@@ -46,6 +46,16 @@ namespace Skelvy.Infrastructure.Facebook
       var response =
         await GetBody<dynamic>("debug_token", $"{_clientId}|{_clientSecret}", $"input_token={accessToken}");
 
+      if (response.data.is_valid != true)
+      {
+        if (response.data.error != null && response.data.error.message != null)
+        {
+          throw new UnauthorizedException((string)response.data.error.message);
+        }
+
+        throw new UnauthorizedException("Facebook Token is not valid.");
+      }
+
       return new AccessVerification
       {
         UserId = response.data.user_id,
@@ -76,16 +86,6 @@ namespace Skelvy.Infrastructure.Facebook
         if (responseDataDynamic.error != null)
         {
           throw new BadRequestException((string)responseDataDynamic.error.message);
-        }
-
-        if (responseDataDynamic.data.is_valid != true)
-        {
-          if (responseDataDynamic.data.error != null && responseDataDynamic.data.error.message != null)
-          {
-            throw new BadRequestException((string)responseDataDynamic.data.error.message);
-          }
-
-          throw new BadRequestException();
         }
       }
       else
