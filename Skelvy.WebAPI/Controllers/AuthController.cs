@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Auth.Commands.SignInWithFacebook;
+using Skelvy.Application.Auth.Commands.SignInWithGoogle;
 
 namespace Skelvy.WebAPI.Controllers
 {
@@ -10,6 +11,13 @@ namespace Skelvy.WebAPI.Controllers
   {
     [HttpPost("facebook")]
     public async Task<IActionResult> Add(SignInWithFacebookCommand request)
+    {
+      var token = await Mediator.Send(request);
+      return Ok(new { token });
+    }
+
+    [HttpPost("google")]
+    public async Task<IActionResult> Add(SignInWithGoogleCommand request)
     {
       var token = await Mediator.Send(request);
       return Ok(new { token });
