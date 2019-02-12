@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Auth.Commands;
@@ -23,55 +24,27 @@ namespace Skelvy.Infrastructure.Facebook
     public async Task<T> GetBody<T>(string path, string accessToken, string args = null)
     {
       var response = await HttpClient.GetAsync($"{path}?access_token={accessToken}&{args}");
-      if (!response.IsSuccessStatusCode)
-      {
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-          throw new UnauthorizedException("Facebook Token is not valid.");
-        }
+      var responseData = await GetData<T>(response.Content);
 
-        throw new ConflictException($"Facebook GET problem with entity {nameof(T)}({path}?{args}).");
-      }
+      ValidateResponse(path, args, response, responseData, "GET");
 
-      return await GetData<T>(response.Content);
+      return responseData;
     }
 
     public async Task<T> PostBody<T>(string path, string accessToken, object data, string args = null)
     {
       var response = await HttpClient.PostAsync($"{path}?access_token={accessToken}&{args}", PrepareData(data));
+      var responseData = await GetData<T>(response.Content);
 
-      if (!response.IsSuccessStatusCode)
-      {
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-          throw new UnauthorizedException("Facebook Token is not valid.");
-        }
+      ValidateResponse(path, args, response, responseData, "POST");
 
-        throw new ConflictException($"Facebook POST problem with entity {nameof(T)}({path}?{args}).");
-      }
-
-      return await GetData<T>(response.Content);
+      return responseData;
     }
 
     public async Task<AccessVerification> Verify(string accessToken)
     {
       var response =
         await GetBody<dynamic>("debug_token", $"{_clientId}|{_clientSecret}", $"input_token={accessToken}");
-
-      if (response.error != null)
-      {
-        throw new UnauthorizedException(response.error.message);
-      }
-
-      if (response.data.is_valid != true)
-      {
-        if (response.data.error != null && response.data.error.message != null)
-        {
-          throw new UnauthorizedException(response.data.error.message);
-        }
-
-        throw new UnauthorizedException("Facebook Token is not valid.");
-      }
 
       return new AccessVerification
       {
@@ -88,6 +61,42 @@ namespace Skelvy.Infrastructure.Facebook
       var unixStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
       var unixTimeStampInTicks = (long)(unixTime * TimeSpan.TicksPerSecond);
       return new DateTime(unixStart.Ticks + unixTimeStampInTicks, DateTimeKind.Utc);
+    }
+
+    private static void ValidateResponse<T>(
+      string path,
+      string args,
+      HttpResponseMessage response,
+      T responseData,
+      string requestType)
+    {
+      if (response.IsSuccessStatusCode)
+      {
+        var responseDataDynamic = (dynamic)responseData;
+        if (responseDataDynamic.error != null)
+        {
+          throw new BadRequestException((string)responseDataDynamic.error.message);
+        }
+
+        if (responseDataDynamic.data.is_valid != true)
+        {
+          if (responseDataDynamic.data.error != null && responseDataDynamic.data.error.message != null)
+          {
+            throw new BadRequestException((string)responseDataDynamic.data.error.message);
+          }
+
+          throw new BadRequestException();
+        }
+      }
+      else
+      {
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+          throw new UnauthorizedException("Facebook Token is not valid.");
+        }
+
+        throw new ConflictException($"Facebook {requestType} problem with entity {nameof(T)}({path}?{args}).");
+      }
     }
   }
 }
