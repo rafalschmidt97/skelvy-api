@@ -41,35 +41,45 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           request.AuthToken,
           "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}");
 
-        user = new User
-        {
-          Email = details.email,
-          FacebookId = verified.UserId
-        };
-        _context.Users.Add(user);
+        var email = (string)details.email;
+        var userByEmail = await _context.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 
-        var profile = new UserProfile
+        if (userByEmail == null)
         {
-          Name = details.first_name,
-          Birthday = DateTime.ParseExact(
-            (string)details.birthday,
-            "MM/dd/yyyy",
-            CultureInfo.CurrentCulture),
-          Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-          UserId = user.Id
-        };
-
-        _context.UserProfiles.Add(profile);
-
-        if (details.picture != null)
-        {
-          var photo = new UserProfilePhoto
+          user = new User
           {
-            Url = details.picture.data.url,
-            ProfileId = profile.Id
+            Email = details.email,
+            FacebookId = verified.UserId
+          };
+          _context.Users.Add(user);
+
+          var profile = new UserProfile
+          {
+            Name = details.first_name,
+            Birthday = DateTime.ParseExact(
+              (string)details.birthday,
+              "MM/dd/yyyy",
+              CultureInfo.CurrentCulture),
+            Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+            UserId = user.Id
           };
 
-          _context.UserProfilePhotos.Add(photo);
+          _context.UserProfiles.Add(profile);
+
+          if (details.picture != null)
+          {
+            var photo = new UserProfilePhoto
+            {
+              Url = details.picture.data.url,
+              ProfileId = profile.Id
+            };
+
+            _context.UserProfilePhotos.Add(photo);
+          }
+        }
+        else
+        {
+          userByEmail.FacebookId = verified.UserId;
         }
 
         await _context.SaveChangesAsync(cancellationToken);

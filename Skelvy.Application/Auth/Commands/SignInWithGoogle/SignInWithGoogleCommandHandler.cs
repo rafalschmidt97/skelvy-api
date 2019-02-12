@@ -41,35 +41,45 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           request.AuthToken,
           "fields=birthday,name/givenName,emails/value,gender,image/url");
 
-        user = new User
-        {
-          Email = details.emails[0].value,
-          GoogleId = verified.UserId
-        };
-        _context.Users.Add(user);
+        var email = (string)details.emails[0].value;
+        var userByEmail = await _context.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 
-        var profile = new UserProfile
+        if (userByEmail == null)
         {
-          Name = details.name.givenName,
-          Birthday = DateTime.ParseExact(
-            (string)details.birthday,
-            "yyyy-MM-dd",
-            CultureInfo.CurrentCulture),
-          Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-          UserId = user.Id
-        };
-
-        _context.UserProfiles.Add(profile);
-
-        if (details.image != null)
-        {
-          var photo = new UserProfilePhoto
+          user = new User
           {
-            Url = details.image.url,
-            ProfileId = profile.Id
+            Email = details.emails[0].value,
+            GoogleId = verified.UserId
+          };
+          _context.Users.Add(user);
+
+          var profile = new UserProfile
+          {
+            Name = details.name.givenName,
+            Birthday = DateTime.ParseExact(
+              (string)details.birthday,
+              "yyyy-MM-dd",
+              CultureInfo.CurrentCulture),
+            Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+            UserId = user.Id
           };
 
-          _context.UserProfilePhotos.Add(photo);
+          _context.UserProfiles.Add(profile);
+
+          if (details.image != null)
+          {
+            var photo = new UserProfilePhoto
+            {
+              Url = details.image.url,
+              ProfileId = profile.Id
+            };
+
+            _context.UserProfilePhotos.Add(photo);
+          }
+        }
+        else
+        {
+          userByEmail.GoogleId = verified.UserId;
         }
 
         await _context.SaveChangesAsync(cancellationToken);
