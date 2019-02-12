@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190209230235_Initial")]
+    [Migration("20190212130607_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,8 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<string>("FacebookId")
                         .HasMaxLength(50);
+
+                    b.Property<string>("GoogleId");
 
                     b.HasKey("Id");
 
@@ -90,7 +92,7 @@ namespace Skelvy.Persistence.Migrations
             modelBuilder.Entity("Skelvy.Domain.Entities.UserProfile", b =>
                 {
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
-                        .WithOne("UserProfile")
+                        .WithOne("Profile")
                         .HasForeignKey("Skelvy.Domain.Entities.UserProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

@@ -32,6 +32,8 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<string>("FacebookId")
                         .HasMaxLength(50);
 
+                    b.Property<string>("GoogleId");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -88,7 +90,7 @@ namespace Skelvy.Persistence.Migrations
             modelBuilder.Entity("Skelvy.Domain.Entities.UserProfile", b =>
                 {
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
-                        .WithOne("UserProfile")
+                        .WithOne("Profile")
                         .HasForeignKey("Skelvy.Domain.Entities.UserProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

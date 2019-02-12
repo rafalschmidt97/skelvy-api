@@ -15,7 +15,8 @@ namespace Skelvy.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Email = table.Column<string>(maxLength: 50, nullable: false),
-                    FacebookId = table.Column<string>(maxLength: 50, nullable: true)
+                    FacebookId = table.Column<string>(maxLength: 50, nullable: true),
+                    GoogleId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
