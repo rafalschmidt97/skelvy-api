@@ -80,6 +80,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         else
         {
           userByEmail.GoogleId = verified.UserId;
+          user = userByEmail;
         }
 
         await _context.SaveChangesAsync(cancellationToken);

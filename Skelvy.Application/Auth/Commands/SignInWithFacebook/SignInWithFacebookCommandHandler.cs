@@ -80,6 +80,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         else
         {
           userByEmail.FacebookId = verified.UserId;
+          user = userByEmail;
         }
 
         await _context.SaveChangesAsync(cancellationToken);
