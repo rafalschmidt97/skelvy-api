@@ -87,6 +87,8 @@ namespace Skelvy.WebAPI
           .AddClasses()
           .AsMatchingInterface());
 
+      services.AddCors();
+
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
@@ -127,6 +129,11 @@ namespace Skelvy.WebAPI
       app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
 
       app.UseStaticFiles();
+      app.UseCors(builder => builder
+        .SetIsOriginAllowed(isOriginAllowed => true)
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials());
       app.UseAuthentication();
       app.UseMvc();
     }
