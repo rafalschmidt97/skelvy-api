@@ -54,7 +54,6 @@ namespace Skelvy.Infrastructure.Google
         UserId = response.sub,
         AccessToken = accessToken,
         ExpiresAt = UnixTimestampToDateTime(response.exp),
-        // google doesn't return IssuedAt
         AccessType = AccessTypes.Google
       };
     }

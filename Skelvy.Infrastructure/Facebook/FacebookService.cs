@@ -61,7 +61,6 @@ namespace Skelvy.Infrastructure.Facebook
         UserId = response.data.user_id,
         AccessToken = accessToken,
         ExpiresAt = UnixTimestampToDateTime(response.data.expires_at),
-        IssuedAt = UnixTimestampToDateTime(response.data.issued_at),
         AccessType = AccessTypes.Facebook
       };
     }
