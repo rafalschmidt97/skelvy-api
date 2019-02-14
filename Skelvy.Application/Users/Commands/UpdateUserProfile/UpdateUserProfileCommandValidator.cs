@@ -8,6 +8,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
   {
     public UpdateUserProfileCommandValidator()
     {
+      RuleFor(x => x.UserId).NotEmpty();
       RuleFor(x => x.Name).NotEmpty().MaximumLength(50);
 
       RuleFor(x => x.Birthday).NotEmpty()
