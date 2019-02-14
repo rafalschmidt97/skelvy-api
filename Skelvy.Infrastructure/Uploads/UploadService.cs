@@ -26,7 +26,7 @@ namespace Skelvy.Infrastructure.Uploads
       }
 
       var relativePath = Path.Combine("wwwroot", "uploads");
-      var absolutePath = Path.Combine(serverPath, "uploads");
+      var listeningPath = Path.Combine(serverPath, "uploads");
 
       if (!Directory.Exists(relativePath))
       {
@@ -40,7 +40,7 @@ namespace Skelvy.Infrastructure.Uploads
         await fileData.CopyToAsync(stream);
       }
 
-      return Path.Combine(absolutePath, name);
+      return Path.Combine("http://" + listeningPath, name);
     }
   }
 }

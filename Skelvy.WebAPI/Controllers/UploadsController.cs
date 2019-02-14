@@ -19,13 +19,14 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<string> Upload(IFormFile file)
+    public async Task<IActionResult> Upload(IFormFile file)
     {
       _logger.LogInformation("Request: Upload {@File}", file);
 
       try
       {
-        return await _uploadService.Upload(file.OpenReadStream(), file.FileName, Request.Host.Value);
+        var url = await _uploadService.Upload(file.OpenReadStream(), file.FileName, Request.Host.Value);
+        return Ok(new { url });
       }
       catch (CustomException exception)
       {
