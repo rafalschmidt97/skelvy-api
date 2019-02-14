@@ -11,7 +11,7 @@ namespace Skelvy.Persistence.Configurations
       builder.Property(e => e.Name).IsRequired().HasMaxLength(50);
       builder.Property(e => e.Gender).IsRequired().HasMaxLength(15);
       builder.Property(e => e.Birthday).IsRequired();
-      builder.Property(e => e.Description).HasMaxLength(150);
+      builder.Property(e => e.Description).HasMaxLength(500);
     }
   }
 }

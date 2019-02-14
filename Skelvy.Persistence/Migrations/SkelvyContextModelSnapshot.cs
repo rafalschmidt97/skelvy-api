@@ -48,7 +48,7 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<DateTime>("Birthday");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(150);
+                        .HasMaxLength(500);
 
                     b.Property<string>("Gender")
                         .IsRequired()

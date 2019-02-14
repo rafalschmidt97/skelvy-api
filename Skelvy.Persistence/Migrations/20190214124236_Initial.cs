@@ -32,7 +32,7 @@ namespace Skelvy.Persistence.Migrations
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Birthday = table.Column<DateTime>(nullable: false),
                     Gender = table.Column<string>(maxLength: 15, nullable: false),
-                    Description = table.Column<string>(maxLength: 150, nullable: true),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

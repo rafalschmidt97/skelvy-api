@@ -10,6 +10,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
     {
       RuleFor(x => x.UserId).NotEmpty();
       RuleFor(x => x.Name).NotEmpty().MaximumLength(50);
+      RuleFor(x => x.Description).NotEmpty().MaximumLength(500);
 
       RuleFor(x => x.Birthday).NotEmpty()
         .Must(x => x < DateTime.Now.AddYears(-18))

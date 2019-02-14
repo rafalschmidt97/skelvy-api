@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190212130607_Initial")]
+    [Migration("20190214124236_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,7 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<DateTime>("Birthday");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(150);
+                        .HasMaxLength(500);
 
                     b.Property<string>("Gender")
                         .IsRequired()
