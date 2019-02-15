@@ -29,10 +29,10 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
         throw new NotFoundException(nameof(UserProfile), request.UserId);
       }
 
-      profile.Name = request.Name;
+      profile.Name = request.Name.Trim();
       profile.Birthday = request.Birthday;
       profile.Gender = request.Gender;
-      profile.Description = request.Description;
+      profile.Description = request.Description.Trim();
 
       // Remove old photos
       // TODO: this should be done by a scheduler instead of here
