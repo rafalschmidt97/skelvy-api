@@ -35,7 +35,6 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       profile.Description = request.Description.Trim();
 
       // Remove old photos
-      // TODO: this should be done by a scheduler instead of here
       var oldPhotos = await _context.UserProfilePhotos.Where(x => x.ProfileId == profile.Id)
         .ToListAsync(cancellationToken);
       _context.UserProfilePhotos.RemoveRange(oldPhotos);
