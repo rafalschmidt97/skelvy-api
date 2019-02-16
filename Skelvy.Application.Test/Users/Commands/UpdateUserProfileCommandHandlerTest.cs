@@ -23,8 +23,7 @@ namespace Skelvy.Application.Test.Users.Commands
     public async Task ShouldThrowException()
     {
       var request = Request();
-      request.UserId = 2;
-      var handler = new UpdateUserProfileCommandHandler(InitializedDbContext());
+      var handler = new UpdateUserProfileCommandHandler(DbContext());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request, CancellationToken.None));

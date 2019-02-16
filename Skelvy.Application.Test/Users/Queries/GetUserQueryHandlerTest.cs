@@ -23,8 +23,8 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new GetUserQuery { Id = 2 };
-      var handler = new GetUserQueryHandler(InitializedDbContext(), Mapper());
+      var request = new GetUserQuery { Id = 1 };
+      var handler = new GetUserQueryHandler(DbContext(), Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request, CancellationToken.None));
