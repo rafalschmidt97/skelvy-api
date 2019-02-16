@@ -32,7 +32,11 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       profile.Name = request.Name.Trim();
       profile.Birthday = request.Birthday;
       profile.Gender = request.Gender;
-      profile.Description = request.Description.Trim();
+
+      if (request.Description != null)
+      {
+        profile.Description = request.Description.Trim();
+      }
 
       // Remove old photos
       var oldPhotos = await _context.UserProfilePhotos.Where(x => x.ProfileId == profile.Id)
