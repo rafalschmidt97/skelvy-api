@@ -8,6 +8,7 @@ FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /
 COPY Skelvy.Application/Skelvy.Application.csproj /src/Skelvy.Application/
 COPY Skelvy.Domain/Skelvy.Domain.csproj /src/Skelvy.Domain/
+COPY Skelvy.Common/Skelvy.Common.csproj /src/Skelvy.Common/
 COPY Skelvy.Infrastructure/Skelvy.Infrastructure.csproj /src/Skelvy.Infrastructure/
 COPY Skelvy.Persistence/Skelvy.Persistence.csproj /src/Skelvy.Persistence/
 COPY Skelvy.WebAPI/Skelvy.WebAPI.csproj /src/Skelvy.WebAPI/
