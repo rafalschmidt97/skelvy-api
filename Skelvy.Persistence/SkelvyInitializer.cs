@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using Skelvy.Common;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence
@@ -50,7 +51,7 @@ namespace Skelvy.Persistence
         {
           Name = "User",
           Birthday = DateTime.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture),
-          Gender = "male", // TODO: Fix circular dependency with GenderTypes from Application layer
+          Gender = GenderTypes.Male,
           UserId = users[0].Id
         }
       };

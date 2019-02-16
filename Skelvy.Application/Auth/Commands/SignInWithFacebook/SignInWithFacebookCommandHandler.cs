@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Common;
 using Skelvy.Application.Core.Infrastructure.Facebook;
 using Skelvy.Application.Core.Infrastructure.Tokens;
+using Skelvy.Common;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 

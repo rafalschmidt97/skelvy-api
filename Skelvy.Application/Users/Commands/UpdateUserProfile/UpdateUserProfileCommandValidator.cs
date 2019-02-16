@@ -1,6 +1,6 @@
 using System;
 using FluentValidation;
-using Skelvy.Application.Core.Common;
+using Skelvy.Common;
 
 namespace Skelvy.Application.Users.Commands.UpdateUserProfile
 {

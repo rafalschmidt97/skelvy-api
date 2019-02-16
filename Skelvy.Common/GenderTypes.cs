@@ -1,4 +1,4 @@
-namespace Skelvy.Application.Core.Common
+namespace Skelvy.Common
 {
   public static class GenderTypes
   {
