@@ -106,6 +106,8 @@ namespace Skelvy.WebAPI
 
       services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
+      services.AddResponseCaching();
+
       services.AddMvc(options =>
         {
           options.Filters.Add(typeof(CustomExceptionFilter));

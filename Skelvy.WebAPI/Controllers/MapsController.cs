@@ -8,6 +8,7 @@ using Skelvy.Common;
 
 namespace Skelvy.WebAPI.Controllers
 {
+  [ResponseCache(Duration = 60 * 60 * 24 * 7)] // 7 days; TODO: It should at least log request
   public class MapsController : BaseController
   {
     private readonly IMapsService _mapsService;
