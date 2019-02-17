@@ -30,6 +30,11 @@ namespace Skelvy.WebAPI.Controllers
         throw new BadRequestException("'search' must not be empty.");
       }
 
+      if (language != LanguageTypes.EN || language != LanguageTypes.PL)
+      {
+        throw new BadRequestException($"'language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
+      }
+
       try
       {
         return await _mapsService.Search(search, language);
@@ -48,6 +53,11 @@ namespace Skelvy.WebAPI.Controllers
         "Request: Maps Reverse (latitude: {latitude}, longitude: {longitude})",
         latitude,
         longitude);
+
+      if (language != LanguageTypes.EN || language != LanguageTypes.PL)
+      {
+        throw new BadRequestException($"'language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
+      }
 
       try
       {
