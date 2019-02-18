@@ -37,6 +37,31 @@ namespace Skelvy.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MeetingRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    MinDate = table.Column<DateTime>(nullable: false),
+                    MaxDate = table.Column<DateTime>(nullable: false),
+                    MinAge = table.Column<int>(nullable: false),
+                    MaxAge = table.Column<int>(nullable: false),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false),
+                    UserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MeetingRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MeetingRequests_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserProfiles",
                 columns: table => new
                 {
@@ -55,6 +80,30 @@ namespace Skelvy.Persistence.Migrations
                         name: "FK_UserProfiles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MeetingRequestDrinks",
+                columns: table => new
+                {
+                    MeetingRequestId = table.Column<int>(nullable: false),
+                    DrinkId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MeetingRequestDrinks", x => new { x.MeetingRequestId, x.DrinkId });
+                    table.ForeignKey(
+                        name: "FK_MeetingRequestDrinks_Drinks_DrinkId",
+                        column: x => x.DrinkId,
+                        principalTable: "Drinks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MeetingRequestDrinks_MeetingRequests_MeetingRequestId",
+                        column: x => x.MeetingRequestId,
+                        principalTable: "MeetingRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -80,6 +129,17 @@ namespace Skelvy.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequestDrinks_DrinkId",
+                table: "MeetingRequestDrinks",
+                column: "DrinkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_UserId",
+                table: "MeetingRequests",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserProfilePhotos_ProfileId",
                 table: "UserProfilePhotos",
                 column: "ProfileId");
@@ -94,10 +154,16 @@ namespace Skelvy.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Drinks");
+                name: "MeetingRequestDrinks");
 
             migrationBuilder.DropTable(
                 name: "UserProfilePhotos");
+
+            migrationBuilder.DropTable(
+                name: "Drinks");
+
+            migrationBuilder.DropTable(
+                name: "MeetingRequests");
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");
