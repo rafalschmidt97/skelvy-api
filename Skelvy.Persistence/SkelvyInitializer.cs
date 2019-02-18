@@ -18,6 +18,7 @@ namespace Skelvy.Persistence
       context.Database.EnsureCreated();
       SeedUsers(context);
       SeedProfiles(context);
+      SeedDrinks(context);
     }
 
     private static void SeedUsers(SkelvyContext context)
@@ -69,6 +70,28 @@ namespace Skelvy.Persistence
       };
 
       context.UserProfilePhotos.AddRange(photos);
+      context.SaveChanges();
+    }
+
+    private static void SeedDrinks(SkelvyContext context)
+    {
+      if (context.Drinks.Any())
+      {
+        return;
+      }
+
+      var drinks = new[]
+      {
+        new Drink { Name = "tea" },
+        new Drink { Name = "chocolate" },
+        new Drink { Name = "coffee" },
+        new Drink { Name = "beer" },
+        new Drink { Name = "wine" },
+        new Drink { Name = "vodka" },
+        new Drink { Name = "whiskey" }
+      };
+
+      context.Drinks.AddRange(drinks);
       context.SaveChanges();
     }
   }

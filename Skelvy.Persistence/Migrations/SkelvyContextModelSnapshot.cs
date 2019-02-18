@@ -19,6 +19,21 @@ namespace Skelvy.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Skelvy.Domain.Entities.Drink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Drinks");
+                });
+
             modelBuilder.Entity("Skelvy.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")

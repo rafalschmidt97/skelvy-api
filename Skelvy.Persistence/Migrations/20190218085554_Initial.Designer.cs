@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190214124236_Initial")]
+    [Migration("20190218085554_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,21 @@ namespace Skelvy.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.Drink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Drinks");
+                });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.User", b =>
                 {
