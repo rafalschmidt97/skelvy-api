@@ -11,6 +11,7 @@ namespace Skelvy.Domain.Entities
     }
 
     public int Id { get; set; }
+    public string Status { get; set; }
     public DateTime MinDate { get; set; }
     public DateTime MaxDate { get; set; }
     public int MinAge { get; set; }

@@ -34,6 +34,27 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("Drinks");
                 });
 
+            modelBuilder.Entity("Skelvy.Domain.Entities.Meeting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int>("DrinkId");
+
+                    b.Property<double>("Latitude");
+
+                    b.Property<double>("Longitude");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DrinkId");
+
+                    b.ToTable("Meetings");
+                });
+
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -51,6 +72,8 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<int>("MinAge");
 
                     b.Property<DateTime>("MinDate");
+
+                    b.Property<string>("Status");
 
                     b.Property<int>("UserId");
 
@@ -73,6 +96,19 @@ namespace Skelvy.Persistence.Migrations
                     b.HasIndex("DrinkId");
 
                     b.ToTable("MeetingRequestDrinks");
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.MeetingUser", b =>
+                {
+                    b.Property<int>("MeetingId");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("MeetingId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MeetingUsers");
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.User", b =>
@@ -143,6 +179,14 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("UserProfilePhotos");
                 });
 
+            modelBuilder.Entity("Skelvy.Domain.Entities.Meeting", b =>
+                {
+                    b.HasOne("Skelvy.Domain.Entities.Drink", "Drink")
+                        .WithMany()
+                        .HasForeignKey("DrinkId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequest", b =>
                 {
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
@@ -161,6 +205,19 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.MeetingRequest", "MeetingRequest")
                         .WithMany("Drinks")
                         .HasForeignKey("MeetingRequestId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.MeetingUser", b =>
+                {
+                    b.HasOne("Skelvy.Domain.Entities.Meeting", "Meeting")
+                        .WithMany("Users")
+                        .HasForeignKey("MeetingId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Skelvy.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
