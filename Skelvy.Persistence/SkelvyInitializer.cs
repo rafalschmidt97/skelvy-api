@@ -50,21 +50,21 @@ namespace Skelvy.Persistence
         new UserProfile
         {
           Name = "User1",
-          Birthday = DateTime.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture),
+          Birthday = DateTime.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).Date,
           Gender = GenderTypes.Male,
           UserId = users[0].Id
         },
         new UserProfile
         {
           Name = "User2",
-          Birthday = DateTime.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture),
+          Birthday = DateTime.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture).Date,
           Gender = GenderTypes.Male,
           UserId = users[1].Id
         },
         new UserProfile
         {
           Name = "User3",
-          Birthday = DateTime.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture),
+          Birthday = DateTime.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).Date,
           Gender = GenderTypes.Male,
           UserId = users[2].Id
         }
@@ -133,8 +133,8 @@ namespace Skelvy.Persistence
         new MeetingRequest
         {
           Status = MeetingStatusTypes.Searching,
-          MinDate = DateTime.Now,
-          MaxDate = DateTime.Now.AddDays(2),
+          MinDate = DateTime.Now.Date,
+          MaxDate = DateTime.Now.AddDays(2).Date,
           MinAge = 18,
           MaxAge = 25,
           Latitude = 1,
@@ -174,8 +174,8 @@ namespace Skelvy.Persistence
         new MeetingRequest
         {
           Status = MeetingStatusTypes.Found,
-          MinDate = DateTime.Now.AddDays(2),
-          MaxDate = DateTime.Now.AddDays(4),
+          MinDate = DateTime.Now.AddDays(2).Date,
+          MaxDate = DateTime.Now.AddDays(4).Date,
           MinAge = 18,
           MaxAge = 25,
           Latitude = 1,
@@ -185,8 +185,8 @@ namespace Skelvy.Persistence
         new MeetingRequest
         {
           Status = MeetingStatusTypes.Found,
-          MinDate = DateTime.Now.AddDays(2),
-          MaxDate = DateTime.Now.AddDays(4),
+          MinDate = DateTime.Now.AddDays(2).Date,
+          MaxDate = DateTime.Now.AddDays(4).Date,
           MinAge = 18,
           MaxAge = 25,
           Latitude = 1,
@@ -218,7 +218,7 @@ namespace Skelvy.Persistence
       {
         new Meeting
         {
-          Date = DateTime.Now.AddDays(3),
+          Date = DateTime.Now.AddDays(3).Date,
           Latitude = 1,
           Longitude = 1,
           DrinkId = drinks[0].Id

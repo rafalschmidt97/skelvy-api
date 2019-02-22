@@ -89,8 +89,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       var meetingRequest = new MeetingRequest
       {
         Status = MeetingStatusTypes.Searching,
-        MinDate = request.MinDate,
-        MaxDate = request.MaxDate,
+        MinDate = request.MinDate.Date,
+        MaxDate = request.MaxDate.Date,
         MinAge = request.MinAge,
         MaxAge = request.MaxAge,
         Latitude = request.Latitude,

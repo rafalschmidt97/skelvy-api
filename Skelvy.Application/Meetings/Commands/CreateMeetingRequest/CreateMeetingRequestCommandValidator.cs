@@ -10,17 +10,17 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       RuleFor(x => x.UserId).NotEmpty();
 
       RuleFor(x => x.MinDate).NotEmpty()
-        .Must(x => x > DateTime.Now.Date)
+        .Must(x => x >= DateTime.Now.Date)
         .WithMessage("'MinDate' must show the future.");
       RuleFor(x => x.MaxDate).NotEmpty()
-        .Unless(x => x.MaxDate > x.MinDate)
+        .Unless(x => x.MaxDate.Date >= x.MinDate.Date)
         .WithMessage("'MaxDate' must be after 'MinDate'.");
 
       RuleFor(x => x.MinAge).NotEmpty()
         .Must(x => x >= 18)
         .WithMessage("'MinAge' must show the age of majority.");
       RuleFor(x => x.MaxAge).NotEmpty()
-        .Unless(x => x.MaxAge > x.MinAge)
+        .Unless(x => x.MaxAge >= x.MinAge)
         .WithMessage("'MaxAge' must be bigger than 'MinAge'.");
       RuleFor(x => x.MaxAge).NotEmpty()
         .Unless(x => x.MaxAge - x.MinAge >= 5)
