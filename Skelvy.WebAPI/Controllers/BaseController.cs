@@ -7,7 +7,7 @@ namespace Skelvy.WebAPI.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  public class BaseController : Controller
+  public abstract class BaseController : Controller
   {
     private IMediator _mediator;
 
