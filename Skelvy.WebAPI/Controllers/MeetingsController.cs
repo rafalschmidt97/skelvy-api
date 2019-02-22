@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
+using Skelvy.Application.Meetings.Commands.DeleteMeetingRequest;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.GetMeeting;
@@ -26,6 +27,12 @@ namespace Skelvy.WebAPI.Controllers
     {
       request.UserId = UserId;
       await Mediator.Send(request);
+    }
+
+    [HttpDelete("requests/self")]
+    public async Task DeleteRequestSelf()
+    {
+      await Mediator.Send(new DeleteMeetingRequestCommand { UserId = UserId });
     }
   }
 }
