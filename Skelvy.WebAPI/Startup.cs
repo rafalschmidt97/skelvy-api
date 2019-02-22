@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using AutoMapper;
+using Coravel;
+using Coravel.Invocable;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
@@ -20,6 +22,7 @@ using Skelvy.Application.Core.Pipes;
 using Skelvy.Infrastructure.Notifications;
 using Skelvy.Persistence;
 using Skelvy.WebAPI.Filters;
+using Skelvy.WebAPI.Schedulers;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Skelvy.WebAPI
@@ -37,6 +40,7 @@ namespace Skelvy.WebAPI
     {
       var applicationAssembly = typeof(RequestLogger<,>).GetTypeInfo().Assembly;
       var infrastructureAssembly = typeof(NotificationService).GetTypeInfo().Assembly;
+      var presentationAssembly = typeof(Startup).GetTypeInfo().Assembly;
 
       services.AddDbContext<SkelvyContext>(options =>
         options.UseSqlServer(_configuration.GetConnectionString("Database")));
@@ -88,6 +92,14 @@ namespace Skelvy.WebAPI
           .AddClasses()
           .AsMatchingInterface());
 
+      // Add Schedulers
+      services.Scan(scan =>
+        scan.FromAssemblies(presentationAssembly)
+          .AddClasses(classes => classes.AssignableTo(typeof(IInvocable)))
+          .AsSelf()
+          .WithTransientLifetime());
+      services.AddScheduler();
+
       services.AddCors();
 
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -132,6 +144,15 @@ namespace Skelvy.WebAPI
       app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
 
       app.UseStaticFiles();
+
+      app.ApplicationServices.UseScheduler(scheduler =>
+      {
+        scheduler.Schedule(() =>
+        {
+          Console.WriteLine("Action");
+        }).EveryTenSeconds();
+      }).OnError(exception => throw exception);
+
       app.UseCors(builder => builder
         .SetIsOriginAllowed(isOriginAllowed => true)
         .AllowAnyHeader()
