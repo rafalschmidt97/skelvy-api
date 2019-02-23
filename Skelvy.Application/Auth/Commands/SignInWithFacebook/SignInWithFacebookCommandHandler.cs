@@ -59,7 +59,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             Birthday = DateTime.ParseExact(
               (string)details.birthday,
               "MM/dd/yyyy",
-              CultureInfo.CurrentCulture),
+              CultureInfo.CurrentCulture).Date,
             Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
             UserId = user.Id
           };

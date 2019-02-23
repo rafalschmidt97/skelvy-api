@@ -59,7 +59,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             Birthday = DateTime.ParseExact(
               (string)details.birthday,
               "yyyy-MM-dd",
-              CultureInfo.CurrentCulture),
+              CultureInfo.CurrentCulture).Date,
             Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
             UserId = user.Id
           };

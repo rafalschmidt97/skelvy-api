@@ -8,5 +8,6 @@ namespace Skelvy.Domain.Entities
     public string GoogleId { get; set; }
 
     public UserProfile Profile { get; set; }
+    public MeetingRequest MeetingRequest { get; set; }
   }
 }
