@@ -148,6 +148,7 @@ namespace Skelvy.WebAPI
       app.ApplicationServices.UseScheduler(scheduler =>
       {
         scheduler.Schedule<MatchMeetingRequestsScheduler>().Hourly();
+        scheduler.Schedule<DeleteExpiredMeetingsAndMeetingRequestsScheduler>().Daily();
       }).OnError(exception => throw exception);
 
       app.UseCors(builder => builder
