@@ -12,6 +12,7 @@ using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMee
 
 namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 {
+  // TODO: handler contains same logic as MatchMeetingRequestsCommandHandler
   public class CreateMeetingRequestCommandHandler : IRequestHandler<CreateMeetingRequestCommand>
   {
     private readonly SkelvyContext _context;
