@@ -28,6 +28,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
         .ToListAsync(cancellationToken);
+      var isDataChanged = false;
 
       foreach (var meetingRequest in requests)
       {
@@ -35,8 +36,14 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
         if (existingRequest != null)
         {
-          await CreateNewMeeting(meetingRequest, existingRequest, cancellationToken);
+          CreateNewMeeting(meetingRequest, existingRequest);
+          isDataChanged = true;
         }
+      }
+
+      if (isDataChanged)
+      {
+        await _context.SaveChangesAsync(cancellationToken);
       }
 
       return Unit.Value;
@@ -63,10 +70,9 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
              request2.Drinks.Any(x => request1.Drinks.Any(y => y.Drink.Id == x.DrinkId));
     }
 
-    private async Task CreateNewMeeting(
+    private void CreateNewMeeting(
       MeetingRequest request1,
-      MeetingRequest request2,
-      CancellationToken cancellationToken)
+      MeetingRequest request2)
     {
       var meeting = new Meeting
       {
@@ -96,8 +102,6 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
       request1.Status = MeetingStatusTypes.Found;
       request2.Status = MeetingStatusTypes.Found;
-
-      await _context.SaveChangesAsync(cancellationToken);
     }
   }
 }
