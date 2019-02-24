@@ -9,16 +9,18 @@ services:
       context: .
       dockerfile: "Skelvy.WebAPI/Dockerfile"
     depends_on:
-      - db
+      - mssql
+      - redis
     environment:
       - "ASPNETCORE_ENVIRONMENT=Production"
       - "ASPNETCORE_URLS=http://0.0.0.0:80"
-      - "ConnectionStrings__Database=Server=db; Database=skelvy; MultipleActiveResultSets=true; User Id=sa; Password=zaq1@WSX;"
+      - "ConnectionStrings__Database=Server=mssql; Database=skelvy; MultipleActiveResultSets=true; User Id=sa; Password=zaq1@WSX;"
+      - "ConnectionStrings__Redis=redis:6379"
     ports:
       - "80:80"
 
-  db:
-    container_name: "skelvy-sqlserver"
+  mssql:
+    container_name: "skelvy-mssql"
     image: "mcr.microsoft.com/mssql/server:2017-latest"
     ports:
       - "1433:1433"
@@ -26,3 +28,9 @@ services:
       SA_PASSWORD: "zaq1@WSX"
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Express"
+
+  redis:
+    container_name: "skelvy-redis"
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
