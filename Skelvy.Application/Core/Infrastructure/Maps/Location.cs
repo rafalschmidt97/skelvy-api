@@ -1,5 +1,8 @@
+using System;
+
 namespace Skelvy.Application.Core.Infrastructure.Maps
 {
+  [Serializable]
   public class Location
   {
     public double Latitude { get; set; }

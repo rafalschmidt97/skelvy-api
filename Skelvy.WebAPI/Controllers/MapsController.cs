@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Exceptions;
+using Skelvy.Application.Core.Extensions;
 using Skelvy.Application.Core.Infrastructure.Maps;
 using Skelvy.Common;
 
@@ -14,9 +15,9 @@ namespace Skelvy.WebAPI.Controllers
   {
     private readonly IMapsService _mapsService;
     private readonly ILogger<MapsController> _logger;
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCache _cache;
 
-    public MapsController(IMapsService mapsService, ILogger<MapsController> logger, IMemoryCache cache)
+    public MapsController(IMapsService mapsService, ILogger<MapsController> logger, IDistributedCache cache)
     {
       _mapsService = mapsService;
       _logger = logger;
@@ -38,20 +39,26 @@ namespace Skelvy.WebAPI.Controllers
         throw new BadRequestException($"'language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
       }
 
-      return await _cache.GetOrCreateAsync($"search/maps?search={search}&language={language}", async entry =>
-      {
-        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7);
+      var cacheKey = $"maps/search?search={search}&language={language}";
+      var cachedLocationBytes = await _cache.GetAsync(cacheKey);
 
-        try
-        {
-          return await _mapsService.Search(search, language);
-        }
-        catch (CustomException exception)
-        {
-          _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
-          throw;
-        }
-      });
+      if (cachedLocationBytes != null)
+      {
+        return cachedLocationBytes.Deserialize<ICollection<Location>>();
+      }
+
+      try
+      {
+        var location = await _mapsService.Search(search, language);
+        var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(7));
+        await _cache.SetAsync(cacheKey, location.Serialize(), options);
+        return location;
+      }
+      catch (CustomException exception)
+      {
+        _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
+        throw;
+      }
     }
 
     [HttpGet("reverse")]
@@ -70,21 +77,26 @@ namespace Skelvy.WebAPI.Controllers
         throw new BadRequestException($"'language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
       }
 
-      return await _cache.GetOrCreateAsync(
-        $"maps/reverse?latitude={latitude}&longitude={longitude}&language={language}", async entry =>
-        {
-          entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7);
+      var cacheKey = $"maps/reverse?latitude={latitude}&longitude={longitude}&language={language}";
+      var cachedLocationBytes = await _cache.GetAsync(cacheKey);
 
-          try
-          {
-            return await _mapsService.Search(latitude, longitude, language);
-          }
-          catch (CustomException exception)
-          {
-            _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
-            throw;
-          }
-        });
+      if (cachedLocationBytes != null)
+      {
+        return cachedLocationBytes.Deserialize<ICollection<Location>>();
+      }
+
+      try
+      {
+        var location = await _mapsService.Search(latitude, longitude, language);
+        var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(7));
+        await _cache.SetAsync(cacheKey, location.Serialize(), options);
+        return location;
+      }
+      catch (CustomException exception)
+      {
+        _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
+        throw;
+      }
     }
   }
 }

@@ -45,6 +45,11 @@ namespace Skelvy.WebAPI
       services.AddDbContext<SkelvyContext>(options =>
         options.UseSqlServer(_configuration.GetConnectionString("Database")));
 
+      services.AddDistributedRedisCache(options =>
+      {
+        options.Configuration = _configuration.GetConnectionString("Redis");
+      });
+
       services.AddSwaggerGen(configuration =>
       {
         configuration.SwaggerDoc("v1", new Info
@@ -117,8 +122,6 @@ namespace Skelvy.WebAPI
         });
 
       services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
-
-      services.AddMemoryCache();
 
       services.AddMvc(options =>
         {
