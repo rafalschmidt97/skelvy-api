@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Exceptions;
 using Skelvy.Application.Core.Infrastructure.Maps;
@@ -8,16 +10,17 @@ using Skelvy.Common;
 
 namespace Skelvy.WebAPI.Controllers
 {
-  [ResponseCache(Duration = 60 * 60 * 24 * 7)] // 7 days; TODO: It should at least log request
   public class MapsController : BaseController
   {
     private readonly IMapsService _mapsService;
     private readonly ILogger<MapsController> _logger;
+    private readonly IMemoryCache _cache;
 
-    public MapsController(IMapsService mapsService, ILogger<MapsController> logger)
+    public MapsController(IMapsService mapsService, ILogger<MapsController> logger, IMemoryCache cache)
     {
       _mapsService = mapsService;
       _logger = logger;
+      _cache = cache;
     }
 
     [HttpGet("search")]
@@ -30,44 +33,58 @@ namespace Skelvy.WebAPI.Controllers
         throw new BadRequestException("'search' must not be empty.");
       }
 
-      if (language != LanguageTypes.EN || language != LanguageTypes.PL)
+      if (!(language == LanguageTypes.EN || language == LanguageTypes.PL))
       {
         throw new BadRequestException($"'language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
       }
 
-      try
+      return await _cache.GetOrCreateAsync($"search/maps?search={search}&language={language}", async entry =>
       {
-        return await _mapsService.Search(search, language);
-      }
-      catch (CustomException exception)
-      {
-        _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
-        throw;
-      }
+        entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7);
+
+        try
+        {
+          return await _mapsService.Search(search, language);
+        }
+        catch (CustomException exception)
+        {
+          _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
+          throw;
+        }
+      });
     }
 
     [HttpGet("reverse")]
-    public async Task<ICollection<Location>> Reverse(double latitude, double longitude, string language = LanguageTypes.EN)
+    public async Task<ICollection<Location>> Reverse(
+      double latitude,
+      double longitude,
+      string language = LanguageTypes.EN)
     {
       _logger.LogInformation(
         "Request: Maps Reverse (latitude: {latitude}, longitude: {longitude})",
         latitude,
         longitude);
 
-      if (language != LanguageTypes.EN || language != LanguageTypes.PL)
+      if (!(language == LanguageTypes.EN || language == LanguageTypes.PL))
       {
         throw new BadRequestException($"'language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
       }
 
-      try
-      {
-        return await _mapsService.Search(latitude, longitude, language);
-      }
-      catch (CustomException exception)
-      {
-        _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
-        throw;
-      }
+      return await _cache.GetOrCreateAsync(
+        $"maps/reverse?latitude={latitude}&longitude={longitude}&language={language}", async entry =>
+        {
+          entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7);
+
+          try
+          {
+            return await _mapsService.Search(latitude, longitude, language);
+          }
+          catch (CustomException exception)
+          {
+            _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
+            throw;
+          }
+        });
     }
   }
 }
