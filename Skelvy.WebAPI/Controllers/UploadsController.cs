@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Exceptions;
@@ -19,20 +18,29 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Upload(IFormFile file)
+    public async Task<IActionResult> Upload()
     {
-      _logger.LogInformation("Request: Upload {@File}", file);
+      var files = Request.Form.Files;
+      _logger.LogInformation("Request: Upload {@File}", files);
 
-      try
+      if (files.Count > 0)
       {
-        var url = await _uploadService.Upload(file.OpenReadStream(), file.FileName, Request.Host.Value);
-        return Ok(new { url });
+        var file = files[0];
+        try
+        {
+          var url = await _uploadService.Upload(file.OpenReadStream(), file.FileName, Request.Host.Value);
+          return Ok(new { url });
+        }
+        catch (CustomException exception)
+        {
+          _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
+          throw;
+        }
       }
-      catch (CustomException exception)
-      {
-        _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
-        throw;
-      }
+
+      var badRequestException = new BadRequestException("Unsupported media type. File required.");
+      _logger.LogError("Request {Status}: {Message}", badRequestException.Status, badRequestException.Message);
+      throw badRequestException;
     }
   }
 }
