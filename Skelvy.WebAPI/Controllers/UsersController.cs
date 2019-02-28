@@ -1,24 +1,24 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Skelvy.Application.Users.Commands.DeleteUser;
+using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Application.Users.Queries;
-using Skelvy.Application.Users.Queries.GetUser;
+using Skelvy.Application.Users.Queries.FindUser;
 
 namespace Skelvy.WebAPI.Controllers
 {
   public class UsersController : BaseController
   {
     [HttpGet("self")]
-    public async Task<UserDto> GetSelf()
+    public async Task<UserDto> FindSelf()
     {
-      return await Mediator.Send(new GetUserQuery { Id = UserId });
+      return await Mediator.Send(new FindUserQuery { Id = UserId });
     }
 
     [HttpGet("{id}")]
-    public async Task<UserDto> Get(int id)
+    public async Task<UserDto> Find(int id)
     {
-      return await Mediator.Send(new GetUserQuery { Id = id });
+      return await Mediator.Send(new FindUserQuery { Id = id });
     }
 
     [HttpPut("self/profile")]
@@ -29,9 +29,9 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpDelete("self")]
-    public async Task DeleteSelf()
+    public async Task RemoveSelf()
     {
-      await Mediator.Send(new DeleteUserCommand { Id = UserId });
+      await Mediator.Send(new RemoveUserCommand { Id = UserId });
     }
   }
 }

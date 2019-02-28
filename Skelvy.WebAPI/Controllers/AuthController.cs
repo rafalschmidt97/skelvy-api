@@ -10,14 +10,14 @@ namespace Skelvy.WebAPI.Controllers
   public class AuthController : BaseController
   {
     [HttpPost("facebook")]
-    public async Task<IActionResult> Add(SignInWithFacebookCommand request)
+    public async Task<IActionResult> SignInWithFacebook(SignInWithFacebookCommand request)
     {
       var token = await Mediator.Send(request);
       return Ok(new { token });
     }
 
     [HttpPost("google")]
-    public async Task<IActionResult> Add(SignInWithGoogleCommand request)
+    public async Task<IActionResult> SignInWithGoogle(SignInWithGoogleCommand request)
     {
       var token = await Mediator.Send(request);
       return Ok(new { token });

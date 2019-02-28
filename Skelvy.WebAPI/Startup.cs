@@ -154,8 +154,8 @@ namespace Skelvy.WebAPI
 
       app.ApplicationServices.UseScheduler(scheduler =>
       {
-        scheduler.Schedule<DeleteExpiredMeetingsAndMeetingRequestsScheduler>().Daily();
-        scheduler.Schedule<DeleteEmptyMeetingsScheduler>().Hourly();
+        scheduler.Schedule<RemoveExpiredMeetingsAndMeetingRequestsScheduler>().Daily();
+        scheduler.Schedule<RemoveEmptyMeetingsScheduler>().Hourly();
         scheduler.Schedule<MatchMeetingRequestsScheduler>().Hourly();
       }).OnError(exception => throw exception);
 
