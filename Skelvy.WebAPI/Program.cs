@@ -18,7 +18,12 @@ namespace Skelvy.WebAPI
       {
         var context = scope.ServiceProvider.GetService<SkelvyContext>();
         context.Database.Migrate();
-        SkelvyInitializer.Initialize(context);
+
+        var hosting = scope.ServiceProvider.GetService<IHostingEnvironment>();
+        if (hosting.IsDevelopment())
+        {
+          SkelvyInitializer.Initialize(context);
+        }
       }
 
       host.Run();
