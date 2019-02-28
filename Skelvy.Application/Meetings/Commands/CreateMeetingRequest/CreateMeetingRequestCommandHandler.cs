@@ -51,6 +51,12 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
+      if (user.Profile == null)
+      {
+        throw new ConflictException(
+          $"Entity {nameof(UserProfile)}({nameof(request.UserId)}={request.UserId}) must exists.");
+      }
+
       var drinks = await _context.Drinks.ToListAsync(cancellationToken);
       var filteredDrinks = drinks.Where(x => request.Drinks.Any(y => y.Id == x.Id)).ToList();
 
