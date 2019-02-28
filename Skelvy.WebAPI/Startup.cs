@@ -82,7 +82,6 @@ namespace Skelvy.WebAPI
       services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
       services.AddMediatR(applicationAssembly);
 
-      // Add AutoMapper
       services.AddAutoMapper(applicationAssembly);
 
       // Add Validators
@@ -153,8 +152,6 @@ namespace Skelvy.WebAPI
         app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
       }
 
-      app.UseStaticFiles();
-
       app.ApplicationServices.UseScheduler(scheduler =>
       {
         scheduler.Schedule<DeleteExpiredMeetingsAndMeetingRequestsScheduler>().Daily();
@@ -167,7 +164,11 @@ namespace Skelvy.WebAPI
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials());
+
       app.UseAuthentication();
+
+      app.UseStaticFiles();
+
       app.UseMvc();
     }
   }
