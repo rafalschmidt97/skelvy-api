@@ -121,8 +121,6 @@ namespace Skelvy.WebAPI
           };
         });
 
-      services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
-
       services.AddMvc(options =>
         {
           options.Filters.Add(typeof(CustomExceptionFilter));
@@ -131,7 +129,12 @@ namespace Skelvy.WebAPI
               .RequireAuthenticatedUser()
               .Build()));
         })
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+        .AddMvcOptions(options =>
+        {
+          options.ModelMetadataDetailsProviders.Clear();
+          options.ModelValidatorProviders.Clear();
+        });
     }
 
     public void Configure(IApplicationBuilder app)
