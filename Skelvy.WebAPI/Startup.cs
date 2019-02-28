@@ -12,6 +12,7 @@ using MediatR.Pipeline;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -137,17 +138,20 @@ namespace Skelvy.WebAPI
         });
     }
 
-    public void Configure(IApplicationBuilder app)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
-      app.UseSwagger(options =>
+      if (env.IsDevelopment())
       {
-        options.PreSerializeFilters.Add((document, request) =>
+        app.UseSwagger(options =>
         {
-          document.Paths =
-            document.Paths.ToDictionary(path => path.Key.ToLowerInvariant(), p => p.Value);
+          options.PreSerializeFilters.Add((document, request) =>
+          {
+            document.Paths =
+              document.Paths.ToDictionary(path => path.Key.ToLowerInvariant(), p => p.Value);
+          });
         });
-      });
-      app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
+        app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
+      }
 
       app.UseStaticFiles();
 
