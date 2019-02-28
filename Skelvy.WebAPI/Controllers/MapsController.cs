@@ -39,7 +39,7 @@ namespace Skelvy.WebAPI.Controllers
         throw new BadRequestException($"'language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
       }
 
-      var cacheKey = $"maps/search?search={search}&language={language}";
+      var cacheKey = $"maps:search#{search}#{language}";
       var cachedLocationBytes = await _cache.GetAsync(cacheKey);
 
       if (cachedLocationBytes != null)
@@ -77,7 +77,7 @@ namespace Skelvy.WebAPI.Controllers
         throw new BadRequestException($"'language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
       }
 
-      var cacheKey = $"maps/reverse?latitude={latitude}&longitude={longitude}&language={language}";
+      var cacheKey = $"maps:reverse#{latitude}#{longitude}#{language}";
       var cachedLocationBytes = await _cache.GetAsync(cacheKey);
 
       if (cachedLocationBytes != null)
