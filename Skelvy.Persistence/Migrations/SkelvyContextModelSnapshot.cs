@@ -55,6 +55,31 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("Meetings");
                 });
 
+            modelBuilder.Entity("Skelvy.Domain.Entities.MeetingChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int>("MeetingId");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MeetingId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MeetingChatMessages");
+                });
+
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -184,6 +209,19 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.Drink", "Drink")
                         .WithMany()
                         .HasForeignKey("DrinkId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.MeetingChatMessage", b =>
+                {
+                    b.HasOne("Skelvy.Domain.Entities.Meeting", "Meeting")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("MeetingId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Skelvy.Domain.Entities.User", "User")
+                        .WithMany("MeetingChatMessages")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

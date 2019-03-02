@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using Coravel;
 using Coravel.Invocable;
@@ -20,9 +21,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Skelvy.Application.Core.Pipes;
-using Skelvy.Infrastructure.Notifications;
+using Skelvy.Infrastructure;
 using Skelvy.Persistence;
 using Skelvy.WebAPI.Filters;
+using Skelvy.WebAPI.Hubs;
 using Skelvy.WebAPI.Schedulers;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -40,7 +42,7 @@ namespace Skelvy.WebAPI
     public void ConfigureServices(IServiceCollection services)
     {
       var applicationAssembly = typeof(RequestLogger<,>).GetTypeInfo().Assembly;
-      var infrastructureAssembly = typeof(NotificationService).GetTypeInfo().Assembly;
+      var infrastructureAssembly = typeof(HttpServiceBase).GetTypeInfo().Assembly;
       var presentationAssembly = typeof(Startup).GetTypeInfo().Assembly;
 
       services.AddDbContext<SkelvyContext>(options =>
@@ -93,7 +95,7 @@ namespace Skelvy.WebAPI
 
       // Add Services
       services.Scan(scan =>
-        scan.FromAssemblies(infrastructureAssembly)
+        scan.FromAssemblies(infrastructureAssembly, presentationAssembly)
           .AddClasses()
           .AsMatchingInterface());
 
@@ -119,7 +121,26 @@ namespace Skelvy.WebAPI
             ValidIssuer = _configuration["Jwt:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
           };
+
+          options.Events = new JwtBearerEvents
+          {
+            OnMessageReceived = context =>
+            {
+              if (string.IsNullOrWhiteSpace(context.Request.Headers["Authorization"]))
+              {
+                var token = context.Request.Query["access_token"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                  context.Token = token;
+                }
+              }
+
+              return Task.CompletedTask;
+            }
+          };
         });
+
+      services.AddSignalR();
 
       services.AddMvc(options =>
         {
@@ -166,6 +187,11 @@ namespace Skelvy.WebAPI
         .AllowCredentials());
 
       app.UseAuthentication();
+
+      app.UseSignalR(options =>
+      {
+        options.MapHub<MeetingHub>("/api/meeting");
+      });
 
       app.UseStaticFiles();
 
