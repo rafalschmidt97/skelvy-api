@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Exceptions;
 using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
+using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
@@ -29,6 +30,12 @@ namespace Skelvy.WebAPI.Hubs
     public async Task SendMessage(string message)
     {
       var request = new AddMeetingChatMessageCommand { Message = message, UserId = UserId };
+      await Mediator.Send(request, Context.ConnectionAborted);
+    }
+
+    public async Task LoadMessages(FindMeetingChatMessagesQuery request)
+    {
+      request.UserId = UserId;
       await Mediator.Send(request, Context.ConnectionAborted);
     }
 

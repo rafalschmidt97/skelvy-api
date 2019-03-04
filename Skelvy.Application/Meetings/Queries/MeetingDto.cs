@@ -26,4 +26,11 @@ namespace Skelvy.Application.Meetings.Queries
           options => options.MapFrom(x => x.Users.Select(y => y.User)));
     }
   }
+
+  public class MeetingChatMessageDto
+  {
+    public string Message { get; set; }
+    public DateTime Date { get; set; }
+    public int UserId { get; set; }
+  }
 }

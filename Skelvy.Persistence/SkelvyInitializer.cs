@@ -16,6 +16,7 @@ namespace Skelvy.Persistence
       SeedDrinks(context);
       SeedMeetingRequests(context);
       SeedMeetings(context);
+      SeedMeetingsChatMessages(context);
     }
 
     public static void SeedUsers(SkelvyContext context)
@@ -243,6 +244,38 @@ namespace Skelvy.Persistence
       };
 
       context.MeetingUsers.AddRange(meetingUsers);
+      context.SaveChanges();
+    }
+
+    public static void SeedMeetingsChatMessages(SkelvyContext context)
+    {
+      if (context.MeetingChatMessages.Any())
+      {
+        return;
+      }
+
+      var users = context.Users.ToList();
+      var meetings = context.Users.ToList();
+
+      var messages = new[]
+      {
+        new MeetingChatMessage
+        {
+          MeetingId = meetings[0].Id,
+          UserId = users[1].Id,
+          Date = DateTime.UtcNow.AddHours(-2),
+          Message = "Hello User3"
+        },
+        new MeetingChatMessage
+        {
+          MeetingId = meetings[0].Id,
+          UserId = users[2].Id,
+          Date = DateTime.UtcNow.AddHours(-1),
+          Message = "Hello User2"
+        }
+      };
+
+      context.MeetingChatMessages.AddRange(messages);
       context.SaveChanges();
     }
   }
