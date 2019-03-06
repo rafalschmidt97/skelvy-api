@@ -28,6 +28,7 @@ namespace Skelvy.Infrastructure.Tokens
       var claims = new List<Claim>
       {
         new Claim(ClaimTypes.Sid, user.Id.ToString()),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new Claim(ClaimTypes.Email, user.Email),
         new Claim(AuthClaimTypes.Type, verification.AccessType),
         new Claim(AuthClaimTypes.UserId, verification.UserId),

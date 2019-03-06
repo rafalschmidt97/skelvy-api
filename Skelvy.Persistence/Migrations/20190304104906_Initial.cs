@@ -108,6 +108,34 @@ namespace Skelvy.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MeetingChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Message = table.Column<string>(maxLength: 500, nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    MeetingId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MeetingChatMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MeetingChatMessages_Meetings_MeetingId",
+                        column: x => x.MeetingId,
+                        principalTable: "Meetings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MeetingChatMessages_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MeetingUsers",
                 columns: table => new
                 {
@@ -176,6 +204,16 @@ namespace Skelvy.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_MeetingChatMessages_MeetingId",
+                table: "MeetingChatMessages",
+                column: "MeetingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingChatMessages_UserId",
+                table: "MeetingChatMessages",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MeetingRequestDrinks_DrinkId",
                 table: "MeetingRequestDrinks",
                 column: "DrinkId");
@@ -210,6 +248,9 @@ namespace Skelvy.Persistence.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "MeetingChatMessages");
+
             migrationBuilder.DropTable(
                 name: "MeetingRequestDrinks");
 

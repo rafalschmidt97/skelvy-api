@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190221145637_Initial")]
+    [Migration("20190304104906_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,31 @@ namespace Skelvy.Persistence.Migrations
                     b.HasIndex("DrinkId");
 
                     b.ToTable("Meetings");
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.MeetingChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int>("MeetingId");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MeetingId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MeetingChatMessages");
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequest", b =>
@@ -186,6 +211,19 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.Drink", "Drink")
                         .WithMany()
                         .HasForeignKey("DrinkId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.MeetingChatMessage", b =>
+                {
+                    b.HasOne("Skelvy.Domain.Entities.Meeting", "Meeting")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("MeetingId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Skelvy.Domain.Entities.User", "User")
+                        .WithMany("MeetingChatMessages")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
