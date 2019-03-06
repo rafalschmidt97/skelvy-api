@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190304104906_Initial")]
+    [Migration("20190306234407_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,7 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTimeOffset>("Date");
 
                     b.Property<int>("DrinkId");
 
@@ -63,7 +63,7 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTimeOffset>("Date");
 
                     b.Property<int>("MeetingId");
 
@@ -94,11 +94,11 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<int>("MaxAge");
 
-                    b.Property<DateTime>("MaxDate");
+                    b.Property<DateTimeOffset>("MaxDate");
 
                     b.Property<int>("MinAge");
 
-                    b.Property<DateTime>("MinDate");
+                    b.Property<DateTimeOffset>("MinDate");
 
                     b.Property<string>("Status");
 
@@ -164,7 +164,7 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Birthday");
+                    b.Property<DateTimeOffset>("Birthday");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500);

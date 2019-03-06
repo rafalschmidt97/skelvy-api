@@ -10,10 +10,10 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       RuleFor(x => x.UserId).NotEmpty();
 
       RuleFor(x => x.MinDate).NotEmpty()
-        .Must(x => x >= DateTime.Now.Date)
+        .Must(x => x >= DateTimeOffset.Now.AddMinutes(-10))
         .WithMessage("'MinDate' must show the future.");
       RuleFor(x => x.MaxDate).NotEmpty()
-        .Unless(x => x.MaxDate.Date >= x.MinDate.Date)
+        .Unless(x => x.MaxDate >= x.MinDate)
         .WithMessage("'MaxDate' must be after 'MinDate'.");
 
       RuleFor(x => x.MinAge).NotEmpty()

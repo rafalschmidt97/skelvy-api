@@ -19,10 +19,10 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       return 6376500.0 * (2.0 * Math.Atan2(Math.Sqrt(d3), Math.Sqrt(1.0 - d3))) / 1000;
     }
 
-    public static int CalculateAge(DateTime date)
+    public static int CalculateAge(DateTimeOffset date)
     {
-      var age = DateTime.Now.Year - date.Year;
-      if (DateTime.Now.DayOfYear < date.DayOfYear)
+      var age = DateTimeOffset.Now.Year - date.Year;
+      if (DateTimeOffset.Now.DayOfYear < date.DayOfYear)
       {
         age = age - 1;
       }
@@ -30,16 +30,16 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       return age;
     }
 
-    public static DateTime FindCommonDate(MeetingRequest request1, MeetingRequest request2)
+    public static DateTimeOffset FindCommonDate(MeetingRequest request1, MeetingRequest request2)
     {
-      var dates = new List<DateTime>();
+      var dates = new List<DateTimeOffset>();
 
       for (var i = request1.MinDate; i <= request1.MaxDate; i = i.AddDays(1))
       {
         dates.Add(i);
       }
 
-      var commonDates = new List<DateTime>();
+      var commonDates = new List<DateTimeOffset>();
 
       foreach (var date in dates)
       {

@@ -1,7 +1,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Skelvy.Application.Core.Extensions
+namespace Skelvy.Common
 {
   public static class Serialization
   {

@@ -1,3 +1,4 @@
+using System;
 using FluentValidation;
 
 namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
@@ -6,8 +7,12 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
   {
     public AddMeetingChatMessageCommandValidator()
     {
-      RuleFor(x => x.UserId).NotEmpty();
+      RuleFor(x => x.Date).NotEmpty()
+        .Must(x => x >= DateTimeOffset.Now.AddHours(-1) && x <= DateTimeOffset.Now.AddHours(1))
+        .WithMessage("'Date' must show the present.");
+
       RuleFor(x => x.Message).NotEmpty().MaximumLength(500);
+      RuleFor(x => x.UserId).NotEmpty();
     }
   }
 }

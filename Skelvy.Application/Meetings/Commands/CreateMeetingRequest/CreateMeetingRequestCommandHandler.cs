@@ -218,7 +218,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     {
       var meeting = new Meeting
       {
-        Date = FindCommonDate(request1, request2),
+        Date = FindCommonDate(request1, request2).Date,
         Latitude = request1.Latitude,
         Longitude = request1.Longitude,
         DrinkId = FindCommonDrink(request1, request2)

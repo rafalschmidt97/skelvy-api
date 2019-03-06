@@ -12,7 +12,7 @@ namespace Skelvy.Application.Meetings.Queries
   public class MeetingDto : ICustomMapping
   {
     public int Id { get; set; }
-    public DateTime Date { get; set; }
+    public DateTimeOffset Date { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public ICollection<UserDto> Users { get; set; }
@@ -30,7 +30,7 @@ namespace Skelvy.Application.Meetings.Queries
   public class MeetingChatMessageDto
   {
     public string Message { get; set; }
-    public DateTime Date { get; set; }
+    public DateTimeOffset Date { get; set; }
     public int UserId { get; set; }
     public int MeetingId { get; set; }
   }

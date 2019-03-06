@@ -42,7 +42,7 @@ namespace Skelvy.Persistence.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Date = table.Column<DateTime>(nullable: false),
+                    Date = table.Column<DateTimeOffset>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
                     DrinkId = table.Column<int>(nullable: false)
@@ -65,8 +65,8 @@ namespace Skelvy.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Status = table.Column<string>(nullable: true),
-                    MinDate = table.Column<DateTime>(nullable: false),
-                    MaxDate = table.Column<DateTime>(nullable: false),
+                    MinDate = table.Column<DateTimeOffset>(nullable: false),
+                    MaxDate = table.Column<DateTimeOffset>(nullable: false),
                     MinAge = table.Column<int>(nullable: false),
                     MaxAge = table.Column<int>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
@@ -91,7 +91,7 @@ namespace Skelvy.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
-                    Birthday = table.Column<DateTime>(nullable: false),
+                    Birthday = table.Column<DateTimeOffset>(nullable: false),
                     Gender = table.Column<string>(maxLength: 15, nullable: false),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
                     UserId = table.Column<int>(nullable: false)
@@ -114,7 +114,7 @@ namespace Skelvy.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Message = table.Column<string>(maxLength: 500, nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
+                    Date = table.Column<DateTimeOffset>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     MeetingId = table.Column<int>(nullable: false)
                 },

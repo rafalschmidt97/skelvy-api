@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Extensions;
 using Skelvy.Application.Core.Infrastructure.Maps;
 using Skelvy.Common;
 

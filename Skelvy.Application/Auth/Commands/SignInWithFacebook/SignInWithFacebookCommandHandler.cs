@@ -56,10 +56,10 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           var profile = new UserProfile
           {
             Name = details.first_name,
-            Birthday = DateTime.ParseExact(
+            Birthday = DateTimeOffset.ParseExact(
               (string)details.birthday,
               "MM/dd/yyyy",
-              CultureInfo.CurrentCulture).Date,
+              CultureInfo.CurrentCulture),
             Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
             UserId = user.Id
           };

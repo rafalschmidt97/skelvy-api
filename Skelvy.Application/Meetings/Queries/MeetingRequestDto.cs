@@ -11,8 +11,8 @@ namespace Skelvy.Application.Meetings.Queries
   public class MeetingRequestDto : ICustomMapping
   {
     public int Id { get; set; }
-    public DateTime MinDate { get; set; }
-    public DateTime MaxDate { get; set; }
+    public DateTimeOffset MinDate { get; set; }
+    public DateTimeOffset MaxDate { get; set; }
     public int MinAge { get; set; }
     public int MaxAge { get; set; }
     public double Latitude { get; set; }

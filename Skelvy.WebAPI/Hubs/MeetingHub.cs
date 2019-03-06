@@ -27,9 +27,9 @@ namespace Skelvy.WebAPI.Hubs
       await base.OnConnectedAsync();
     }
 
-    public async Task SendMessage(string message)
+    public async Task SendMessage(AddMeetingChatMessageCommand request)
     {
-      var request = new AddMeetingChatMessageCommand { Message = message, UserId = UserId };
+      request.UserId = UserId;
       await Mediator.Send(request, Context.ConnectionAborted);
     }
 

@@ -22,7 +22,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingsAndMeetingRe
       RemoveExpiredMeetingsAndMeetingRequestsCommand request,
       CancellationToken cancellationToken)
     {
-      var today = DateTime.Now.Date;
+      var today = DateTimeOffset.Now;
       var requestsToRemove = await _context.MeetingRequests.Where(x => x.MaxDate < today).ToListAsync(cancellationToken);
       var meetingsToRemove = await _context.Meetings.Where(x => x.Date < today).ToListAsync(cancellationToken);
       var isDataChanged = false;

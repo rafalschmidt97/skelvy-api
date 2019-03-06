@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -38,7 +37,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
       var message = new MeetingChatMessage
       {
         Message = request.Message,
-        Date = DateTime.UtcNow,
+        Date = request.Date,
         UserId = meetingUser.UserId,
         MeetingId = meetingUser.MeetingId
       };

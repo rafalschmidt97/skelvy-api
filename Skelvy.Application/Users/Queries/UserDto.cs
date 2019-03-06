@@ -12,7 +12,7 @@ namespace Skelvy.Application.Users.Queries
   public class UserProfileDto
   {
     public string Name { get; set; }
-    public DateTime Birthday { get; set; }
+    public DateTimeOffset Birthday { get; set; }
     public string Gender { get; set; }
     public string Description { get; set; }
     public ICollection<UserProfilePhotoDto> Photos { get; set; }
