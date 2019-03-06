@@ -32,5 +32,6 @@ namespace Skelvy.Application.Meetings.Queries
     public string Message { get; set; }
     public DateTime Date { get; set; }
     public int UserId { get; set; }
+    public int MeetingId { get; set; }
   }
 }

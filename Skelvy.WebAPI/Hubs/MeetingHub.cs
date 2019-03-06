@@ -23,7 +23,7 @@ namespace Skelvy.WebAPI.Hubs
     public override async Task OnConnectedAsync()
     {
       var meetingUser = await GetMeetingUser(Context.ConnectionAborted);
-      await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(meetingUser), Context.ConnectionAborted);
+      await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(meetingUser.MeetingId), Context.ConnectionAborted);
       await base.OnConnectedAsync();
     }
 
@@ -39,14 +39,9 @@ namespace Skelvy.WebAPI.Hubs
       await Mediator.Send(request, Context.ConnectionAborted);
     }
 
-    public static string GetGroupName(MeetingUser user)
+    public static string GetGroupName(int meetingId)
     {
-      return $"Meeting:{user.MeetingId}";
-    }
-
-    public static string GetGroupName(MeetingChatMessage message)
-    {
-      return $"Meeting:{message.MeetingId}";
+      return $"Meeting:{meetingId}";
     }
 
     private async Task<MeetingUser> GetMeetingUser(CancellationToken cancellationToken)
