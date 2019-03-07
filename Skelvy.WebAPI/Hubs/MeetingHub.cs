@@ -23,7 +23,21 @@ namespace Skelvy.WebAPI.Hubs
     public override async Task OnConnectedAsync()
     {
       var meetingUser = await GetMeetingUser(Context.ConnectionAborted);
-      await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(meetingUser.MeetingId), Context.ConnectionAborted);
+
+      if (meetingUser != null)
+      {
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(meetingUser.MeetingId), Context.ConnectionAborted);
+      }
+      else
+      {
+        var meetingRequest = await GetMeetingRequest(Context.ConnectionAborted);
+
+        if (meetingRequest == null)
+        {
+          throw new ConflictException($"Entity {nameof(MeetingRequest)}(UserId = {UserId}) not exists. Create one first.");
+        }
+      }
+
       await base.OnConnectedAsync();
     }
 
@@ -46,14 +60,12 @@ namespace Skelvy.WebAPI.Hubs
 
     private async Task<MeetingUser> GetMeetingUser(CancellationToken cancellationToken)
     {
-      var meetingUser = await _context.MeetingUsers.FirstOrDefaultAsync(x => x.UserId == UserId, cancellationToken);
+      return await _context.MeetingUsers.FirstOrDefaultAsync(x => x.UserId == UserId, cancellationToken);
+    }
 
-      if (meetingUser == null)
-      {
-        throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {UserId}) not found.");
-      }
-
-      return meetingUser;
+    private async Task<MeetingRequest> GetMeetingRequest(CancellationToken cancellationToken)
+    {
+      return await _context.MeetingRequests.FirstOrDefaultAsync(x => x.UserId == UserId, cancellationToken);
     }
   }
 }
