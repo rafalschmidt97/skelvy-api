@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Moq;
 using Skelvy.Application.Core.Exceptions;
+using Skelvy.Application.Core.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
 using Skelvy.Persistence;
 using Xunit;
@@ -12,13 +14,20 @@ namespace Skelvy.Application.Test.Meetings.Commands
 {
   public class CreateMeetingRequestCommandHandlerTest : RequestTestBase
   {
+    private readonly Mock<INotificationsService> _notifications;
+
+    public CreateMeetingRequestCommandHandlerTest()
+    {
+      _notifications = new Mock<INotificationsService>();
+    }
+
     [Fact]
     public async Task ShouldAddToExistingMeeting()
     {
       var request = Request();
       request.MinDate = DateTimeOffset.Now.AddDays(2);
       request.MaxDate = DateTimeOffset.Now.AddDays(4);
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithMeetings());
+      var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithMeetings(), _notifications.Object);
 
       await handler.Handle(request, CancellationToken.None);
     }
@@ -27,7 +36,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldAddRequest()
     {
       var request = Request();
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContext());
+      var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
 
       await handler.Handle(request, CancellationToken.None);
     }
@@ -37,7 +46,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       request.UserId = 2;
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithRequests());
+      var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithRequests(), _notifications.Object);
 
       await handler.Handle(request, CancellationToken.None);
     }
@@ -47,7 +56,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       request.UserId = 100;
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContext());
+      var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request, CancellationToken.None));
@@ -58,7 +67,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       request.Drinks.First().Id = 10;
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContext());
+      var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request, CancellationToken.None));
@@ -68,7 +77,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldThrowExceptionWithExistingRequest()
     {
       var request = Request();
-      var handler = new CreateMeetingRequestCommandHandler(InitializedDbContext());
+      var handler = new CreateMeetingRequestCommandHandler(InitializedDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request, CancellationToken.None));
@@ -79,7 +88,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       request.UserId = 2;
-      var handler = new CreateMeetingRequestCommandHandler(InitializedDbContext());
+      var handler = new CreateMeetingRequestCommandHandler(InitializedDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request, CancellationToken.None));

@@ -17,14 +17,24 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _hubContext = hubContext;
     }
 
-    public async Task SendMessage(MeetingChatMessageDto message, CancellationToken cancellationToken)
+    public async Task BroadcastMessage(MeetingChatMessageDto message, CancellationToken cancellationToken)
     {
       await _hubContext.Clients.Group(MeetingHub.GetGroupName(message.MeetingId)).SendAsync("ReceiveMessage", message, cancellationToken);
     }
 
-    public async Task SendMessages(ICollection<MeetingChatMessageDto> messages, int userid, CancellationToken cancellationToken)
+    public async Task BroadcastMessages(ICollection<MeetingChatMessageDto> messages, int userid, CancellationToken cancellationToken)
     {
       await _hubContext.Clients.User(userid.ToString()).SendAsync("ReceiveMessages", messages, cancellationToken);
+    }
+
+    public async Task BroadcastUserAddedToMeeting(int meetingId, CancellationToken cancellationToken)
+    {
+      await _hubContext.Clients.Group(MeetingHub.GetGroupName(meetingId)).SendAsync("UserAddedToMeeting", cancellationToken);
+    }
+
+    public async Task BroadcastMeetingFound(int userId, CancellationToken cancellationToken)
+    {
+      await _hubContext.Clients.User(userId.ToString()).SendAsync("MeetingFound", cancellationToken);
     }
   }
 }

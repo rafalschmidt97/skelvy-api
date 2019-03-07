@@ -7,7 +7,9 @@ namespace Skelvy.Application.Core.Infrastructure.Notifications
 {
   public interface INotificationsService
   {
-    Task SendMessage(MeetingChatMessageDto message, CancellationToken cancellationToken);
-    Task SendMessages(ICollection<MeetingChatMessageDto> messages, int userid, CancellationToken cancellationToken);
+    Task BroadcastMessage(MeetingChatMessageDto message, CancellationToken cancellationToken);
+    Task BroadcastMessages(ICollection<MeetingChatMessageDto> messages, int userid, CancellationToken cancellationToken);
+    Task BroadcastUserAddedToMeeting(int meetingId, CancellationToken cancellationToken);
+    Task BroadcastMeetingFound(int userId, CancellationToken cancellationToken);
   }
 }

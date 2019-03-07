@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Infrastructure.Notifications;
 using Skelvy.Common;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
@@ -14,10 +16,12 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
   public class MatchMeetingRequestsCommandHandler : IRequestHandler<MatchMeetingRequestsCommand>
   {
     private readonly SkelvyContext _context;
+    private readonly INotificationsService _notifications;
 
-    public MatchMeetingRequestsCommandHandler(SkelvyContext context)
+    public MatchMeetingRequestsCommandHandler(SkelvyContext context, INotificationsService notifications)
     {
       _context = context;
+      _notifications = notifications;
     }
 
     public async Task<Unit> Handle(MatchMeetingRequestsCommand request, CancellationToken cancellationToken)
@@ -29,6 +33,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         .ThenInclude(x => x.Drink)
         .ToListAsync(cancellationToken);
       var isDataChanged = false;
+      var updatedRequests = new List<MeetingRequest>();
 
       foreach (var meetingRequest in requests)
       {
@@ -37,6 +42,8 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         if (existingRequest != null)
         {
           CreateNewMeeting(meetingRequest, existingRequest);
+          updatedRequests.Add(meetingRequest);
+          updatedRequests.Add(existingRequest);
           isDataChanged = true;
         }
       }
@@ -44,6 +51,11 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       if (isDataChanged)
       {
         await _context.SaveChangesAsync(cancellationToken);
+
+        foreach (var updatedRequest in updatedRequests)
+        {
+          await _notifications.BroadcastMeetingFound(updatedRequest.UserId, cancellationToken);
+        }
       }
 
       return Unit.Value;

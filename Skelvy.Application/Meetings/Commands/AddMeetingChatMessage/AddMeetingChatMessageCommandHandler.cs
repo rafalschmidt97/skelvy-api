@@ -46,7 +46,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 
       await _context.SaveChangesAsync(cancellationToken);
       var messageDto = _mapper.Map<MeetingChatMessageDto>(message);
-      await _notifications.SendMessage(messageDto, cancellationToken);
+      await _notifications.BroadcastMessage(messageDto, cancellationToken);
       return Unit.Value;
     }
   }

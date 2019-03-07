@@ -43,7 +43,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
         .Where(x => x.MeetingId == meetingUser.MeetingId && x.Date >= request.FromDate && x.Date <= request.ToDate)
         .ProjectTo<MeetingChatMessageDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
 
-      await _notifications.SendMessages(messages, meetingUser.UserId, cancellationToken);
+      await _notifications.BroadcastMessages(messages, meetingUser.UserId, cancellationToken);
       return messages;
     }
   }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Exceptions;
+using Skelvy.Application.Core.Infrastructure.Notifications;
 using Skelvy.Common;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
@@ -16,10 +17,12 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
   public class CreateMeetingRequestCommandHandler : IRequestHandler<CreateMeetingRequestCommand>
   {
     private readonly SkelvyContext _context;
+    private readonly INotificationsService _notifications;
 
-    public CreateMeetingRequestCommandHandler(SkelvyContext context)
+    public CreateMeetingRequestCommandHandler(SkelvyContext context, INotificationsService notifications)
     {
       _context = context;
+      _notifications = notifications;
     }
 
     public async Task<Unit> Handle(CreateMeetingRequestCommand request, CancellationToken cancellationToken)
@@ -160,6 +163,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       newRequest.Status = MeetingStatusTypes.Found;
 
       await _context.SaveChangesAsync(cancellationToken);
+      await _notifications.BroadcastUserAddedToMeeting(meeting.Id, cancellationToken);
     }
 
     private async Task MatchExistingMeetingRequests(
@@ -246,6 +250,9 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       request2.Status = MeetingStatusTypes.Found;
 
       await _context.SaveChangesAsync(cancellationToken);
+
+      await _notifications.BroadcastMeetingFound(request1.UserId, cancellationToken);
+      await _notifications.BroadcastMeetingFound(request2.UserId, cancellationToken);
     }
 
     private static IEnumerable<MeetingRequestDrink> PrepareDrinks(
