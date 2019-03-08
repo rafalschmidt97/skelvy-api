@@ -36,7 +36,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 
       var message = new MeetingChatMessage
       {
-        Message = request.Message,
+        Message = request.Message.Trim(),
         Date = request.Date,
         UserId = meetingUser.UserId,
         MeetingId = meetingUser.MeetingId
