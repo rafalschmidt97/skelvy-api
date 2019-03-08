@@ -11,5 +11,6 @@ namespace Skelvy.Application.Core.Infrastructure.Notifications
     Task BroadcastMessages(ICollection<MeetingChatMessageDto> messages, int userid, CancellationToken cancellationToken);
     Task BroadcastUserAddedToMeeting(int meetingId, CancellationToken cancellationToken);
     Task BroadcastMeetingFound(int userId, CancellationToken cancellationToken);
+    Task BroadcastUserLeftMeeting(int meetingId, CancellationToken cancellationToken);
   }
 }

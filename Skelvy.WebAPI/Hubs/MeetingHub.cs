@@ -53,6 +53,23 @@ namespace Skelvy.WebAPI.Hubs
       await Mediator.Send(request, Context.ConnectionAborted);
     }
 
+    public async Task AddToGroup()
+    {
+      var meetingUser = await GetMeetingUser(Context.ConnectionAborted);
+
+      if (meetingUser == null)
+      {
+        throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {UserId}) not found.");
+      }
+
+      await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(meetingUser.MeetingId), Context.ConnectionAborted);
+    }
+
+    public async Task RemoveFromGroup(int meetingId)
+    {
+      await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetGroupName(meetingId), Context.ConnectionAborted);
+    }
+
     public static string GetGroupName(int meetingId)
     {
       return $"Meeting:{meetingId}";

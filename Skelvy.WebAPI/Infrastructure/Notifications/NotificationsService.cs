@@ -36,5 +36,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     {
       await _hubContext.Clients.User(userId.ToString()).SendAsync("MeetingFound", cancellationToken);
     }
+
+    public async Task BroadcastUserLeftMeeting(int meetingId, CancellationToken cancellationToken)
+    {
+      await _hubContext.Clients.Group(MeetingHub.GetGroupName(meetingId)).SendAsync("UserLeftMeeting", cancellationToken);
+    }
   }
 }
