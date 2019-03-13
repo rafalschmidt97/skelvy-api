@@ -6,32 +6,25 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Persistence;
 
-namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingsAndMeetingRequests
+namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
 {
-  public class RemoveExpiredMeetingsAndMeetingRequestsCommandHandler
-    : IRequestHandler<RemoveExpiredMeetingsAndMeetingRequestsCommand>
+  public class RemoveExpiredMeetingsCommandHandler
+    : IRequestHandler<RemoveExpiredMeetingsCommand>
   {
     private readonly SkelvyContext _context;
 
-    public RemoveExpiredMeetingsAndMeetingRequestsCommandHandler(SkelvyContext context)
+    public RemoveExpiredMeetingsCommandHandler(SkelvyContext context)
     {
       _context = context;
     }
 
     public async Task<Unit> Handle(
-      RemoveExpiredMeetingsAndMeetingRequestsCommand request,
+      RemoveExpiredMeetingsCommand request,
       CancellationToken cancellationToken)
     {
       var today = DateTimeOffset.Now;
-      var requestsToRemove = await _context.MeetingRequests.Where(x => x.MaxDate < today).ToListAsync(cancellationToken);
       var meetingsToRemove = await _context.Meetings.Where(x => x.Date < today.AddDays(-1)).ToListAsync(cancellationToken);
       var isDataChanged = false;
-
-      if (requestsToRemove.Count != 0)
-      {
-        _context.MeetingRequests.RemoveRange(requestsToRemove);
-        isDataChanged = true;
-      }
 
       if (meetingsToRemove.Count != 0)
       {
