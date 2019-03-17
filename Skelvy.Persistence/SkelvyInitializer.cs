@@ -13,6 +13,7 @@ namespace Skelvy.Persistence
       context.Database.EnsureCreated();
       SeedUsers(context);
       SeedProfiles(context);
+      SeedDevices(context);
       SeedDrinks(context);
       SeedMeetingRequests(context);
       SeedMeetings(context);
@@ -94,6 +95,28 @@ namespace Skelvy.Persistence
       };
 
       context.UserProfilePhotos.AddRange(photos);
+      context.SaveChanges();
+    }
+
+    public static void SeedDevices(SkelvyContext context)
+    {
+      if (context.UserDevices.Any())
+      {
+        return;
+      }
+
+      var users = context.Users.ToList();
+
+      var devices = new[]
+      {
+        new UserDevice
+        {
+          UserId = users[0].Id,
+          RegistrationId = "ABC"
+        }
+      };
+
+      context.UserDevices.AddRange(devices);
       context.SaveChanges();
     }
 
