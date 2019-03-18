@@ -191,7 +191,7 @@ namespace Skelvy.WebAPI
 
       app.UseSignalR(options =>
       {
-        options.MapHub<MeetingHub>("/api/meeting");
+        options.MapHub<UsersHub>("/api/users");
       });
 
       app.UseStaticFiles();

@@ -10,16 +10,16 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 {
   public class NotificationsService : INotificationsService
   {
-    private readonly IHubContext<MeetingHub> _hubContext;
+    private readonly IHubContext<UsersHub> _hubContext;
 
-    public NotificationsService(IHubContext<MeetingHub> hubContext)
+    public NotificationsService(IHubContext<UsersHub> hubContext)
     {
       _hubContext = hubContext;
     }
 
     public async Task BroadcastMessage(MeetingChatMessageDto message, CancellationToken cancellationToken)
     {
-      await _hubContext.Clients.Group(MeetingHub.GetGroupName(message.MeetingId)).SendAsync("ReceiveMessage", message, cancellationToken);
+      await _hubContext.Clients.Group(UsersHub.GetGroupName(message.MeetingId)).SendAsync("ReceiveMessage", message, cancellationToken);
     }
 
     public async Task BroadcastMessages(ICollection<MeetingChatMessageDto> messages, int userid, CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     public async Task BroadcastUserAddedToMeeting(int meetingId, CancellationToken cancellationToken)
     {
-      await _hubContext.Clients.Group(MeetingHub.GetGroupName(meetingId)).SendAsync("UserAddedToMeeting", cancellationToken);
+      await _hubContext.Clients.Group(UsersHub.GetGroupName(meetingId)).SendAsync("UserAddedToMeeting", cancellationToken);
     }
 
     public async Task BroadcastMeetingFound(int userId, CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     public async Task BroadcastUserLeftMeeting(int meetingId, CancellationToken cancellationToken)
     {
-      await _hubContext.Clients.Group(MeetingHub.GetGroupName(meetingId)).SendAsync("UserLeftMeeting", cancellationToken);
+      await _hubContext.Clients.Group(UsersHub.GetGroupName(meetingId)).SendAsync("UserLeftMeeting", cancellationToken);
     }
   }
 }
