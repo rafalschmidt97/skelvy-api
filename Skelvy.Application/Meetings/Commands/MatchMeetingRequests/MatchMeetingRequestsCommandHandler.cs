@@ -51,11 +51,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       if (isDataChanged)
       {
         await _context.SaveChangesAsync(cancellationToken);
-
-        foreach (var updatedRequest in updatedRequests)
-        {
-          await _notifications.BroadcastMeetingFound(updatedRequest.UserId, cancellationToken);
-        }
+        await BroadcastUserFoundMeeting(updatedRequests, cancellationToken);
       }
 
       return Unit.Value;
@@ -114,6 +110,12 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
       request1.Status = MeetingStatusTypes.Found;
       request2.Status = MeetingStatusTypes.Found;
+    }
+
+    private async Task BroadcastUserFoundMeeting(IEnumerable<MeetingRequest> updatedRequests, CancellationToken cancellationToken)
+    {
+      var userIds = updatedRequests.Select(x => x.User.Id).ToList();
+      await _notifications.BroadcastUserFoundMeeting(userIds, cancellationToken);
     }
   }
 }

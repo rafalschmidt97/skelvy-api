@@ -163,7 +163,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       newRequest.Status = MeetingStatusTypes.Found;
 
       await _context.SaveChangesAsync(cancellationToken);
-      await _notifications.BroadcastUserAddedToMeeting(meeting.Id, cancellationToken);
+      await BroadcastUserJoinedMeeting(meetingUser, cancellationToken);
     }
 
     private async Task MatchExistingMeetingRequests(
@@ -250,9 +250,23 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       request2.Status = MeetingStatusTypes.Found;
 
       await _context.SaveChangesAsync(cancellationToken);
+      await BroadcastUserFoundMeeting(request1, request2, cancellationToken);
+    }
 
-      await _notifications.BroadcastMeetingFound(request1.UserId, cancellationToken);
-      await _notifications.BroadcastMeetingFound(request2.UserId, cancellationToken);
+    private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2, CancellationToken cancellationToken)
+    {
+      var userIds = new List<int> { request1.UserId, request2.UserId };
+      await _notifications.BroadcastUserFoundMeeting(userIds, cancellationToken);
+    }
+
+    private async Task BroadcastUserJoinedMeeting(MeetingUser meetingUser, CancellationToken cancellationToken)
+    {
+      var meetingUsers = await _context.MeetingUsers
+        .Where(x => x.MeetingId == meetingUser.MeetingId)
+        .ToListAsync(cancellationToken);
+
+      var meetingUserIds = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
+      await _notifications.BroadcastUserJoinedMeeting(meetingUser, meetingUserIds, cancellationToken);
     }
 
     private static IEnumerable<MeetingRequestDrink> PrepareDrinks(

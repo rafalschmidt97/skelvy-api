@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Core.Infrastructure.Notifications;
+using Skelvy.Domain.Entities;
 
 namespace Skelvy.Infrastructure.Notifications
 {
@@ -14,8 +16,50 @@ namespace Skelvy.Infrastructure.Notifications
         .TryAddWithoutValidation("Authorization", "key=" + configuration["Google:Key"]);
     }
 
-    public async Task BroadcastMessage(PushNotificationMessage message, CancellationToken cancellationToken)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, ICollection<int> userIds, CancellationToken cancellationToken)
     {
+      foreach (var userId in userIds)
+      {
+        await SendNotification(userId, null, message.Message, cancellationToken);
+      }
+    }
+
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      foreach (var userId in userIds)
+      {
+        await SendNotification(userId, null, "A new user has been added to the group", cancellationToken);
+      }
+    }
+
+    public async Task BroadcastUserFoundMeeting(ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      foreach (var userId in userIds)
+      {
+        await SendNotification(userId, null, "A new meeting has been found", cancellationToken);
+      }
+    }
+
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      foreach (var userId in userIds)
+      {
+        await SendNotification(userId, null, "A user has left the group", cancellationToken);
+      }
+    }
+
+    private async Task SendNotification(int userId, string title, string body, CancellationToken cancellationToken)
+    {
+      var message = new PushNotificationMessage
+      {
+        To = $"/topics/user-{userId}",
+        Notification = new PushNotificationContent
+        {
+          Title = title,
+          Body = body
+        }
+      };
+
       await HttpClient.PostAsync("send", PrepareData(message), cancellationToken);
     }
   }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
@@ -5,6 +6,7 @@ using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
+using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
 
 namespace Skelvy.WebAPI.Controllers
 {
@@ -33,6 +35,13 @@ namespace Skelvy.WebAPI.Controllers
     public async Task RemoveRequestSelf()
     {
       await Mediator.Send(new RemoveMeetingRequestCommand { UserId = UserId });
+    }
+
+    [HttpGet("self/chat")]
+    public async Task<ICollection<MeetingChatMessageDto>> FindSelfChat([FromQuery] FindMeetingChatMessagesQuery request)
+    {
+      request.UserId = UserId;
+      return await Mediator.Send(request);
     }
   }
 }

@@ -1,35 +1,16 @@
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Exceptions;
 using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
-using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
-using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
+using Skelvy.Infrastructure.Notifications;
 
 namespace Skelvy.WebAPI.Hubs
 {
   public class UsersHub : BaseHub
   {
-    private readonly SkelvyContext _context;
-
-    public UsersHub(IMediator mediator, SkelvyContext context)
+    public UsersHub(IMediator mediator)
       : base(mediator)
     {
-      _context = context;
-    }
-
-    public override async Task OnConnectedAsync()
-    {
-      var meetingUser = await GetMeetingUser(Context.ConnectionAborted);
-
-      if (meetingUser != null)
-      {
-        await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(meetingUser.MeetingId), Context.ConnectionAborted);
-      }
-
-      await base.OnConnectedAsync();
     }
 
     public async Task SendMessage(AddMeetingChatMessageCommand request)
@@ -38,37 +19,22 @@ namespace Skelvy.WebAPI.Hubs
       await Mediator.Send(request, Context.ConnectionAborted);
     }
 
-    public async Task LoadMessages(FindMeetingChatMessagesQuery request)
+    public override Task OnConnectedAsync()
     {
-      request.UserId = UserId;
-      await Mediator.Send(request, Context.ConnectionAborted);
+      NotificationsService.Connections.Add(UserId);
+      return base.OnConnectedAsync();
     }
 
-    public async Task AddToMeeting()
+    public override Task OnDisconnectedAsync(Exception exception)
     {
-      var meetingUser = await GetMeetingUser(Context.ConnectionAborted);
+      var userId = UserId;
 
-      if (meetingUser == null)
+      if (NotificationsService.IsConnected(userId))
       {
-        throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {UserId}) not found.");
+        NotificationsService.Connections.Remove(userId);
       }
 
-      await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(meetingUser.MeetingId), Context.ConnectionAborted);
-    }
-
-    public async Task RemoveFromMeeting(int meetingId)
-    {
-      await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetGroupName(meetingId), Context.ConnectionAborted);
-    }
-
-    public static string GetGroupName(int meetingId)
-    {
-      return $"Meeting:{meetingId}";
-    }
-
-    private async Task<MeetingUser> GetMeetingUser(CancellationToken cancellationToken)
-    {
-      return await _context.MeetingUsers.FirstOrDefaultAsync(x => x.UserId == UserId, cancellationToken);
+      return base.OnDisconnectedAsync(exception);
     }
   }
 }
