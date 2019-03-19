@@ -85,26 +85,6 @@ namespace Skelvy.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserDevices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RegistrationId = table.Column<string>(maxLength: 250, nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserDevices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserDevices_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserProfiles",
                 columns: table => new
                 {
@@ -255,11 +235,6 @@ namespace Skelvy.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserDevices_UserId",
-                table: "UserDevices",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserProfilePhotos_ProfileId",
                 table: "UserProfilePhotos",
                 column: "ProfileId");
@@ -281,9 +256,6 @@ namespace Skelvy.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "MeetingUsers");
-
-            migrationBuilder.DropTable(
-                name: "UserDevices");
 
             migrationBuilder.DropTable(
                 name: "UserProfilePhotos");

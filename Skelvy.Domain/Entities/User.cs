@@ -7,7 +7,6 @@ namespace Skelvy.Domain.Entities
     public User()
     {
       MeetingChatMessages = new HashSet<MeetingChatMessage>();
-      UserDevices = new HashSet<UserDevice>();
     }
 
     public int Id { get; set; }
@@ -18,6 +17,5 @@ namespace Skelvy.Domain.Entities
     public UserProfile Profile { get; set; }
     public MeetingRequest MeetingRequest { get; set; }
     public ICollection<MeetingChatMessage> MeetingChatMessages { get; private set; }
-    public ICollection<UserDevice> UserDevices { get; private set; }
   }
 }

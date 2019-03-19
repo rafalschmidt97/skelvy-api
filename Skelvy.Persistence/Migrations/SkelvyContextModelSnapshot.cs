@@ -156,25 +156,6 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Skelvy.Domain.Entities.UserDevice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("RegistrationId")
-                        .IsRequired()
-                        .HasMaxLength(250);
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserDevices");
-                });
-
             modelBuilder.Entity("Skelvy.Domain.Entities.UserProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -274,14 +255,6 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Skelvy.Domain.Entities.UserDevice", b =>
-                {
-                    b.HasOne("Skelvy.Domain.Entities.User", "User")
-                        .WithMany("UserDevices")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

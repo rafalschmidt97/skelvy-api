@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Skelvy.Application.Users.Commands.AddUserDevice;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Application.Users.Queries;
@@ -33,13 +32,6 @@ namespace Skelvy.WebAPI.Controllers
     public async Task RemoveSelf()
     {
       await Mediator.Send(new RemoveUserCommand { Id = UserId });
-    }
-
-    [HttpPost("self/devices")]
-    public async Task AddSelfDevice(AddUserDeviceCommand request)
-    {
-      request.UserId = UserId;
-      await Mediator.Send(request);
     }
   }
 }
