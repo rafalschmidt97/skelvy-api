@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190306234407_Initial")]
+    [Migration("20190318161057_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

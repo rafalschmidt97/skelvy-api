@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Skelvy.Application.Meetings.Queries;
+using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Core.Infrastructure.Notifications
 {
   public interface INotificationsService
   {
-    Task BroadcastMessage(MeetingChatMessageDto message, CancellationToken cancellationToken);
-    Task BroadcastMessages(ICollection<MeetingChatMessageDto> messages, int userid, CancellationToken cancellationToken);
-    Task BroadcastUserAddedToMeeting(int meetingId, CancellationToken cancellationToken);
-    Task BroadcastMeetingFound(int userId, CancellationToken cancellationToken);
-    Task BroadcastUserLeftMeeting(int meetingId, CancellationToken cancellationToken);
+    Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, ICollection<int> userIds, CancellationToken cancellationToken);
+    Task BroadcastUserJoinedMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken);
+    Task BroadcastUserFoundMeeting(ICollection<int> userIds, CancellationToken cancellationToken);
+    Task BroadcastUserLeftMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken);
+    Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken);
+    Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken);
   }
 }

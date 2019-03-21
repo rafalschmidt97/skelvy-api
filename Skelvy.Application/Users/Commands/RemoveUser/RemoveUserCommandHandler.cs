@@ -1,9 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Exceptions;
 using Skelvy.Application.Core.Infrastructure.Notifications;
+using Skelvy.Common;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
@@ -30,18 +33,48 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
         throw new NotFoundException(nameof(User), request.Id);
       }
 
-      var meetingUser = await _context.MeetingUsers.FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
+      await RemoveFromMeeting(user, cancellationToken);
 
       _context.Users.Remove(user);
-
       await _context.SaveChangesAsync(cancellationToken);
+
+      return Unit.Value;
+    }
+
+    private async Task RemoveFromMeeting(User user, CancellationToken cancellationToken)
+    {
+      var meetingUser = await _context.MeetingUsers.FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
 
       if (meetingUser != null)
       {
-        await _notifications.BroadcastUserLeftMeeting(meetingUser.MeetingId, cancellationToken);
-      }
+        var meeting = await _context.Meetings
+          .Include(x => x.Users)
+          .ThenInclude(x => x.User)
+          .ThenInclude(x => x.MeetingRequest)
+          .FirstOrDefaultAsync(x => x.Id == meetingUser.MeetingId, cancellationToken);
 
-      return Unit.Value;
+        _context.MeetingUsers.Remove(meetingUser);
+        var meetingUserDetails = meeting.Users.First(x => x.UserId == meetingUser.UserId);
+        _context.MeetingRequests.Remove(meetingUserDetails.User.MeetingRequest);
+
+        if (meeting.Users.Count == 2)
+        {
+          meeting.Users.First(x => x.UserId != meetingUser.UserId).User.MeetingRequest.Status = MeetingStatusTypes.Searching;
+          _context.Meetings.Remove(meeting);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+        await BroadcastUserLeftMeeting(meetingUser, meeting.Users, cancellationToken);
+      }
+    }
+
+    private async Task BroadcastUserLeftMeeting(
+      MeetingUser meetingUser,
+      IEnumerable<MeetingUser> meetingUsers,
+      CancellationToken cancellationToken)
+    {
+      var meetingUserIds = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
+      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUserIds, cancellationToken);
     }
   }
 }

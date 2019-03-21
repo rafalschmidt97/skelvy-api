@@ -7,7 +7,6 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Notifications;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
@@ -18,13 +17,11 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
   {
     private readonly SkelvyContext _context;
     private readonly IMapper _mapper;
-    private readonly INotificationsService _notifications;
 
-    public FindMeetingChatMessagesQueryHandler(SkelvyContext context, IMapper mapper, INotificationsService notifications)
+    public FindMeetingChatMessagesQueryHandler(SkelvyContext context, IMapper mapper)
     {
       _context = context;
       _mapper = mapper;
-      _notifications = notifications;
     }
 
     public async Task<ICollection<MeetingChatMessageDto>> Handle(
@@ -39,12 +36,9 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
         throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var messages = await _context.MeetingChatMessages
+      return await _context.MeetingChatMessages
         .Where(x => x.MeetingId == meetingUser.MeetingId && x.Date >= request.FromDate && x.Date <= request.ToDate)
         .ProjectTo<MeetingChatMessageDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
-
-      await _notifications.BroadcastMessages(messages, meetingUser.UserId, cancellationToken);
-      return messages;
     }
   }
 }

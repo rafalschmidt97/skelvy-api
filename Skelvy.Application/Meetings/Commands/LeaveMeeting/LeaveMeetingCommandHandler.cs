@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,9 +39,9 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
         .ThenInclude(x => x.MeetingRequest)
         .FirstOrDefaultAsync(x => x.Id == user.MeetingId, cancellationToken);
 
-      var userDetails = meeting.Users.First(x => x.UserId == user.UserId);
-      _context.MeetingUsers.Remove(userDetails);
-      _context.MeetingRequests.Remove(userDetails.User.MeetingRequest);
+      var meetingUser = meeting.Users.First(x => x.UserId == user.UserId);
+      _context.MeetingUsers.Remove(meetingUser);
+      _context.MeetingRequests.Remove(meetingUser.User.MeetingRequest);
 
       if (meeting.Users.Count == 2)
       {
@@ -49,8 +50,17 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
       }
 
       await _context.SaveChangesAsync(cancellationToken);
-      await _notifications.BroadcastUserLeftMeeting(meeting.Id, cancellationToken);
+      await BroadcastUserLeftMeeting(meetingUser, meeting.Users, cancellationToken);
       return Unit.Value;
+    }
+
+    private async Task BroadcastUserLeftMeeting(
+      MeetingUser meetingUser,
+      IEnumerable<MeetingUser> meetingUsers,
+      CancellationToken cancellationToken)
+    {
+      var meetingUserIds = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
+      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUserIds, cancellationToken);
     }
   }
 }
