@@ -48,6 +48,22 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
+    public async Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      foreach (var userId in userIds)
+      {
+        await SendNotification(userId, null, "A meeting request has expired", cancellationToken);
+      }
+    }
+
+    public async Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      foreach (var userId in userIds)
+      {
+        await SendNotification(userId, null, "A meeting has expired", cancellationToken);
+      }
+    }
+
     private async Task SendNotification(int userId, string title, string body, CancellationToken cancellationToken)
     {
       var message = new PushNotificationMessage

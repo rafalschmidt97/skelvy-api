@@ -79,6 +79,36 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
+    public async Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      var connections = GetConnections(userIds);
+
+      if (connections.OnlineIds.Count > 0)
+      {
+        await _socketService.BroadcastMeetingRequestExpired(userIds, cancellationToken);
+      }
+
+      if (connections.OfflineIds.Count > 0)
+      {
+        await _pushService.BroadcastMeetingRequestExpired(userIds, cancellationToken);
+      }
+    }
+
+    public async Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      var connections = GetConnections(userIds);
+
+      if (connections.OnlineIds.Count > 0)
+      {
+        await _socketService.BroadcastMeetingExpired(userIds, cancellationToken);
+      }
+
+      if (connections.OfflineIds.Count > 0)
+      {
+        await _pushService.BroadcastMeetingExpired(userIds, cancellationToken);
+      }
+    }
+
     public static bool IsConnected(int userId)
     {
       return Connections.FirstOrDefault(x => x == userId) != default(int);

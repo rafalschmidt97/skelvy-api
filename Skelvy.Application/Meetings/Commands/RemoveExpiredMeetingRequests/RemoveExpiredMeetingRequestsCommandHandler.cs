@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Infrastructure.Notifications;
+using Skelvy.Common;
+using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
@@ -12,10 +16,12 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
     : IRequestHandler<RemoveExpiredMeetingRequestsCommand>
   {
     private readonly SkelvyContext _context;
+    private readonly INotificationsService _notifications;
 
-    public RemoveExpiredMeetingRequestsCommandHandler(SkelvyContext context)
+    public RemoveExpiredMeetingRequestsCommandHandler(SkelvyContext context, INotificationsService notifications)
     {
       _context = context;
+      _notifications = notifications;
     }
 
     public async Task<Unit> Handle(
@@ -23,7 +29,10 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
       CancellationToken cancellationToken)
     {
       var today = DateTimeOffset.Now;
-      var requestsToRemove = await _context.MeetingRequests.Where(x => x.MaxDate < today).ToListAsync(cancellationToken);
+      var requestsToRemove = await _context.MeetingRequests
+        .Where(x => x.MaxDate < today && x.Status == MeetingStatusTypes.Searching)
+        .ToListAsync(cancellationToken);
+
       var isDataChanged = false;
 
       if (requestsToRemove.Count != 0)
@@ -35,9 +44,16 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
       if (isDataChanged)
       {
         await _context.SaveChangesAsync(cancellationToken);
+        await BroadcastMeetingRequestExpired(requestsToRemove, cancellationToken);
       }
 
       return Unit.Value;
+    }
+
+    private async Task BroadcastMeetingRequestExpired(IEnumerable<MeetingRequest> requestsToRemove, CancellationToken cancellationToken)
+    {
+      var userIds = requestsToRemove.Select(x => x.UserId).ToList();
+      await _notifications.BroadcastMeetingRequestExpired(userIds, cancellationToken);
     }
   }
 }

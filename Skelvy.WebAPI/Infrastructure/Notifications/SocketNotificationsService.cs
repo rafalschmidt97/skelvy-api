@@ -38,6 +38,16 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserLeftMeeting", cancellationToken);
     }
 
+    public async Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingRequestExpired", cancellationToken);
+    }
+
+    public async Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    {
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingExpired", cancellationToken);
+    }
+
     private static IReadOnlyList<string> PrepareUsers(IEnumerable<int> userIds)
     {
       return userIds.Select(x => x.ToString()).ToList().AsReadOnly();
