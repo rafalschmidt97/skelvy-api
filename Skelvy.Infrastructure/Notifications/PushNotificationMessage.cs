@@ -11,6 +11,8 @@ namespace Skelvy.Infrastructure.Notifications
   {
     public string Title { get; set; }
     public string Body { get; set; }
+    public string TitleLocKey { get; set; }
+    public string BodyLocKey { get; set; }
     public string Sound { get; set; } = "default";
   }
 }
