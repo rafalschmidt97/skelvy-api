@@ -15,33 +15,33 @@ namespace Skelvy.WebAPI.Controllers
     [HttpGet("self")]
     public async Task<MeetingViewModel> FindSelf()
     {
-      return await Mediator.Send(new FindMeetingQuery { UserId = UserId });
+      return await Mediator.Send(new FindMeetingQuery { UserId = UserId }, HttpContext.RequestAborted);
     }
 
     [HttpDelete("self")]
     public async Task RemoveSelf()
     {
-      await Mediator.Send(new LeaveMeetingCommand { UserId = UserId });
+      await Mediator.Send(new LeaveMeetingCommand { UserId = UserId }, HttpContext.RequestAborted);
     }
 
     [HttpPost("requests/self")]
     public async Task CreateRequestSelf(CreateMeetingRequestCommand request)
     {
       request.UserId = UserId;
-      await Mediator.Send(request);
+      await Mediator.Send(request, HttpContext.RequestAborted);
     }
 
     [HttpDelete("requests/self")]
     public async Task RemoveRequestSelf()
     {
-      await Mediator.Send(new RemoveMeetingRequestCommand { UserId = UserId });
+      await Mediator.Send(new RemoveMeetingRequestCommand { UserId = UserId }, HttpContext.RequestAborted);
     }
 
     [HttpGet("self/chat")]
     public async Task<ICollection<MeetingChatMessageDto>> FindSelfChat([FromQuery] FindMeetingChatMessagesQuery request)
     {
       request.UserId = UserId;
-      return await Mediator.Send(request);
+      return await Mediator.Send(request, HttpContext.RequestAborted);
     }
   }
 }

@@ -28,7 +28,7 @@ namespace Skelvy.WebAPI.Controllers
         var file = files[0];
         try
         {
-          var url = await _uploadService.Upload(file.OpenReadStream(), file.FileName, Request.Host.Value);
+          var url = await _uploadService.Upload(file.OpenReadStream(), file.FileName, Request.Host.Value, HttpContext.RequestAborted);
           return Ok(new { url });
         }
         catch (CustomException exception)

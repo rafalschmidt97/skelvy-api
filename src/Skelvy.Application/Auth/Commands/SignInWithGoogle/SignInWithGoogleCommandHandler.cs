@@ -30,7 +30,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
     public async Task<string> Handle(SignInWithGoogleCommand request, CancellationToken cancellationToken)
     {
-      var verified = await _googleService.Verify(request.AuthToken);
+      var verified = await _googleService.Verify(request.AuthToken, cancellationToken);
 
       var user = await _context.Users.FirstOrDefaultAsync(x => x.GoogleId == verified.UserId, cancellationToken);
 
@@ -39,7 +39,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         var details = await _googleService.GetBody<dynamic>(
           "plus/v1/people/me",
           request.AuthToken,
-          "fields=birthday,name/givenName,emails/value,gender,image/url");
+          "fields=birthday,name/givenName,emails/value,gender,image/url",
+          cancellationToken);
 
         var email = (string)details.emails[0].value;
         var userByEmail = await _context.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);

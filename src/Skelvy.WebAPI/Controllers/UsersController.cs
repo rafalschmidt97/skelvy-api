@@ -12,26 +12,26 @@ namespace Skelvy.WebAPI.Controllers
     [HttpGet("self")]
     public async Task<UserDto> FindSelf()
     {
-      return await Mediator.Send(new FindUserQuery { Id = UserId });
+      return await Mediator.Send(new FindUserQuery { Id = UserId }, HttpContext.RequestAborted);
     }
 
     [HttpGet("{id}")]
     public async Task<UserDto> Find(int id)
     {
-      return await Mediator.Send(new FindUserQuery { Id = id });
+      return await Mediator.Send(new FindUserQuery { Id = id }, HttpContext.RequestAborted);
     }
 
     [HttpPut("self/profile")]
     public async Task UpdateSelfProfile(UpdateUserProfileCommand request)
     {
       request.UserId = UserId;
-      await Mediator.Send(request);
+      await Mediator.Send(request, HttpContext.RequestAborted);
     }
 
     [HttpDelete("self")]
     public async Task RemoveSelf()
     {
-      await Mediator.Send(new RemoveUserCommand { Id = UserId });
+      await Mediator.Send(new RemoveUserCommand { Id = UserId }, HttpContext.RequestAborted);
     }
   }
 }

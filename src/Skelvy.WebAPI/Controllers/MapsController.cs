@@ -40,7 +40,7 @@ namespace Skelvy.WebAPI.Controllers
       }
 
       var cacheKey = $"maps:search#{search}#{language}";
-      var cachedLocationBytes = await _cache.GetAsync(cacheKey);
+      var cachedLocationBytes = await _cache.GetAsync(cacheKey, HttpContext.RequestAborted);
 
       if (cachedLocationBytes != null)
       {
@@ -49,9 +49,9 @@ namespace Skelvy.WebAPI.Controllers
 
       try
       {
-        var location = await _mapsService.Search(search, language);
+        var location = await _mapsService.Search(search, language, HttpContext.RequestAborted);
         var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(7));
-        await _cache.SetAsync(cacheKey, location.Serialize(), options);
+        await _cache.SetAsync(cacheKey, location.Serialize(), options, HttpContext.RequestAborted);
         return location;
       }
       catch (CustomException exception)
@@ -78,7 +78,7 @@ namespace Skelvy.WebAPI.Controllers
       }
 
       var cacheKey = $"maps:reverse#{latitude}#{longitude}#{language}";
-      var cachedLocationBytes = await _cache.GetAsync(cacheKey);
+      var cachedLocationBytes = await _cache.GetAsync(cacheKey, HttpContext.RequestAborted);
 
       if (cachedLocationBytes != null)
       {
@@ -87,9 +87,9 @@ namespace Skelvy.WebAPI.Controllers
 
       try
       {
-        var location = await _mapsService.Search(latitude, longitude, language);
+        var location = await _mapsService.Search(latitude, longitude, language, HttpContext.RequestAborted);
         var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(7));
-        await _cache.SetAsync(cacheKey, location.Serialize(), options);
+        await _cache.SetAsync(cacheKey, location.Serialize(), options, HttpContext.RequestAborted);
         return location;
       }
       catch (CustomException exception)

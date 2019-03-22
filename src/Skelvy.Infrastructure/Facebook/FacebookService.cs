@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Auth.Commands;
@@ -21,9 +22,9 @@ namespace Skelvy.Infrastructure.Facebook
       _clientSecret = configuration["Facebook:Secret"];
     }
 
-    public async Task<T> GetBody<T>(string path, string accessToken, string args = null)
+    public async Task<T> GetBody<T>(string path, string accessToken, string args, CancellationToken cancellationToken)
     {
-      var response = await HttpClient.GetAsync($"{path}?access_token={accessToken}&{args}");
+      var response = await HttpClient.GetAsync($"{path}?access_token={accessToken}&{args}", cancellationToken);
       var responseData = await GetData<T>(response.Content);
 
       ValidateResponse(path, args, response, responseData, "GET");
@@ -31,9 +32,9 @@ namespace Skelvy.Infrastructure.Facebook
       return responseData;
     }
 
-    public async Task<T> PostBody<T>(string path, string accessToken, object data, string args = null)
+    public async Task<T> PostBody<T>(string path, string accessToken, object data, string args, CancellationToken cancellationToken)
     {
-      var response = await HttpClient.PostAsync($"{path}?access_token={accessToken}&{args}", PrepareData(data));
+      var response = await HttpClient.PostAsync($"{path}?access_token={accessToken}&{args}", PrepareData(data), cancellationToken);
       var responseData = await GetData<T>(response.Content);
 
       ValidateResponse(path, args, response, responseData, "POST");
@@ -41,10 +42,10 @@ namespace Skelvy.Infrastructure.Facebook
       return responseData;
     }
 
-    public async Task<AccessVerification> Verify(string accessToken)
+    public async Task<AccessVerification> Verify(string accessToken, CancellationToken cancellationToken)
     {
       var response =
-        await GetBody<dynamic>("debug_token", $"{_clientId}|{_clientSecret}", $"input_token={accessToken}");
+        await GetBody<dynamic>("debug_token", $"{_clientId}|{_clientSecret}", $"input_token={accessToken}", cancellationToken);
 
       if (response.data.is_valid != true)
       {

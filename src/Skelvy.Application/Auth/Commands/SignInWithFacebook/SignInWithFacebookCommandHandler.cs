@@ -30,7 +30,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
     public async Task<string> Handle(SignInWithFacebookCommand request, CancellationToken cancellationToken)
     {
-      var verified = await _facebookService.Verify(request.AuthToken);
+      var verified = await _facebookService.Verify(request.AuthToken, cancellationToken);
 
       var user = await _context.Users.FirstOrDefaultAsync(x => x.FacebookId == verified.UserId, cancellationToken);
 
@@ -39,7 +39,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         var details = await _facebookService.GetBody<dynamic>(
           "me",
           request.AuthToken,
-          "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}");
+          "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}",
+          cancellationToken);
 
         var email = (string)details.email;
         var userByEmail = await _context.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);

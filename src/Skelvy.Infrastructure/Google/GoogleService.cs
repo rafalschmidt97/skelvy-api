@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Auth.Commands;
@@ -19,9 +20,9 @@ namespace Skelvy.Infrastructure.Google
       _clientId = configuration["Google:Id"];
     }
 
-    public async Task<T> GetBody<T>(string path, string accessToken, string args = null)
+    public async Task<T> GetBody<T>(string path, string accessToken, string args, CancellationToken cancellationToken)
     {
-      var response = await HttpClient.GetAsync($"{path}?access_token={accessToken}&{args}");
+      var response = await HttpClient.GetAsync($"{path}?access_token={accessToken}&{args}", cancellationToken);
       var responseData = await GetData<T>(response.Content);
 
       ValidateResponse(path, args, response, responseData, "GET");
@@ -29,9 +30,9 @@ namespace Skelvy.Infrastructure.Google
       return responseData;
     }
 
-    public async Task<T> PostBody<T>(string path, string accessToken, object data, string args = null)
+    public async Task<T> PostBody<T>(string path, string accessToken, object data, string args, CancellationToken cancellationToken)
     {
-      var response = await HttpClient.PostAsync($"{path}?access_token={accessToken}&{args}", PrepareData(data));
+      var response = await HttpClient.PostAsync($"{path}?access_token={accessToken}&{args}", PrepareData(data), cancellationToken);
       var responseData = await GetData<T>(response.Content);
 
       ValidateResponse(path, args, response, responseData, "POST");
@@ -39,10 +40,10 @@ namespace Skelvy.Infrastructure.Google
       return responseData;
     }
 
-    public async Task<AccessVerification> Verify(string accessToken)
+    public async Task<AccessVerification> Verify(string accessToken, CancellationToken cancellationToken)
     {
       var response =
-        await GetBody<dynamic>("oauth2/v3/tokeninfo", accessToken);
+        await GetBody<dynamic>("oauth2/v3/tokeninfo", accessToken, null, cancellationToken);
 
       if (response.aud != _clientId)
       {

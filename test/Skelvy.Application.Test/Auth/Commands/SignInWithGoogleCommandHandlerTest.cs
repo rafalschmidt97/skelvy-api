@@ -31,7 +31,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldReturnTokenWithInitializedUser()
     {
       var request = new SignInWithGoogleCommand { AuthToken = AuthToken };
-      _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      _googleService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Access);
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>(), It.IsAny<AccessVerification>())).Returns(Token);
       var handler =
@@ -46,9 +46,9 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldReturnTokenWithNotInitializedUser()
     {
       var request = new SignInWithGoogleCommand { AuthToken = AuthToken };
-      _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      _googleService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Access);
       _googleService
-        .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None))
         .ReturnsAsync((object)PeopleResponse());
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>(), It.IsAny<AccessVerification>())).Returns(Token);
@@ -63,7 +63,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldThrowException()
     {
       var request = new SignInWithGoogleCommand { AuthToken = AuthToken };
-      _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
+      _googleService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).Throws<UnauthorizedException>();
       var handler =
         new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object);
 

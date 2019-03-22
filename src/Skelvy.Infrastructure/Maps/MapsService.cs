@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Geocoding.Google;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,7 @@ namespace Skelvy.Infrastructure.Maps
       _geocoder = new GoogleGeocoder { ApiKey = configuration["Google:Key"] };
     }
 
-    public async Task<ICollection<Location>> Search(string search, string language)
+    public async Task<ICollection<Location>> Search(string search, string language, CancellationToken cancellationToken)
     {
       _geocoder.Language = language;
       var response = await _geocoder.GeocodeAsync(search);
@@ -24,7 +25,7 @@ namespace Skelvy.Infrastructure.Maps
       return MapToLocations(filteredResponse);
     }
 
-    public async Task<ICollection<Location>> Search(double latitude, double longitude, string language)
+    public async Task<ICollection<Location>> Search(double latitude, double longitude, string language, CancellationToken cancellationToken)
     {
       _geocoder.Language = language;
       var response = await _geocoder.ReverseGeocodeAsync(latitude, longitude);
