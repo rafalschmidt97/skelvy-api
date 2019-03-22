@@ -9,6 +9,6 @@ install:
   - dotnet restore
 
 script:
-  - dotnet build Skelvy.WebAPI
-  - dotnet test Skelvy.Domain.Test
-  - dotnet test Skelvy.Application.Test
+  - dotnet build src/Skelvy.WebAPI
+  - dotnet test test/Skelvy.Domain.Test
+  - dotnet test test/Skelvy.Application.Test

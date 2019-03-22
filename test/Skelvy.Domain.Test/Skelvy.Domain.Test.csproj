@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\Skelvy.CodeAnalysis.targets" />
+  <Import Project="..\..\Skelvy.CodeAnalysis.targets" />
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -15,6 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Skelvy.Domain\Skelvy.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Skelvy.Domain\Skelvy.Domain.csproj" />
   </ItemGroup>
 </Project>

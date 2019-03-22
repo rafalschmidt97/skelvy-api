@@ -264,5 +264,9 @@ paket-files/
 __pycache__/
 *.pyc
 
-Skelvy.WebAPI/Logs/
-Skelvy.WebAPI/wwwroot/uploads/
+.DS_Store
+Thumbs.db
+$RECYCLE.BIN/
+
+src/Skelvy.WebAPI/Logs/
+src/Skelvy.WebAPI/wwwroot/uploads/

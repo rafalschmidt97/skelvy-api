@@ -7,7 +7,7 @@ services:
     image: "skelvy:latest"
     build:
       context: .
-      dockerfile: "Skelvy.WebAPI/Dockerfile"
+      dockerfile: "src/Skelvy.WebAPI/Dockerfile"
     depends_on:
       - mssql
       - redis

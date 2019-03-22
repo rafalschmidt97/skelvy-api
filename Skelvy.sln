@@ -3,29 +3,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{0475A42F-563
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B268A1B4-576B-4B82-B8F6-585065D9F60B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Application", "Skelvy.Application\Skelvy.Application.csproj", "{1657B1E9-FE1E-460D-B02C-7F93C06386DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Application", "src\Skelvy.Application\Skelvy.Application.csproj", "{1657B1E9-FE1E-460D-B02C-7F93C06386DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Domain", "Skelvy.Domain\Skelvy.Domain.csproj", "{E808E4CE-E0B2-4975-9F09-C205956A39A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Domain", "src\Skelvy.Domain\Skelvy.Domain.csproj", "{E808E4CE-E0B2-4975-9F09-C205956A39A2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{4F8A073D-A793-43C8-848F-FA798F35450C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Infrastructure", "Skelvy.Infrastructure\Skelvy.Infrastructure.csproj", "{3E6E585B-84FB-4708-AD0B-9A973C66A90D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Infrastructure", "src\Skelvy.Infrastructure\Skelvy.Infrastructure.csproj", "{3E6E585B-84FB-4708-AD0B-9A973C66A90D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Persistence", "Skelvy.Persistence\Skelvy.Persistence.csproj", "{D682F37C-D76A-473C-9C20-FB9E59231C53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Persistence", "src\Skelvy.Persistence\Skelvy.Persistence.csproj", "{D682F37C-D76A-473C-9C20-FB9E59231C53}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{B6693A10-B14B-4944-BFF0-A865BEC282AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.WebAPI", "Skelvy.WebAPI\Skelvy.WebAPI.csproj", "{6A673C4C-B348-4986-B879-23B47164AEED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.WebAPI", "src\Skelvy.WebAPI\Skelvy.WebAPI.csproj", "{6A673C4C-B348-4986-B879-23B47164AEED}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{50F8B9AD-899E-41E4-8621-9F3F1BCB1714}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Application.Test", "Skelvy.Application.Test\Skelvy.Application.Test.csproj", "{815BC9AE-C2A9-4247-AC6C-156C2CDD0A6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Application.Test", "test\Skelvy.Application.Test\Skelvy.Application.Test.csproj", "{815BC9AE-C2A9-4247-AC6C-156C2CDD0A6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Domain.Test", "Skelvy.Domain.Test\Skelvy.Domain.Test.csproj", "{F2B08E96-4040-4EFB-A66B-3B32E88D93B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Domain.Test", "test\Skelvy.Domain.Test\Skelvy.Domain.Test.csproj", "{F2B08E96-4040-4EFB-A66B-3B32E88D93B1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{136290D0-2597-4861-88AD-554F0CAB40B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Common", "Skelvy.Common\Skelvy.Common.csproj", "{360ABF50-DD8E-4CBB-82F0-618B494A5A32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skelvy.Common", "src\Skelvy.Common\Skelvy.Common.csproj", "{360ABF50-DD8E-4CBB-82F0-618B494A5A32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
