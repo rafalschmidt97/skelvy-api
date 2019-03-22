@@ -23,28 +23,6 @@ namespace Skelvy.Infrastructure
 
     protected HttpClient HttpClient { get; }
 
-    protected async Task<T> GetBody<T>(string path)
-    {
-      var response = await HttpClient.GetAsync(path);
-      if (!response.IsSuccessStatusCode)
-      {
-        return default(T);
-      }
-
-      return await GetData<T>(response.Content);
-    }
-
-    protected async Task<T> PostBody<T>(string path, object data)
-    {
-      var response = await HttpClient.PostAsync(path, PrepareData(data));
-      if (!response.IsSuccessStatusCode)
-      {
-        return default(T);
-      }
-
-      return await GetData<T>(response.Content);
-    }
-
     protected static async Task<T> GetData<T>(HttpContent responseContent)
     {
       var result = await responseContent.ReadAsStringAsync();
