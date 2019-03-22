@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Skelvy.Application.Core.Mapping;
+using Skelvy.Application.Core.Mappers;
 using Skelvy.Application.Drinks.Queries;
 using Skelvy.Domain.Entities;
 

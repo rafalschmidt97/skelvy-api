@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Uploads;
+using Skelvy.Application.Infrastructure.Uploads;
+using Skelvy.Common.Exceptions;
 
 namespace Skelvy.WebAPI.Controllers
 {

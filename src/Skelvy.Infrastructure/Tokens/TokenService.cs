@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Skelvy.Application.Auth.Commands;
-using Skelvy.Application.Core.Infrastructure.Tokens;
+using Skelvy.Application.Infrastructure.Tokens;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Infrastructure.Tokens

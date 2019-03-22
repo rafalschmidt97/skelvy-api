@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Skelvy.Application.Core.Infrastructure.Notifications;
+using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Infrastructure.Notifications

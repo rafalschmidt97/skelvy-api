@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Maps;
-using Skelvy.Common;
+using Skelvy.Application.Infrastructure.Maps;
+using Skelvy.Application.Users.Commands;
+using Skelvy.Common.Exceptions;
+using Skelvy.Common.Serializers;
 
 namespace Skelvy.WebAPI.Controllers
 {

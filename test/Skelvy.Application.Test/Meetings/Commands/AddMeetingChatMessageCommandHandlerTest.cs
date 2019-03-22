@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Notifications;
+using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
+using Skelvy.Common.Exceptions;
 using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands

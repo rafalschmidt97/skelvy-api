@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Auth.Commands;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Google;
+using Skelvy.Application.Infrastructure.Google;
+using Skelvy.Common.Exceptions;
 
 namespace Skelvy.Infrastructure.Google
 {

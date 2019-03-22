@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Google;
-using Skelvy.Application.Core.Infrastructure.Tokens;
+using Skelvy.Application.Infrastructure.Google;
+using Skelvy.Application.Infrastructure.Tokens;
+using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Xunit;
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Skelvy.Application.Core.Initializers;
 using Skelvy.Persistence;
 
 namespace Skelvy.WebAPI

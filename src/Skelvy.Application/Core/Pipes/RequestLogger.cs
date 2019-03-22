@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Skelvy.Application.Core.Exceptions;
+using Skelvy.Common.Exceptions;
 
 namespace Skelvy.Application.Core.Pipes
 {

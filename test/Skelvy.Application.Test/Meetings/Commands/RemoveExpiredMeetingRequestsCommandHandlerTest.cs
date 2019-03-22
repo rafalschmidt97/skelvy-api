@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Core.Infrastructure.Notifications;
+using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests;
 using Xunit;
 

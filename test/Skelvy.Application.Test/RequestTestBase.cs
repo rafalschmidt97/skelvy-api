@@ -1,7 +1,8 @@
 using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Mapping;
+using Skelvy.Application.Core.Initializers;
+using Skelvy.Application.Core.Mappers;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Test

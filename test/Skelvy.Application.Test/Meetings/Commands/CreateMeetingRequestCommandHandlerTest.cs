@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Notifications;
+using Skelvy.Application.Core.Initializers;
+using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
+using Skelvy.Common.Exceptions;
 using Skelvy.Persistence;
 using Xunit;
 

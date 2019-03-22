@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Auth.Commands;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Facebook;
+using Skelvy.Application.Infrastructure.Facebook;
+using Skelvy.Common.Exceptions;
 
 namespace Skelvy.Infrastructure.Facebook
 {

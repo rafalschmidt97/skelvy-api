@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Persistence.Infrastructure;
+using Skelvy.Persistence.Helpers;
 
 namespace Skelvy.Persistence
 {

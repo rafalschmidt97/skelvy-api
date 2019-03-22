@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Common;
+using Skelvy.Application.Meetings.Commands;
+using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 

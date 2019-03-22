@@ -20,8 +20,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Skelvy.Application.Core.Pipes;
-using Skelvy.Infrastructure;
+using Skelvy.Application.Infrastructure.Maps;
+using Skelvy.Infrastructure.Maps;
 using Skelvy.Persistence;
 using Skelvy.WebAPI.Filters;
 using Skelvy.WebAPI.Hubs;
@@ -41,8 +41,8 @@ namespace Skelvy.WebAPI
 
     public void ConfigureServices(IServiceCollection services)
     {
-      var applicationAssembly = typeof(RequestLogger<,>).GetTypeInfo().Assembly;
-      var infrastructureAssembly = typeof(HttpServiceBase).GetTypeInfo().Assembly;
+      var applicationAssembly = typeof(IMapsService).GetTypeInfo().Assembly;
+      var infrastructureAssembly = typeof(MapsService).GetTypeInfo().Assembly;
       var presentationAssembly = typeof(Startup).GetTypeInfo().Assembly;
 
       services.AddDbContext<SkelvyContext>(options =>

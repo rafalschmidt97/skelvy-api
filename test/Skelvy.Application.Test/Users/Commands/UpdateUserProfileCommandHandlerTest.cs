@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Skelvy.Application.Core.Exceptions;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
+using Skelvy.Common.Exceptions;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Commands

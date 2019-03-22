@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Infrastructure.Google;
-using Skelvy.Application.Core.Infrastructure.Tokens;
-using Skelvy.Common;
+using Skelvy.Application.Infrastructure.Google;
+using Skelvy.Application.Infrastructure.Tokens;
+using Skelvy.Application.Users.Commands;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 

@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Skelvy.Application.Core.Exceptions;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindUser;
+using Skelvy.Common.Exceptions;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Queries

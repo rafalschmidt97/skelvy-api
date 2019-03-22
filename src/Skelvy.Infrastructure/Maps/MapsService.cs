@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Geocoding.Google;
 using Microsoft.Extensions.Configuration;
-using Skelvy.Application.Core.Infrastructure.Maps;
+using Skelvy.Application.Infrastructure.Maps;
 
 namespace Skelvy.Infrastructure.Maps
 {

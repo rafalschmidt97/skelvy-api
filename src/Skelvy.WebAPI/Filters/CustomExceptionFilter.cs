@@ -4,8 +4,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Skelvy.Application.Core.Exceptions;
 using Skelvy.Application.Core.Pipes;
+using Skelvy.Common.Exceptions;
 
 namespace Skelvy.WebAPI.Filters
 {

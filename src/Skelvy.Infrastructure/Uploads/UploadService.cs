@@ -3,8 +3,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Skelvy.Application.Core.Exceptions;
-using Skelvy.Application.Core.Infrastructure.Uploads;
+using Skelvy.Application.Infrastructure.Uploads;
+using Skelvy.Common.Exceptions;
 
 namespace Skelvy.Infrastructure.Uploads
 {
