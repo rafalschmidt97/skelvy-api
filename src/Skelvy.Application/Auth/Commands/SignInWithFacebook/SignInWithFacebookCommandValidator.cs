@@ -1,4 +1,5 @@
 using FluentValidation;
+using Skelvy.Application.Users.Commands;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 {
@@ -7,6 +8,10 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     public SignInWithFacebookCommandValidator()
     {
       RuleFor(x => x.AuthToken).NotEmpty();
+
+      RuleFor(x => x.Language).NotEmpty()
+        .Must(x => x == LanguageTypes.EN || x == LanguageTypes.PL)
+        .WithMessage($"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
     }
   }
 }

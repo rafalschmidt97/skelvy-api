@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Users.Commands.RemoveUser;
+using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindUser;
@@ -21,17 +22,24 @@ namespace Skelvy.WebAPI.Controllers
       return await Mediator.Send(new FindUserQuery { Id = id }, HttpContext.RequestAborted);
     }
 
-    [HttpPut("self/profile")]
-    public async Task UpdateSelfProfile(UpdateUserProfileCommand request)
+    [HttpDelete("self")]
+    public async Task RemoveSelf()
+    {
+      await Mediator.Send(new RemoveUserCommand { Id = UserId }, HttpContext.RequestAborted);
+    }
+
+    [HttpPatch("self/language")]
+    public async Task UpdateSelfLanguage(UpdateUserLanguageCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request, HttpContext.RequestAborted);
     }
 
-    [HttpDelete("self")]
-    public async Task RemoveSelf()
+    [HttpPut("self/profile")]
+    public async Task UpdateSelfProfile(UpdateUserProfileCommand request)
     {
-      await Mediator.Send(new RemoveUserCommand { Id = UserId }, HttpContext.RequestAborted);
+      request.UserId = UserId;
+      await Mediator.Send(request, HttpContext.RequestAborted);
     }
   }
 }

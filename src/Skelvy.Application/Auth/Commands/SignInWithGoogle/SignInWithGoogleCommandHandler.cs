@@ -50,6 +50,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           user = new User
           {
             Email = details.emails[0].value,
+            Language = request.Language,
             GoogleId = verified.UserId
           };
           _context.Users.Add(user);
