@@ -30,9 +30,9 @@ namespace Skelvy.Application.Core.Initializers
 
       var users = new[]
       {
-        new User { Email = "user1@gmail.com", FacebookId = "1", GoogleId = "1" },
-        new User { Email = "user2@gmail.com", FacebookId = "2", GoogleId = "2" },
-        new User { Email = "user3@gmail.com", FacebookId = "3", GoogleId = "3" }
+        new User { Email = "user1@gmail.com", Language = LanguageTypes.EN, FacebookId = "1", GoogleId = "1" },
+        new User { Email = "user2@gmail.com", Language = LanguageTypes.EN, FacebookId = "2", GoogleId = "2" },
+        new User { Email = "user3@gmail.com", Language = LanguageTypes.EN, FacebookId = "3", GoogleId = "3" }
       };
 
       context.Users.AddRange(users);

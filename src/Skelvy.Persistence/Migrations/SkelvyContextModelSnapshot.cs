@@ -149,7 +149,12 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<string>("FacebookId")
                         .HasMaxLength(50);
 
-                    b.Property<string>("GoogleId");
+                    b.Property<string>("GoogleId")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.HasKey("Id");
 

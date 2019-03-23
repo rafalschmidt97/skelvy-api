@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Core.Pipes;
+using Skelvy.Application.Users.Commands;
 using Xunit;
 
 namespace Skelvy.Application.Test.Core.Pipes
@@ -26,7 +27,7 @@ namespace Skelvy.Application.Test.Core.Pipes
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new SignInWithFacebookCommand { AuthToken = Token };
+      var request = new SignInWithFacebookCommand { AuthToken = Token, Language = LanguageTypes.EN };
       var validators = new List<IValidator<SignInWithFacebookCommand>> { new SignInWithFacebookCommandValidator() };
       var pipe = new RequestValidation<SignInWithFacebookCommand>(validators);
 

@@ -50,6 +50,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           user = new User
           {
             Email = details.email,
+            Language = request.Language,
             FacebookId = verified.UserId
           };
           _context.Users.Add(user);

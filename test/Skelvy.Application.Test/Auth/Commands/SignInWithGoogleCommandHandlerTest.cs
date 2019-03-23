@@ -6,6 +6,7 @@ using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
 using Skelvy.Application.Infrastructure.Google;
 using Skelvy.Application.Infrastructure.Tokens;
+using Skelvy.Application.Users.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Xunit;
@@ -30,7 +31,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithInitializedUser()
     {
-      var request = new SignInWithGoogleCommand { AuthToken = AuthToken };
+      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
       _googleService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Access);
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>(), It.IsAny<AccessVerification>())).Returns(Token);
@@ -45,7 +46,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithNotInitializedUser()
     {
-      var request = new SignInWithGoogleCommand { AuthToken = AuthToken };
+      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
       _googleService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Access);
       _googleService
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None))
@@ -62,7 +63,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new SignInWithGoogleCommand { AuthToken = AuthToken };
+      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
       _googleService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).Throws<UnauthorizedException>();
       var handler =
         new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object);
