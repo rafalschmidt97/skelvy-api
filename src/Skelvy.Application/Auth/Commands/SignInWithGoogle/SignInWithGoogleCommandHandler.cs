@@ -61,8 +61,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
               ? DateTimeOffset.ParseExact(
                 (string)details.birthday,
                 "yyyy-MM-dd",
-                CultureInfo.CurrentCulture)
-              : DateTimeOffset.Now.AddYears(-18),
+                CultureInfo.CurrentCulture).ToUniversalTime()
+              : DateTimeOffset.UtcNow.AddYears(-18),
             Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
             UserId = user.Id
           };

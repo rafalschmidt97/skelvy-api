@@ -30,7 +30,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       }
 
       profile.Name = request.Name.Trim();
-      profile.Birthday = request.Birthday.Date;
+      profile.Birthday = request.Birthday;
       profile.Gender = request.Gender;
 
       if (request.Description != null)

@@ -27,7 +27,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
       RemoveExpiredMeetingsCommand request,
       CancellationToken cancellationToken)
     {
-      var today = DateTimeOffset.Now;
+      var today = DateTimeOffset.UtcNow;
       var meetingsToRemove = await _context.Meetings
         .Include(x => x.Users)
         .Where(x => x.Date < today.AddDays(-1))

@@ -21,8 +21,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     public static int CalculateAge(DateTimeOffset date)
     {
-      var age = DateTimeOffset.Now.Year - date.Year;
-      if (DateTimeOffset.Now.DayOfYear < date.DayOfYear)
+      var age = DateTimeOffset.UtcNow.Year - date.Year;
+      if (DateTimeOffset.UtcNow.DayOfYear < date.DayOfYear)
       {
         age = age - 1;
       }

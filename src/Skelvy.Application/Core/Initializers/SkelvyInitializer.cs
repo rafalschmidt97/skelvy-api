@@ -53,21 +53,21 @@ namespace Skelvy.Application.Core.Initializers
         new UserProfile
         {
           Name = "User1",
-          Birthday = DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture),
+          Birthday = DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           Gender = GenderTypes.Male,
           UserId = users[0].Id
         },
         new UserProfile
         {
           Name = "User2",
-          Birthday = DateTimeOffset.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture),
+          Birthday = DateTimeOffset.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           Gender = GenderTypes.Male,
           UserId = users[1].Id
         },
         new UserProfile
         {
           Name = "User3",
-          Birthday = DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture),
+          Birthday = DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           Gender = GenderTypes.Male,
           UserId = users[2].Id
         }
@@ -136,8 +136,8 @@ namespace Skelvy.Application.Core.Initializers
         new MeetingRequest
         {
           Status = MeetingStatusTypes.Searching,
-          MinDate = DateTimeOffset.Now.Date,
-          MaxDate = DateTimeOffset.Now.Date,
+          MinDate = DateTimeOffset.UtcNow,
+          MaxDate = DateTimeOffset.UtcNow,
           MinAge = 18,
           MaxAge = 25,
           Latitude = 1,
@@ -177,8 +177,8 @@ namespace Skelvy.Application.Core.Initializers
         new MeetingRequest
         {
           Status = MeetingStatusTypes.Found,
-          MinDate = DateTimeOffset.Now.AddDays(2).Date,
-          MaxDate = DateTimeOffset.Now.AddDays(4).Date,
+          MinDate = DateTimeOffset.UtcNow.AddDays(2),
+          MaxDate = DateTimeOffset.UtcNow.AddDays(4),
           MinAge = 18,
           MaxAge = 25,
           Latitude = 1,
@@ -188,8 +188,8 @@ namespace Skelvy.Application.Core.Initializers
         new MeetingRequest
         {
           Status = MeetingStatusTypes.Found,
-          MinDate = DateTimeOffset.Now.AddDays(2).Date,
-          MaxDate = DateTimeOffset.Now.AddDays(4).Date,
+          MinDate = DateTimeOffset.UtcNow.AddDays(2),
+          MaxDate = DateTimeOffset.UtcNow.AddDays(4),
           MinAge = 18,
           MaxAge = 25,
           Latitude = 1,
@@ -221,7 +221,7 @@ namespace Skelvy.Application.Core.Initializers
       {
         new Meeting
         {
-          Date = DateTimeOffset.Now.AddDays(3).Date,
+          Date = DateTimeOffset.UtcNow.AddDays(3),
           Latitude = 1,
           Longitude = 1,
           DrinkId = drinks[0].Id
@@ -265,14 +265,14 @@ namespace Skelvy.Application.Core.Initializers
         {
           MeetingId = meetings[0].Id,
           UserId = users[1].Id,
-          Date = DateTimeOffset.Now.AddHours(-2),
+          Date = DateTimeOffset.UtcNow.AddHours(-2),
           Message = "Hello User3"
         },
         new MeetingChatMessage
         {
           MeetingId = meetings[0].Id,
           UserId = users[2].Id,
-          Date = DateTimeOffset.Now.AddHours(-1),
+          Date = DateTimeOffset.UtcNow.AddHours(-1),
           Message = "Hello User2"
         }
       };

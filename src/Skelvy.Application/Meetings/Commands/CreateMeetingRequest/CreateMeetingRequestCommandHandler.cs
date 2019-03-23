@@ -93,8 +93,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       var meetingRequest = new MeetingRequest
       {
         Status = MeetingStatusTypes.Searching,
-        MinDate = request.MinDate.Date,
-        MaxDate = request.MaxDate.Date,
+        MinDate = request.MinDate,
+        MaxDate = request.MaxDate,
         MinAge = request.MinAge,
         MaxAge = request.MaxAge,
         Latitude = request.Latitude,
@@ -221,7 +221,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     {
       var meeting = new Meeting
       {
-        Date = FindCommonDate(request1, request2).Date,
+        Date = FindCommonDate(request1, request2),
         Latitude = request1.Latitude,
         Longitude = request1.Longitude,
         DrinkId = FindCommonDrink(request1, request2)

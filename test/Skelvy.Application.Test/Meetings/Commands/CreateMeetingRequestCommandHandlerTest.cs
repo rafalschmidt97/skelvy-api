@@ -26,8 +26,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldAddToExistingMeeting()
     {
       var request = Request();
-      request.MinDate = DateTimeOffset.Now.AddDays(2);
-      request.MaxDate = DateTimeOffset.Now.AddDays(4);
+      request.MinDate = DateTimeOffset.UtcNow.AddDays(2);
+      request.MaxDate = DateTimeOffset.UtcNow.AddDays(4);
       var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithMeetings(), _notifications.Object);
 
       await handler.Handle(request, CancellationToken.None);
@@ -100,8 +100,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       return new CreateMeetingRequestCommand
       {
         UserId = 1,
-        MinDate = DateTimeOffset.Now,
-        MaxDate = DateTimeOffset.Now.AddDays(2),
+        MinDate = DateTimeOffset.UtcNow,
+        MaxDate = DateTimeOffset.UtcNow.AddDays(2),
         MinAge = 18,
         MaxAge = 25,
         Latitude = 1,

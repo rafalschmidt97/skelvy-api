@@ -39,7 +39,7 @@ namespace Skelvy.Infrastructure.Tokens
         _configuration["Jwt:Issuer"],
         null,
         claims.ToArray(),
-        expires: DateTimeOffset.Now.AddDays(7).UtcDateTime,
+        expires: DateTimeOffset.UtcNow.AddDays(7).UtcDateTime,
         signingCredentials: credentials);
 
       return new JwtSecurityTokenHandler().WriteToken(token);

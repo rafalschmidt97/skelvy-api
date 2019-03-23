@@ -12,7 +12,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       RuleFor(x => x.Description).MaximumLength(500);
 
       RuleFor(x => x.Birthday).NotEmpty()
-        .Must(x => x.Date <= DateTimeOffset.Now.AddYears(-18))
+        .Must(x => x.Date <= DateTimeOffset.UtcNow.AddYears(-18))
         .WithMessage("'Birthday' must show the age of majority.");
 
       RuleFor(x => x.Gender).NotEmpty().MaximumLength(15)

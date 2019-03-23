@@ -16,8 +16,8 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingChatMessagesQuery
       {
         UserId = 2,
-        FromDate = DateTimeOffset.Now.AddDays(-7),
-        ToDate = DateTimeOffset.Now
+        FromDate = DateTimeOffset.UtcNow.AddDays(-7),
+        ToDate = DateTimeOffset.UtcNow
       };
       var handler = new FindMeetingChatMessagesQueryHandler(InitializedDbContext(), Mapper());
 
@@ -33,8 +33,8 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingChatMessagesQuery
       {
         UserId = 1,
-        FromDate = DateTimeOffset.Now.AddDays(-7),
-        ToDate = DateTimeOffset.Now
+        FromDate = DateTimeOffset.UtcNow.AddDays(-7),
+        ToDate = DateTimeOffset.UtcNow
       };
       var handler = new FindMeetingChatMessagesQueryHandler(DbContext(), Mapper());
 

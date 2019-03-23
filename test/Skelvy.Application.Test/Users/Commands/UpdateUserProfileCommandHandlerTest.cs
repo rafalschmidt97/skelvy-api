@@ -36,7 +36,7 @@ namespace Skelvy.Application.Test.Users.Commands
         UserId = 1,
         Name = "Example",
         Gender = "Female",
-        Birthday = DateTimeOffset.Now.AddYears(-18),
+        Birthday = DateTimeOffset.UtcNow.AddYears(-18),
         Photos = new List<UpdateUserProfilePhotos>
         {
           new UpdateUserProfilePhotos { Url = "Url" }
