@@ -133,10 +133,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     private static bool IsMeetingMatchRequest(Meeting meeting, MeetingRequest newRequest, User user)
     {
       return meeting.Date >= newRequest.MinDate && meeting.Date <= newRequest.MaxDate &&
-             meeting.Users.All(x => CalculateAge(x.User.Profile.Birthday) >= newRequest.MinAge &&
-                                    CalculateAge(x.User.Profile.Birthday) <= newRequest.MaxAge) &&
-             meeting.Users.All(x => CalculateAge(user.Profile.Birthday) >= x.User.MeetingRequest.MinAge &&
-                                    CalculateAge(user.Profile.Birthday) <= x.User.MeetingRequest.MaxAge) &&
+             meeting.Users.All(x => IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(x.User.Profile.Birthday), newRequest.MinAge, newRequest.MaxAge)) &&
+             meeting.Users.All(x => IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(user.Profile.Birthday), x.User.MeetingRequest.MinAge, x.User.MeetingRequest.MaxAge)) &&
              meeting.Users.Count < 4 &&
              CalculateDistance(
                meeting.Latitude,
@@ -144,6 +142,11 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
                newRequest.Latitude,
                newRequest.Longitude) <= 5 &&
              newRequest.Drinks.Any(x => x.DrinkId == meeting.DrinkId);
+    }
+
+    private static bool IsUserAgeWithinMeetingRequestAgeRange(int age, int minAge, int maxAge)
+    {
+      return age >= minAge && (maxAge >= 55 || age <= maxAge);
     }
 
     private async Task AddUserToMeeting(
@@ -202,10 +205,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
              request.Status == MeetingStatusTypes.Searching &&
              request.MinDate <= newRequest.MaxDate &&
              request.MaxDate >= newRequest.MinDate &&
-             CalculateAge(request.User.Profile.Birthday) >= newRequest.MinAge &&
-             CalculateAge(request.User.Profile.Birthday) <= newRequest.MaxAge &&
-             CalculateAge(user.Profile.Birthday) >= request.MinAge &&
-             CalculateAge(user.Profile.Birthday) <= request.MaxAge &&
+             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request.User.Profile.Birthday), newRequest.MinAge, newRequest.MaxAge) &&
+             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(user.Profile.Birthday), request.MinAge, request.MaxAge) &&
              CalculateDistance(
                request.Latitude,
                request.Longitude,

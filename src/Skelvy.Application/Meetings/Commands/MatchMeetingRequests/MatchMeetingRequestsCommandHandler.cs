@@ -65,16 +65,19 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
              request2.Status == MeetingStatusTypes.Searching &&
              request1.MinDate <= request2.MaxDate &&
              request1.MaxDate >= request2.MinDate &&
-             CalculateAge(request1.User.Profile.Birthday) >= request2.MinAge &&
-             CalculateAge(request1.User.Profile.Birthday) <= request2.MaxAge &&
-             CalculateAge(request2.User.Profile.Birthday) >= request1.MinAge &&
-             CalculateAge(request2.User.Profile.Birthday) <= request1.MaxAge &&
+             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request1.User.Profile.Birthday), request2.MinAge, request2.MaxAge) &&
+             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request2.User.Profile.Birthday), request1.MinAge, request1.MaxAge) &&
              CalculateDistance(
                request1.Latitude,
                request1.Longitude,
                request2.Latitude,
                request2.Longitude) <= 5 &&
              request2.Drinks.Any(x => request1.Drinks.Any(y => y.Drink.Id == x.DrinkId));
+    }
+
+    private static bool IsUserAgeWithinMeetingRequestAgeRange(int age, int minAge, int maxAge)
+    {
+      return age >= minAge && (maxAge >= 55 || age <= maxAge);
     }
 
     private void CreateNewMeeting(

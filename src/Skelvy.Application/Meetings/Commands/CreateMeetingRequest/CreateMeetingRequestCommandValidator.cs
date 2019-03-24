@@ -24,7 +24,9 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .WithMessage("'MaxAge' must be bigger than 'MinAge'.");
       RuleFor(x => x.MaxAge).NotEmpty()
         .Unless(x => x.MaxAge - x.MinAge >= 5)
-        .WithMessage("Age difference must be more or equal to 5 years");
+        .WithMessage("Age difference must be more or equal to 5 years")
+        .Must(x => x <= 55)
+        .WithMessage("'MaxAge' must be less or equal 55.");
 
       RuleFor(x => x.Latitude).NotEmpty();
       RuleFor(x => x.Longitude).NotEmpty();
