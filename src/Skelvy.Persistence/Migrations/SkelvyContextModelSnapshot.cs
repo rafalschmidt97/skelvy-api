@@ -98,7 +98,9 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<DateTimeOffset>("MinDate");
 
-                    b.Property<string>("Status");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.Property<int>("UserId");
 

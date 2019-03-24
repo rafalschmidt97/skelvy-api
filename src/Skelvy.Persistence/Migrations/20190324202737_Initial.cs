@@ -65,7 +65,7 @@ namespace Skelvy.Persistence.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(maxLength: 15, nullable: false),
                     MinDate = table.Column<DateTimeOffset>(nullable: false),
                     MaxDate = table.Column<DateTimeOffset>(nullable: false),
                     MinAge = table.Column<int>(nullable: false),

@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190323102018_Initial")]
+    [Migration("20190324202737_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,7 +100,9 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<DateTimeOffset>("MinDate");
 
-                    b.Property<string>("Status");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.Property<int>("UserId");
 

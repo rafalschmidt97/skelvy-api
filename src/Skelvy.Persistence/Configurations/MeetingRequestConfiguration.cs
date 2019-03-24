@@ -8,6 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<MeetingRequest> builder)
     {
+      builder.Property(e => e.Status).IsRequired().HasMaxLength(15);
     }
   }
 }
