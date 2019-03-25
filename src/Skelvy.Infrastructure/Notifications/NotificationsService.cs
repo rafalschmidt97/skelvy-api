@@ -12,11 +12,16 @@ namespace Skelvy.Infrastructure.Notifications
     public static readonly HashSet<int> Connections = new HashSet<int>();
     private readonly IPushNotificationsService _pushService;
     private readonly ISocketNotificationsService _socketService;
+    private readonly IEmailNotificationsService _emailService;
 
-    public NotificationsService(IPushNotificationsService pushService, ISocketNotificationsService socketService)
+    public NotificationsService(
+      IPushNotificationsService pushService,
+      ISocketNotificationsService socketService,
+      IEmailNotificationsService emailService)
     {
       _pushService = pushService;
       _socketService = socketService;
+      _emailService = emailService;
     }
 
     public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, ICollection<int> userIds, CancellationToken cancellationToken)
@@ -107,6 +112,16 @@ namespace Skelvy.Infrastructure.Notifications
       {
         await _pushService.BroadcastMeetingExpired(userIds, cancellationToken);
       }
+    }
+
+    public async Task BroadcastUserCreated(User user, CancellationToken cancellationToken)
+    {
+      await _emailService.BroadcastUserCreated(user, cancellationToken);
+    }
+
+    public async Task BroadcastUserDeleted(User user, CancellationToken cancellationToken)
+    {
+      await _emailService.BroadcastUserDeleted(user, cancellationToken);
     }
 
     public static bool IsConnected(int userId)

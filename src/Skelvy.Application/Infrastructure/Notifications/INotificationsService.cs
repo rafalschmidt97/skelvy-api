@@ -13,5 +13,7 @@ namespace Skelvy.Application.Infrastructure.Notifications
     Task BroadcastUserLeftMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken);
     Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken);
     Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken);
+    Task BroadcastUserCreated(User user, CancellationToken cancellationToken);
+    Task BroadcastUserDeleted(User user, CancellationToken cancellationToken);
   }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Infrastructure.Facebook;
+using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Infrastructure.Tokens;
 using Skelvy.Application.Users.Commands;
 using Skelvy.Domain.Entities;
@@ -17,15 +18,18 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     private readonly SkelvyContext _context;
     private readonly IFacebookService _facebookService;
     private readonly ITokenService _tokenService;
+    private readonly INotificationsService _notifications;
 
     public SignInWithFacebookCommandHandler(
       SkelvyContext context,
       IFacebookService facebookService,
-      ITokenService tokenService)
+      ITokenService tokenService,
+      INotificationsService notifications)
     {
       _context = context;
       _facebookService = facebookService;
       _tokenService = tokenService;
+      _notifications = notifications;
     }
 
     public async Task<string> Handle(SignInWithFacebookCommand request, CancellationToken cancellationToken)
@@ -44,6 +48,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
         var email = (string)details.email;
         var userByEmail = await _context.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+        var isDataChanged = false;
 
         if (userByEmail == null)
         {
@@ -83,9 +88,15 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         {
           userByEmail.FacebookId = verified.UserId;
           user = userByEmail;
+          isDataChanged = true;
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        if (!isDataChanged)
+        {
+          await _notifications.BroadcastUserCreated(user, cancellationToken);
+        }
       }
 
       return _tokenService.Generate(user, verified);
