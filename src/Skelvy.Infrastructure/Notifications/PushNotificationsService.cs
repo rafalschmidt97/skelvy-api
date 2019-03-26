@@ -23,10 +23,7 @@ namespace Skelvy.Infrastructure.Notifications
         Body = message.Message
       };
 
-      foreach (var userId in userIds)
-      {
-        await SendNotification(userId, notification, cancellationToken);
-      }
+      await SendNotifications(userIds, notification, cancellationToken);
     }
 
     public async Task BroadcastUserJoinedMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
@@ -36,10 +33,7 @@ namespace Skelvy.Infrastructure.Notifications
         BodyLocKey = "USER_JOINED_MEETING"
       };
 
-      foreach (var userId in userIds)
-      {
-        await SendNotification(userId, notification, cancellationToken);
-      }
+      await SendNotifications(userIds, notification, cancellationToken);
     }
 
     public async Task BroadcastUserFoundMeeting(ICollection<int> userIds, CancellationToken cancellationToken)
@@ -49,10 +43,7 @@ namespace Skelvy.Infrastructure.Notifications
         BodyLocKey = "USER_FOUND_MEETING"
       };
 
-      foreach (var userId in userIds)
-      {
-        await SendNotification(userId, notification, cancellationToken);
-      }
+      await SendNotifications(userIds, notification, cancellationToken);
     }
 
     public async Task BroadcastUserLeftMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
@@ -62,10 +53,7 @@ namespace Skelvy.Infrastructure.Notifications
         BodyLocKey = "USER_LEFT_MEETING"
       };
 
-      foreach (var userId in userIds)
-      {
-        await SendNotification(userId, notification, cancellationToken);
-      }
+      await SendNotifications(userIds, notification, cancellationToken);
     }
 
     public async Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken)
@@ -75,10 +63,7 @@ namespace Skelvy.Infrastructure.Notifications
         BodyLocKey = "MEETING_REQUEST_EXPIRED"
       };
 
-      foreach (var userId in userIds)
-      {
-        await SendNotification(userId, notification, cancellationToken);
-      }
+      await SendNotifications(userIds, notification, cancellationToken);
     }
 
     public async Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken)
@@ -88,6 +73,11 @@ namespace Skelvy.Infrastructure.Notifications
         BodyLocKey = "MEETING_EXPIRED"
       };
 
+      await SendNotifications(userIds, notification, cancellationToken);
+    }
+
+    private async Task SendNotifications(IEnumerable<int> userIds, PushNotificationContent notification, CancellationToken cancellationToken)
+    {
       foreach (var userId in userIds)
       {
         await SendNotification(userId, notification, cancellationToken);

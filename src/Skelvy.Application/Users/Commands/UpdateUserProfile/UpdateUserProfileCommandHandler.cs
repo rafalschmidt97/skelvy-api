@@ -38,17 +38,21 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
         profile.Description = request.Description.Trim();
       }
 
+      await UpdatePhotos(profile, request.Photos, cancellationToken);
+      await _context.SaveChangesAsync(cancellationToken);
+      return Unit.Value;
+    }
+
+    private async Task UpdatePhotos(UserProfile profile, IEnumerable<UpdateUserProfilePhotos> photos, CancellationToken cancellationToken)
+    {
       // Remove old photos
       var oldPhotos = await _context.UserProfilePhotos.Where(x => x.ProfileId == profile.Id)
         .ToListAsync(cancellationToken);
       _context.UserProfilePhotos.RemoveRange(oldPhotos);
 
       // Add new photos
-      var newPhotos = PreparePhotos(request.Photos, profile);
+      var newPhotos = PreparePhotos(photos, profile);
       _context.UserProfilePhotos.AddRange(newPhotos);
-
-      await _context.SaveChangesAsync(cancellationToken);
-      return Unit.Value;
     }
 
     private static IEnumerable<UserProfilePhoto> PreparePhotos(
