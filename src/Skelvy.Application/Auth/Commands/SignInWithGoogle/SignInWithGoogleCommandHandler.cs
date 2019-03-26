@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Infrastructure.Google;
+using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Infrastructure.Tokens;
 using Skelvy.Application.Users.Commands;
 using Skelvy.Domain.Entities;
@@ -17,15 +18,18 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     private readonly SkelvyContext _context;
     private readonly IGoogleService _googleService;
     private readonly ITokenService _tokenService;
+    private readonly INotificationsService _notifications;
 
     public SignInWithGoogleCommandHandler(
       SkelvyContext context,
       IGoogleService googleService,
-      ITokenService tokenService)
+      ITokenService tokenService,
+      INotificationsService notifications)
     {
       _context = context;
       _googleService = googleService;
       _tokenService = tokenService;
+      _notifications = notifications;
     }
 
     public async Task<string> Handle(SignInWithGoogleCommand request, CancellationToken cancellationToken)
@@ -44,6 +48,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
         var email = (string)details.emails[0].value;
         var userByEmail = await _context.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+        var isDataChanged = false;
 
         if (userByEmail == null)
         {
@@ -85,9 +90,15 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         {
           userByEmail.GoogleId = verified.UserId;
           user = userByEmail;
+          isDataChanged = true;
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        if (!isDataChanged)
+        {
+          await _notifications.BroadcastUserCreated(user, cancellationToken);
+        }
       }
 
       return _tokenService.Generate(user, verified);

@@ -5,6 +5,7 @@ using Moq;
 using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
 using Skelvy.Application.Infrastructure.Google;
+using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Infrastructure.Tokens;
 using Skelvy.Application.Users.Commands;
 using Skelvy.Common.Exceptions;
@@ -21,11 +22,13 @@ namespace Skelvy.Application.Test.Auth.Commands
 
     private readonly Mock<IGoogleService> _googleService;
     private readonly Mock<ITokenService> _tokenService;
+    private readonly Mock<INotificationsService> _notifications;
 
     public SignInWithGoogleCommandHandlerTest()
     {
       _googleService = new Mock<IGoogleService>();
       _tokenService = new Mock<ITokenService>();
+      _notifications = new Mock<INotificationsService>();
     }
 
     [Fact]
@@ -36,7 +39,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>(), It.IsAny<AccessVerification>())).Returns(Token);
       var handler =
-        new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object);
+        new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request, CancellationToken.None);
 
@@ -53,7 +56,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .ReturnsAsync((object)PeopleResponse());
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>(), It.IsAny<AccessVerification>())).Returns(Token);
-      var handler = new SignInWithGoogleCommandHandler(DbContext(), _googleService.Object, _tokenService.Object);
+      var handler = new SignInWithGoogleCommandHandler(DbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request, CancellationToken.None);
 
@@ -66,7 +69,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
       _googleService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).Throws<UnauthorizedException>();
       var handler =
-        new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object);
+        new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request, CancellationToken.None));

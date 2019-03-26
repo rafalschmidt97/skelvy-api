@@ -37,6 +37,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
 
       _context.Users.Remove(user);
       await _context.SaveChangesAsync(cancellationToken);
+      await _notifications.BroadcastUserDeleted(user, cancellationToken);
 
       return Unit.Value;
     }
