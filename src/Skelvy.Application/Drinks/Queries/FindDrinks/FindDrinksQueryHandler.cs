@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Persistence;
@@ -21,8 +22,7 @@ namespace Skelvy.Application.Drinks.Queries.FindDrinks
 
     public async Task<ICollection<DrinkDto>> Handle(FindDrinksQuery request, CancellationToken cancellationToken)
     {
-      var drinks = await _context.Drinks.ToListAsync(cancellationToken);
-      return _mapper.Map<ICollection<DrinkDto>>(drinks);
+      return await _context.Drinks.ProjectTo<DrinkDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
     }
   }
 }
