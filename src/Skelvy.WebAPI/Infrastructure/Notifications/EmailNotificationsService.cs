@@ -21,7 +21,8 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         To = user.Email,
         Subject = "Account has been created",
-        Body = "Body created"
+        Body = "Body created",
+        TemplateName = "Created"
       };
 
       await SendEmail(message, cancellationToken);
@@ -33,7 +34,8 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         To = user.Email,
         Subject = "Account has been deleted",
-        Body = "Body deleted"
+        Body = "Body deleted",
+        TemplateName = "Deleted"
       };
 
       await SendEmail(message, cancellationToken);
@@ -41,10 +43,12 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     private async Task SendEmail(EmailMessage message, CancellationToken cancellationToken)
     {
+      var templatePath = $"Views/{message.TemplateName}.cshtml";
+
       await _email
         .To(message.To)
         .Subject(message.Subject)
-        .Body(message.Body)
+        .UsingTemplateFromFile(templatePath, message.Model)
         .SendAsync(cancellationToken);
     }
   }
@@ -54,5 +58,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     public string To { get; set; }
     public string Subject { get; set; }
     public string Body { get; set; }
+    public string TemplateName { get; set; }
+    public object Model { get; set; }
   }
 }
