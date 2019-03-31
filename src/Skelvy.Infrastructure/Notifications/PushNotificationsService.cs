@@ -13,7 +13,7 @@ namespace Skelvy.Infrastructure.Notifications
       : base("https://fcm.googleapis.com/fcm/")
     {
       HttpClient.DefaultRequestHeaders
-        .TryAddWithoutValidation("Authorization", "key=" + configuration["Google:Key"]);
+        .TryAddWithoutValidation("Authorization", "key=" + configuration["Google:KeyWeb"]);
     }
 
     public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, ICollection<int> userIds, CancellationToken cancellationToken)

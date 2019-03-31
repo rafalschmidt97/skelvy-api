@@ -12,12 +12,14 @@ namespace Skelvy.Infrastructure.Google
 {
   public class GoogleService : HttpServiceBase, IGoogleService
   {
-    private readonly string _clientId;
+    private readonly string _idIos;
+    private readonly string _idAndroid;
 
     public GoogleService(IConfiguration configuration)
       : base("https://www.googleapis.com/")
     {
-      _clientId = configuration["Google:Id"];
+      _idIos = configuration["Google:IdIos"];
+      _idAndroid = configuration["Google:IdAndroid"];
     }
 
     public async Task<T> GetBody<T>(string path, string accessToken, string args, CancellationToken cancellationToken)
@@ -45,7 +47,7 @@ namespace Skelvy.Infrastructure.Google
       var response =
         await GetBody<dynamic>("oauth2/v3/tokeninfo", accessToken, null, cancellationToken);
 
-      if (response.aud != _clientId)
+      if (response.aud != _idIos && response.aud != _idAndroid)
       {
         throw new UnauthorizedException("Google Token Client is not valid.");
       }
