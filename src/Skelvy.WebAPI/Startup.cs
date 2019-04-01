@@ -27,7 +27,7 @@ namespace Skelvy.WebAPI
       services.AddCors();
       services.AddAuth(_configuration);
       services.AddSocket();
-      services.AddEmail(_configuration);
+      services.AddEmail();
       services.AddCustomMvc();
     }
 

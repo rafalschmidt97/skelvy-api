@@ -1,6 +1,11 @@
+using System.IO;
+using System.Net;
+using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentEmail.Core;
+using FluentEmail.Core.Interfaces;
+using FluentEmail.Smtp;
+using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Domain.Entities;
 
@@ -8,11 +13,13 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 {
   public class EmailNotificationsService : IEmailNotificationsService
   {
-    private readonly IFluentEmail _email;
+    private readonly IConfiguration _configuration;
+    private readonly ITemplateRenderer _templateRenderer;
 
-    public EmailNotificationsService(IFluentEmail email)
+    public EmailNotificationsService(IConfiguration configuration, ITemplateRenderer templateRenderer)
     {
-      _email = email;
+      _configuration = configuration;
+      _templateRenderer = templateRenderer;
     }
 
     public async Task BroadcastUserCreated(User user, CancellationToken cancellationToken)
@@ -43,13 +50,38 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     private async Task SendEmail(EmailMessage message, CancellationToken cancellationToken)
     {
-      var templatePath = $"Views/{message.TemplateName}.cshtml";
+      var body = await GetHtmlBody(message);
 
-      await _email
-        .To(message.To)
-        .Subject(message.Subject)
-        .UsingTemplateFromFile(templatePath, message.Model)
-        .SendAsync(cancellationToken);
+      var email = new MailMessage
+      {
+        From = new MailAddress(_configuration["Email:Username"], _configuration["Email:Name"]),
+        To = { message.To },
+        Subject = message.Subject,
+        Body = body,
+        IsBodyHtml = true
+      };
+
+      using (var smtp = new SmtpClient(_configuration["Email:Host"], int.Parse(_configuration["Email:Port"]))
+      {
+        EnableSsl = true,
+        DeliveryMethod = SmtpDeliveryMethod.Network,
+        Credentials = new NetworkCredential(_configuration["Email:Username"], _configuration["Email:Password"])
+      })
+      {
+        await smtp.SendMailExAsync(email, cancellationToken);
+      }
+    }
+
+    private async Task<string> GetHtmlBody(EmailMessage message)
+    {
+      string template;
+
+      using (var reader = new StreamReader(File.OpenRead($"Views/{message.TemplateName}.cshtml")))
+      {
+        template = await reader.ReadToEndAsync();
+      }
+
+      return await _templateRenderer.ParseAsync(template, message.Model);
     }
   }
 

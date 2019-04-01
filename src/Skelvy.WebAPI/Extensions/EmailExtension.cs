@@ -1,28 +1,15 @@
-using System.Net;
-using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
+using FluentEmail.Core.Interfaces;
+using FluentEmail.Razor;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Skelvy.WebAPI.Extensions
 {
   public static class EmailExtension
   {
-    public static void AddEmail(this IServiceCollection services, IConfiguration configuration)
+    public static void AddEmail(this IServiceCollection services)
     {
-      services
-        .AddFluentEmail(configuration["Email:Username"], configuration["Email:Name"])
-        .AddSmtpSender(PrepareSmtpClientSsl(configuration))
-        .AddRazorRenderer();
-    }
-
-    private static SmtpClient PrepareSmtpClientSsl(IConfiguration configuration)
-    {
-      return new SmtpClient(configuration["Email:Host"], int.Parse(configuration["Email:Port"]))
-      {
-        EnableSsl = true,
-        DeliveryMethod = SmtpDeliveryMethod.Network,
-        Credentials = new NetworkCredential(configuration["Email:Username"], configuration["Email:Password"])
-      };
+      services.TryAdd(ServiceDescriptor.Singleton<ITemplateRenderer, RazorRenderer>());
     }
   }
 }
