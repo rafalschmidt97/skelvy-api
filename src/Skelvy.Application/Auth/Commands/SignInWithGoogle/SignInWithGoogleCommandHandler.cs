@@ -60,15 +60,17 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           };
           _context.Users.Add(user);
 
+          var birthday = details.birthday != null
+            ? DateTimeOffset.ParseExact(
+              (string)details.birthday,
+              "yyyy-MM-dd",
+              CultureInfo.CurrentCulture).ToUniversalTime()
+            : DateTimeOffset.UtcNow;
+
           var profile = new UserProfile
           {
             Name = details.name.givenName,
-            Birthday = details.birthday != null
-              ? DateTimeOffset.ParseExact(
-                (string)details.birthday,
-                "yyyy-MM-dd",
-                CultureInfo.CurrentCulture).ToUniversalTime()
-              : DateTimeOffset.UtcNow.AddYears(-18),
+            Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
             Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
             UserId = user.Id
           };
