@@ -11,7 +11,6 @@ using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMee
 
 namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 {
-  // TODO: handler contains same logic as CreateMeetingRequestCommandHandler
   public class MatchMeetingRequestsCommandHandler : IRequestHandler<MatchMeetingRequestsCommand>
   {
     private readonly SkelvyContext _context;
@@ -30,7 +29,9 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         .ThenInclude(x => x.Profile)
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
+        .Where(x => x.Status == MeetingStatusTypes.Searching)
         .ToListAsync(cancellationToken);
+
       var isDataChanged = false;
       var updatedRequests = new List<MeetingRequest>();
 

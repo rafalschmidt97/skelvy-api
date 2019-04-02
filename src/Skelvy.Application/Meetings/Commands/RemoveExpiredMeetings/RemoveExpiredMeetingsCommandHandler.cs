@@ -37,9 +37,9 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
 
       if (meetingsToRemove.Count != 0)
       {
-        var meetingsToRemoveUserIds = meetingsToRemove.SelectMany(x => x.Users);
+        var meetingUsers = meetingsToRemove.SelectMany(x => x.Users);
         var meetingRequests = await _context.MeetingRequests.Where(x => x.Status == MeetingStatusTypes.Found).ToListAsync(cancellationToken);
-        var meetingRequestsToRemove = meetingRequests.Where(x => meetingsToRemoveUserIds.Any(y => y.UserId == x.UserId)).ToList();
+        var meetingRequestsToRemove = meetingRequests.Where(x => meetingUsers.Any(y => y.UserId == x.UserId)).ToList();
 
         _context.Meetings.RemoveRange(meetingsToRemove);
         _context.MeetingRequests.RemoveRange(meetingRequestsToRemove);

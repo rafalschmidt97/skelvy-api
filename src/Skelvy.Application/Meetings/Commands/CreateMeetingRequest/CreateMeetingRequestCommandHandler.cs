@@ -12,7 +12,6 @@ using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMee
 
 namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 {
-  // TODO: handler contains same logic as MatchMeetingRequestsCommandHandler
   public class CreateMeetingRequestCommandHandler : IRequestHandler<CreateMeetingRequestCommand>
   {
     private readonly SkelvyContext _context;
@@ -125,6 +124,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .ThenInclude(x => x.MeetingRequest)
         .ThenInclude(x => x.Drinks)
         .ThenInclude(x => x.Drink)
+        .Where(x => x.Date >= newRequest.MinDate && x.Date <= newRequest.MaxDate)
         .ToListAsync(cancellationToken);
 
       return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, newRequest, user));
@@ -132,8 +132,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private static bool IsMeetingMatchRequest(Meeting meeting, MeetingRequest newRequest, User user)
     {
-      return meeting.Date >= newRequest.MinDate && meeting.Date <= newRequest.MaxDate &&
-             meeting.Users.All(x => IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(x.User.Profile.Birthday), newRequest.MinAge, newRequest.MaxAge)) &&
+      return meeting.Users.All(x => IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(x.User.Profile.Birthday), newRequest.MinAge, newRequest.MaxAge)) &&
              meeting.Users.All(x => IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(user.Profile.Birthday), x.User.MeetingRequest.MinAge, x.User.MeetingRequest.MaxAge)) &&
              meeting.Users.Count < 4 &&
              CalculateDistance(
@@ -191,6 +190,10 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .ThenInclude(x => x.Profile)
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
+        .Where(x => x.Id != newRequest.Id &&
+                    x.Status == MeetingStatusTypes.Searching &&
+                    x.MinDate <= newRequest.MaxDate &&
+                    x.MaxDate >= newRequest.MinDate)
         .ToListAsync(cancellationToken);
 
       return requests.FirstOrDefault(x => AreRequestsMatch(x, newRequest, user));
@@ -201,11 +204,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       MeetingRequest newRequest,
       User user)
     {
-      return request.Id != newRequest.Id &&
-             request.Status == MeetingStatusTypes.Searching &&
-             request.MinDate <= newRequest.MaxDate &&
-             request.MaxDate >= newRequest.MinDate &&
-             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request.User.Profile.Birthday), newRequest.MinAge, newRequest.MaxAge) &&
+      return IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request.User.Profile.Birthday), newRequest.MinAge, newRequest.MaxAge) &&
              IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(user.Profile.Birthday), request.MinAge, request.MaxAge) &&
              CalculateDistance(
                request.Latitude,
