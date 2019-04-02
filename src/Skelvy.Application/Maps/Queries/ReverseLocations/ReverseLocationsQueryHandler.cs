@@ -32,7 +32,7 @@ namespace Skelvy.Application.Maps.Queries.ReverseLocations
 
       var locations = await _mapsService.Search(request.Latitude, request.Longitude, request.Language, cancellationToken);
 
-      var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(7));
+      var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(14));
       await _cache.SetAsync(cacheKey, locations.Serialize(), options, cancellationToken);
 
       return locations;
