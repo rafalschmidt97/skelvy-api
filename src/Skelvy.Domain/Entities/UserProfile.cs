@@ -7,7 +7,7 @@ namespace Skelvy.Domain.Entities
   {
     public UserProfile()
     {
-      Photos = new HashSet<UserProfilePhoto>();
+      Photos = new List<UserProfilePhoto>();
     }
 
     public int Id { get; set; }
@@ -17,7 +17,7 @@ namespace Skelvy.Domain.Entities
     public string Description { get; set; }
     public int UserId { get; set; }
 
-    public ICollection<UserProfilePhoto> Photos { get; private set; }
+    public IList<UserProfilePhoto> Photos { get; private set; }
     public User User { get; set; }
   }
 }

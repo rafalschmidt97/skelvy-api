@@ -16,7 +16,7 @@ namespace Skelvy.Infrastructure.Notifications
         .TryAddWithoutValidation("Authorization", "key=" + configuration["Google:KeyWeb"]);
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       var notification = new PushNotificationContent
       {
@@ -26,7 +26,7 @@ namespace Skelvy.Infrastructure.Notifications
       await SendNotifications(userIds, notification, cancellationToken);
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       var notification = new PushNotificationContent
       {
@@ -36,7 +36,7 @@ namespace Skelvy.Infrastructure.Notifications
       await SendNotifications(userIds, notification, cancellationToken);
     }
 
-    public async Task BroadcastUserFoundMeeting(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       var notification = new PushNotificationContent
       {
@@ -46,7 +46,7 @@ namespace Skelvy.Infrastructure.Notifications
       await SendNotifications(userIds, notification, cancellationToken);
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       var notification = new PushNotificationContent
       {
@@ -56,7 +56,7 @@ namespace Skelvy.Infrastructure.Notifications
       await SendNotifications(userIds, notification, cancellationToken);
     }
 
-    public async Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       var notification = new PushNotificationContent
       {
@@ -66,7 +66,7 @@ namespace Skelvy.Infrastructure.Notifications
       await SendNotifications(userIds, notification, cancellationToken);
     }
 
-    public async Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingExpired(IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       var notification = new PushNotificationContent
       {

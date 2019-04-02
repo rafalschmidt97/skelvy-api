@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Skelvy.Application.Drinks.Queries.FindDrinks
 {
-  public class FindDrinksQuery : IRequest<ICollection<DrinkDto>>
+  public class FindDrinksQuery : IRequest<IList<DrinkDto>>
   {
   }
 }

@@ -4,7 +4,7 @@ using Skelvy.Application.Infrastructure.Maps;
 
 namespace Skelvy.Application.Maps.Queries.ReverseLocations
 {
-  public class ReverseLocationsQuery : IRequest<ICollection<Location>>
+  public class ReverseLocationsQuery : IRequest<IList<Location>>
   {
     public double Latitude { get; set; }
     public double Longitude { get; set; }

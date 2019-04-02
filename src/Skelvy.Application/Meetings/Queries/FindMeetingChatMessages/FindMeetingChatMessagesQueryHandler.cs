@@ -13,7 +13,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
 {
   public class FindMeetingChatMessagesQueryHandler
-    : IRequestHandler<FindMeetingChatMessagesQuery, ICollection<MeetingChatMessageDto>>
+    : IRequestHandler<FindMeetingChatMessagesQuery, IList<MeetingChatMessageDto>>
   {
     private readonly SkelvyContext _context;
     private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
       _mapper = mapper;
     }
 
-    public async Task<ICollection<MeetingChatMessageDto>> Handle(
+    public async Task<IList<MeetingChatMessageDto>> Handle(
       FindMeetingChatMessagesQuery request,
       CancellationToken cancellationToken)
     {

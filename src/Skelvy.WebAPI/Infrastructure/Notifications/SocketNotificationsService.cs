@@ -18,32 +18,32 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _hubContext = hubContext;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserSentMeetingChatMessage", message, cancellationToken);
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserJoinedMeeting", cancellationToken);
     }
 
-    public async Task BroadcastUserFoundMeeting(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserFoundMeeting", cancellationToken);
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserLeftMeeting", cancellationToken);
     }
 
-    public async Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingRequestExpired", cancellationToken);
     }
 
-    public async Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingExpired(IEnumerable<int> userIds, CancellationToken cancellationToken)
     {
       await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingExpired", cancellationToken);
     }

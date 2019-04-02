@@ -38,7 +38,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpGet("self/chat")]
-    public async Task<ICollection<MeetingChatMessageDto>> FindSelfChat([FromQuery] FindMeetingChatMessagesQuery request)
+    public async Task<IList<MeetingChatMessageDto>> FindSelfChat([FromQuery] FindMeetingChatMessagesQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request, HttpContext.RequestAborted);

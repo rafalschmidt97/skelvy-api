@@ -9,7 +9,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Drinks.Queries.FindDrinks
 {
-  public class FindDrinksQueryHandler : IRequestHandler<FindDrinksQuery, ICollection<DrinkDto>>
+  public class FindDrinksQueryHandler : IRequestHandler<FindDrinksQuery, IList<DrinkDto>>
   {
     private readonly SkelvyContext _context;
     private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ namespace Skelvy.Application.Drinks.Queries.FindDrinks
       _mapper = mapper;
     }
 
-    public async Task<ICollection<DrinkDto>> Handle(FindDrinksQuery request, CancellationToken cancellationToken)
+    public async Task<IList<DrinkDto>> Handle(FindDrinksQuery request, CancellationToken cancellationToken)
     {
       return await _context.Drinks.ProjectTo<DrinkDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
     }

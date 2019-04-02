@@ -11,7 +11,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
     public DateTimeOffset Birthday { get; set; }
     public string Gender { get; set; }
     public string Description { get; set; }
-    public ICollection<UpdateUserProfilePhotos> Photos { get; set; }
+    public IList<UpdateUserProfilePhotos> Photos { get; set; }
   }
 
   public class UpdateUserProfilePhotos

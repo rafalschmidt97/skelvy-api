@@ -15,7 +15,7 @@ namespace Skelvy.Application.Meetings.Queries
     public DateTimeOffset Date { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public ICollection<UserDto> Users { get; set; }
+    public IList<UserDto> Users { get; set; }
     public DrinkDto Drink { get; set; }
 
     public void CreateMappings(Profile configuration)

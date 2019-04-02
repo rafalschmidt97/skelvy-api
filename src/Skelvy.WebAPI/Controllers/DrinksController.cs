@@ -9,7 +9,7 @@ namespace Skelvy.WebAPI.Controllers
   public class DrinksController : BaseController
   {
     [HttpGet]
-    public async Task<ICollection<DrinkDto>> FindAll()
+    public async Task<IList<DrinkDto>> FindAll()
     {
       return await Mediator.Send(new FindDrinksQuery(), HttpContext.RequestAborted);
     }

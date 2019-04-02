@@ -24,7 +24,7 @@ namespace Skelvy.Infrastructure.Notifications
       _emailService = emailService;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IList<int> userIds, CancellationToken cancellationToken)
     {
       var connections = GetConnections(userIds);
 
@@ -39,7 +39,7 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IList<int> userIds, CancellationToken cancellationToken)
     {
       var connections = GetConnections(userIds);
 
@@ -54,7 +54,7 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserFoundMeeting(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserFoundMeeting(IList<int> userIds, CancellationToken cancellationToken)
     {
       var connections = GetConnections(userIds);
 
@@ -69,7 +69,7 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, IList<int> userIds, CancellationToken cancellationToken)
     {
       var connections = GetConnections(userIds);
 
@@ -84,7 +84,7 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastMeetingRequestExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingRequestExpired(IList<int> userIds, CancellationToken cancellationToken)
     {
       var connections = GetConnections(userIds);
 
@@ -99,7 +99,7 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastMeetingExpired(ICollection<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingExpired(IList<int> userIds, CancellationToken cancellationToken)
     {
       var connections = GetConnections(userIds);
 
@@ -157,7 +157,7 @@ namespace Skelvy.Infrastructure.Notifications
       OfflineIds = new List<int>();
     }
 
-    public ICollection<int> OnlineIds { get; private set; }
-    public ICollection<int> OfflineIds { get; private set; }
+    public IList<int> OnlineIds { get; private set; }
+    public IList<int> OfflineIds { get; private set; }
   }
 }

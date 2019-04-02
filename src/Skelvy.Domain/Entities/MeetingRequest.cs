@@ -7,7 +7,7 @@ namespace Skelvy.Domain.Entities
   {
     public MeetingRequest()
     {
-      Drinks = new HashSet<MeetingRequestDrink>();
+      Drinks = new List<MeetingRequestDrink>();
     }
 
     public int Id { get; set; }
@@ -20,7 +20,7 @@ namespace Skelvy.Domain.Entities
     public double Longitude { get; set; }
     public int UserId { get; set; }
 
-    public ICollection<MeetingRequestDrink> Drinks { get; private set; }
+    public IList<MeetingRequestDrink> Drinks { get; private set; }
     public User User { get; set; }
   }
 }

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
 {
-  public class FindMeetingChatMessagesQuery : IRequest<ICollection<MeetingChatMessageDto>>
+  public class FindMeetingChatMessagesQuery : IRequest<IList<MeetingChatMessageDto>>
   {
     public int UserId { get; set; }
     public DateTimeOffset FromDate { get; set; }

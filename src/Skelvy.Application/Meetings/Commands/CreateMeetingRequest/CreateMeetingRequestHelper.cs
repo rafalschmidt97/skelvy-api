@@ -50,7 +50,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         }
       }
 
-      return dates.First();
+      return dates[0];
     }
 
     public static int FindCommonDrink(MeetingRequest request1, MeetingRequest request2)

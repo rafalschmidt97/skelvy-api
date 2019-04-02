@@ -15,7 +15,7 @@ namespace Skelvy.Application.Users.Queries
     public DateTimeOffset Birthday { get; set; }
     public string Gender { get; set; }
     public string Description { get; set; }
-    public ICollection<UserProfilePhotoDto> Photos { get; set; }
+    public IList<UserProfilePhotoDto> Photos { get; set; }
   }
 
   public class UserProfilePhotoDto

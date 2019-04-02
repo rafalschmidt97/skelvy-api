@@ -7,8 +7,8 @@ namespace Skelvy.Domain.Entities
   {
     public Meeting()
     {
-      Users = new HashSet<MeetingUser>();
-      ChatMessages = new HashSet<MeetingChatMessage>();
+      Users = new List<MeetingUser>();
+      ChatMessages = new List<MeetingChatMessage>();
     }
 
     public int Id { get; set; }
@@ -17,8 +17,8 @@ namespace Skelvy.Domain.Entities
     public double Longitude { get; set; }
     public int DrinkId { get; set; }
 
-    public ICollection<MeetingUser> Users { get; private set; }
-    public ICollection<MeetingChatMessage> ChatMessages { get; private set; }
+    public IList<MeetingUser> Users { get; private set; }
+    public IList<MeetingChatMessage> ChatMessages { get; private set; }
     public Drink Drink { get; set; }
   }
 }

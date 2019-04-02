@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -67,7 +66,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldThrowExceptionWithInvalidDrink()
     {
       var request = Request();
-      request.Drinks.First().Id = 10;
+      request.Drinks[0].Id = 10;
       var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
