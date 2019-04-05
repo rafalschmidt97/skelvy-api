@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190324202737_Initial")]
+    [Migration("20190406104737_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,10 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.HasKey("Id");
 
@@ -108,8 +112,7 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("MeetingRequests");
                 });
@@ -129,11 +132,21 @@ namespace Skelvy.Persistence.Migrations
 
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingUser", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<int>("MeetingId");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.Property<int>("UserId");
 
-                    b.HasKey("MeetingId", "UserId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("MeetingId");
 
                     b.HasIndex("UserId");
 
@@ -202,6 +215,10 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<int>("ProfileId");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15);
+
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasMaxLength(2048);
@@ -237,8 +254,8 @@ namespace Skelvy.Persistence.Migrations
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequest", b =>
                 {
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
-                        .WithOne("MeetingRequest")
-                        .HasForeignKey("Skelvy.Domain.Entities.MeetingRequest", "UserId")
+                        .WithMany("MeetingRequests")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

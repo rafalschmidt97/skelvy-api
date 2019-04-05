@@ -1,8 +1,9 @@
 namespace Skelvy.Application.Meetings.Commands
 {
-  public static class MeetingStatusTypes
+  public static class MeetingRequestStatusTypes
   {
-    public const string Active = "active";
+    public const string Found = "found";
+    public const string Searching = "searching";
     public const string Aborted = "aborted";
     public const string Expired = "expired";
   }

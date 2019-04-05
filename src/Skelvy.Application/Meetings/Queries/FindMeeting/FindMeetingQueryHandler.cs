@@ -27,7 +27,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
       var meetingRequest = await _context.MeetingRequests
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && (x.Status == MeetingRequestStatusTypes.Searching || x.Status == MeetingRequestStatusTypes.Found), cancellationToken);
 
       if (meetingRequest == null)
       {
@@ -40,13 +40,13 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
         .ThenInclude(x => x.Profile)
         .ThenInclude(x => x.Photos)
         .Include(x => x.Drink)
-        .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == request.UserId), cancellationToken);
+        .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == request.UserId && y.Status == MeetingUserStatusTypes.Joined), cancellationToken);
 
       if (meeting != null)
       {
         return new MeetingViewModel
         {
-          Status = MeetingStatusTypes.Found,
+          Status = MeetingRequestStatusTypes.Found,
           Meeting = _mapper.Map<MeetingDto>(meeting),
           Request = _mapper.Map<MeetingRequestDto>(meetingRequest)
         };
@@ -54,7 +54,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
 
       return new MeetingViewModel
       {
-        Status = MeetingStatusTypes.Searching,
+        Status = MeetingRequestStatusTypes.Searching,
         Request = _mapper.Map<MeetingRequestDto>(meetingRequest)
       };
     }

@@ -44,24 +44,27 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
 
     private async Task RemoveFromMeeting(User user, CancellationToken cancellationToken)
     {
-      var meetingUser = await _context.MeetingUsers.FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
+      var meetingUser = await _context.MeetingUsers
+        .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Status == MeetingUserStatusTypes.Joined, cancellationToken);
 
       if (meetingUser != null)
       {
         var meeting = await _context.Meetings
           .Include(x => x.Users)
           .ThenInclude(x => x.User)
-          .ThenInclude(x => x.MeetingRequest)
-          .FirstOrDefaultAsync(x => x.Id == meetingUser.MeetingId, cancellationToken);
+          .ThenInclude(x => x.MeetingRequests)
+          .FirstOrDefaultAsync(x => x.Id == meetingUser.MeetingId && x.Status == MeetingStatusTypes.Active, cancellationToken);
 
-        _context.MeetingUsers.Remove(meetingUser);
+        meetingUser.Status = MeetingUserStatusTypes.Left;
         var meetingUserDetails = meeting.Users.First(x => x.UserId == meetingUser.UserId);
-        _context.MeetingRequests.Remove(meetingUserDetails.User.MeetingRequest);
+        meetingUserDetails.User.MeetingRequests.First(x => x.Status == MeetingRequestStatusTypes.Found).Status = MeetingRequestStatusTypes.Aborted;
 
         if (meeting.Users.Count == 2)
         {
-          meeting.Users.First(x => x.UserId != meetingUser.UserId).User.MeetingRequest.Status = MeetingStatusTypes.Searching;
-          _context.Meetings.Remove(meeting);
+          var anotherUser = meeting.Users.First(x => x.UserId != meetingUser.UserId);
+          anotherUser.User.MeetingRequests.First(x => x.Status == MeetingRequestStatusTypes.Found).Status = MeetingRequestStatusTypes.Searching;
+          anotherUser.Status = MeetingUserStatusTypes.Left;
+          meeting.Status = MeetingStatusTypes.Aborted;
         }
 
         await _context.SaveChangesAsync(cancellationToken);

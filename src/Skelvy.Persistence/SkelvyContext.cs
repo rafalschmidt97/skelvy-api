@@ -26,7 +26,6 @@ namespace Skelvy.Persistence
 
       // Configuration for many-to-many relationships (automatic joining has not been implemented yet in EF Core)
       modelBuilder.Entity<MeetingRequestDrink>().HasKey(x => new { x.MeetingRequestId, x.DrinkId });
-      modelBuilder.Entity<MeetingUser>().HasKey(x => new { x.MeetingId, x.UserId });
     }
   }
 }

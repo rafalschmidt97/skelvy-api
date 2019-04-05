@@ -81,16 +81,19 @@ namespace Skelvy.Application.Core.Initializers
         new UserProfilePhoto
         {
           Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=1",
+          Status = UserProfilePhotoStatusTypes.Active,
           ProfileId = profiles[0].Id
         },
         new UserProfilePhoto
         {
           Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=2",
+          Status = UserProfilePhotoStatusTypes.Active,
           ProfileId = profiles[1].Id
         },
         new UserProfilePhoto
         {
           Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=3",
+          Status = UserProfilePhotoStatusTypes.Active,
           ProfileId = profiles[2].Id
         }
       };
@@ -135,7 +138,7 @@ namespace Skelvy.Application.Core.Initializers
       {
         new MeetingRequest
         {
-          Status = MeetingStatusTypes.Searching,
+          Status = MeetingRequestStatusTypes.Searching,
           MinDate = DateTimeOffset.UtcNow,
           MaxDate = DateTimeOffset.UtcNow,
           MinAge = 18,
@@ -176,7 +179,7 @@ namespace Skelvy.Application.Core.Initializers
       {
         new MeetingRequest
         {
-          Status = MeetingStatusTypes.Found,
+          Status = MeetingRequestStatusTypes.Found,
           MinDate = DateTimeOffset.UtcNow.AddDays(2),
           MaxDate = DateTimeOffset.UtcNow.AddDays(4),
           MinAge = 18,
@@ -187,7 +190,7 @@ namespace Skelvy.Application.Core.Initializers
         },
         new MeetingRequest
         {
-          Status = MeetingStatusTypes.Found,
+          Status = MeetingRequestStatusTypes.Found,
           MinDate = DateTimeOffset.UtcNow.AddDays(2),
           MaxDate = DateTimeOffset.UtcNow.AddDays(4),
           MinAge = 18,
@@ -221,6 +224,7 @@ namespace Skelvy.Application.Core.Initializers
       {
         new Meeting
         {
+          Status = MeetingStatusTypes.Active,
           Date = DateTimeOffset.UtcNow.AddDays(3),
           Latitude = 1,
           Longitude = 1,
@@ -236,12 +240,14 @@ namespace Skelvy.Application.Core.Initializers
         new MeetingUser
         {
           MeetingId = meetings[0].Id,
-          UserId = users[1].Id
+          UserId = users[1].Id,
+          Status = MeetingUserStatusTypes.Joined
         },
         new MeetingUser
         {
           MeetingId = meetings[0].Id,
-          UserId = users[2].Id
+          UserId = users[2].Id,
+          Status = MeetingUserStatusTypes.Joined
         }
       };
 

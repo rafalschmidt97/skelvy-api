@@ -24,7 +24,9 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
     public async Task<Unit> Handle(AddMeetingChatMessageCommand request, CancellationToken cancellationToken)
     {
       var meetingUser =
-        await _context.MeetingUsers.FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken);
+        await _context.MeetingUsers.FirstOrDefaultAsync(
+          x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined,
+          cancellationToken);
 
       if (meetingUser == null)
       {

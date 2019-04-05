@@ -20,7 +20,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
     public async Task<Unit> Handle(RemoveMeetingRequestCommand request, CancellationToken cancellationToken)
     {
       var user = await _context.MeetingUsers
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined, cancellationToken);
 
       if (user != null)
       {
@@ -28,14 +28,14 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
       }
 
       var meetingRequest = await _context.MeetingRequests
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingRequestStatusTypes.Searching, cancellationToken);
 
       if (meetingRequest == null)
       {
         throw new NotFoundException($"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) not found.");
       }
 
-      _context.MeetingRequests.Remove(meetingRequest);
+      meetingRequest.Status = MeetingRequestStatusTypes.Aborted;
 
       await _context.SaveChangesAsync(cancellationToken);
       return Unit.Value;

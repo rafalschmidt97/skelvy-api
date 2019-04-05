@@ -12,6 +12,7 @@ namespace Skelvy.Domain.Entities
     }
 
     public int Id { get; set; }
+    public string Status { get; set; }
     public DateTimeOffset Date { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
