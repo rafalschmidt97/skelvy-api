@@ -36,9 +36,16 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
         throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
       }
 
+      const int pageSize = 20;
+      var skip = (request.Page - 1) * pageSize;
+
       return await _context.MeetingChatMessages
-        .Where(x => x.MeetingId == meetingUser.MeetingId && x.Date >= request.FromDate && x.Date <= request.ToDate)
-        .ProjectTo<MeetingChatMessageDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
+        .OrderByDescending(p => p.Date)
+        .Skip(skip)
+        .Take(pageSize)
+        .Where(x => x.MeetingId == meetingUser.MeetingId)
+        .ProjectTo<MeetingChatMessageDto>(_mapper.ConfigurationProvider)
+        .ToListAsync(cancellationToken);
     }
   }
 }
