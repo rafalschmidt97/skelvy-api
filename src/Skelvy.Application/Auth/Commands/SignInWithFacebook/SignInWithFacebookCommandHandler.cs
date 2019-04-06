@@ -36,7 +36,9 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     {
       var verified = await _facebookService.Verify(request.AuthToken, cancellationToken);
 
-      var user = await _context.Users.FirstOrDefaultAsync(x => x.FacebookId == verified.UserId, cancellationToken);
+      var user = await _context.Users
+        .Include(x => x.Roles)
+        .FirstOrDefaultAsync(x => x.FacebookId == verified.UserId, cancellationToken);
 
       if (user == null)
       {
@@ -47,7 +49,10 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           cancellationToken);
 
         var email = (string)details.email;
-        var userByEmail = await _context.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+        var userByEmail = await _context.Users
+          .Include(x => x.Roles)
+          .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+
         var isDataChanged = false;
 
         if (userByEmail == null)
@@ -102,7 +107,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         }
       }
 
-      return _tokenService.Generate(user, verified);
+      return _tokenService.Generate(user);
     }
   }
 }
