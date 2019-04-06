@@ -19,6 +19,7 @@ namespace Skelvy.Domain.Entities
 
     public UserProfile Profile { get; set; }
     public IList<UserRole> Roles { get; private set; }
+    public IList<MeetingRequest> MeetingRequests { get; private set; }
     public IList<MeetingChatMessage> MeetingChatMessages { get; private set; }
   }
 }
