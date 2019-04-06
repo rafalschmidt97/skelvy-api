@@ -171,6 +171,8 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<bool>("IsDisabled");
+
                     b.Property<string>("Language")
                         .IsRequired()
                         .HasMaxLength(15);

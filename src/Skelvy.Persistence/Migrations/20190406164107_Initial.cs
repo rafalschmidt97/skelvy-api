@@ -32,7 +32,8 @@ namespace Skelvy.Persistence.Migrations
                     FacebookId = table.Column<string>(maxLength: 50, nullable: true),
                     GoogleId = table.Column<string>(maxLength: 50, nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    DeletionDate = table.Column<DateTimeOffset>(nullable: true)
+                    DeletionDate = table.Column<DateTimeOffset>(nullable: true),
+                    IsDisabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

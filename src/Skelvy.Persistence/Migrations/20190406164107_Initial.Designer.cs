@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190406144253_Initial")]
+    [Migration("20190406164107_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,6 +172,8 @@ namespace Skelvy.Persistence.Migrations
                         .HasMaxLength(50);
 
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsDisabled");
 
                     b.Property<string>("Language")
                         .IsRequired()

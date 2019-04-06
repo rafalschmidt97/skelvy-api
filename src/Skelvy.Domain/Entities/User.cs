@@ -19,6 +19,7 @@ namespace Skelvy.Domain.Entities
     public string GoogleId { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletionDate { get; set; }
+    public bool IsDisabled { get; set; }
 
     public UserProfile Profile { get; set; }
     public IList<UserRole> Roles { get; private set; }

@@ -1,3 +1,4 @@
+using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
@@ -28,7 +29,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         To = user.Email,
         Subject = "Account has been created",
-        Body = "Body created",
         TemplateName = "Created"
       };
 
@@ -41,8 +41,23 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         To = user.Email,
         Subject = "Account has been deleted",
-        Body = "Body deleted",
         TemplateName = "Deleted"
+      };
+
+      await SendEmail(message, cancellationToken);
+    }
+
+    public async Task BroadcastUserDisabled(User user, string reason, CancellationToken cancellationToken)
+    {
+      dynamic model = new ExpandoObject();
+      model.Reason = reason;
+
+      var message = new EmailMessage
+      {
+        To = user.Email,
+        Subject = "Account has been disabled",
+        TemplateName = "Disabled",
+        Model = model
       };
 
       await SendEmail(message, cancellationToken);
@@ -89,7 +104,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
   {
     public string To { get; set; }
     public string Subject { get; set; }
-    public string Body { get; set; }
     public string TemplateName { get; set; }
     public object Model { get; set; }
   }
