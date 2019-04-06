@@ -8,6 +8,7 @@ using Skelvy.Application.Infrastructure.Facebook;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Infrastructure.Tokens;
 using Skelvy.Application.Users.Commands;
+using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
@@ -61,7 +62,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           {
             Email = details.email,
             Language = request.Language,
-            FacebookId = verified.UserId
+            FacebookId = verified.UserId,
+            IsDeleted = false
           };
           _context.Users.Add(user);
 
@@ -94,6 +96,11 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         }
         else
         {
+          if (userByEmail.IsDeleted)
+          {
+            throw new UnauthorizedException("User is in safety retention window for deletion");
+          }
+
           userByEmail.FacebookId = verified.UserId;
           user = userByEmail;
           isDataChanged = true;
@@ -104,6 +111,13 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         if (!isDataChanged)
         {
           await _notifications.BroadcastUserCreated(user, cancellationToken);
+        }
+      }
+      else
+      {
+        if (user.IsDeleted)
+        {
+          throw new UnauthorizedException("User is in safety retention window for deletion");
         }
       }
 

@@ -8,6 +8,7 @@ using Skelvy.Application.Infrastructure.Google;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Infrastructure.Tokens;
 using Skelvy.Application.Users.Commands;
+using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
@@ -61,7 +62,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           {
             Email = details.emails[0].value,
             Language = request.Language,
-            GoogleId = verified.UserId
+            GoogleId = verified.UserId,
+            IsDeleted = false
           };
           _context.Users.Add(user);
 
@@ -96,6 +98,11 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         }
         else
         {
+          if (userByEmail.IsDeleted)
+          {
+            throw new UnauthorizedException("User is in safety retention window for deletion");
+          }
+
           userByEmail.GoogleId = verified.UserId;
           user = userByEmail;
           isDataChanged = true;
@@ -106,6 +113,13 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         if (!isDataChanged)
         {
           await _notifications.BroadcastUserCreated(user, cancellationToken);
+        }
+      }
+      else
+      {
+        if (user.IsDeleted)
+        {
+          throw new UnauthorizedException("User is in safety retention window for deletion");
         }
       }
 

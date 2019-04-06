@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -33,16 +34,18 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
         throw new NotFoundException(nameof(User), request.Id);
       }
 
-      await RemoveFromMeeting(user, cancellationToken);
+      await LeaveMeetings(user, cancellationToken);
 
-      _context.Users.Remove(user);
+      user.IsDeleted = true;
+      user.DeletionDate = DateTimeOffset.UtcNow.AddMonths(3);
+
       await _context.SaveChangesAsync(cancellationToken);
       await _notifications.BroadcastUserDeleted(user, cancellationToken);
 
       return Unit.Value;
     }
 
-    private async Task RemoveFromMeeting(User user, CancellationToken cancellationToken)
+    private async Task LeaveMeetings(User user, CancellationToken cancellationToken)
     {
       var meetingUser = await _context.MeetingUsers
         .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Status == MeetingUserStatusTypes.Joined, cancellationToken);

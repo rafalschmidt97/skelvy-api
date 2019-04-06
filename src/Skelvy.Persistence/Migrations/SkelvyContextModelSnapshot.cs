@@ -157,6 +157,8 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset?>("DeletionDate");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -166,6 +168,8 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<string>("GoogleId")
                         .HasMaxLength(50);
+
+                    b.Property<bool>("IsDeleted");
 
                     b.Property<string>("Language")
                         .IsRequired()

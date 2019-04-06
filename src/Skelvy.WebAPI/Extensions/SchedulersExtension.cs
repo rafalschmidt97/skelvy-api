@@ -25,6 +25,7 @@ namespace Skelvy.WebAPI.Extensions
     {
       app.ApplicationServices.UseScheduler(scheduler =>
       {
+        scheduler.Schedule<RemoveUsersScheduler>().Daily();
         scheduler.Schedule<RemoveExpiredMeetingsScheduler>().Daily();
         scheduler.Schedule<RemoveExpiredMeetingRequestsScheduler>().Daily();
         scheduler.Schedule<MatchMeetingRequestsScheduler>().Hourly();
