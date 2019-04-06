@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Users.Commands;
+using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
@@ -30,6 +31,14 @@ namespace Skelvy.WebAPI.Controllers
     public async Task Remove(int id)
     {
       await Mediator.Send(new RemoveUserCommand { Id = id }, HttpContext.RequestAborted);
+    }
+
+    [HttpPatch("{id}/disabled")]
+    [AuthorizeRole(RoleTypes.Admin)]
+    public async Task Disable(int id, DisableUserCommand request)
+    {
+      request.Id = id;
+      await Mediator.Send(request, HttpContext.RequestAborted);
     }
 
     [HttpPatch("self/language")]

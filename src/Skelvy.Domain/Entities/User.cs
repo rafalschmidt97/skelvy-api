@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Skelvy.Domain.Entities
@@ -16,6 +17,9 @@ namespace Skelvy.Domain.Entities
     public string Language { get; set; }
     public string FacebookId { get; set; }
     public string GoogleId { get; set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletionDate { get; set; }
+    public bool IsDisabled { get; set; }
 
     public UserProfile Profile { get; set; }
     public IList<UserRole> Roles { get; private set; }

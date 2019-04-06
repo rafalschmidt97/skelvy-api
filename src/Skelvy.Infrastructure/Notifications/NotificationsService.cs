@@ -124,6 +124,11 @@ namespace Skelvy.Infrastructure.Notifications
       await _emailService.BroadcastUserDeleted(user, cancellationToken);
     }
 
+    public async Task BroadcastUserDisabled(User user, string reason, CancellationToken cancellationToken)
+    {
+      await _emailService.BroadcastUserDisabled(user, reason, cancellationToken);
+    }
+
     public static bool IsConnected(int userId)
     {
       return Connections.FirstOrDefault(x => x == userId) != default(int);

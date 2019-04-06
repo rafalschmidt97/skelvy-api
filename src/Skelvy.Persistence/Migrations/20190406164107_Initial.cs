@@ -30,7 +30,10 @@ namespace Skelvy.Persistence.Migrations
                     Email = table.Column<string>(maxLength: 50, nullable: false),
                     Language = table.Column<string>(maxLength: 15, nullable: false),
                     FacebookId = table.Column<string>(maxLength: 50, nullable: true),
-                    GoogleId = table.Column<string>(maxLength: 50, nullable: true)
+                    GoogleId = table.Column<string>(maxLength: 50, nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletionDate = table.Column<DateTimeOffset>(nullable: true),
+                    IsDisabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

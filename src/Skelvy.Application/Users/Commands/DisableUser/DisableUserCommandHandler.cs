@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -11,23 +10,23 @@ using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
-namespace Skelvy.Application.Users.Commands.RemoveUser
+namespace Skelvy.Application.Users.Commands.DisableUser
 {
-  public class RemoveUserCommandHandler : IRequestHandler<RemoveUserCommand>
+  public class DisableUserCommandHandler : IRequestHandler<DisableUserCommand>
   {
     private readonly SkelvyContext _context;
     private readonly INotificationsService _notifications;
 
-    public RemoveUserCommandHandler(SkelvyContext context, INotificationsService notifications)
+    public DisableUserCommandHandler(SkelvyContext context, INotificationsService notifications)
     {
       _context = context;
       _notifications = notifications;
     }
 
-    public async Task<Unit> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DisableUserCommand request, CancellationToken cancellationToken)
     {
       var user = await _context.Users
-        .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        .FirstOrDefaultAsync(x => x.Id == request.Id && !x.IsDeleted, cancellationToken);
 
       if (user == null)
       {
@@ -36,11 +35,10 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
 
       await LeaveMeetings(user, cancellationToken);
 
-      user.IsDeleted = true;
-      user.DeletionDate = DateTimeOffset.UtcNow.AddMonths(3);
+      user.IsDisabled = true;
 
       await _context.SaveChangesAsync(cancellationToken);
-      await _notifications.BroadcastUserDeleted(user, cancellationToken);
+      await _notifications.BroadcastUserDisabled(user, request.Reason, cancellationToken);
 
       return Unit.Value;
     }

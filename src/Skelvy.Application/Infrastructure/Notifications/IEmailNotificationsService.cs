@@ -8,5 +8,6 @@ namespace Skelvy.Application.Infrastructure.Notifications
   {
     Task BroadcastUserCreated(User user, CancellationToken cancellationToken);
     Task BroadcastUserDeleted(User user, CancellationToken cancellationToken);
+    Task BroadcastUserDisabled(User user, string reason, CancellationToken cancellationToken);
   }
 }

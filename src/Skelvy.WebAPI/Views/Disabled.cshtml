@@ -1,3 +1,4 @@
+@model dynamic
 <!--https://htmlemail.io/inline/-->
 <!--http://minifycode.com/html-minifier/-->
 <!doctype html>
@@ -265,8 +266,9 @@
                   <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td> <!-- START CONTENT -->
-                        <h1>Account has been deleted! &nbsp;</h1>
-                        <p>This email is part of the account deleting procedure. After the safety retention window your data will disappear.</p>
+                        <h1>Account has been disabled! &nbsp;</h1>
+                        <p>Due to the violating our Terms of Service, the account has been disabled.</p>
+                        <p>Reason: @Model.Reason</p>
                       </td> <!-- END CONTENT -->
                     </tr>
                   </table>
