@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Infrastructure.Tokens;
 using Skelvy.Domain.Entities;
 
@@ -20,7 +20,7 @@ namespace Skelvy.Infrastructure.Tokens
       _configuration = configuration;
     }
 
-    public string Generate(User user, AccessVerification verification)
+    public string Generate(User user)
     {
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
       var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -29,11 +29,10 @@ namespace Skelvy.Infrastructure.Tokens
       {
         new Claim(ClaimTypes.Sid, user.Id.ToString()),
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Email, user.Email),
-        new Claim(AuthClaimTypes.Type, verification.AccessType),
-        new Claim(AuthClaimTypes.UserId, verification.UserId),
-        new Claim(AuthClaimTypes.AccessToken, verification.AccessToken)
+        new Claim(ClaimTypes.Email, user.Email)
       };
+
+      claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
 
       var token = new JwtSecurityToken(
         _configuration["Jwt:Issuer"],

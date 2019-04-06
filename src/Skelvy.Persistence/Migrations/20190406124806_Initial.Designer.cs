@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190406104737_Initial")]
+    [Migration("20190406124806_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -230,6 +230,25 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("UserProfilePhotos");
                 });
 
+            modelBuilder.Entity("Skelvy.Domain.Entities.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(15);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles");
+                });
+
             modelBuilder.Entity("Skelvy.Domain.Entities.Meeting", b =>
                 {
                     b.HasOne("Skelvy.Domain.Entities.Drink", "Drink")
@@ -298,6 +317,14 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.UserProfile", "Profile")
                         .WithMany("Photos")
                         .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.UserRole", b =>
+                {
+                    b.HasOne("Skelvy.Domain.Entities.User", "User")
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

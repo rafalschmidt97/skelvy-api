@@ -37,7 +37,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
       _googleService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Access);
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>(), It.IsAny<AccessVerification>())).Returns(Token);
+        x.Generate(It.IsAny<User>())).Returns(Token);
       var handler =
         new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
@@ -55,7 +55,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None))
         .ReturnsAsync((object)PeopleResponse());
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>(), It.IsAny<AccessVerification>())).Returns(Token);
+        x.Generate(It.IsAny<User>())).Returns(Token);
       var handler = new SignInWithGoogleCommandHandler(DbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request, CancellationToken.None);

@@ -228,6 +228,25 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("UserProfilePhotos");
                 });
 
+            modelBuilder.Entity("Skelvy.Domain.Entities.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(15);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles");
+                });
+
             modelBuilder.Entity("Skelvy.Domain.Entities.Meeting", b =>
                 {
                     b.HasOne("Skelvy.Domain.Entities.Drink", "Drink")
@@ -296,6 +315,14 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.UserProfile", "Profile")
                         .WithMany("Photos")
                         .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.UserRole", b =>
+                {
+                    b.HasOne("Skelvy.Domain.Entities.User", "User")
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
