@@ -43,6 +43,7 @@ namespace Skelvy.Persistence.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Status = table.Column<string>(maxLength: 15, nullable: false),
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
@@ -140,12 +141,15 @@ namespace Skelvy.Persistence.Migrations
                 name: "MeetingUsers",
                 columns: table => new
                 {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Status = table.Column<string>(maxLength: 15, nullable: false),
                     MeetingId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MeetingUsers", x => new { x.MeetingId, x.UserId });
+                    table.PrimaryKey("PK_MeetingUsers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MeetingUsers_Meetings_MeetingId",
                         column: x => x.MeetingId,
@@ -191,6 +195,7 @@ namespace Skelvy.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Url = table.Column<string>(maxLength: 2048, nullable: false),
+                    Status = table.Column<string>(maxLength: 15, nullable: false),
                     ProfileId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -222,13 +227,17 @@ namespace Skelvy.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MeetingRequests_UserId",
                 table: "MeetingRequests",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Meetings_DrinkId",
                 table: "Meetings",
                 column: "DrinkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingUsers_MeetingId",
+                table: "MeetingUsers",
+                column: "MeetingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MeetingUsers_UserId",

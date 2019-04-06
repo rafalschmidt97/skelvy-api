@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Meetings.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
@@ -28,8 +29,8 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
       FindMeetingChatMessagesQuery request,
       CancellationToken cancellationToken)
     {
-      var meetingUser =
-        await _context.MeetingUsers.FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken);
+      var meetingUser = await _context.MeetingUsers
+          .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined, cancellationToken);
 
       if (meetingUser == null)
       {

@@ -29,14 +29,14 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
     {
       var today = DateTimeOffset.UtcNow;
       var requestsToRemove = await _context.MeetingRequests
-        .Where(x => x.MaxDate < today && x.Status == MeetingStatusTypes.Searching)
+        .Where(x => x.MaxDate < today && x.Status == MeetingRequestStatusTypes.Searching)
         .ToListAsync(cancellationToken);
 
       var isDataChanged = false;
 
       if (requestsToRemove.Count != 0)
       {
-        _context.MeetingRequests.RemoveRange(requestsToRemove);
+        requestsToRemove.ForEach(x => { x.Status = MeetingRequestStatusTypes.Expired; });
         isDataChanged = true;
       }
 

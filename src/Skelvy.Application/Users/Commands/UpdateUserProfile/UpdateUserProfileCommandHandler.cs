@@ -48,7 +48,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       // Remove old photos
       var oldPhotos = await _context.UserProfilePhotos.Where(x => x.ProfileId == profile.Id)
         .ToListAsync(cancellationToken);
-      _context.UserProfilePhotos.RemoveRange(oldPhotos);
+      oldPhotos.ForEach(x => { x.Status = UserProfilePhotoStatusTypes.Removed; });
 
       // Add new photos
       var newPhotos = PreparePhotos(photos, profile);
@@ -62,6 +62,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       return photos.Select(photo => new UserProfilePhoto
       {
         Url = photo.Url,
+        Status = UserProfilePhotoStatusTypes.Active,
         ProfileId = profile.Id
       });
     }

@@ -29,7 +29,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         .ThenInclude(x => x.Profile)
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
-        .Where(x => x.Status == MeetingStatusTypes.Searching)
+        .Where(x => x.Status == MeetingRequestStatusTypes.Searching)
         .ToListAsync(cancellationToken);
 
       var isDataChanged = false;
@@ -62,8 +62,6 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       MeetingRequest request2)
     {
       return request1.Id != request2.Id &&
-             request1.Status == MeetingStatusTypes.Searching &&
-             request2.Status == MeetingStatusTypes.Searching &&
              request1.MinDate <= request2.MaxDate &&
              request1.MaxDate >= request2.MinDate &&
              IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request1.User.Profile.Birthday), request2.MinAge, request2.MaxAge) &&
@@ -87,6 +85,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
     {
       var meeting = new Meeting
       {
+        Status = MeetingStatusTypes.Active,
         Date = FindCommonDate(request1, request2),
         Latitude = request1.Latitude,
         Longitude = request1.Longitude,
@@ -100,19 +99,21 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         new MeetingUser
         {
           MeetingId = meeting.Id,
-          UserId = request1.UserId
+          UserId = request1.UserId,
+          Status = MeetingUserStatusTypes.Joined
         },
         new MeetingUser
         {
           MeetingId = meeting.Id,
-          UserId = request2.UserId
+          UserId = request2.UserId,
+          Status = MeetingUserStatusTypes.Joined
         }
       };
 
       _context.MeetingUsers.AddRange(meetingUsers);
 
-      request1.Status = MeetingStatusTypes.Found;
-      request2.Status = MeetingStatusTypes.Found;
+      request1.Status = MeetingRequestStatusTypes.Found;
+      request2.Status = MeetingRequestStatusTypes.Found;
     }
 
     private async Task BroadcastUserFoundMeeting(IEnumerable<MeetingRequest> updatedRequests, CancellationToken cancellationToken)
