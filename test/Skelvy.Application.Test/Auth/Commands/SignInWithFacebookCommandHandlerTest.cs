@@ -17,7 +17,6 @@ namespace Skelvy.Application.Test.Auth.Commands
   public class SignInWithFacebookCommandHandlerTest : RequestTestBase
   {
     private const string AuthToken = "Token";
-    private const string Token = "ABC";
     private static readonly AccessVerification Access = new AccessVerification { UserId = "1" };
 
     private readonly Mock<IFacebookService> _facebookService;
@@ -37,7 +36,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
       _facebookService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Access);
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>())).Returns(Token);
+        x.Generate(It.IsAny<User>(), CancellationToken.None)).ReturnsAsync(new Token());
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContext(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
@@ -55,7 +54,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None))
         .ReturnsAsync((object)GraphResponse());
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>())).Returns(Token);
+        x.Generate(It.IsAny<User>(), CancellationToken.None)).ReturnsAsync(new Token());
       var handler = new SignInWithFacebookCommandHandler(DbContext(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request, CancellationToken.None);

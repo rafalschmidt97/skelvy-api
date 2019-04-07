@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
+using Skelvy.Application.Infrastructure.Tokens;
 
 namespace Skelvy.WebAPI.Controllers
 {
@@ -10,17 +11,15 @@ namespace Skelvy.WebAPI.Controllers
   public class AuthController : BaseController
   {
     [HttpPost("facebook")]
-    public async Task<IActionResult> SignInWithFacebook(SignInWithFacebookCommand request)
+    public async Task<Token> SignInWithFacebook(SignInWithFacebookCommand request)
     {
-      var token = await Mediator.Send(request, HttpContext.RequestAborted);
-      return Ok(new { token });
+      return await Mediator.Send(request, HttpContext.RequestAborted);
     }
 
     [HttpPost("google")]
-    public async Task<IActionResult> SignInWithGoogle(SignInWithGoogleCommand request)
+    public async Task<Token> SignInWithGoogle(SignInWithGoogleCommand request)
     {
-      var token = await Mediator.Send(request, HttpContext.RequestAborted);
-      return Ok(new { token });
+      return await Mediator.Send(request, HttpContext.RequestAborted);
     }
   }
 }

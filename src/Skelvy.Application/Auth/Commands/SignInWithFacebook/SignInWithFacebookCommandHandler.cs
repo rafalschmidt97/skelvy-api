@@ -14,7 +14,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 {
-  public class SignInWithFacebookCommandHandler : IRequestHandler<SignInWithFacebookCommand, string>
+  public class SignInWithFacebookCommandHandler : IRequestHandler<SignInWithFacebookCommand, Token>
   {
     private readonly SkelvyContext _context;
     private readonly IFacebookService _facebookService;
@@ -33,7 +33,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       _notifications = notifications;
     }
 
-    public async Task<string> Handle(SignInWithFacebookCommand request, CancellationToken cancellationToken)
+    public async Task<Token> Handle(SignInWithFacebookCommand request, CancellationToken cancellationToken)
     {
       var verified = await _facebookService.Verify(request.AuthToken, cancellationToken);
 
@@ -122,7 +122,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         }
       }
 
-      return _tokenService.Generate(user);
+      return await _tokenService.Generate(user, cancellationToken);
     }
   }
 }
