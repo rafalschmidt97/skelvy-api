@@ -33,6 +33,11 @@ namespace Skelvy.Application.Users.Commands.DisableUser
         throw new NotFoundException(nameof(User), request.Id);
       }
 
+      if (user.IsDisabled)
+      {
+        throw new ConflictException($"Entity {nameof(User)}(Id = {request.Id}) is already disabled.");
+      }
+
       await LeaveMeetings(user, cancellationToken);
 
       user.IsDisabled = true;

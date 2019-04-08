@@ -34,6 +34,11 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
         throw new NotFoundException(nameof(User), request.Id);
       }
 
+      if (user.IsDeleted)
+      {
+        throw new ConflictException($"Entity {nameof(User)}(Id = {request.Id}) is already deleted.");
+      }
+
       await LeaveMeetings(user, cancellationToken);
 
       user.IsDeleted = true;
