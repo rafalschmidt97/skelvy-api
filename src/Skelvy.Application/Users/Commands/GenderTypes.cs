@@ -4,5 +4,6 @@ namespace Skelvy.Application.Users.Commands
   {
     public const string Male = "male";
     public const string Female = "female";
+    public const string Other = "other";
   }
 }
