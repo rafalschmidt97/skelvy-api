@@ -24,7 +24,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("logout")]
-    public async Task SignInWithGoogle(LogoutCommand request)
+    public async Task Logout(LogoutCommand request)
     {
       await Mediator.Send(request, HttpContext.RequestAborted);
     }
