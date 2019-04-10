@@ -1,9 +1,10 @@
 using Destructurama.Attributed;
 using MediatR;
+using Skelvy.Application.Infrastructure.Tokens;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 {
-  public class SignInWithFacebookCommand : IRequest<string>
+  public class SignInWithFacebookCommand : IRequest<Token>
   {
     [LogMasked]
     public string AuthToken { get; set; }

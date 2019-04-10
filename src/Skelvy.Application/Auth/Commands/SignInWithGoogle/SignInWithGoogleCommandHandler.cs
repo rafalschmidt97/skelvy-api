@@ -14,7 +14,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 {
-  public class SignInWithGoogleCommandHandler : IRequestHandler<SignInWithGoogleCommand, string>
+  public class SignInWithGoogleCommandHandler : IRequestHandler<SignInWithGoogleCommand, Token>
   {
     private readonly SkelvyContext _context;
     private readonly IGoogleService _googleService;
@@ -33,7 +33,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
       _notifications = notifications;
     }
 
-    public async Task<string> Handle(SignInWithGoogleCommand request, CancellationToken cancellationToken)
+    public async Task<Token> Handle(SignInWithGoogleCommand request, CancellationToken cancellationToken)
     {
       var verified = await _googleService.Verify(request.AuthToken, cancellationToken);
 
@@ -124,7 +124,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         }
       }
 
-      return _tokenService.Generate(user);
+      return await _tokenService.Generate(user, cancellationToken);
     }
   }
 }
