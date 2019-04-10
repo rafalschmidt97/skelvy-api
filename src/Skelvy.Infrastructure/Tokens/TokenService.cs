@@ -106,6 +106,11 @@ namespace Skelvy.Infrastructure.Tokens
         throw new UnauthorizedException("User from Refresh Token does not exists");
       }
 
+      if (user.IsDisabled || user.IsDeleted)
+      {
+        throw new UnauthorizedException("User is in safety retention window for deletion");
+      }
+
       await _cache.RefreshAsync(cacheKey, cancellationToken);
       return user;
     }
