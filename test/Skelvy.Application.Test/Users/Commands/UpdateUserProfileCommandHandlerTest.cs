@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Skelvy.Application.Users.Commands;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Common.Exceptions;
 using Xunit;
@@ -35,7 +36,7 @@ namespace Skelvy.Application.Test.Users.Commands
       {
         UserId = 1,
         Name = "Example",
-        Gender = "Female",
+        Gender = GenderTypes.Female,
         Birthday = DateTimeOffset.UtcNow.AddYears(-18),
         Photos = new List<UpdateUserProfilePhotos>
         {
