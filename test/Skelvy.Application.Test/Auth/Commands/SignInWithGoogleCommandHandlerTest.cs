@@ -42,7 +42,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       var result = await handler.Handle(request, CancellationToken.None);
 
-      Assert.IsType<string>(result);
+      Assert.IsType<Token>(result);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       var result = await handler.Handle(request, CancellationToken.None);
 
-      Assert.IsType<string>(result);
+      Assert.IsType<Token>(result);
     }
 
     [Fact]
