@@ -48,14 +48,14 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
         {
           Status = MeetingRequestStatusTypes.Found,
           Meeting = _mapper.Map<MeetingDto>(meeting),
-          Request = _mapper.Map<MeetingRequestDto>(meetingRequest)
+          Request = _mapper.Map<MeetingRequestDto>(meetingRequest),
         };
       }
 
       return new MeetingViewModel
       {
         Status = MeetingRequestStatusTypes.Searching,
-        Request = _mapper.Map<MeetingRequestDto>(meetingRequest)
+        Request = _mapper.Map<MeetingRequestDto>(meetingRequest),
       };
     }
   }

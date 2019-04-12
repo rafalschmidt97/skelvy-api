@@ -29,7 +29,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         To = user.Email,
         Subject = "Account has been created",
-        TemplateName = "Created"
+        TemplateName = "Created",
       };
 
       await SendEmail(message, cancellationToken);
@@ -41,7 +41,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         To = user.Email,
         Subject = "Account has been deleted",
-        TemplateName = "Deleted"
+        TemplateName = "Deleted",
       };
 
       await SendEmail(message, cancellationToken);
@@ -57,7 +57,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         To = user.Email,
         Subject = "Account has been disabled",
         TemplateName = "Disabled",
-        Model = model
+        Model = model,
       };
 
       await SendEmail(message, cancellationToken);
@@ -73,14 +73,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         To = { message.To },
         Subject = message.Subject,
         Body = body,
-        IsBodyHtml = true
+        IsBodyHtml = true,
       };
 
       using (var smtp = new SmtpClient(_configuration["Email:Host"], int.Parse(_configuration["Email:Port"]))
       {
         EnableSsl = true,
         DeliveryMethod = SmtpDeliveryMethod.Network,
-        Credentials = new NetworkCredential(_configuration["Email:Username"], _configuration["Email:Password"])
+        Credentials = new NetworkCredential(_configuration["Email:Username"], _configuration["Email:Password"]),
       })
       {
         await smtp.SendMailExAsync(email, cancellationToken);

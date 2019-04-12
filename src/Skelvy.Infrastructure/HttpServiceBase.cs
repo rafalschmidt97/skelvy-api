@@ -14,7 +14,7 @@ namespace Skelvy.Infrastructure
     {
       HttpClient = new HttpClient
       {
-        BaseAddress = new Uri(baseUrl)
+        BaseAddress = new Uri(baseUrl),
       };
       HttpClient.DefaultRequestHeaders
         .Accept
@@ -30,9 +30,9 @@ namespace Skelvy.Infrastructure
       {
         ContractResolver = new DefaultContractResolver
         {
-          NamingStrategy = new SnakeCaseNamingStrategy()
+          NamingStrategy = new SnakeCaseNamingStrategy(),
         },
-        Formatting = Formatting.Indented
+        Formatting = Formatting.Indented,
       });
     }
 
@@ -42,9 +42,9 @@ namespace Skelvy.Infrastructure
       {
         ContractResolver = new DefaultContractResolver
         {
-          NamingStrategy = new SnakeCaseNamingStrategy()
+          NamingStrategy = new SnakeCaseNamingStrategy(),
         },
-        Formatting = Formatting.Indented
+        Formatting = Formatting.Indented,
       });
       return new StringContent(json, Encoding.UTF8, "application/json");
     }

@@ -64,7 +64,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             Language = request.Language,
             FacebookId = verified.UserId,
             IsDeleted = false,
-            IsDisabled = false
+            IsDisabled = false,
           };
           _context.Users.Add(user);
 
@@ -78,7 +78,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             Name = details.first_name,
             Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
             Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-            UserId = user.Id
+            UserId = user.Id,
           };
 
           _context.UserProfiles.Add(profile);
@@ -89,7 +89,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             {
               Url = details.picture.data.url,
               Status = UserProfilePhotoStatusTypes.Active,
-              ProfileId = profile.Id
+              ProfileId = profile.Id,
             };
 
             _context.UserProfilePhotos.Add(photo);

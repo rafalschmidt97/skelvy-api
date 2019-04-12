@@ -38,7 +38,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
         Message = request.Message.Trim(),
         Date = request.Date,
         UserId = meetingUser.UserId,
-        MeetingId = meetingUser.MeetingId
+        MeetingId = meetingUser.MeetingId,
       };
 
       _context.MeetingChatMessages.Add(message);

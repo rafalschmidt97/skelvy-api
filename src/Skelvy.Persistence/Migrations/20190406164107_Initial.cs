@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -14,7 +14,7 @@ namespace Skelvy.Persistence.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 50, nullable: false)
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
                 },
                 constraints: table =>
                 {
@@ -33,7 +33,7 @@ namespace Skelvy.Persistence.Migrations
                     GoogleId = table.Column<string>(maxLength: 50, nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletionDate = table.Column<DateTimeOffset>(nullable: true),
-                    IsDisabled = table.Column<bool>(nullable: false)
+                    IsDisabled = table.Column<bool>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -50,7 +50,7 @@ namespace Skelvy.Persistence.Migrations
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
-                    DrinkId = table.Column<int>(nullable: false)
+                    DrinkId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -76,7 +76,7 @@ namespace Skelvy.Persistence.Migrations
                     MaxAge = table.Column<int>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -99,7 +99,7 @@ namespace Skelvy.Persistence.Migrations
                     Birthday = table.Column<DateTimeOffset>(nullable: false),
                     Gender = table.Column<string>(maxLength: 15, nullable: false),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -119,7 +119,7 @@ namespace Skelvy.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 15, nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -141,7 +141,7 @@ namespace Skelvy.Persistence.Migrations
                     Message = table.Column<string>(maxLength: 500, nullable: false),
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    MeetingId = table.Column<int>(nullable: false)
+                    MeetingId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -168,7 +168,7 @@ namespace Skelvy.Persistence.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Status = table.Column<string>(maxLength: 15, nullable: false),
                     MeetingId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -192,7 +192,7 @@ namespace Skelvy.Persistence.Migrations
                 columns: table => new
                 {
                     MeetingRequestId = table.Column<int>(nullable: false),
-                    DrinkId = table.Column<int>(nullable: false)
+                    DrinkId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -219,7 +219,7 @@ namespace Skelvy.Persistence.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Url = table.Column<string>(maxLength: 2048, nullable: false),
                     Status = table.Column<string>(maxLength: 15, nullable: false),
-                    ProfileId = table.Column<int>(nullable: false)
+                    ProfileId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {

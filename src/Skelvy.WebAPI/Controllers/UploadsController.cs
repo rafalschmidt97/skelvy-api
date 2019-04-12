@@ -22,7 +22,7 @@ namespace Skelvy.WebAPI.Controllers
       {
         Data = file.OpenReadStream(),
         Name = file.FileName,
-        ServerPath = Request.Host.Value
+        ServerPath = Request.Host.Value,
       };
 
       var url = await Mediator.Send(request, HttpContext.RequestAborted);

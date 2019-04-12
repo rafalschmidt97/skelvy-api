@@ -42,7 +42,7 @@ namespace Skelvy.Infrastructure.Tokens
       return new Token
       {
         AccessToken = accessToken,
-        RefreshToken = refreshToken
+        RefreshToken = refreshToken,
       };
     }
 
@@ -54,7 +54,7 @@ namespace Skelvy.Infrastructure.Tokens
       return new Token
       {
         AccessToken = accessToken,
-        RefreshToken = refreshToken
+        RefreshToken = refreshToken,
       };
     }
 
@@ -70,7 +70,7 @@ namespace Skelvy.Infrastructure.Tokens
       {
         new Claim(ClaimTypes.Sid, user.Id.ToString()),
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Email, user.Email)
+        new Claim(ClaimTypes.Email, user.Email),
       };
 
       claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));

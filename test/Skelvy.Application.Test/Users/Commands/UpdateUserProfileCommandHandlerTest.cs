@@ -40,8 +40,8 @@ namespace Skelvy.Application.Test.Users.Commands
         Birthday = DateTimeOffset.UtcNow.AddYears(-18),
         Photos = new List<UpdateUserProfilePhotos>
         {
-          new UpdateUserProfilePhotos { Url = "Url" }
-        }
+          new UpdateUserProfilePhotos { Url = "Url" },
+        },
       };
     }
   }

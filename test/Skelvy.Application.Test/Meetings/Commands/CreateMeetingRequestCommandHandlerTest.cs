@@ -107,8 +107,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         Longitude = 1,
         Drinks = new List<CreateMeetingRequestDrink>
         {
-          new CreateMeetingRequestDrink { Id = 1 }
-        }
+          new CreateMeetingRequestDrink { Id = 1 },
+        },
       };
     }
 

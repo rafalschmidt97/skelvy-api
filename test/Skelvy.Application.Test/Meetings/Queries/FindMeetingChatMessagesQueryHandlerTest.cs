@@ -15,7 +15,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingChatMessagesQuery
       {
         UserId = 2,
-        Page = 1
+        Page = 1,
       };
       var handler = new FindMeetingChatMessagesQueryHandler(InitializedDbContext(), Mapper());
 
@@ -31,7 +31,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingChatMessagesQuery
       {
         UserId = 1,
-        Page = 1
+        Page = 1,
       };
       var handler = new FindMeetingChatMessagesQueryHandler(DbContext(), Mapper());
 

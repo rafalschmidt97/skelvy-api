@@ -20,7 +20,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       var notification = new PushNotificationContent
       {
-        Body = message.Message
+        Body = message.Message,
       };
 
       await SendNotifications(userIds, notification, cancellationToken);
@@ -30,7 +30,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       var notification = new PushNotificationContent
       {
-        BodyLocKey = "USER_JOINED_MEETING"
+        BodyLocKey = "USER_JOINED_MEETING",
       };
 
       await SendNotifications(userIds, notification, cancellationToken);
@@ -40,7 +40,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       var notification = new PushNotificationContent
       {
-        BodyLocKey = "USER_FOUND_MEETING"
+        BodyLocKey = "USER_FOUND_MEETING",
       };
 
       await SendNotifications(userIds, notification, cancellationToken);
@@ -50,7 +50,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       var notification = new PushNotificationContent
       {
-        BodyLocKey = "USER_LEFT_MEETING"
+        BodyLocKey = "USER_LEFT_MEETING",
       };
 
       await SendNotifications(userIds, notification, cancellationToken);
@@ -60,7 +60,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       var notification = new PushNotificationContent
       {
-        BodyLocKey = "MEETING_REQUEST_EXPIRED"
+        BodyLocKey = "MEETING_REQUEST_EXPIRED",
       };
 
       await SendNotifications(userIds, notification, cancellationToken);
@@ -70,7 +70,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       var notification = new PushNotificationContent
       {
-        BodyLocKey = "MEETING_EXPIRED"
+        BodyLocKey = "MEETING_EXPIRED",
       };
 
       await SendNotifications(userIds, notification, cancellationToken);
@@ -89,7 +89,7 @@ namespace Skelvy.Infrastructure.Notifications
       var message = new PushNotificationMessage
       {
         To = $"/topics/user-{userId}",
-        Notification = notification
+        Notification = notification,
       };
 
       await HttpClient.PostAsync("send", PrepareData(message), cancellationToken);

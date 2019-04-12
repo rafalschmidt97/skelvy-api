@@ -63,7 +63,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       {
         Url = photo.Url,
         Status = UserProfilePhotoStatusTypes.Active,
-        ProfileId = profile.Id
+        ProfileId = profile.Id,
       });
     }
   }

@@ -64,7 +64,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             Language = request.Language,
             GoogleId = verified.UserId,
             IsDeleted = false,
-            IsDisabled = false
+            IsDisabled = false,
           };
           _context.Users.Add(user);
 
@@ -80,7 +80,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             Name = details.name.givenName,
             Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
             Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-            UserId = user.Id
+            UserId = user.Id,
           };
 
           _context.UserProfiles.Add(profile);
@@ -91,7 +91,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             {
               Url = details.image.url,
               Status = UserProfilePhotoStatusTypes.Active,
-              ProfileId = profile.Id
+              ProfileId = profile.Id,
             };
 
             _context.UserProfilePhotos.Add(photo);

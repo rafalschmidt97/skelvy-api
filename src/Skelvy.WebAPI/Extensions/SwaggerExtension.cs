@@ -16,19 +16,19 @@ namespace Skelvy.WebAPI.Extensions
         configuration.SwaggerDoc("v1", new Info
         {
           Title = "Skelvy API",
-          Description = "Mobile app for meetings over beer or coffee 🚀"
+          Description = "Mobile app for meetings over beer or coffee 🚀",
         });
 
         configuration.AddSecurityDefinition("Token", new ApiKeyScheme
         {
           In = "header",
           Name = "Authorization",
-          Type = "apiKey"
+          Type = "apiKey",
         });
 
         configuration.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
         {
-          { "Token", Array.Empty<string>() }
+          { "Token", Array.Empty<string>() },
         });
       });
     }

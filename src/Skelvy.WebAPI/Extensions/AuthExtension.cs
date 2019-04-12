@@ -24,7 +24,7 @@ namespace Skelvy.WebAPI.Extensions
             ValidateIssuerSigningKey = true,
             ValidIssuer = configuration["Jwt:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
-            ClockSkew = TimeSpan.FromMinutes(1)
+            ClockSkew = TimeSpan.FromMinutes(1),
           };
 
           options.Events = new JwtBearerEvents
@@ -41,7 +41,7 @@ namespace Skelvy.WebAPI.Extensions
               }
 
               return Task.CompletedTask;
-            }
+            },
           };
         });
     }

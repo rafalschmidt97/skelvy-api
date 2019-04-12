@@ -89,7 +89,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         Date = FindCommonDate(request1, request2),
         Latitude = request1.Latitude,
         Longitude = request1.Longitude,
-        DrinkId = FindCommonDrink(request1, request2)
+        DrinkId = FindCommonDrink(request1, request2),
       };
 
       _context.Meetings.Add(meeting);
@@ -100,14 +100,14 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         {
           MeetingId = meeting.Id,
           UserId = request1.UserId,
-          Status = MeetingUserStatusTypes.Joined
+          Status = MeetingUserStatusTypes.Joined,
         },
         new MeetingUser
         {
           MeetingId = meeting.Id,
           UserId = request2.UserId,
-          Status = MeetingUserStatusTypes.Joined
-        }
+          Status = MeetingUserStatusTypes.Joined,
+        },
       };
 
       _context.MeetingUsers.AddRange(meetingUsers);

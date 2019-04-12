@@ -101,7 +101,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         MaxAge = request.MaxAge,
         Latitude = request.Latitude,
         Longitude = request.Longitude,
-        UserId = request.UserId
+        UserId = request.UserId,
       };
       _context.MeetingRequests.Add(meetingRequest);
 
@@ -168,7 +168,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       {
         MeetingId = meeting.Id,
         UserId = newRequest.UserId,
-        Status = MeetingUserStatusTypes.Joined
+        Status = MeetingUserStatusTypes.Joined,
       };
 
       _context.MeetingUsers.Add(meetingUser);
@@ -236,7 +236,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         Date = FindCommonDate(request1, request2),
         Latitude = request1.Latitude,
         Longitude = request1.Longitude,
-        DrinkId = FindCommonDrink(request1, request2)
+        DrinkId = FindCommonDrink(request1, request2),
       };
 
       _context.Meetings.Add(meeting);
@@ -247,14 +247,14 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         {
           MeetingId = meeting.Id,
           UserId = request1.UserId,
-          Status = MeetingUserStatusTypes.Joined
+          Status = MeetingUserStatusTypes.Joined,
         },
         new MeetingUser
         {
           MeetingId = meeting.Id,
           UserId = request2.UserId,
-          Status = MeetingUserStatusTypes.Joined
-        }
+          Status = MeetingUserStatusTypes.Joined,
+        },
       };
 
       _context.MeetingUsers.AddRange(meetingUsers);
@@ -289,7 +289,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       return requestDrinks.Select(requestDrink => new MeetingRequestDrink
       {
         MeetingRequestId = request.Id,
-        DrinkId = requestDrink.Id
+        DrinkId = requestDrink.Id,
       });
     }
   }
