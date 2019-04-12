@@ -9,16 +9,17 @@ using Skelvy.Application.Infrastructure.Tokens;
 
 namespace Skelvy.WebAPI.Controllers
 {
-  [AllowAnonymous]
   public class AuthController : BaseController
   {
     [HttpPost("facebook")]
+    [AllowAnonymous]
     public async Task<Token> SignInWithFacebook(SignInWithFacebookCommand request)
     {
       return await Mediator.Send(request, HttpContext.RequestAborted);
     }
 
     [HttpPost("google")]
+    [AllowAnonymous]
     public async Task<Token> SignInWithGoogle(SignInWithGoogleCommand request)
     {
       return await Mediator.Send(request, HttpContext.RequestAborted);
@@ -31,7 +32,8 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("refresh")]
-    public async Task<Token> Logout(RefreshTokenCommand request)
+    [AllowAnonymous]
+    public async Task<Token> Refresh(RefreshTokenCommand request)
     {
       return await Mediator.Send(request, HttpContext.RequestAborted);
     }
