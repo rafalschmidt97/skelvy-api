@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -11,7 +11,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 {
-  public class LeaveMeetingCommandHandler : IRequestHandler<LeaveMeetingCommand>
+  public class LeaveMeetingCommandHandler : CommandHandler<LeaveMeetingCommand>
   {
     private readonly SkelvyContext _context;
     private readonly INotificationsService _notifications;
@@ -22,10 +22,10 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
       _notifications = notifications;
     }
 
-    public async Task<Unit> Handle(LeaveMeetingCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(LeaveMeetingCommand request)
     {
       var user = await _context.MeetingUsers
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined, cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
 
       if (user == null)
       {
@@ -36,7 +36,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
         .Include(x => x.Users)
         .ThenInclude(x => x.User)
         .ThenInclude(x => x.MeetingRequests)
-        .FirstOrDefaultAsync(x => x.Id == user.MeetingId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.Id == user.MeetingId);
 
       var meetingUser = meeting.Users.First(x => x.UserId == user.UserId);
       meetingUser.Status = MeetingUserStatusTypes.Left;
@@ -50,18 +50,15 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
         meeting.Status = MeetingStatusTypes.Aborted;
       }
 
-      await _context.SaveChangesAsync(cancellationToken);
-      await BroadcastUserLeftMeeting(meetingUser, meeting.Users, cancellationToken);
+      await _context.SaveChangesAsync();
+      await BroadcastUserLeftMeeting(meetingUser, meeting.Users);
       return Unit.Value;
     }
 
-    private async Task BroadcastUserLeftMeeting(
-      MeetingUser meetingUser,
-      IEnumerable<MeetingUser> meetingUsers,
-      CancellationToken cancellationToken)
+    private async Task BroadcastUserLeftMeeting(MeetingUser meetingUser, IEnumerable<MeetingUser> meetingUsers)
     {
       var meetingUserIds = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUserIds, cancellationToken);
+      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUserIds);
     }
   }
 }

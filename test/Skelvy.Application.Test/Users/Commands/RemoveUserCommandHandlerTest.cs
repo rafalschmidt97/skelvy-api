@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Infrastructure.Notifications;
@@ -23,7 +22,7 @@ namespace Skelvy.Application.Test.Users.Commands
       var request = new RemoveUserCommand { Id = 1 };
       var handler = new RemoveUserCommandHandler(InitializedDbContext(), _notifications.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -33,7 +32,7 @@ namespace Skelvy.Application.Test.Users.Commands
       var handler = new RemoveUserCommandHandler(DbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

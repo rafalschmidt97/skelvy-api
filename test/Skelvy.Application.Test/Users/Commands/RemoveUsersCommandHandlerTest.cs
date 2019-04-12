@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Users.Commands.RemoveUsers;
 using Xunit;
@@ -13,7 +12,7 @@ namespace Skelvy.Application.Test.Users.Commands
       var request = new RemoveUsersCommand();
       var handler = new RemoveUsersCommandHandler(InitializedDbContext());
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
   }
 }

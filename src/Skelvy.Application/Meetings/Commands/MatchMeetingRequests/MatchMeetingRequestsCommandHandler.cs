@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
@@ -11,7 +11,7 @@ using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMee
 
 namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 {
-  public class MatchMeetingRequestsCommandHandler : IRequestHandler<MatchMeetingRequestsCommand>
+  public class MatchMeetingRequestsCommandHandler : CommandHandler<MatchMeetingRequestsCommand>
   {
     private readonly SkelvyContext _context;
     private readonly INotificationsService _notifications;
@@ -22,7 +22,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       _notifications = notifications;
     }
 
-    public async Task<Unit> Handle(MatchMeetingRequestsCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(MatchMeetingRequestsCommand request)
     {
       var requests = await _context.MeetingRequests
         .Include(x => x.User)
@@ -30,7 +30,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
         .Where(x => x.Status == MeetingRequestStatusTypes.Searching)
-        .ToListAsync(cancellationToken);
+        .ToListAsync();
 
       var isDataChanged = false;
       var updatedRequests = new List<MeetingRequest>();
@@ -50,8 +50,8 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
       if (isDataChanged)
       {
-        await _context.SaveChangesAsync(cancellationToken);
-        await BroadcastUserFoundMeeting(updatedRequests, cancellationToken);
+        await _context.SaveChangesAsync();
+        await BroadcastUserFoundMeeting(updatedRequests);
       }
 
       return Unit.Value;
@@ -116,10 +116,10 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       request2.Status = MeetingRequestStatusTypes.Found;
     }
 
-    private async Task BroadcastUserFoundMeeting(IEnumerable<MeetingRequest> updatedRequests, CancellationToken cancellationToken)
+    private async Task BroadcastUserFoundMeeting(IEnumerable<MeetingRequest> updatedRequests)
     {
       var userIds = updatedRequests.Select(x => x.User.Id).ToList();
-      await _notifications.BroadcastUserFoundMeeting(userIds, cancellationToken);
+      await _notifications.BroadcastUserFoundMeeting(userIds);
     }
   }
 }

@@ -1,9 +1,9 @@
 using System.IO;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Uploads.Commands.UploadPhoto
 {
-  public class UploadPhotoCommand : IRequest<string>
+  public class UploadPhotoCommand : IQuery<string>
   {
     public string Name { get; set; }
     public Stream Data { get; set; }

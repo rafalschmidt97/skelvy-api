@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
@@ -15,7 +14,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingQuery { UserId = 2 };
       var handler = new FindMeetingQueryHandler(InitializedDbContext(), Mapper());
 
-      var result = await handler.Handle(request, CancellationToken.None);
+      var result = await handler.Handle(request);
 
       Assert.IsType<MeetingViewModel>(result);
       Assert.NotNull(result.Meeting);
@@ -27,7 +26,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingQuery { UserId = 1 };
       var handler = new FindMeetingQueryHandler(InitializedDbContext(), Mapper());
 
-      var result = await handler.Handle(request, CancellationToken.None);
+      var result = await handler.Handle(request);
 
       Assert.IsType<MeetingViewModel>(result);
       Assert.NotNull(result.Request);
@@ -40,7 +39,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var handler = new FindMeetingQueryHandler(DbContext(), Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

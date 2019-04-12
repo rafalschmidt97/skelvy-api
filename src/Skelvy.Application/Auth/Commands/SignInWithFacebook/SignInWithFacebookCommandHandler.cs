@@ -1,9 +1,8 @@
 using System;
 using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Facebook;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Infrastructure.Tokens;
@@ -14,7 +13,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 {
-  public class SignInWithFacebookCommandHandler : IRequestHandler<SignInWithFacebookCommand, Token>
+  public class SignInWithFacebookCommandHandler : QueryHandler<SignInWithFacebookCommand, Token>
   {
     private readonly SkelvyContext _context;
     private readonly IFacebookService _facebookService;
@@ -33,26 +32,25 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       _notifications = notifications;
     }
 
-    public async Task<Token> Handle(SignInWithFacebookCommand request, CancellationToken cancellationToken)
+    public override async Task<Token> Handle(SignInWithFacebookCommand request)
     {
-      var verified = await _facebookService.Verify(request.AuthToken, cancellationToken);
+      var verified = await _facebookService.Verify(request.AuthToken);
 
       var user = await _context.Users
         .Include(x => x.Roles)
-        .FirstOrDefaultAsync(x => x.FacebookId == verified.UserId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.FacebookId == verified.UserId);
 
       if (user == null)
       {
         var details = await _facebookService.GetBody<dynamic>(
           "me",
           request.AuthToken,
-          "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}",
-          cancellationToken);
+          "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}");
 
         var email = (string)details.email;
         var userByEmail = await _context.Users
           .Include(x => x.Roles)
-          .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+          .FirstOrDefaultAsync(x => x.Email == email);
 
         var isDataChanged = false;
 
@@ -107,11 +105,11 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           isDataChanged = true;
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync();
 
         if (!isDataChanged)
         {
-          await _notifications.BroadcastUserCreated(user, cancellationToken);
+          await _notifications.BroadcastUserCreated(user);
         }
       }
       else
@@ -122,7 +120,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         }
       }
 
-      return await _tokenService.Generate(user, cancellationToken);
+      return await _tokenService.Generate(user);
     }
   }
 }

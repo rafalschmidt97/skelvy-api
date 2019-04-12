@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Commands;
 using Skelvy.Common.Exceptions;
@@ -12,7 +12,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Users.Commands.DisableUser
 {
-  public class DisableUserCommandHandler : IRequestHandler<DisableUserCommand>
+  public class DisableUserCommandHandler : CommandHandler<DisableUserCommand>
   {
     private readonly SkelvyContext _context;
     private readonly INotificationsService _notifications;
@@ -23,10 +23,10 @@ namespace Skelvy.Application.Users.Commands.DisableUser
       _notifications = notifications;
     }
 
-    public async Task<Unit> Handle(DisableUserCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(DisableUserCommand request)
     {
       var user = await _context.Users
-        .FirstOrDefaultAsync(x => x.Id == request.Id && !x.IsDeleted, cancellationToken);
+        .FirstOrDefaultAsync(x => x.Id == request.Id && !x.IsDeleted);
 
       if (user == null)
       {
@@ -38,20 +38,20 @@ namespace Skelvy.Application.Users.Commands.DisableUser
         throw new ConflictException($"Entity {nameof(User)}(Id = {request.Id}) is already disabled.");
       }
 
-      await LeaveMeetings(user, cancellationToken);
+      await LeaveMeetings(user);
 
       user.IsDisabled = true;
 
-      await _context.SaveChangesAsync(cancellationToken);
-      await _notifications.BroadcastUserDisabled(user, request.Reason, cancellationToken);
+      await _context.SaveChangesAsync();
+      await _notifications.BroadcastUserDisabled(user, request.Reason);
 
       return Unit.Value;
     }
 
-    private async Task LeaveMeetings(User user, CancellationToken cancellationToken)
+    private async Task LeaveMeetings(User user)
     {
       var meetingUser = await _context.MeetingUsers
-        .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Status == MeetingUserStatusTypes.Joined, cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Status == MeetingUserStatusTypes.Joined);
 
       if (meetingUser != null)
       {
@@ -59,7 +59,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
           .Include(x => x.Users)
           .ThenInclude(x => x.User)
           .ThenInclude(x => x.MeetingRequests)
-          .FirstOrDefaultAsync(x => x.Id == meetingUser.MeetingId && x.Status == MeetingStatusTypes.Active, cancellationToken);
+          .FirstOrDefaultAsync(x => x.Id == meetingUser.MeetingId && x.Status == MeetingStatusTypes.Active);
 
         meetingUser.Status = MeetingUserStatusTypes.Left;
         var meetingUserDetails = meeting.Users.First(x => x.UserId == meetingUser.UserId);
@@ -73,18 +73,15 @@ namespace Skelvy.Application.Users.Commands.DisableUser
           meeting.Status = MeetingStatusTypes.Aborted;
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
-        await BroadcastUserLeftMeeting(meetingUser, meeting.Users, cancellationToken);
+        await _context.SaveChangesAsync();
+        await BroadcastUserLeftMeeting(meetingUser, meeting.Users);
       }
     }
 
-    private async Task BroadcastUserLeftMeeting(
-      MeetingUser meetingUser,
-      IEnumerable<MeetingUser> meetingUsers,
-      CancellationToken cancellationToken)
+    private async Task BroadcastUserLeftMeeting(MeetingUser meetingUser, IEnumerable<MeetingUser> meetingUsers)
     {
       var meetingUserIds = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUserIds, cancellationToken);
+      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUserIds);
     }
   }
 }

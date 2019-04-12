@@ -1,9 +1,9 @@
 using Destructurama.Attributed;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Auth.Commands.Logout
 {
-  public class LogoutCommand : IRequest
+  public class LogoutCommand : ICommand
   {
     [LogMasked]
     public string RefreshToken { get; set; }

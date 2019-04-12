@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindUser;
@@ -15,7 +14,7 @@ namespace Skelvy.Application.Test.Users.Queries
       var request = new FindUserQuery { Id = 1 };
       var handler = new FindUserQueryHandler(InitializedDbContext(), Mapper());
 
-      var result = await handler.Handle(request, CancellationToken.None);
+      var result = await handler.Handle(request);
 
       Assert.IsType<UserDto>(result);
     }
@@ -27,7 +26,7 @@ namespace Skelvy.Application.Test.Users.Queries
       var handler = new FindUserQueryHandler(DbContext(), Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

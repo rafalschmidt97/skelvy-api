@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -13,8 +12,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
 {
-  public class FindMeetingChatMessagesQueryHandler
-    : IRequestHandler<FindMeetingChatMessagesQuery, IList<MeetingChatMessageDto>>
+  public class FindMeetingChatMessagesQueryHandler : QueryHandler<FindMeetingChatMessagesQuery, IList<MeetingChatMessageDto>>
   {
     private readonly SkelvyContext _context;
     private readonly IMapper _mapper;
@@ -25,12 +23,10 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
       _mapper = mapper;
     }
 
-    public async Task<IList<MeetingChatMessageDto>> Handle(
-      FindMeetingChatMessagesQuery request,
-      CancellationToken cancellationToken)
+    public override async Task<IList<MeetingChatMessageDto>> Handle(FindMeetingChatMessagesQuery request)
     {
       var meetingUser = await _context.MeetingUsers
-          .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined, cancellationToken);
+          .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
 
       if (meetingUser == null)
       {
@@ -46,7 +42,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
         .Take(pageSize)
         .Where(x => x.MeetingId == meetingUser.MeetingId)
         .ProjectTo<MeetingChatMessageDto>(_mapper.ConfigurationProvider)
-        .ToListAsync(cancellationToken);
+        .ToListAsync();
     }
   }
 }

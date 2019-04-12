@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -12,7 +12,7 @@ using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMee
 
 namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 {
-  public class CreateMeetingRequestCommandHandler : IRequestHandler<CreateMeetingRequestCommand>
+  public class CreateMeetingRequestCommandHandler : CommandHandler<CreateMeetingRequestCommand>
   {
     private readonly SkelvyContext _context;
     private readonly INotificationsService _notifications;
@@ -23,29 +23,29 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       _notifications = notifications;
     }
 
-    public async Task<Unit> Handle(CreateMeetingRequestCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(CreateMeetingRequestCommand request)
     {
-      var data = await ValidateData(request, cancellationToken);
-      var newRequest = await CreateNewMeetingRequest(request, cancellationToken);
-      var meeting = await FindMatchingMeeting(newRequest, data.user, cancellationToken);
+      var data = await ValidateData(request);
+      var newRequest = await CreateNewMeetingRequest(request);
+      var meeting = await FindMatchingMeeting(newRequest, data.user);
 
       if (meeting != null)
       {
-        await AddUserToMeeting(newRequest, meeting, cancellationToken);
+        await AddUserToMeeting(newRequest, meeting);
       }
       else
       {
-        await MatchExistingMeetingRequests(newRequest, data.user, cancellationToken);
+        await MatchExistingMeetingRequests(newRequest, data.user);
       }
 
       return Unit.Value;
     }
 
-    private async Task<dynamic> ValidateData(CreateMeetingRequestCommand request, CancellationToken cancellationToken)
+    private async Task<dynamic> ValidateData(CreateMeetingRequestCommand request)
     {
       var user = await _context.Users
         .Include(x => x.Profile)
-        .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
       if (user == null)
       {
@@ -58,7 +58,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
           $"Entity {nameof(UserProfile)}({nameof(request.UserId)}={request.UserId}) must exists.");
       }
 
-      var drinks = await _context.Drinks.ToListAsync(cancellationToken);
+      var drinks = await _context.Drinks.ToListAsync();
       var filteredDrinks = drinks.Where(x => request.Drinks.Any(y => y.Id == x.Id)).ToList();
 
       if (filteredDrinks.Count != request.Drinks.Count)
@@ -88,9 +88,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       return new { user };
     }
 
-    private async Task<MeetingRequest> CreateNewMeetingRequest(
-      CreateMeetingRequestCommand request,
-      CancellationToken cancellationToken)
+    private async Task<MeetingRequest> CreateNewMeetingRequest(CreateMeetingRequestCommand request)
     {
       var meetingRequest = new MeetingRequest
       {
@@ -108,15 +106,12 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       var meetingRequestDrinks = PrepareDrinks(request.Drinks, meetingRequest);
       _context.MeetingRequestDrinks.AddRange(meetingRequestDrinks);
 
-      await _context.SaveChangesAsync(cancellationToken);
+      await _context.SaveChangesAsync();
 
       return meetingRequest;
     }
 
-    private async Task<Meeting> FindMatchingMeeting(
-      MeetingRequest newRequest,
-      User user,
-      CancellationToken cancellationToken)
+    private async Task<Meeting> FindMatchingMeeting(MeetingRequest newRequest, User user)
     {
       var meetings = await _context.Meetings
         .Include(x => x.Users)
@@ -128,7 +123,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .ThenInclude(x => x.Drinks)
         .ThenInclude(x => x.Drink)
         .Where(x => x.Date >= newRequest.MinDate && x.Date <= newRequest.MaxDate && x.Status == MeetingStatusTypes.Active)
-        .ToListAsync(cancellationToken);
+        .ToListAsync();
 
       return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, newRequest, user));
     }
@@ -159,10 +154,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       return age >= minAge && (maxAge >= 55 || age <= maxAge);
     }
 
-    private async Task AddUserToMeeting(
-      MeetingRequest newRequest,
-      Meeting meeting,
-      CancellationToken cancellationToken)
+    private async Task AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
     {
       var meetingUser = new MeetingUser
       {
@@ -174,27 +166,21 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       _context.MeetingUsers.Add(meetingUser);
       newRequest.Status = MeetingRequestStatusTypes.Found;
 
-      await _context.SaveChangesAsync(cancellationToken);
-      await BroadcastUserJoinedMeeting(meetingUser, cancellationToken);
+      await _context.SaveChangesAsync();
+      await BroadcastUserJoinedMeeting(meetingUser);
     }
 
-    private async Task MatchExistingMeetingRequests(
-      MeetingRequest newRequest,
-      User user,
-      CancellationToken cancellationToken)
+    private async Task MatchExistingMeetingRequests(MeetingRequest newRequest, User user)
     {
-      var existingRequest = await FindMatchingMeetingRequest(newRequest, user, cancellationToken);
+      var existingRequest = await FindMatchingMeetingRequest(newRequest, user);
 
       if (existingRequest != null)
       {
-        await CreateNewMeeting(newRequest, existingRequest, cancellationToken);
+        await CreateNewMeeting(newRequest, existingRequest);
       }
     }
 
-    private async Task<MeetingRequest> FindMatchingMeetingRequest(
-      MeetingRequest newRequest,
-      User user,
-      CancellationToken cancellationToken)
+    private async Task<MeetingRequest> FindMatchingMeetingRequest(MeetingRequest newRequest, User user)
     {
       var requests = await _context.MeetingRequests
         .Include(x => x.User)
@@ -205,7 +191,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
                     x.Status == MeetingRequestStatusTypes.Searching &&
                     x.MinDate <= newRequest.MaxDate &&
                     x.MaxDate >= newRequest.MinDate)
-        .ToListAsync(cancellationToken);
+        .ToListAsync();
 
       return requests.FirstOrDefault(x => AreRequestsMatch(x, newRequest, user));
     }
@@ -225,10 +211,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
              newRequest.Drinks.Any(x => request.Drinks.Any(y => y.Drink.Id == x.DrinkId));
     }
 
-    private async Task CreateNewMeeting(
-      MeetingRequest request1,
-      MeetingRequest request2,
-      CancellationToken cancellationToken)
+    private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
     {
       var meeting = new Meeting
       {
@@ -262,24 +245,24 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       request1.Status = MeetingRequestStatusTypes.Found;
       request2.Status = MeetingRequestStatusTypes.Found;
 
-      await _context.SaveChangesAsync(cancellationToken);
-      await BroadcastUserFoundMeeting(request1, request2, cancellationToken);
+      await _context.SaveChangesAsync();
+      await BroadcastUserFoundMeeting(request1, request2);
     }
 
-    private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2, CancellationToken cancellationToken)
+    private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)
     {
       var userIds = new List<int> { request1.UserId, request2.UserId };
-      await _notifications.BroadcastUserFoundMeeting(userIds, cancellationToken);
+      await _notifications.BroadcastUserFoundMeeting(userIds);
     }
 
-    private async Task BroadcastUserJoinedMeeting(MeetingUser meetingUser, CancellationToken cancellationToken)
+    private async Task BroadcastUserJoinedMeeting(MeetingUser meetingUser)
     {
       var meetingUsers = await _context.MeetingUsers
         .Where(x => x.MeetingId == meetingUser.MeetingId)
-        .ToListAsync(cancellationToken);
+        .ToListAsync();
 
       var meetingUserIds = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserJoinedMeeting(meetingUser, meetingUserIds, cancellationToken);
+      await _notifications.BroadcastUserJoinedMeeting(meetingUser, meetingUserIds);
     }
 
     private static IEnumerable<MeetingRequestDrink> PrepareDrinks(

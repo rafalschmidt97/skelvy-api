@@ -1,11 +1,10 @@
-using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Uploads;
 
 namespace Skelvy.Application.Uploads.Commands.UploadPhoto
 {
-  public class UploadPhotoCommandHandler : IRequestHandler<UploadPhotoCommand, string>
+  public class UploadPhotoCommandHandler : QueryHandler<UploadPhotoCommand, string>
   {
     private readonly IUploadService _uploadService;
 
@@ -14,9 +13,9 @@ namespace Skelvy.Application.Uploads.Commands.UploadPhoto
       _uploadService = uploadService;
     }
 
-    public async Task<string> Handle(UploadPhotoCommand request, CancellationToken cancellationToken)
+    public override async Task<string> Handle(UploadPhotoCommand request)
     {
-      return await _uploadService.Upload(request.Data, request.Name, request.ServerPath, cancellationToken);
+      return await _uploadService.Upload(request.Data, request.Name, request.ServerPath);
     }
   }
 }

@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Auth.Commands.RefreshToken;
@@ -23,10 +22,10 @@ namespace Skelvy.Application.Test.Auth.Commands
     {
       var request = new RefreshTokenCommand { RefreshToken = RefreshToken };
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(new Token());
+        x.Generate(It.IsAny<string>())).ReturnsAsync(new Token());
       var handler = new RefreshTokenCommandHandler(_tokenService.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -34,11 +33,11 @@ namespace Skelvy.Application.Test.Auth.Commands
     {
       var request = new RefreshTokenCommand { RefreshToken = RefreshToken };
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<string>(), CancellationToken.None)).Throws<UnauthorizedException>();
+        x.Generate(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler = new RefreshTokenCommandHandler(_tokenService.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Users.Commands;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
@@ -15,7 +14,7 @@ namespace Skelvy.Application.Test.Users.Commands
       var request = new UpdateUserLanguageCommand { UserId = 1, Language = LanguageTypes.EN };
       var handler = new UpdateUserLanguageCommandHandler(InitializedDbContext());
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -25,7 +24,7 @@ namespace Skelvy.Application.Test.Users.Commands
       var handler = new UpdateUserLanguageCommandHandler(DbContext());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

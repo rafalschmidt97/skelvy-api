@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 {
-  public class CreateMeetingRequestCommand : IRequest
+  public class CreateMeetingRequestCommand : ICommand
   {
     public int UserId { get; set; }
     public DateTimeOffset MinDate { get; set; }

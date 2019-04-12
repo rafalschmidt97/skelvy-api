@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -34,9 +33,9 @@ namespace Skelvy.Infrastructure.Tokens
       _context = context;
     }
 
-    public async Task<Token> Generate(User user, CancellationToken cancellationToken)
+    public async Task<Token> Generate(User user)
     {
-      var refreshToken = await GenerateRefreshToken(user, cancellationToken);
+      var refreshToken = await GenerateRefreshToken(user);
       var accessToken = GenerateAccessToken(user);
 
       return new Token
@@ -46,9 +45,9 @@ namespace Skelvy.Infrastructure.Tokens
       };
     }
 
-    public async Task<Token> Generate(string refreshToken, CancellationToken cancellationToken)
+    public async Task<Token> Generate(string refreshToken)
     {
-      var user = await RefreshToken(refreshToken, cancellationToken);
+      var user = await RefreshToken(refreshToken);
       var accessToken = GenerateAccessToken(user);
 
       return new Token
@@ -58,10 +57,10 @@ namespace Skelvy.Infrastructure.Tokens
       };
     }
 
-    public async Task Invalidate(string refreshToken, CancellationToken cancellationToken)
+    public async Task Invalidate(string refreshToken)
     {
       var cacheKey = $"auth:refresh#{refreshToken}";
-      await _cache.RemoveAsync(cacheKey, cancellationToken);
+      await _cache.RemoveAsync(cacheKey);
     }
 
     private string GenerateAccessToken(User user)
@@ -77,21 +76,21 @@ namespace Skelvy.Infrastructure.Tokens
       return GenerateToken(DateTimeOffset.UtcNow.AddMinutes(5).UtcDateTime, claims);
     }
 
-    private async Task<string> GenerateRefreshToken(User user, CancellationToken cancellationToken)
+    private async Task<string> GenerateRefreshToken(User user)
     {
       var refreshToken = GenerateToken(DateTimeOffset.UtcNow.AddDays(15).UtcDateTime);
 
       var cacheKey = $"auth:refresh#{refreshToken}";
       var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(15));
-      await _cache.SetAsync(cacheKey, _mapper.Map<TokenUser>(user).Serialize(), options, cancellationToken);
+      await _cache.SetAsync(cacheKey, _mapper.Map<TokenUser>(user).Serialize(), options);
 
       return refreshToken;
     }
 
-    private async Task<User> RefreshToken(string refreshToken, CancellationToken cancellationToken)
+    private async Task<User> RefreshToken(string refreshToken)
     {
       var cacheKey = $"auth:refresh#{refreshToken}";
-      var cachedBytes = await _cache.GetAsync(cacheKey, cancellationToken);
+      var cachedBytes = await _cache.GetAsync(cacheKey);
 
       if (cachedBytes == null)
       {
@@ -99,7 +98,7 @@ namespace Skelvy.Infrastructure.Tokens
       }
 
       var tokenUser = cachedBytes.Deserialize<TokenUser>();
-      var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == tokenUser.Id, cancellationToken);
+      var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == tokenUser.Id);
 
       if (user == null)
       {
@@ -111,7 +110,7 @@ namespace Skelvy.Infrastructure.Tokens
         throw new UnauthorizedException("User is in safety retention window for deletion");
       }
 
-      await _cache.RefreshAsync(cacheKey, cancellationToken);
+      await _cache.RefreshAsync(cacheKey);
       return user;
     }
 

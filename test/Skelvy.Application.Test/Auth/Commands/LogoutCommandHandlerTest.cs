@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Auth.Commands.Logout;
@@ -23,7 +22,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var request = new LogoutCommand { RefreshToken = RefreshToken };
       var handler = new LogoutCommandHandler(_tokenService.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
   }
 }

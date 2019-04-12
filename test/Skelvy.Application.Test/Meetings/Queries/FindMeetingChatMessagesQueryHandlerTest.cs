@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
@@ -19,7 +18,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       };
       var handler = new FindMeetingChatMessagesQueryHandler(InitializedDbContext(), Mapper());
 
-      var result = await handler.Handle(request, CancellationToken.None);
+      var result = await handler.Handle(request);
 
       Assert.All(result, x => Assert.IsType<MeetingChatMessageDto>(x));
       Assert.NotEmpty(result);
@@ -36,7 +35,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var handler = new FindMeetingChatMessagesQueryHandler(DbContext(), Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

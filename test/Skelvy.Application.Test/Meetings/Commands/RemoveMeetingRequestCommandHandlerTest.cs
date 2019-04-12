@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
 using Skelvy.Common.Exceptions;
@@ -14,7 +13,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new RemoveMeetingRequestCommand { UserId = 1 };
       var handler = new RemoveMeetingRequestCommandHandler(InitializedDbContext());
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -24,7 +23,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new RemoveMeetingRequestCommandHandler(InitializedDbContext());
 
       await Assert.ThrowsAsync<ConflictException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
 
     [Fact]
@@ -34,7 +33,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new RemoveMeetingRequestCommandHandler(DbContext());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

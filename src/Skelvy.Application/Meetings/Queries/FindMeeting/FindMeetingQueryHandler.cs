@@ -1,9 +1,8 @@
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -11,7 +10,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Queries.FindMeeting
 {
-  public class FindMeetingQueryHandler : IRequestHandler<FindMeetingQuery, MeetingViewModel>
+  public class FindMeetingQueryHandler : QueryHandler<FindMeetingQuery, MeetingViewModel>
   {
     private readonly SkelvyContext _context;
     private readonly IMapper _mapper;
@@ -22,12 +21,12 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
       _mapper = mapper;
     }
 
-    public async Task<MeetingViewModel> Handle(FindMeetingQuery request, CancellationToken cancellationToken)
+    public override async Task<MeetingViewModel> Handle(FindMeetingQuery request)
     {
       var meetingRequest = await _context.MeetingRequests
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && (x.Status == MeetingRequestStatusTypes.Searching || x.Status == MeetingRequestStatusTypes.Found), cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && (x.Status == MeetingRequestStatusTypes.Searching || x.Status == MeetingRequestStatusTypes.Found));
 
       if (meetingRequest == null)
       {
@@ -40,7 +39,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
         .ThenInclude(x => x.Profile)
         .ThenInclude(x => x.Photos)
         .Include(x => x.Drink)
-        .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == request.UserId && y.Status == MeetingUserStatusTypes.Joined), cancellationToken);
+        .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == request.UserId && y.Status == MeetingUserStatusTypes.Joined));
 
       if (meeting != null)
       {

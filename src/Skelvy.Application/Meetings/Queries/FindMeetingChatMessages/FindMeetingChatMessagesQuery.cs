@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
 {
-  public class FindMeetingChatMessagesQuery : IRequest<IList<MeetingChatMessageDto>>
+  public class FindMeetingChatMessagesQuery : IQuery<IList<MeetingChatMessageDto>>
   {
     public int UserId { get; set; }
     public int Page { get; set; }

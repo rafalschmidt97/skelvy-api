@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Infrastructure.Notifications;
@@ -16,75 +15,75 @@ namespace Skelvy.Infrastructure.Notifications
         .TryAddWithoutValidation("Authorization", "key=" + configuration["Google:KeyWeb"]);
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds)
     {
       var notification = new PushNotificationContent
       {
         Body = message.Message,
       };
 
-      await SendNotifications(userIds, notification, cancellationToken);
+      await SendNotifications(userIds, notification);
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds)
     {
       var notification = new PushNotificationContent
       {
         BodyLocKey = "USER_JOINED_MEETING",
       };
 
-      await SendNotifications(userIds, notification, cancellationToken);
+      await SendNotifications(userIds, notification);
     }
 
-    public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds)
     {
       var notification = new PushNotificationContent
       {
         BodyLocKey = "USER_FOUND_MEETING",
       };
 
-      await SendNotifications(userIds, notification, cancellationToken);
+      await SendNotifications(userIds, notification);
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds)
     {
       var notification = new PushNotificationContent
       {
         BodyLocKey = "USER_LEFT_MEETING",
       };
 
-      await SendNotifications(userIds, notification, cancellationToken);
+      await SendNotifications(userIds, notification);
     }
 
-    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds)
     {
       var notification = new PushNotificationContent
       {
         BodyLocKey = "MEETING_REQUEST_EXPIRED",
       };
 
-      await SendNotifications(userIds, notification, cancellationToken);
+      await SendNotifications(userIds, notification);
     }
 
-    public async Task BroadcastMeetingExpired(IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingExpired(IEnumerable<int> userIds)
     {
       var notification = new PushNotificationContent
       {
         BodyLocKey = "MEETING_EXPIRED",
       };
 
-      await SendNotifications(userIds, notification, cancellationToken);
+      await SendNotifications(userIds, notification);
     }
 
-    private async Task SendNotifications(IEnumerable<int> userIds, PushNotificationContent notification, CancellationToken cancellationToken)
+    private async Task SendNotifications(IEnumerable<int> userIds, PushNotificationContent notification)
     {
       foreach (var userId in userIds)
       {
-        await SendNotification(userId, notification, cancellationToken);
+        await SendNotification(userId, notification);
       }
     }
 
-    private async Task SendNotification(int userId, PushNotificationContent notification, CancellationToken cancellationToken)
+    private async Task SendNotification(int userId, PushNotificationContent notification)
     {
       var message = new PushNotificationMessage
       {
@@ -92,7 +91,7 @@ namespace Skelvy.Infrastructure.Notifications
         Notification = notification,
       };
 
-      await HttpClient.PostAsync("send", PrepareData(message), cancellationToken);
+      await HttpClient.PostAsync("send", PrepareData(message));
     }
   }
 }

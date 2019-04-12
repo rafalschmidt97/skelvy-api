@@ -1,14 +1,14 @@
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 {
-  public class RemoveMeetingRequestCommandHandler : IRequestHandler<RemoveMeetingRequestCommand>
+  public class RemoveMeetingRequestCommandHandler : CommandHandler<RemoveMeetingRequestCommand>
   {
     private readonly SkelvyContext _context;
 
@@ -17,10 +17,10 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
       _context = context;
     }
 
-    public async Task<Unit> Handle(RemoveMeetingRequestCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(RemoveMeetingRequestCommand request)
     {
       var user = await _context.MeetingUsers
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined, cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
 
       if (user != null)
       {
@@ -28,7 +28,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
       }
 
       var meetingRequest = await _context.MeetingRequests
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingRequestStatusTypes.Searching, cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingRequestStatusTypes.Searching);
 
       if (meetingRequest == null)
       {
@@ -37,7 +37,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 
       meetingRequest.Status = MeetingRequestStatusTypes.Aborted;
 
-      await _context.SaveChangesAsync(cancellationToken);
+      await _context.SaveChangesAsync();
       return Unit.Value;
     }
   }

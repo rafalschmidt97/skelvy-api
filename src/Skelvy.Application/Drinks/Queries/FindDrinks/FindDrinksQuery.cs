@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Drinks.Queries.FindDrinks
 {
-  public class FindDrinksQuery : IRequest<IList<DrinkDto>>
+  public class FindDrinksQuery : IQuery<IList<DrinkDto>>
   {
   }
 }

@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Infrastructure.Notifications;
@@ -23,7 +22,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new AddMeetingChatMessageCommand { Message = "Hello World", UserId = 2 };
       var handler = new AddMeetingChatMessageCommandHandler(InitializedDbContext(), _notifications.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -33,7 +32,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new AddMeetingChatMessageCommandHandler(DbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

@@ -1,8 +1,8 @@
-using MediatR;
+using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
 {
-  public class RemoveExpiredMeetingsCommand : IRequest
+  public class RemoveExpiredMeetingsCommand : ICommand
   {
   }
 }

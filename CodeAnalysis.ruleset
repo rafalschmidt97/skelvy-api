@@ -24,11 +24,13 @@
     <Rule Id="SX1309" Action="Error" />
     <Rule Id="CA1001" Action="None" />
     <Rule Id="CA1032" Action="None" />
+    <Rule Id="CA1040" Action="None" />
     <Rule Id="CA1054" Action="None" />
     <Rule Id="CA1056" Action="None" />
     <Rule Id="CA1308" Action="None" />
     <Rule Id="CA1305" Action="None" />
     <Rule Id="CA1710" Action="None" />
+    <Rule Id="CA1715" Action="None" />
     <Rule Id="CA1724" Action="None" />
     <Rule Id="CA1822" Action="None" />
     <Rule Id="CA2007" Action="None" />

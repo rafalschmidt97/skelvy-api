@@ -1,5 +1,4 @@
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Infrastructure.Uploads;
@@ -24,7 +23,7 @@ namespace Skelvy.Application.Test.Uploads.Commands
       var request = new UploadPhotoCommand { Name = "photo.jpg", ServerPath = "localhost" };
       var handler = new UploadPhotoCommandHandler(_uploadService.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -32,12 +31,12 @@ namespace Skelvy.Application.Test.Uploads.Commands
     {
       var request = new UploadPhotoCommand { Name = "photo.jppg", ServerPath = "localhost" };
       _uploadService
-        .Setup(x => x.Upload(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None))
+        .Setup(x => x.Upload(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>()))
         .Throws<BadRequestException>();
       var handler = new UploadPhotoCommandHandler(_uploadService.Object);
 
       await Assert.ThrowsAsync<BadRequestException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
   }
 }

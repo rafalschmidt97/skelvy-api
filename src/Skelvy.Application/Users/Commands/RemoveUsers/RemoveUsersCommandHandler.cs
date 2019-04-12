@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Users.Commands.RemoveUsers
 {
-  public class RemoveUsersCommandHandler : IRequestHandler<RemoveUsersCommand>
+  public class RemoveUsersCommandHandler : CommandHandler<RemoveUsersCommand>
   {
     private readonly SkelvyContext _context;
 
@@ -17,16 +17,16 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       _context = context;
     }
 
-    public async Task<Unit> Handle(RemoveUsersCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(RemoveUsersCommand request)
     {
       var today = DateTimeOffset.UtcNow;
 
       var usersToRemove = await _context.Users
         .Where(x => x.IsDeleted && x.DeletionDate < today)
-        .ToListAsync(cancellationToken);
+        .ToListAsync();
 
       _context.Users.RemoveRange(usersToRemove);
-      await _context.SaveChangesAsync(cancellationToken);
+      await _context.SaveChangesAsync();
 
       return Unit.Value;
     }

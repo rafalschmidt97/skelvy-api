@@ -1,9 +1,8 @@
 using System;
 using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Google;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Infrastructure.Tokens;
@@ -14,7 +13,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 {
-  public class SignInWithGoogleCommandHandler : IRequestHandler<SignInWithGoogleCommand, Token>
+  public class SignInWithGoogleCommandHandler : QueryHandler<SignInWithGoogleCommand, Token>
   {
     private readonly SkelvyContext _context;
     private readonly IGoogleService _googleService;
@@ -33,26 +32,25 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
       _notifications = notifications;
     }
 
-    public async Task<Token> Handle(SignInWithGoogleCommand request, CancellationToken cancellationToken)
+    public override async Task<Token> Handle(SignInWithGoogleCommand request)
     {
-      var verified = await _googleService.Verify(request.AuthToken, cancellationToken);
+      var verified = await _googleService.Verify(request.AuthToken);
 
       var user = await _context.Users
         .Include(x => x.Roles)
-        .FirstOrDefaultAsync(x => x.GoogleId == verified.UserId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.GoogleId == verified.UserId);
 
       if (user == null)
       {
         var details = await _googleService.GetBody<dynamic>(
           "plus/v1/people/me",
           request.AuthToken,
-          "fields=birthday,name/givenName,emails/value,gender,image/url",
-          cancellationToken);
+          "fields=birthday,name/givenName,emails/value,gender,image/url");
 
         var email = (string)details.emails[0].value;
         var userByEmail = await _context.Users
           .Include(x => x.Roles)
-          .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+          .FirstOrDefaultAsync(x => x.Email == email);
 
         var isDataChanged = false;
 
@@ -109,11 +107,11 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           isDataChanged = true;
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync();
 
         if (!isDataChanged)
         {
-          await _notifications.BroadcastUserCreated(user, cancellationToken);
+          await _notifications.BroadcastUserCreated(user);
         }
       }
       else
@@ -124,7 +122,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         }
       }
 
-      return await _tokenService.Generate(user, cancellationToken);
+      return await _tokenService.Generate(user);
     }
   }
 }

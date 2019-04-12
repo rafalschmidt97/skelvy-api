@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Infrastructure.Uploads;
 using Skelvy.Common.Exceptions;
@@ -11,7 +10,7 @@ namespace Skelvy.Infrastructure.Uploads
 {
   public class UploadService : IUploadService
   {
-    public async Task<string> Upload(Stream fileData, string fileName, string serverPath, CancellationToken cancellationToken)
+    public async Task<string> Upload(Stream fileData, string fileName, string serverPath)
     {
       const int maxFileSize = 5 * 1024 * 1024; // 5MB
       var acceptedFileTypes = new[] { ".jpg", ".jpeg", ".png", ".heic" };
@@ -38,7 +37,7 @@ namespace Skelvy.Infrastructure.Uploads
       var path = Path.Combine(relativePath, name);
       using (var stream = new FileStream(path, FileMode.Create))
       {
-        await fileData.CopyToAsync(stream, cancellationToken);
+        await fileData.CopyToAsync(stream);
       }
 
       return Path.Combine("http://" + listeningPath, name);

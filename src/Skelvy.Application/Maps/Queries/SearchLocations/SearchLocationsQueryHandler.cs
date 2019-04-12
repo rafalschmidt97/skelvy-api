@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Maps;
 using Skelvy.Common.Serializers;
 
 namespace Skelvy.Application.Maps.Queries.SearchLocations
 {
-  public class SearchLocationsQueryHandler : IRequestHandler<SearchLocationsQuery, IList<Location>>
+  public class SearchLocationsQueryHandler : QueryHandler<SearchLocationsQuery, IList<Location>>
   {
     private readonly IMapsService _mapsService;
     private readonly IDistributedCache _cache;
@@ -20,20 +19,20 @@ namespace Skelvy.Application.Maps.Queries.SearchLocations
       _cache = cache;
     }
 
-    public async Task<IList<Location>> Handle(SearchLocationsQuery request, CancellationToken cancellationToken)
+    public override async Task<IList<Location>> Handle(SearchLocationsQuery request)
     {
       var cacheKey = $"maps:search#{request.Search}#{request.Language}";
-      var cachedLocationBytes = await _cache.GetAsync(cacheKey, cancellationToken);
+      var cachedLocationBytes = await _cache.GetAsync(cacheKey);
 
       if (cachedLocationBytes != null)
       {
         return cachedLocationBytes.Deserialize<IList<Location>>();
       }
 
-      var locations = await _mapsService.Search(request.Search, request.Language, cancellationToken);
+      var locations = await _mapsService.Search(request.Search, request.Language);
 
       var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(14));
-      await _cache.SetAsync(cacheKey, locations.Serialize(), options, cancellationToken);
+      await _cache.SetAsync(cacheKey, locations.Serialize(), options);
 
       return locations;
     }

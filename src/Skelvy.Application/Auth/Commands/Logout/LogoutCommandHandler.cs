@@ -1,11 +1,11 @@
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Tokens;
 
 namespace Skelvy.Application.Auth.Commands.Logout
 {
-  public class LogoutCommandHandler : IRequestHandler<LogoutCommand>
+  public class LogoutCommandHandler : CommandHandler<LogoutCommand>
   {
     private readonly ITokenService _tokenService;
 
@@ -14,9 +14,9 @@ namespace Skelvy.Application.Auth.Commands.Logout
       _tokenService = tokenService;
     }
 
-    public async Task<Unit> Handle(LogoutCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(LogoutCommand request)
     {
-      await _tokenService.Invalidate(request.RefreshToken, cancellationToken);
+      await _tokenService.Invalidate(request.RefreshToken);
       return Unit.Value;
     }
   }

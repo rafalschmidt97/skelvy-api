@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Infrastructure.Notifications;
@@ -22,7 +21,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new RemoveExpiredMeetingsCommand();
       var handler = new RemoveExpiredMeetingsCommandHandler(InitializedDbContext(), _notifications.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
   }
 }

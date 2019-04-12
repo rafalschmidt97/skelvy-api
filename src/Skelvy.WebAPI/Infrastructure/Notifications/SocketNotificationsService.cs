@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Skelvy.Application.Infrastructure.Notifications;
@@ -18,34 +17,34 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _hubContext = hubContext;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserSentMeetingChatMessage", message, cancellationToken);
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserSentMeetingChatMessage", message);
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserJoinedMeeting", cancellationToken);
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserJoinedMeeting");
     }
 
-    public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserFoundMeeting", cancellationToken);
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserFoundMeeting");
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserLeftMeeting", cancellationToken);
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserLeftMeeting");
     }
 
-    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingRequestExpired", cancellationToken);
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingRequestExpired");
     }
 
-    public async Task BroadcastMeetingExpired(IEnumerable<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingExpired(IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingExpired", cancellationToken);
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingExpired");
     }
 
     private static IReadOnlyList<string> PrepareUsers(IEnumerable<int> userIds)

@@ -1,5 +1,4 @@
 using System.Dynamic;
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Auth.Commands;
@@ -34,13 +33,13 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldReturnTokenWithInitializedUser()
     {
       var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
-      _facebookService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Access);
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>(), CancellationToken.None)).ReturnsAsync(new Token());
+        x.Generate(It.IsAny<User>())).ReturnsAsync(new Token());
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContext(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
-      var result = await handler.Handle(request, CancellationToken.None);
+      var result = await handler.Handle(request);
 
       Assert.IsType<Token>(result);
     }
@@ -49,15 +48,15 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldReturnTokenWithNotInitializedUser()
     {
       var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
-      _facebookService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Access);
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
       _facebookService
-        .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None))
+        .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync((object)GraphResponse());
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>(), CancellationToken.None)).ReturnsAsync(new Token());
+        x.Generate(It.IsAny<User>())).ReturnsAsync(new Token());
       var handler = new SignInWithFacebookCommandHandler(DbContext(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
-      var result = await handler.Handle(request, CancellationToken.None);
+      var result = await handler.Handle(request);
 
       Assert.IsType<Token>(result);
     }
@@ -66,12 +65,12 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldThrowException()
     {
       var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
-      _facebookService.Setup(x => x.Verify(It.IsAny<string>(), CancellationToken.None)).Throws<UnauthorizedException>();
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContext(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
 
     private static dynamic GraphResponse()

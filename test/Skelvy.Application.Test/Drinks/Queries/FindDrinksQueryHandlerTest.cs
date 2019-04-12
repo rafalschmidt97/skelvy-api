@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Drinks.Queries;
 using Skelvy.Application.Drinks.Queries.FindDrinks;
@@ -14,7 +13,7 @@ namespace Skelvy.Application.Test.Drinks.Queries
       var request = new FindDrinksQuery();
       var handler = new FindDrinksQueryHandler(InitializedDbContext(), Mapper());
 
-      var result = await handler.Handle(request, CancellationToken.None);
+      var result = await handler.Handle(request);
 
       Assert.All(result, x => Assert.IsType<DrinkDto>(x));
       Assert.NotEmpty(result);
@@ -26,7 +25,7 @@ namespace Skelvy.Application.Test.Drinks.Queries
       var request = new FindDrinksQuery();
       var handler = new FindDrinksQueryHandler(DbContext(), Mapper());
 
-      var result = await handler.Handle(request, CancellationToken.None);
+      var result = await handler.Handle(request);
 
       Assert.All(result, x => Assert.IsType<DrinkDto>(x));
       Assert.Empty(result);

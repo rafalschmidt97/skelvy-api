@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Users.Commands.UpdateUserProfile
 {
-  public class UpdateUserProfileCommandHandler : IRequestHandler<UpdateUserProfileCommand>
+  public class UpdateUserProfileCommandHandler : CommandHandler<UpdateUserProfileCommand>
   {
     private readonly SkelvyContext _context;
 
@@ -19,10 +19,10 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       _context = context;
     }
 
-    public async Task<Unit> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(UpdateUserProfileCommand request)
     {
       var profile = await _context.UserProfiles
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId);
 
       if (profile == null)
       {
@@ -38,16 +38,16 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
         profile.Description = request.Description.Trim();
       }
 
-      await UpdatePhotos(profile, request.Photos, cancellationToken);
-      await _context.SaveChangesAsync(cancellationToken);
+      await UpdatePhotos(profile, request.Photos);
+      await _context.SaveChangesAsync();
       return Unit.Value;
     }
 
-    private async Task UpdatePhotos(UserProfile profile, IEnumerable<UpdateUserProfilePhotos> photos, CancellationToken cancellationToken)
+    private async Task UpdatePhotos(UserProfile profile, IEnumerable<UpdateUserProfilePhotos> photos)
     {
       // Remove old photos
       var oldPhotos = await _context.UserProfilePhotos.Where(x => x.ProfileId == profile.Id)
-        .ToListAsync(cancellationToken);
+        .ToListAsync();
       oldPhotos.ForEach(x => { x.Status = UserProfilePhotoStatusTypes.Removed; });
 
       // Add new photos

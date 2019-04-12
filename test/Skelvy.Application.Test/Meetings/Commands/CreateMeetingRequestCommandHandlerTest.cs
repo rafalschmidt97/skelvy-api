@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Core.Initializers;
@@ -29,7 +28,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       request.MaxDate = DateTimeOffset.UtcNow.AddDays(4);
       var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithMeetings(), _notifications.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -38,7 +37,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = Request();
       var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -48,7 +47,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       request.UserId = 2;
       var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithRequests(), _notifications.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
 
     [Fact]
@@ -59,7 +58,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
 
     [Fact]
@@ -70,7 +69,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
 
     [Fact]
@@ -80,7 +79,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new CreateMeetingRequestCommandHandler(InitializedDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<ConflictException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
 
     [Fact]
@@ -91,7 +90,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new CreateMeetingRequestCommandHandler(InitializedDbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<ConflictException>(() =>
-        handler.Handle(request, CancellationToken.None));
+        handler.Handle(request));
     }
 
     private static CreateMeetingRequestCommand Request()

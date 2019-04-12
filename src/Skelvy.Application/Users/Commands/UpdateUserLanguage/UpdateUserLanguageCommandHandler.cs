@@ -1,14 +1,14 @@
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
 {
-  public class UpdateUserLanguageCommandHandler : IRequestHandler<UpdateUserLanguageCommand>
+  public class UpdateUserLanguageCommandHandler : CommandHandler<UpdateUserLanguageCommand>
   {
     private readonly SkelvyContext _context;
 
@@ -17,10 +17,10 @@ namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
       _context = context;
     }
 
-    public async Task<Unit> Handle(UpdateUserLanguageCommand request, CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(UpdateUserLanguageCommand request)
     {
       var user = await _context.Users
-        .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
+        .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
       if (user == null)
       {
@@ -29,7 +29,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
 
       user.Language = request.Language;
 
-      await _context.SaveChangesAsync(cancellationToken);
+      await _context.SaveChangesAsync();
       return Unit.Value;
     }
   }

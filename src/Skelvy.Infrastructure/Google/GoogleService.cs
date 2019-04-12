@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Auth.Commands;
@@ -22,9 +21,9 @@ namespace Skelvy.Infrastructure.Google
       _idAndroid = configuration["Google:IdAndroid"];
     }
 
-    public async Task<T> GetBody<T>(string path, string accessToken, string args, CancellationToken cancellationToken)
+    public async Task<T> GetBody<T>(string path, string accessToken, string args)
     {
-      var response = await HttpClient.GetAsync($"{path}?access_token={accessToken}&{args}", cancellationToken);
+      var response = await HttpClient.GetAsync($"{path}?access_token={accessToken}&{args}");
       var responseData = await GetData<T>(response.Content);
 
       ValidateResponse(path, args, response, responseData, "GET");
@@ -32,9 +31,9 @@ namespace Skelvy.Infrastructure.Google
       return responseData;
     }
 
-    public async Task<T> PostBody<T>(string path, string accessToken, object data, string args, CancellationToken cancellationToken)
+    public async Task<T> PostBody<T>(string path, string accessToken, object data, string args)
     {
-      var response = await HttpClient.PostAsync($"{path}?access_token={accessToken}&{args}", PrepareData(data), cancellationToken);
+      var response = await HttpClient.PostAsync($"{path}?access_token={accessToken}&{args}", PrepareData(data));
       var responseData = await GetData<T>(response.Content);
 
       ValidateResponse(path, args, response, responseData, "POST");
@@ -42,10 +41,10 @@ namespace Skelvy.Infrastructure.Google
       return responseData;
     }
 
-    public async Task<AccessVerification> Verify(string accessToken, CancellationToken cancellationToken)
+    public async Task<AccessVerification> Verify(string accessToken)
     {
       var response =
-        await GetBody<dynamic>("oauth2/v3/tokeninfo", accessToken, null, cancellationToken);
+        await GetBody<dynamic>("oauth2/v3/tokeninfo", accessToken, null);
 
       if (response.aud != _idIos && response.aud != _idAndroid)
       {

@@ -1,11 +1,10 @@
-using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Tokens;
 
 namespace Skelvy.Application.Auth.Commands.RefreshToken
 {
-  public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, Token>
+  public class RefreshTokenCommandHandler : QueryHandler<RefreshTokenCommand, Token>
   {
     private readonly ITokenService _tokenService;
 
@@ -14,9 +13,9 @@ namespace Skelvy.Application.Auth.Commands.RefreshToken
       _tokenService = tokenService;
     }
 
-    public async Task<Token> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public override async Task<Token> Handle(RefreshTokenCommand request)
     {
-      return await _tokenService.Generate(request.RefreshToken, cancellationToken);
+      return await _tokenService.Generate(request.RefreshToken);
     }
   }
 }

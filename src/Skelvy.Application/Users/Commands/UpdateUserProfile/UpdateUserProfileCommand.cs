@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Commands.UpdateUserProfile
 {
-  public class UpdateUserProfileCommand : IRequest
+  public class UpdateUserProfileCommand : ICommand
   {
     public int UserId { get; set; }
     public string Name { get; set; }

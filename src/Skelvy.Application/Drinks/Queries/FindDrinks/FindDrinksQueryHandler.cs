@@ -1,15 +1,14 @@
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Drinks.Queries.FindDrinks
 {
-  public class FindDrinksQueryHandler : IRequestHandler<FindDrinksQuery, IList<DrinkDto>>
+  public class FindDrinksQueryHandler : QueryHandler<FindDrinksQuery, IList<DrinkDto>>
   {
     private readonly SkelvyContext _context;
     private readonly IMapper _mapper;
@@ -20,9 +19,9 @@ namespace Skelvy.Application.Drinks.Queries.FindDrinks
       _mapper = mapper;
     }
 
-    public async Task<IList<DrinkDto>> Handle(FindDrinksQuery request, CancellationToken cancellationToken)
+    public override async Task<IList<DrinkDto>> Handle(FindDrinksQuery request)
     {
-      return await _context.Drinks.ProjectTo<DrinkDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
+      return await _context.Drinks.ProjectTo<DrinkDto>(_mapper.ConfigurationProvider).ToListAsync();
     }
   }
 }

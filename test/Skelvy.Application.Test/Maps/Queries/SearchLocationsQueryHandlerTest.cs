@@ -27,7 +27,7 @@ namespace Skelvy.Application.Test.Maps.Queries
       _cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((byte[])null);
       var handler = new SearchLocationsQueryHandler(_mapsService.Object, _cache.Object);
 
-      await handler.Handle(request, CancellationToken.None);
+      await handler.Handle(request);
     }
   }
 }

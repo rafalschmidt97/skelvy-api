@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Domain.Entities;
@@ -24,109 +23,109 @@ namespace Skelvy.Infrastructure.Notifications
       _emailService = emailService;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IList<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IList<int> userIds)
     {
       var connections = GetConnections(userIds);
 
       if (connections.OnlineIds.Count > 0)
       {
-        await _socketService.BroadcastUserSentMeetingChatMessage(message, userIds, cancellationToken);
+        await _socketService.BroadcastUserSentMeetingChatMessage(message, userIds);
       }
 
       if (connections.OfflineIds.Count > 0)
       {
-        await _pushService.BroadcastUserSentMeetingChatMessage(message, userIds, cancellationToken);
+        await _pushService.BroadcastUserSentMeetingChatMessage(message, userIds);
       }
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IList<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IList<int> userIds)
     {
       var connections = GetConnections(userIds);
 
       if (connections.OnlineIds.Count > 0)
       {
-        await _socketService.BroadcastUserJoinedMeeting(user, userIds, cancellationToken);
+        await _socketService.BroadcastUserJoinedMeeting(user, userIds);
       }
 
       if (connections.OfflineIds.Count > 0)
       {
-        await _pushService.BroadcastUserJoinedMeeting(user, userIds, cancellationToken);
+        await _pushService.BroadcastUserJoinedMeeting(user, userIds);
       }
     }
 
-    public async Task BroadcastUserFoundMeeting(IList<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserFoundMeeting(IList<int> userIds)
     {
       var connections = GetConnections(userIds);
 
       if (connections.OnlineIds.Count > 0)
       {
-        await _socketService.BroadcastUserFoundMeeting(userIds, cancellationToken);
+        await _socketService.BroadcastUserFoundMeeting(userIds);
       }
 
       if (connections.OfflineIds.Count > 0)
       {
-        await _pushService.BroadcastUserFoundMeeting(userIds, cancellationToken);
+        await _pushService.BroadcastUserFoundMeeting(userIds);
       }
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, IList<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, IList<int> userIds)
     {
       var connections = GetConnections(userIds);
 
       if (connections.OnlineIds.Count > 0)
       {
-        await _socketService.BroadcastUserLeftMeeting(user, userIds, cancellationToken);
+        await _socketService.BroadcastUserLeftMeeting(user, userIds);
       }
 
       if (connections.OfflineIds.Count > 0)
       {
-        await _pushService.BroadcastUserLeftMeeting(user, userIds, cancellationToken);
+        await _pushService.BroadcastUserLeftMeeting(user, userIds);
       }
     }
 
-    public async Task BroadcastMeetingRequestExpired(IList<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingRequestExpired(IList<int> userIds)
     {
       var connections = GetConnections(userIds);
 
       if (connections.OnlineIds.Count > 0)
       {
-        await _socketService.BroadcastMeetingRequestExpired(userIds, cancellationToken);
+        await _socketService.BroadcastMeetingRequestExpired(userIds);
       }
 
       if (connections.OfflineIds.Count > 0)
       {
-        await _pushService.BroadcastMeetingRequestExpired(userIds, cancellationToken);
+        await _pushService.BroadcastMeetingRequestExpired(userIds);
       }
     }
 
-    public async Task BroadcastMeetingExpired(IList<int> userIds, CancellationToken cancellationToken)
+    public async Task BroadcastMeetingExpired(IList<int> userIds)
     {
       var connections = GetConnections(userIds);
 
       if (connections.OnlineIds.Count > 0)
       {
-        await _socketService.BroadcastMeetingExpired(userIds, cancellationToken);
+        await _socketService.BroadcastMeetingExpired(userIds);
       }
 
       if (connections.OfflineIds.Count > 0)
       {
-        await _pushService.BroadcastMeetingExpired(userIds, cancellationToken);
+        await _pushService.BroadcastMeetingExpired(userIds);
       }
     }
 
-    public async Task BroadcastUserCreated(User user, CancellationToken cancellationToken)
+    public async Task BroadcastUserCreated(User user)
     {
-      await _emailService.BroadcastUserCreated(user, cancellationToken);
+      await _emailService.BroadcastUserCreated(user);
     }
 
-    public async Task BroadcastUserDeleted(User user, CancellationToken cancellationToken)
+    public async Task BroadcastUserDeleted(User user)
     {
-      await _emailService.BroadcastUserDeleted(user, cancellationToken);
+      await _emailService.BroadcastUserDeleted(user);
     }
 
-    public async Task BroadcastUserDisabled(User user, string reason, CancellationToken cancellationToken)
+    public async Task BroadcastUserDisabled(User user, string reason)
     {
-      await _emailService.BroadcastUserDisabled(user, reason, cancellationToken);
+      await _emailService.BroadcastUserDisabled(user, reason);
     }
 
     public static bool IsConnected(int userId)

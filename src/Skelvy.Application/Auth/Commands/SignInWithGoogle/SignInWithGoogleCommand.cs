@@ -1,10 +1,10 @@
 using Destructurama.Attributed;
-using MediatR;
+using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Infrastructure.Tokens;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 {
-  public class SignInWithGoogleCommand : IRequest<Token>
+  public class SignInWithGoogleCommand : IQuery<Token>
   {
     [LogMasked]
     public string AuthToken { get; set; }

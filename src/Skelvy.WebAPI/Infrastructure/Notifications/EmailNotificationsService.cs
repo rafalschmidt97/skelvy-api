@@ -2,7 +2,6 @@ using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Smtp;
@@ -23,7 +22,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _templateRenderer = templateRenderer;
     }
 
-    public async Task BroadcastUserCreated(User user, CancellationToken cancellationToken)
+    public async Task BroadcastUserCreated(User user)
     {
       var message = new EmailMessage
       {
@@ -32,10 +31,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         TemplateName = "Created",
       };
 
-      await SendEmail(message, cancellationToken);
+      await SendEmail(message);
     }
 
-    public async Task BroadcastUserDeleted(User user, CancellationToken cancellationToken)
+    public async Task BroadcastUserDeleted(User user)
     {
       var message = new EmailMessage
       {
@@ -44,10 +43,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         TemplateName = "Deleted",
       };
 
-      await SendEmail(message, cancellationToken);
+      await SendEmail(message);
     }
 
-    public async Task BroadcastUserDisabled(User user, string reason, CancellationToken cancellationToken)
+    public async Task BroadcastUserDisabled(User user, string reason)
     {
       dynamic model = new ExpandoObject();
       model.Reason = reason;
@@ -60,10 +59,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         Model = model,
       };
 
-      await SendEmail(message, cancellationToken);
+      await SendEmail(message);
     }
 
-    private async Task SendEmail(EmailMessage message, CancellationToken cancellationToken)
+    private async Task SendEmail(EmailMessage message)
     {
       var body = await GetHtmlBody(message);
 
@@ -83,7 +82,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         Credentials = new NetworkCredential(_configuration["Email:Username"], _configuration["Email:Password"]),
       })
       {
-        await smtp.SendMailExAsync(email, cancellationToken);
+        await smtp.SendMailExAsync(email);
       }
     }
 
