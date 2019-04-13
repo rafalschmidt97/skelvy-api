@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Geocoding.Google;
 using Microsoft.Extensions.Configuration;
-using Skelvy.Application.Infrastructure.Maps;
+using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 
-namespace Skelvy.Infrastructure.Maps
+namespace Skelvy.Infrastructure.Maps.GoogleMaps
 {
   public class MapsService : IMapsService
   {

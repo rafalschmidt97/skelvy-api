@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Skelvy.Application.Infrastructure.Uploads
+namespace Skelvy.Application.Uploads.Infrastructure.LocalUploads
 {
   public interface IUploadService
   {

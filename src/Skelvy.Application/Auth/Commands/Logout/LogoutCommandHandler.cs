@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using MediatR;
+using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Infrastructure.Tokens;
 
 namespace Skelvy.Application.Auth.Commands.Logout
 {

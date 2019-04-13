@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Skelvy.Application.Infrastructure.Tokens;
+using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Common.Exceptions;
 using Skelvy.Common.Serializers;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
 
-namespace Skelvy.Infrastructure.Tokens
+namespace Skelvy.Infrastructure.Auth.Tokens
 {
   public class TokenService : ITokenService
   {

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Infrastructure.Tokens
+namespace Skelvy.Application.Auth.Infrastructure.Tokens
 {
   public interface ITokenService
   {

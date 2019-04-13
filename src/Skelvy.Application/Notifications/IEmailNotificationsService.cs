@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Infrastructure.Notifications
+namespace Skelvy.Application.Notifications
 {
   public interface IEmailNotificationsService
   {

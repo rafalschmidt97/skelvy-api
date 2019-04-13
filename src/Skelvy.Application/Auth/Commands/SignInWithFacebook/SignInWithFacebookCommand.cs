@@ -1,6 +1,6 @@
 using Destructurama.Attributed;
+using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Infrastructure.Tokens;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 {

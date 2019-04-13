@@ -1,6 +1,6 @@
 using System;
 
-namespace Skelvy.Application.Infrastructure.Maps
+namespace Skelvy.Application.Maps.Infrastructure.GoogleMaps
 {
   [Serializable]
   public class Location

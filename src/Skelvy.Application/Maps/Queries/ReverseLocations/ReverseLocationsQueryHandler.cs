@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Infrastructure.Maps;
+using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 using Skelvy.Common.Serializers;
 
 namespace Skelvy.Application.Maps.Queries.ReverseLocations

@@ -3,7 +3,7 @@ using AutoMapper;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
-using Skelvy.Application.Infrastructure.Maps;
+using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 
 namespace Skelvy.WebAPI.Extensions
 {

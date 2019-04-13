@@ -5,7 +5,7 @@ using Skelvy.Application.Auth.Commands.Logout;
 using Skelvy.Application.Auth.Commands.RefreshToken;
 using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
-using Skelvy.Application.Infrastructure.Tokens;
+using Skelvy.Application.Auth.Infrastructure.Tokens;
 
 namespace Skelvy.WebAPI.Controllers
 {

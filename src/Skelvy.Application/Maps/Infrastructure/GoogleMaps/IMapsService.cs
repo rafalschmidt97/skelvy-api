@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Skelvy.Application.Infrastructure.Maps
+namespace Skelvy.Application.Maps.Infrastructure.GoogleMaps
 {
   public interface IMapsService
   {

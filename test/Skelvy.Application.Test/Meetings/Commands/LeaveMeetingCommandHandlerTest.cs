@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
+using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Xunit;
 

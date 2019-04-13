@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Smtp;
 using Microsoft.Extensions.Configuration;
-using Skelvy.Application.Infrastructure.Notifications;
+using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.WebAPI.Infrastructure.Notifications

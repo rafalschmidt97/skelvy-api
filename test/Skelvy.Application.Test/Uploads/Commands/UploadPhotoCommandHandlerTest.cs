@@ -1,8 +1,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Infrastructure.Uploads;
 using Skelvy.Application.Uploads.Commands.UploadPhoto;
+using Skelvy.Application.Uploads.Infrastructure.LocalUploads;
 using Skelvy.Common.Exceptions;
 using Xunit;
 

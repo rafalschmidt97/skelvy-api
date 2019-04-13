@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Auth.Commands.Logout;
-using Skelvy.Application.Infrastructure.Tokens;
+using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Xunit;
 
 namespace Skelvy.Application.Test.Auth.Commands

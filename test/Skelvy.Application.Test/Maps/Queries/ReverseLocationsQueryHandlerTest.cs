@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
-using Skelvy.Application.Infrastructure.Maps;
+using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 using Skelvy.Application.Maps.Queries.ReverseLocations;
 using Skelvy.Application.Users.Commands;
 using Xunit;

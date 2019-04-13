@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Infrastructure.Notifications
+namespace Skelvy.Application.Notifications
 {
-  public interface IPushNotificationsService
+  public interface ISocketNotificationsService
   {
     Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds);
     Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds);

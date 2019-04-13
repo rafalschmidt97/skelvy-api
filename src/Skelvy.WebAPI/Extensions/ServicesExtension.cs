@@ -1,6 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Skelvy.Infrastructure.Maps;
+using Skelvy.Infrastructure.Maps.GoogleMaps;
 
 namespace Skelvy.WebAPI.Extensions
 {

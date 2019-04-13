@@ -1,6 +1,6 @@
 using System;
 
-namespace Skelvy.Application.Infrastructure.Tokens
+namespace Skelvy.Application.Auth.Infrastructure.Tokens
 {
   public class Token
   {

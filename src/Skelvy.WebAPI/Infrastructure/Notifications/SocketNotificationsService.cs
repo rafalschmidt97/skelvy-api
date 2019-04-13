@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Skelvy.Application.Infrastructure.Notifications;
+using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
 using Skelvy.WebAPI.Hubs;
 

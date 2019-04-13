@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Infrastructure.Notifications;
+using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Common.Exceptions;
 using Xunit;

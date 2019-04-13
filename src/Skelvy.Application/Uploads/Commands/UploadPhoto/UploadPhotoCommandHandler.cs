@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Infrastructure.Uploads;
+using Skelvy.Application.Uploads.Infrastructure.LocalUploads;
 
 namespace Skelvy.Application.Uploads.Commands.UploadPhoto
 {

@@ -3,10 +3,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Skelvy.Application.Infrastructure.Uploads;
+using Skelvy.Application.Uploads.Infrastructure.LocalUploads;
 using Skelvy.Common.Exceptions;
 
-namespace Skelvy.Infrastructure.Uploads
+namespace Skelvy.Infrastructure.Uploads.LocalUploads
 {
   public class UploadService : IUploadService
   {
