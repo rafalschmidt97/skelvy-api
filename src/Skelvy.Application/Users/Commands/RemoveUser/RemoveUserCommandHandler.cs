@@ -34,18 +34,18 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
         throw new NotFoundException(nameof(User), request.Id);
       }
 
-      if (user.IsDeleted)
+      if (user.IsRemoved)
       {
-        throw new ConflictException($"Entity {nameof(User)}(Id = {request.Id}) is already deleted.");
+        throw new ConflictException($"Entity {nameof(User)}(Id = {request.Id}) is already removed.");
       }
 
       await LeaveMeetings(user);
 
-      user.IsDeleted = true;
-      user.DeletionDate = DateTimeOffset.UtcNow.AddMonths(3);
+      user.IsRemoved = true;
+      user.RemovedDate = DateTimeOffset.UtcNow.AddMonths(3);
 
       await _context.SaveChangesAsync();
-      await _notifications.BroadcastUserDeleted(user);
+      await _notifications.BroadcastUserRemoved(user);
 
       return Unit.Value;
     }

@@ -118,9 +118,9 @@ namespace Skelvy.Infrastructure.Notifications
       await _emailService.BroadcastUserCreated(user);
     }
 
-    public async Task BroadcastUserDeleted(User user)
+    public async Task BroadcastUserRemoved(User user)
     {
-      await _emailService.BroadcastUserDeleted(user);
+      await _emailService.BroadcastUserRemoved(user);
     }
 
     public async Task BroadcastUserDisabled(User user, string reason)

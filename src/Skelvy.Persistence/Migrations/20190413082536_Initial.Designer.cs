@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190406164107_Initial")]
+    [Migration("20190413082536_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,8 +159,6 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset?>("DeletionDate");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -171,13 +169,15 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<string>("GoogleId")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("IsDeleted");
-
                     b.Property<bool>("IsDisabled");
+
+                    b.Property<bool>("IsRemoved");
 
                     b.Property<string>("Language")
                         .IsRequired()
                         .HasMaxLength(15);
+
+                    b.Property<DateTimeOffset?>("RemovedDate");
 
                     b.HasKey("Id");
 

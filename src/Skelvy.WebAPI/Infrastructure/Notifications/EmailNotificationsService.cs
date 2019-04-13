@@ -34,13 +34,13 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       await SendEmail(message);
     }
 
-    public async Task BroadcastUserDeleted(User user)
+    public async Task BroadcastUserRemoved(User user)
     {
       var message = new EmailMessage
       {
         To = user.Email,
         Subject = "Account has been deleted",
-        TemplateName = "Deleted",
+        TemplateName = "Removed",
       };
 
       await SendEmail(message);

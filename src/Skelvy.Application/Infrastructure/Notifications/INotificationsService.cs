@@ -13,7 +13,7 @@ namespace Skelvy.Application.Infrastructure.Notifications
     Task BroadcastMeetingRequestExpired(IList<int> userIds);
     Task BroadcastMeetingExpired(IList<int> userIds);
     Task BroadcastUserCreated(User user);
-    Task BroadcastUserDeleted(User user);
+    Task BroadcastUserRemoved(User user);
     Task BroadcastUserDisabled(User user, string reason);
   }
 }

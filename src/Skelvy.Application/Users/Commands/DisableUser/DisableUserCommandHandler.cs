@@ -26,7 +26,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
     public override async Task<Unit> Handle(DisableUserCommand request)
     {
       var user = await _context.Users
-        .FirstOrDefaultAsync(x => x.Id == request.Id && !x.IsDeleted);
+        .FirstOrDefaultAsync(x => x.Id == request.Id && !x.IsRemoved);
 
       if (user == null)
       {

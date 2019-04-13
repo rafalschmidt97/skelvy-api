@@ -61,7 +61,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             Email = details.emails[0].value,
             Language = request.Language,
             GoogleId = verified.UserId,
-            IsDeleted = false,
+            IsRemoved = false,
             IsDisabled = false,
           };
           _context.Users.Add(user);
@@ -97,7 +97,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         }
         else
         {
-          if (userByEmail.IsDeleted || userByEmail.IsDisabled)
+          if (userByEmail.IsRemoved || userByEmail.IsDisabled)
           {
             throw new UnauthorizedException("User is in safety retention window for deletion");
           }
@@ -116,7 +116,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
       }
       else
       {
-        if (user.IsDeleted || user.IsDisabled)
+        if (user.IsRemoved || user.IsDisabled)
         {
           throw new UnauthorizedException("User is in safety retention window for deletion");
         }
