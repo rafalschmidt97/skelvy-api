@@ -95,9 +95,14 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         }
         else
         {
-          if (userByEmail.IsRemoved || userByEmail.IsDisabled)
+          if (userByEmail.IsRemoved)
           {
             throw new UnauthorizedException("User is in safety retention window for deletion");
+          }
+
+          if (userByEmail.IsDisabled)
+          {
+            throw new UnauthorizedException("User is disabled");
           }
 
           userByEmail.FacebookId = verified.UserId;
@@ -114,9 +119,14 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       }
       else
       {
-        if (user.IsRemoved || user.IsDisabled)
+        if (user.IsRemoved)
         {
           throw new UnauthorizedException("User is in safety retention window for deletion");
+        }
+
+        if (user.IsDisabled)
+        {
+          throw new UnauthorizedException("User is disabled");
         }
       }
 
