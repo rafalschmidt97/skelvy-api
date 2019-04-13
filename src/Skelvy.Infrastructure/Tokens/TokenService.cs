@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -35,8 +36,8 @@ namespace Skelvy.Infrastructure.Tokens
 
     public async Task<Token> Generate(User user)
     {
-      var refreshToken = await GenerateRefreshToken(user);
-      var accessToken = GenerateAccessToken(user);
+      var refreshToken = await GetRefreshToken(user);
+      var accessToken = GetAccessToken(user);
 
       return new Token
       {
@@ -47,8 +48,8 @@ namespace Skelvy.Infrastructure.Tokens
 
     public async Task<Token> Generate(string refreshToken)
     {
-      var user = await RefreshToken(refreshToken);
-      var accessToken = GenerateAccessToken(user);
+      var user = await UpdateRefreshToken(refreshToken);
+      var accessToken = GetAccessToken(user);
 
       return new Token
       {
@@ -63,7 +64,7 @@ namespace Skelvy.Infrastructure.Tokens
       await _cache.RemoveAsync(cacheKey);
     }
 
-    private string GenerateAccessToken(User user)
+    private string GetAccessToken(User user)
     {
       var claims = new List<Claim>
       {
@@ -73,12 +74,12 @@ namespace Skelvy.Infrastructure.Tokens
       };
 
       claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
-      return GenerateToken(DateTimeOffset.UtcNow.AddMinutes(5).UtcDateTime, claims);
+      return GenerateAccessToken(DateTimeOffset.UtcNow.AddMinutes(5).UtcDateTime, claims);
     }
 
-    private async Task<string> GenerateRefreshToken(User user)
+    private async Task<string> GetRefreshToken(User user)
     {
-      var refreshToken = GenerateToken(DateTimeOffset.UtcNow.AddDays(15).UtcDateTime);
+      var refreshToken = GenerateRefreshToken();
 
       var cacheKey = $"auth:refresh#{refreshToken}";
       var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(15));
@@ -87,7 +88,7 @@ namespace Skelvy.Infrastructure.Tokens
       return refreshToken;
     }
 
-    private async Task<User> RefreshToken(string refreshToken)
+    private async Task<User> UpdateRefreshToken(string refreshToken)
     {
       var cacheKey = $"auth:refresh#{refreshToken}";
       var cachedBytes = await _cache.GetAsync(cacheKey);
@@ -114,7 +115,7 @@ namespace Skelvy.Infrastructure.Tokens
       return user;
     }
 
-    private string GenerateToken(DateTime expires, List<Claim> claims = null)
+    private string GenerateAccessToken(DateTime expires, List<Claim> claims = null)
     {
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
       var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -127,6 +128,16 @@ namespace Skelvy.Infrastructure.Tokens
         signingCredentials: credentials);
 
       return new JwtSecurityTokenHandler().WriteToken(rawAccessToken);
+    }
+
+    private static string GenerateRefreshToken()
+    {
+      var randomNumber = new byte[32];
+      using (var rng = RandomNumberGenerator.Create())
+      {
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+      }
     }
   }
 }
