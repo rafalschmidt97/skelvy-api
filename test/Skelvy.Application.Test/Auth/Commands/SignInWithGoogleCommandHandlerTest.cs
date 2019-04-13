@@ -1,14 +1,17 @@
 using System.Dynamic;
+using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
 using Skelvy.Application.Auth.Infrastructure.Google;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
+using Skelvy.Application.Core.Initializers;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Persistence;
 using Xunit;
 
 namespace Skelvy.Application.Test.Auth.Commands
@@ -62,7 +65,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     }
 
     [Fact]
-    public async Task ShouldThrowException()
+    public async Task ShouldThrowExceptionWithNotVerifiedUser()
     {
       var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
@@ -71,6 +74,62 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request));
+    }
+
+    [Fact]
+    public async Task ShouldThrowExceptionWithRemovedUser()
+    {
+      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
+      var handler =
+        new SignInWithGoogleCommandHandler(InitializedDbContextWithRemovedUser(), _googleService.Object, _tokenService.Object, _notifications.Object);
+
+      await Assert.ThrowsAsync<UnauthorizedException>(() =>
+        handler.Handle(request));
+    }
+
+    [Fact]
+    public async Task ShouldThrowExceptionWithDisabledUser()
+    {
+      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
+      var handler =
+        new SignInWithGoogleCommandHandler(InitializedDbContextWithDisabledUser(), _googleService.Object, _tokenService.Object, _notifications.Object);
+
+      await Assert.ThrowsAsync<UnauthorizedException>(() =>
+        handler.Handle(request));
+    }
+
+    private static SkelvyContext InitializedDbContextWithRemovedUser()
+    {
+      var context = DbContext();
+      SkelvyInitializer.Initialize(context);
+      var user = context.Users.FirstOrDefault(x => x.FacebookId == Access.UserId);
+
+      if (user != null)
+      {
+        user.IsRemoved = true;
+      }
+
+      context.SaveChanges();
+
+      return context;
+    }
+
+    private static SkelvyContext InitializedDbContextWithDisabledUser()
+    {
+      var context = DbContext();
+      SkelvyInitializer.Initialize(context);
+      var user = context.Users.FirstOrDefault(x => x.FacebookId == Access.UserId);
+
+      if (user != null)
+      {
+        user.IsDisabled = true;
+      }
+
+      context.SaveChanges();
+
+      return context;
     }
 
     private static dynamic PeopleResponse()

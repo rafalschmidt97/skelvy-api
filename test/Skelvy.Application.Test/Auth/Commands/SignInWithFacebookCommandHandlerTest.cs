@@ -1,14 +1,17 @@
 using System.Dynamic;
+using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Auth.Infrastructure.Facebook;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
+using Skelvy.Application.Core.Initializers;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Persistence;
 using Xunit;
 
 namespace Skelvy.Application.Test.Auth.Commands
@@ -62,7 +65,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     }
 
     [Fact]
-    public async Task ShouldThrowException()
+    public async Task ShouldThrowExceptionWithNotVerifiedUser()
     {
       var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
@@ -71,6 +74,62 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request));
+    }
+
+    [Fact]
+    public async Task ShouldThrowExceptionWithRemovedUser()
+    {
+      var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      var handler =
+        new SignInWithFacebookCommandHandler(InitializedDbContextWithRemovedUser(), _facebookService.Object, _tokenService.Object, _notifications.Object);
+
+      await Assert.ThrowsAsync<UnauthorizedException>(() =>
+        handler.Handle(request));
+    }
+
+    [Fact]
+    public async Task ShouldThrowExceptionWithDisabledUser()
+    {
+      var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      var handler =
+        new SignInWithFacebookCommandHandler(InitializedDbContextWithDisabledUser(), _facebookService.Object, _tokenService.Object, _notifications.Object);
+
+      await Assert.ThrowsAsync<UnauthorizedException>(() =>
+        handler.Handle(request));
+    }
+
+    private static SkelvyContext InitializedDbContextWithRemovedUser()
+    {
+      var context = DbContext();
+      SkelvyInitializer.Initialize(context);
+      var user = context.Users.FirstOrDefault(x => x.FacebookId == Access.UserId);
+
+      if (user != null)
+      {
+        user.IsRemoved = true;
+      }
+
+      context.SaveChanges();
+
+      return context;
+    }
+
+    private static SkelvyContext InitializedDbContextWithDisabledUser()
+    {
+      var context = DbContext();
+      SkelvyInitializer.Initialize(context);
+      var user = context.Users.FirstOrDefault(x => x.FacebookId == Access.UserId);
+
+      if (user != null)
+      {
+        user.IsDisabled = true;
+      }
+
+      context.SaveChanges();
+
+      return context;
     }
 
     private static dynamic GraphResponse()
