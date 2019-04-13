@@ -15,27 +15,27 @@ namespace Skelvy.WebAPI.Controllers
     [AllowAnonymous]
     public async Task<Token> SignInWithFacebook(SignInWithFacebookCommand request)
     {
-      return await Mediator.Send(request, HttpContext.RequestAborted);
+      return await Mediator.Send(request);
     }
 
     [HttpPost("google")]
     [AllowAnonymous]
     public async Task<Token> SignInWithGoogle(SignInWithGoogleCommand request)
     {
-      return await Mediator.Send(request, HttpContext.RequestAborted);
+      return await Mediator.Send(request);
     }
 
     [HttpPost("logout")]
     public async Task Logout(LogoutCommand request)
     {
-      await Mediator.Send(request, HttpContext.RequestAborted);
+      await Mediator.Send(request);
     }
 
     [HttpPost("refresh")]
     [AllowAnonymous]
     public async Task<Token> Refresh(RefreshTokenCommand request)
     {
-      return await Mediator.Send(request, HttpContext.RequestAborted);
+      return await Mediator.Send(request);
     }
   }
 }
