@@ -129,7 +129,9 @@ You will need dotnet core version 2.2+:
 $ dotnet restore
 ```
 
-2. In order to prepare your environment run `prepare.sh` shell script:
+2. Fill keys (marked as REPLACE_WITH_SECRET) in [secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2) or appsettings
+
+3. In order to prepare your environment run `prepare.sh` shell script:
 
 ```bash
 $ sh scripts/prepare.sh // TODO: script is not ready yet
@@ -147,6 +149,12 @@ $ dotnet test
 # run integration tests
 # docker is required(!)
 $ sh scripts/run-integration.sh // IN PROGRESS
+
+# add migration
+$ dotnet ef migrations add MIGRATION_NAME --project src/Skelvy.Persistence
+
+# migrate database
+$ dotnet ef database update --project src/Skelvy.Persistence
 ```
 
 ## <a name="rules"></a> Coding Rules
