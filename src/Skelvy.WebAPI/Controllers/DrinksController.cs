@@ -11,7 +11,7 @@ namespace Skelvy.WebAPI.Controllers
     [HttpGet]
     public async Task<IList<DrinkDto>> FindAll()
     {
-      return await Mediator.Send(new FindDrinksQuery(), HttpContext.RequestAborted);
+      return await Mediator.Send(new FindDrinksQuery());
     }
   }
 }

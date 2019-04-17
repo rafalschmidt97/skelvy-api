@@ -12,13 +12,13 @@ namespace Skelvy.WebAPI.Controllers
     [HttpGet("search")]
     public async Task<IList<Location>> Search([FromQuery] SearchLocationsQuery request)
     {
-      return await Mediator.Send(request, HttpContext.RequestAborted);
+      return await Mediator.Send(request);
     }
 
     [HttpGet("reverse")]
     public async Task<IList<Location>> Reverse([FromQuery] ReverseLocationsQuery request)
     {
-      return await Mediator.Send(request, HttpContext.RequestAborted);
+      return await Mediator.Send(request);
     }
   }
 }
