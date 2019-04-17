@@ -77,11 +77,13 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
     {
       const int pageSize = 20;
 
-      return await _context.MeetingChatMessages
+      var messages = await _context.MeetingChatMessages
         .OrderByDescending(p => p.Date)
         .Take(pageSize)
         .Where(x => x.MeetingId == meetingId)
         .ToListAsync();
+
+      return messages.OrderBy(x => x.Date).ToList();
     }
   }
 }

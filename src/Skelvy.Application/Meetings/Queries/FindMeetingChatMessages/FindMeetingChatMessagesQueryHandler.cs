@@ -36,13 +36,15 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
       const int pageSize = 20;
       var skip = (request.Page - 1) * pageSize;
 
-      return await _context.MeetingChatMessages
-        .OrderByDescending(p => p.Date)
+      var messages = await _context.MeetingChatMessages
+        .OrderByDescending(x => x.Date)
         .Skip(skip)
-        .Take(pageSize)
+
         .Where(x => x.MeetingId == meetingUser.MeetingId)
         .ProjectTo<MeetingChatMessageDto>(_mapper.ConfigurationProvider)
         .ToListAsync();
+
+      return messages.OrderBy(x => x.Date).ToList();
     }
   }
 }
