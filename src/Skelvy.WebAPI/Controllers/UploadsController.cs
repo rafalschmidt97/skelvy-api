@@ -25,7 +25,7 @@ namespace Skelvy.WebAPI.Controllers
         ServerPath = Request.Host.Value,
       };
 
-      var url = await Mediator.Send(request, HttpContext.RequestAborted);
+      var url = await Mediator.Send(request);
       return Ok(new { url });
     }
   }
