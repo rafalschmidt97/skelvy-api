@@ -136,6 +136,8 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<int>("MeetingId");
 
+                    b.Property<int>("MeetingRequestId");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(15);
@@ -145,6 +147,8 @@ namespace Skelvy.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MeetingId");
+
+                    b.HasIndex("MeetingRequestId");
 
                     b.HasIndex("UserId");
 
@@ -301,6 +305,11 @@ namespace Skelvy.Persistence.Migrations
                         .WithMany("Users")
                         .HasForeignKey("MeetingId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Skelvy.Domain.Entities.MeetingRequest", "MeetingRequest")
+                        .WithMany()
+                        .HasForeignKey("MeetingRequestId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithMany()

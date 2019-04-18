@@ -118,8 +118,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .ThenInclude(x => x.User)
         .ThenInclude(x => x.Profile)
         .Include(x => x.Users)
-        .ThenInclude(x => x.User)
-        .ThenInclude(x => x.MeetingRequests)
+        .ThenInclude(x => x.MeetingRequest)
         .ThenInclude(x => x.Drinks)
         .ThenInclude(x => x.Drink)
         .Where(x => x.Date >= newRequest.MinDate && x.Date <= newRequest.MaxDate && x.Status == MeetingStatusTypes.Active)
@@ -138,8 +137,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
              meeting.Users.Where(x => x.Status == MeetingUserStatusTypes.Joined)
                .All(x => IsUserAgeWithinMeetingRequestAgeRange(
                  CalculateAge(user.Profile.Birthday),
-                 x.User.MeetingRequests.First(y => y.Status == MeetingRequestStatusTypes.Found).MinAge,
-                 x.User.MeetingRequests.First(y => y.Status == MeetingRequestStatusTypes.Found).MaxAge)) &&
+                 x.MeetingRequest.MinAge,
+                 x.MeetingRequest.MaxAge)) &&
              meeting.Users.Count(x => x.Status == MeetingUserStatusTypes.Joined) < 4 &&
              CalculateDistance(
                meeting.Latitude,
@@ -160,6 +159,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       {
         MeetingId = meeting.Id,
         UserId = newRequest.UserId,
+        MeetingRequestId = newRequest.Id,
         Status = MeetingUserStatusTypes.Joined,
       };
 
@@ -230,12 +230,14 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         {
           MeetingId = meeting.Id,
           UserId = request1.UserId,
+          MeetingRequestId = request1.Id,
           Status = MeetingUserStatusTypes.Joined,
         },
         new MeetingUser
         {
           MeetingId = meeting.Id,
           UserId = request2.UserId,
+          MeetingRequestId = request2.Id,
           Status = MeetingUserStatusTypes.Joined,
         },
       };

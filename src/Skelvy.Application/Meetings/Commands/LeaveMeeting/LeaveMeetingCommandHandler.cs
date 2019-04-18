@@ -24,34 +24,38 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 
     public override async Task<Unit> Handle(LeaveMeetingCommand request)
     {
-      var user = await _context.MeetingUsers
+      var meetingUser = await _context.MeetingUsers
+        .Include(x => x.Meeting)
         .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
 
-      if (user == null)
+      if (meetingUser == null)
       {
         throw new NotFoundException(nameof(MeetingUser), request.UserId);
       }
 
-      var meeting = await _context.Meetings
-        .Include(x => x.Users)
-        .ThenInclude(x => x.User)
-        .ThenInclude(x => x.MeetingRequests)
-        .FirstOrDefaultAsync(x => x.Id == user.MeetingId);
+      var meetingUsers = await _context.MeetingUsers
+        .Include(x => x.MeetingRequest)
+        .Where(x => x.MeetingId == meetingUser.MeetingId && x.Status == MeetingUserStatusTypes.Joined)
+        .ToListAsync();
 
-      var meetingUser = meeting.Users.First(x => x.UserId == user.UserId);
       meetingUser.Status = MeetingUserStatusTypes.Left;
-      meetingUser.User.MeetingRequests.First(x => x.Status == MeetingRequestStatusTypes.Found).Status = MeetingRequestStatusTypes.Aborted;
 
-      if (meeting.Users.Count == 2)
+      var meetingUserRequest = await _context.MeetingRequests
+        .FirstOrDefaultAsync(x => x.Id == meetingUser.MeetingRequestId);
+
+      meetingUserRequest.Status = MeetingRequestStatusTypes.Aborted;
+
+      if (meetingUsers.Count == 2)
       {
-        var anotherUser = meeting.Users.First(x => x.UserId != user.UserId);
-        anotherUser.User.MeetingRequests.First(x => x.Status == MeetingRequestStatusTypes.Found).Status = MeetingRequestStatusTypes.Searching;
+        var anotherUser = meetingUsers.First(x => x.UserId != meetingUser.UserId);
+        anotherUser.MeetingRequest.Status = MeetingRequestStatusTypes.Searching;
         anotherUser.Status = MeetingUserStatusTypes.Left;
-        meeting.Status = MeetingStatusTypes.Aborted;
+        meetingUser.Meeting.Status = MeetingStatusTypes.Aborted;
       }
 
       await _context.SaveChangesAsync();
-      await BroadcastUserLeftMeeting(meetingUser, meeting.Users);
+      await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
+
       return Unit.Value;
     }
 

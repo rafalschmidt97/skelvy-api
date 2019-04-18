@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190413082536_Initial")]
+    [Migration("20190418181339_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,6 +138,8 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<int>("MeetingId");
 
+                    b.Property<int>("MeetingRequestId");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(15);
@@ -147,6 +149,8 @@ namespace Skelvy.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MeetingId");
+
+                    b.HasIndex("MeetingRequestId");
 
                     b.HasIndex("UserId");
 
@@ -303,6 +307,11 @@ namespace Skelvy.Persistence.Migrations
                         .WithMany("Users")
                         .HasForeignKey("MeetingId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Skelvy.Domain.Entities.MeetingRequest", "MeetingRequest")
+                        .WithMany()
+                        .HasForeignKey("MeetingRequestId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithMany()

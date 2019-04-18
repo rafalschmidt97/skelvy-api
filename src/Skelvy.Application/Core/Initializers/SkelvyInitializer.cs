@@ -241,12 +241,14 @@ namespace Skelvy.Application.Core.Initializers
         {
           MeetingId = meetings[0].Id,
           UserId = users[1].Id,
+          MeetingRequestId = requests[0].Id,
           Status = MeetingUserStatusTypes.Joined,
         },
         new MeetingUser
         {
           MeetingId = meetings[0].Id,
           UserId = users[2].Id,
+          MeetingRequestId = requests[1].Id,
           Status = MeetingUserStatusTypes.Joined,
         },
       };

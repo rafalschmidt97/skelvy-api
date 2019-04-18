@@ -100,12 +100,14 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         {
           MeetingId = meeting.Id,
           UserId = request1.UserId,
+          MeetingRequestId = request1.Id,
           Status = MeetingUserStatusTypes.Joined,
         },
         new MeetingUser
         {
           MeetingId = meeting.Id,
           UserId = request2.UserId,
+          MeetingRequestId = request2.Id,
           Status = MeetingUserStatusTypes.Joined,
         },
       };

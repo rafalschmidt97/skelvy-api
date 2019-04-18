@@ -162,33 +162,6 @@ namespace Skelvy.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MeetingUsers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(maxLength: 15, nullable: false),
-                    MeetingId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MeetingUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MeetingUsers_Meetings_MeetingId",
-                        column: x => x.MeetingId,
-                        principalTable: "Meetings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MeetingUsers_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MeetingRequestDrinks",
                 columns: table => new
                 {
@@ -208,6 +181,40 @@ namespace Skelvy.Persistence.Migrations
                         name: "FK_MeetingRequestDrinks_MeetingRequests_MeetingRequestId",
                         column: x => x.MeetingRequestId,
                         principalTable: "MeetingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MeetingUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Status = table.Column<string>(maxLength: 15, nullable: false),
+                    MeetingId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    MeetingRequestId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MeetingUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MeetingUsers_Meetings_MeetingId",
+                        column: x => x.MeetingId,
+                        principalTable: "Meetings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MeetingUsers_MeetingRequests_MeetingRequestId",
+                        column: x => x.MeetingRequestId,
+                        principalTable: "MeetingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MeetingUsers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -264,6 +271,11 @@ namespace Skelvy.Persistence.Migrations
                 column: "MeetingId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MeetingUsers_MeetingRequestId",
+                table: "MeetingUsers",
+                column: "MeetingRequestId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MeetingUsers_UserId",
                 table: "MeetingUsers",
                 column: "UserId");
@@ -303,10 +315,10 @@ namespace Skelvy.Persistence.Migrations
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
-                name: "MeetingRequests");
+                name: "Meetings");
 
             migrationBuilder.DropTable(
-                name: "Meetings");
+                name: "MeetingRequests");
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");
