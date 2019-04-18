@@ -8,6 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<MeetingRequestDrink> builder)
     {
+      builder.HasKey(x => new { x.MeetingRequestId, x.DrinkId });
     }
   }
 }
