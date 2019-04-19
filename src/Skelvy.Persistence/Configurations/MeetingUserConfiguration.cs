@@ -8,7 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<MeetingUser> builder)
     {
-      builder.HasOne(x => x.MeetingRequest).WithMany().HasForeignKey(x => x.MeetingRequestId).OnDelete(DeleteBehavior.Restrict);
+      builder.HasOne(x => x.MeetingRequest).WithMany().OnDelete(DeleteBehavior.Restrict);
       builder.Property(e => e.Status).IsRequired().HasMaxLength(15);
     }
   }
