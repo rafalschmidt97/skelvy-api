@@ -81,19 +81,16 @@ namespace Skelvy.Application.Core.Initializers
         new UserProfilePhoto
         {
           Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=1",
-          Status = UserProfilePhotoStatusTypes.Active,
           ProfileId = profiles[0].Id,
         },
         new UserProfilePhoto
         {
           Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=2",
-          Status = UserProfilePhotoStatusTypes.Active,
           ProfileId = profiles[1].Id,
         },
         new UserProfilePhoto
         {
           Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=3",
-          Status = UserProfilePhotoStatusTypes.Active,
           ProfileId = profiles[2].Id,
         },
       };

@@ -88,7 +88,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             var photo = new UserProfilePhoto
             {
               Url = details.image.url,
-              Status = UserProfilePhotoStatusTypes.Active,
               ProfileId = profile.Id,
             };
 

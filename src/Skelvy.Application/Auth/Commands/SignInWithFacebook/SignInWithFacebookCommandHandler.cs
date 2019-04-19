@@ -86,7 +86,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             var photo = new UserProfilePhoto
             {
               Url = details.picture.data.url,
-              Status = UserProfilePhotoStatusTypes.Active,
               ProfileId = profile.Id,
             };
 

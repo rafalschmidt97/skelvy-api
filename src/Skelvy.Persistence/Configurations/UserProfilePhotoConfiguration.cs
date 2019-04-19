@@ -9,7 +9,6 @@ namespace Skelvy.Persistence.Configurations
     public void Configure(EntityTypeBuilder<UserProfilePhoto> builder)
     {
       builder.Property(e => e.Url).IsRequired().HasMaxLength(2048);
-      builder.Property(e => e.Status).IsRequired().HasMaxLength(15);
     }
   }
 }

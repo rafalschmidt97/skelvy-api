@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190418181339_Initial")]
+    [Migration("20190419080447_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,10 +224,6 @@ namespace Skelvy.Persistence.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ProfileId");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(15);
 
                     b.Property<string>("Url")
                         .IsRequired()

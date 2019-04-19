@@ -223,10 +223,6 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<int>("ProfileId");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(15);
-
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasMaxLength(2048);
