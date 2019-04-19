@@ -39,8 +39,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
       }
 
       await LeaveMeetings(user);
-
-      user.IsDisabled = true;
+      user.Disable(request.Reason);
 
       await _context.SaveChangesAsync();
       await _notifications.BroadcastUserDisabled(user, request.Reason);
@@ -48,32 +47,34 @@ namespace Skelvy.Application.Users.Commands.DisableUser
       return Unit.Value;
     }
 
-    private async Task LeaveMeetings(User user) // Same logic as LeaveMeetingCommand=
+    private async Task LeaveMeetings(User user) // Same logic as LeaveMeetingCommand
     {
       var meetingUser = await _context.MeetingUsers
         .Include(x => x.Meeting)
-        .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Status == MeetingUserStatusTypes.Joined);
+        .FirstOrDefaultAsync(x => x.UserId == user.Id && !x.IsRemoved);
 
       if (meetingUser != null)
       {
         var meetingUsers = await _context.MeetingUsers
           .Include(x => x.MeetingRequest)
-          .Where(x => x.MeetingId == meetingUser.MeetingId && x.Status == MeetingUserStatusTypes.Joined)
+          .Where(x => x.MeetingId == meetingUser.MeetingId && !x.IsRemoved)
           .ToListAsync();
 
-        meetingUser.Status = MeetingUserStatusTypes.Left;
+        var userDetails = meetingUsers.First(x => x.UserId == meetingUser.UserId);
 
-        var meetingUserRequest = await _context.MeetingRequests
-          .FirstOrDefaultAsync(x => x.Id == meetingUser.MeetingRequestId);
-
-        meetingUserRequest.Status = MeetingRequestStatusTypes.Aborted;
+        userDetails.Remove(MeetingUserRemovedReasonTypes.Aborted);
+        userDetails.MeetingRequest.Remove(MeetingRequestRemovedReasonTypes.Aborted);
 
         if (meetingUsers.Count == 2)
         {
-          var anotherUser = meetingUsers.First(x => x.UserId != meetingUser.UserId);
-          anotherUser.MeetingRequest.Status = MeetingRequestStatusTypes.Searching;
-          anotherUser.Status = MeetingUserStatusTypes.Left;
-          meetingUser.Meeting.Status = MeetingStatusTypes.Aborted;
+          var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
+
+          anotherUserDetails.Remove(MeetingUserRemovedReasonTypes.Expired);
+          anotherUserDetails.MeetingRequest.UpdateStatus(MeetingRequestStatusTypes.Searching);
+          meetingUser.Meeting.Remove(MeetingRemovedReasonTypes.Aborted);
+
+          await _context.SaveChangesAsync();
+          await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
         }
 
         await _context.SaveChangesAsync();

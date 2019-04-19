@@ -61,8 +61,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             Email = details.email,
             Language = request.Language,
             FacebookId = verified.UserId,
-            IsRemoved = false,
-            IsDisabled = false,
           };
           _context.Users.Add(user);
 

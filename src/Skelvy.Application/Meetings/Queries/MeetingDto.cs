@@ -4,7 +4,6 @@ using System.Linq;
 using AutoMapper;
 using Skelvy.Application.Core.Mappers;
 using Skelvy.Application.Drinks.Queries;
-using Skelvy.Application.Meetings.Commands;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Domain.Entities;
 
@@ -24,7 +23,7 @@ namespace Skelvy.Application.Meetings.Queries
       configuration.CreateMap<Meeting, MeetingDto>()
         .ForMember(
           destination => destination.Users,
-          options => options.MapFrom(x => x.Users.Where(y => y.Status == MeetingUserStatusTypes.Joined).Select(y => y.User)));
+          options => options.MapFrom(x => x.Users.Where(y => !y.IsRemoved).Select(y => y.User)));
     }
   }
 

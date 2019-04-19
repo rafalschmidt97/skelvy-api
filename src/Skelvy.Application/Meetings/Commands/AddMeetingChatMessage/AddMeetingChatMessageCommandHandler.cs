@@ -23,9 +23,8 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 
     public override async Task<Unit> Handle(AddMeetingChatMessageCommand request)
     {
-      var meetingUser =
-        await _context.MeetingUsers.FirstOrDefaultAsync(
-          x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
+      var meetingUser = await _context.MeetingUsers
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && !x.IsRemoved);
 
       if (meetingUser == null)
       {
@@ -50,7 +49,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
     private async Task BroadcastMessage(MeetingChatMessage message)
     {
       var meetingUsers = await _context.MeetingUsers
-        .Where(x => x.MeetingId == message.MeetingId)
+        .Where(x => x.MeetingId == message.MeetingId && !x.IsRemoved)
         .ToListAsync();
 
       var meetingUserIds = meetingUsers.Select(x => x.UserId).ToList();

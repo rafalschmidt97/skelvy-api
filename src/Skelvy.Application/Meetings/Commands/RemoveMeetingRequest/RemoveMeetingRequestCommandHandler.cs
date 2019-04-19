@@ -19,23 +19,23 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 
     public override async Task<Unit> Handle(RemoveMeetingRequestCommand request)
     {
-      var user = await _context.MeetingUsers
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
+      var meetingUser = await _context.MeetingUsers
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && !x.IsRemoved);
 
-      if (user != null)
+      if (meetingUser != null)
       {
         throw new ConflictException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) exists. Leave meeting instead.");
       }
 
       var meetingRequest = await _context.MeetingRequests
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingRequestStatusTypes.Searching);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingRequestStatusTypes.Searching && !x.IsRemoved);
 
       if (meetingRequest == null)
       {
         throw new NotFoundException($"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) not found.");
       }
 
-      meetingRequest.Status = MeetingRequestStatusTypes.Aborted;
+      meetingRequest.Remove(MeetingRequestRemovedReasonTypes.Aborted);
 
       await _context.SaveChangesAsync();
       return Unit.Value;

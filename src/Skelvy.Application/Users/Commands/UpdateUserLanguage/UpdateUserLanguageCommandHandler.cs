@@ -27,7 +27,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      user.Language = request.Language;
+      user.UpdateLanguage(request.Language);
 
       await _context.SaveChangesAsync();
       return Unit.Value;

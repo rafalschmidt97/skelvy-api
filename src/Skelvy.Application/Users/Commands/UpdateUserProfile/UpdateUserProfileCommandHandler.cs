@@ -29,16 +29,9 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
         throw new NotFoundException(nameof(UserProfile), request.UserId);
       }
 
-      profile.Name = request.Name.Trim();
-      profile.Birthday = request.Birthday;
-      profile.Gender = request.Gender;
-
-      if (request.Description != null)
-      {
-        profile.Description = request.Description.Trim();
-      }
-
+      profile.Update(request.Name, request.Birthday, request.Gender, request.Description);
       await UpdatePhotos(profile, request.Photos);
+
       await _context.SaveChangesAsync();
       return Unit.Value;
     }

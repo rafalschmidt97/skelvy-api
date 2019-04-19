@@ -30,9 +30,9 @@ namespace Skelvy.Application.Core.Initializers
 
       var users = new[]
       {
-        new User { Email = "user1@gmail.com", Language = LanguageTypes.EN, FacebookId = "1", GoogleId = "1", IsRemoved = false, IsDisabled = false },
-        new User { Email = "user2@gmail.com", Language = LanguageTypes.EN, FacebookId = "2", GoogleId = "2", IsRemoved = false, IsDisabled = false },
-        new User { Email = "user3@gmail.com", Language = LanguageTypes.EN, FacebookId = "3", GoogleId = "3", IsRemoved = false, IsDisabled = false },
+        new User { Email = "user1@gmail.com", Language = LanguageTypes.EN, FacebookId = "1", GoogleId = "1" },
+        new User { Email = "user2@gmail.com", Language = LanguageTypes.EN, FacebookId = "2", GoogleId = "2" },
+        new User { Email = "user3@gmail.com", Language = LanguageTypes.EN, FacebookId = "3", GoogleId = "3" },
       };
 
       context.Users.AddRange(users);
@@ -221,7 +221,6 @@ namespace Skelvy.Application.Core.Initializers
       {
         new Meeting
         {
-          Status = MeetingStatusTypes.Active,
           Date = DateTimeOffset.UtcNow.AddDays(3),
           Latitude = 1,
           Longitude = 1,
@@ -239,14 +238,12 @@ namespace Skelvy.Application.Core.Initializers
           MeetingId = meetings[0].Id,
           UserId = users[1].Id,
           MeetingRequestId = requests[0].Id,
-          Status = MeetingUserStatusTypes.Joined,
         },
         new MeetingUser
         {
           MeetingId = meetings[0].Id,
           UserId = users[2].Id,
           MeetingRequestId = requests[1].Id,
-          Status = MeetingUserStatusTypes.Joined,
         },
       };
 

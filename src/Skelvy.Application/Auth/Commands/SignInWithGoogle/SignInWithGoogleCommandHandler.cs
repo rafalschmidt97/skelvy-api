@@ -61,8 +61,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             Email = details.emails[0].value,
             Language = request.Language,
             GoogleId = verified.UserId,
-            IsRemoved = false,
-            IsDisabled = false,
           };
           _context.Users.Add(user);
 

@@ -4,7 +4,5 @@ namespace Skelvy.Application.Meetings.Commands
   {
     public const string Found = "found";
     public const string Searching = "searching";
-    public const string Aborted = "aborted";
-    public const string Expired = "expired";
   }
 }

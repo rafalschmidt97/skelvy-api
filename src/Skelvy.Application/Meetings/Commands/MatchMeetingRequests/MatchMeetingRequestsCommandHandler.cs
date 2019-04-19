@@ -29,7 +29,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         .ThenInclude(x => x.Profile)
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
-        .Where(x => x.Status == MeetingRequestStatusTypes.Searching)
+        .Where(x => x.Status == MeetingRequestStatusTypes.Searching && !x.IsRemoved)
         .ToListAsync();
 
       var isDataChanged = false;
@@ -85,7 +85,6 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
     {
       var meeting = new Meeting
       {
-        Status = MeetingStatusTypes.Active,
         Date = FindCommonDate(request1, request2),
         Latitude = request1.Latitude,
         Longitude = request1.Longitude,
@@ -101,21 +100,19 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
           MeetingId = meeting.Id,
           UserId = request1.UserId,
           MeetingRequestId = request1.Id,
-          Status = MeetingUserStatusTypes.Joined,
         },
         new MeetingUser
         {
           MeetingId = meeting.Id,
           UserId = request2.UserId,
           MeetingRequestId = request2.Id,
-          Status = MeetingUserStatusTypes.Joined,
         },
       };
 
       _context.MeetingUsers.AddRange(meetingUsers);
 
-      request1.Status = MeetingRequestStatusTypes.Found;
-      request2.Status = MeetingRequestStatusTypes.Found;
+      request1.UpdateStatus(MeetingRequestStatusTypes.Found);
+      request2.UpdateStatus(MeetingRequestStatusTypes.Found);
     }
 
     private async Task BroadcastUserFoundMeeting(IEnumerable<MeetingRequest> updatedRequests)

@@ -58,8 +58,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
       return await _context.MeetingRequests
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
-        .FirstOrDefaultAsync(x => x.UserId == userId &&
-                                  (x.Status == MeetingRequestStatusTypes.Searching || x.Status == MeetingRequestStatusTypes.Found));
+        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved);
     }
 
     private async Task<Meeting> FindMeeting(int userId)
@@ -70,7 +69,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
         .ThenInclude(x => x.Profile)
         .ThenInclude(x => x.Photos)
         .Include(x => x.Drink)
-        .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == userId && y.Status == MeetingUserStatusTypes.Joined));
+        .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == userId && !x.IsRemoved));
     }
 
     private async Task<List<MeetingChatMessage>> FindMeetingChatMessages(int meetingId)
