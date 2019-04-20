@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Common.Exceptions;
+using Skelvy.Domain.Enums.Users;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Commands

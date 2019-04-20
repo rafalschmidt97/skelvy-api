@@ -4,7 +4,7 @@ namespace Skelvy.Domain.Entities.Base
 {
   public interface IRemovableEntity
   {
-    bool IsRemoved { get; set; }
-    DateTimeOffset? RemovedDate { get; set; }
+    bool IsRemoved { get; }
+    DateTimeOffset? RemovedDate { get; }
   }
 }

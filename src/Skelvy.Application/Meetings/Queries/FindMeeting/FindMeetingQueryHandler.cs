@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Queries.FindMeeting

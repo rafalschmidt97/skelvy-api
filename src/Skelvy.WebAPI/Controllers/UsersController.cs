@@ -2,13 +2,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindUser;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI.Controllers

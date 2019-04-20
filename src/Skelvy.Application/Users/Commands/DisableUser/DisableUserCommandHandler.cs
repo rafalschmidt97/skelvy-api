@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Commands;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -62,16 +61,16 @@ namespace Skelvy.Application.Users.Commands.DisableUser
 
         var userDetails = meetingUsers.First(x => x.UserId == meetingUser.UserId);
 
-        userDetails.Remove(MeetingUserRemovedReasonTypes.Aborted);
-        userDetails.MeetingRequest.Remove(MeetingRequestRemovedReasonTypes.Aborted);
+        userDetails.Abort();
+        userDetails.MeetingRequest.Abort();
 
         if (meetingUsers.Count == 2)
         {
           var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
 
-          anotherUserDetails.Remove(MeetingUserRemovedReasonTypes.Expired);
-          anotherUserDetails.MeetingRequest.UpdateStatus(MeetingRequestStatusTypes.Searching);
-          meetingUser.Meeting.Remove(MeetingRemovedReasonTypes.Aborted);
+          anotherUserDetails.Abort();
+          anotherUserDetails.MeetingRequest.MarkAsSearching();
+          meetingUser.Meeting.Abort();
 
           await _context.SaveChangesAsync();
           await BroadcastUserLeftMeeting(meetingUser, meetingUsers);

@@ -51,11 +51,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       IEnumerable<UpdateUserProfilePhotos> photos,
       UserProfile profile)
     {
-      return photos.Select(photo => new UserProfilePhoto
-      {
-        Url = photo.Url,
-        ProfileId = profile.Id,
-      });
+      return photos.Select(photo => new UserProfilePhoto(photo.Url, profile.Id));
     }
   }
 }

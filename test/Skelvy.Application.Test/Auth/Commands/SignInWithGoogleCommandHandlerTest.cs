@@ -1,3 +1,4 @@
+using System;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +9,9 @@ using Skelvy.Application.Auth.Infrastructure.Google;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Initializers;
 using Skelvy.Application.Notifications;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.Persistence;
 using Xunit;
 
@@ -108,7 +109,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       if (user != null)
       {
-        user.IsRemoved = true;
+        user.Remove(DateTimeOffset.UtcNow);
       }
 
       context.SaveChanges();
@@ -124,7 +125,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       if (user != null)
       {
-        user.IsDisabled = true;
+        user.Disable("Test");
       }
 
       context.SaveChanges();

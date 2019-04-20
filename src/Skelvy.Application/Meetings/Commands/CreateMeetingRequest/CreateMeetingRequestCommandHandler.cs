@@ -87,17 +87,14 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task<MeetingRequest> CreateNewMeetingRequest(CreateMeetingRequestCommand request)
     {
-      var meetingRequest = new MeetingRequest
-      {
-        Status = MeetingRequestStatusTypes.Searching,
-        MinDate = request.MinDate,
-        MaxDate = request.MaxDate,
-        MinAge = request.MinAge,
-        MaxAge = request.MaxAge,
-        Latitude = request.Latitude,
-        Longitude = request.Longitude,
-        UserId = request.UserId,
-      };
+      var meetingRequest = new MeetingRequest(
+        request.MinDate,
+        request.MaxDate,
+        request.MinAge,
+        request.MaxAge,
+        request.Latitude,
+        request.Longitude,
+        request.UserId);
 
       _context.MeetingRequests.Add(meetingRequest);
 
@@ -152,15 +149,9 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
     {
-      var meetingUser = new MeetingUser
-      {
-        MeetingId = meeting.Id,
-        UserId = newRequest.UserId,
-        MeetingRequestId = newRequest.Id,
-      };
-
+      var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
       _context.MeetingUsers.Add(meetingUser);
-      newRequest.UpdateStatus(MeetingRequestStatusTypes.Found);
+      newRequest.MarkAsFound();
 
       await _context.SaveChangesAsync();
       await BroadcastUserJoinedMeeting(meetingUser);
@@ -184,7 +175,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
         .Where(x => x.Id != newRequest.Id &&
-                    x.Status == MeetingRequestStatusTypes.Searching &&
+                    x.IsSearching &&
                     !x.IsRemoved &&
                     x.MinDate <= newRequest.MaxDate &&
                     x.MaxDate >= newRequest.MinDate)
@@ -210,36 +201,24 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
     {
-      var meeting = new Meeting
-      {
-        Date = FindCommonDate(request1, request2),
-        Latitude = request1.Latitude,
-        Longitude = request1.Longitude,
-        DrinkId = FindCommonDrink(request1, request2),
-      };
+      var meeting = new Meeting(
+        FindCommonDate(request1, request2),
+        request1.Latitude,
+        request1.Longitude,
+        FindCommonDrink(request1, request2));
 
       _context.Meetings.Add(meeting);
 
       var meetingUsers = new[]
       {
-        new MeetingUser
-        {
-          MeetingId = meeting.Id,
-          UserId = request1.UserId,
-          MeetingRequestId = request1.Id,
-        },
-        new MeetingUser
-        {
-          MeetingId = meeting.Id,
-          UserId = request2.UserId,
-          MeetingRequestId = request2.Id,
-        },
+        new MeetingUser(meeting.Id, request1.UserId, request1.Id),
+        new MeetingUser(meeting.Id, request2.UserId, request2.Id),
       };
 
       _context.MeetingUsers.AddRange(meetingUsers);
 
-      request1.UpdateStatus(MeetingRequestStatusTypes.Found);
-      request2.UpdateStatus(MeetingRequestStatusTypes.Found);
+      request1.MarkAsFound();
+      request2.MarkAsFound();
 
       await _context.SaveChangesAsync();
       await BroadcastUserFoundMeeting(request1, request2);
@@ -265,11 +244,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       IEnumerable<CreateMeetingRequestDrink> requestDrinks,
       MeetingRequest request)
     {
-      return requestDrinks.Select(requestDrink => new MeetingRequestDrink
-      {
-        MeetingRequestId = request.Id,
-        DrinkId = requestDrink.Id,
-      });
+      return requestDrinks.Select(requestDrink => new MeetingRequestDrink(request.Id, requestDrink.Id));
     }
   }
 }

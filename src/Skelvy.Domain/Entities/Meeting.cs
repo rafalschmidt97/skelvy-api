@@ -1,37 +1,56 @@
 using System;
 using System.Collections.Generic;
 using Skelvy.Domain.Entities.Base;
+using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Domain.Entities
 {
   public class Meeting : ICreatableEntity, IRemovableEntity
   {
-    public Meeting()
+    public Meeting(DateTimeOffset date, double latitude, double longitude, int drinkId)
     {
+      Date = date;
+      Latitude = latitude;
+      Longitude = longitude;
+      DrinkId = drinkId;
+
       CreatedDate = DateTimeOffset.UtcNow;
       Users = new List<MeetingUser>();
       ChatMessages = new List<MeetingChatMessage>();
     }
 
-    public int Id { get; set; }
-    public DateTimeOffset Date { get; set; }
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
-    public DateTimeOffset CreatedDate { get; set; }
-    public bool IsRemoved { get; set; }
-    public DateTimeOffset? RemovedDate { get; set; }
-    public string RemovedReason { get; set; }
-    public int DrinkId { get; set; }
+    public Meeting(int id, DateTimeOffset date, double latitude, double longitude, int drinkId)
+      : this(date, latitude, longitude, drinkId)
+    {
+      Id = id;
+    }
+
+    public int Id { get; private set; }
+    public DateTimeOffset Date { get; private set; }
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
+    public DateTimeOffset CreatedDate { get; private set; }
+    public bool IsRemoved { get; private set; }
+    public DateTimeOffset? RemovedDate { get; private set; }
+    public string RemovedReason { get; private set; }
+    public int DrinkId { get; private set; }
 
     public IList<MeetingUser> Users { get; private set; }
     public IList<MeetingChatMessage> ChatMessages { get; private set; }
-    public Drink Drink { get; set; }
+    public Drink Drink { get; private set; }
 
-    public void Remove(string reason)
+    public void Abort()
     {
       IsRemoved = true;
       RemovedDate = DateTimeOffset.UtcNow;
-      RemovedReason = reason;
+      RemovedReason = MeetingRemovedReasonTypes.Aborted;
+    }
+
+    public void Expire()
+    {
+      IsRemoved = true;
+      RemovedDate = DateTimeOffset.UtcNow;
+      RemovedReason = MeetingRemovedReasonTypes.Expired;
     }
   }
 }

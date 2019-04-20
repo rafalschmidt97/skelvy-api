@@ -31,14 +31,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
         throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var message = new MeetingChatMessage
-      {
-        Message = request.Message.Trim(),
-        Date = request.Date,
-        UserId = meetingUser.UserId,
-        MeetingId = meetingUser.MeetingId,
-      };
-
+      var message = new MeetingChatMessage(request.Message, request.Date, meetingUser.UserId, meetingUser.MeetingId);
       _context.MeetingChatMessages.Add(message);
 
       await _context.SaveChangesAsync();

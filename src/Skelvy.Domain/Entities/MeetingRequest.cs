@@ -1,51 +1,93 @@
 using System;
 using System.Collections.Generic;
 using Skelvy.Domain.Entities.Base;
+using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Domain.Entities
 {
   public class MeetingRequest : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public MeetingRequest()
+    public MeetingRequest(
+      DateTimeOffset minDate,
+      DateTimeOffset maxDate,
+      int minAge,
+      int maxAge,
+      double latitude,
+      double longitude,
+      int userId)
     {
+      Status = MeetingRequestStatusTypes.Searching;
+      MinDate = minDate;
+      MaxDate = maxDate;
+      MinAge = minAge;
+      MaxAge = maxAge;
+      Latitude = latitude;
+      Longitude = longitude;
+      UserId = userId;
+
       CreatedDate = DateTimeOffset.UtcNow;
       Drinks = new List<MeetingRequestDrink>();
     }
 
-    public int Id { get; set; }
-    public string Status { get; set; }
-    public DateTimeOffset MinDate { get; set; }
-    public DateTimeOffset MaxDate { get; set; }
-    public int MinAge { get; set; }
-    public int MaxAge { get; set; }
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
-    public DateTimeOffset CreatedDate { get; set; }
-    public DateTimeOffset? ModifiedDate { get; set; }
-    public bool IsRemoved { get; set; }
-    public DateTimeOffset? RemovedDate { get; set; }
-    public string RemovedReason { get; set; }
-    public int UserId { get; set; }
+    public MeetingRequest(
+      int id,
+      DateTimeOffset minDate,
+      DateTimeOffset maxDate,
+      int minAge,
+      int maxAge,
+      double latitude,
+      double longitude,
+      int userId)
+      : this(minDate, maxDate, minAge, maxAge, latitude, longitude, userId)
+    {
+      Id = id;
+    }
+
+    public int Id { get; private set; }
+    public string Status { get; private set; }
+    public DateTimeOffset MinDate { get; private set; }
+    public DateTimeOffset MaxDate { get; private set; }
+    public int MinAge { get; private set; }
+    public int MaxAge { get; private set; }
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
+    public DateTimeOffset CreatedDate { get; private set; }
+    public DateTimeOffset? ModifiedDate { get; private set; }
+    public bool IsRemoved { get; private set; }
+    public DateTimeOffset? RemovedDate { get; private set; }
+    public string RemovedReason { get; private set; }
+    public int UserId { get; private set; }
 
     public IList<MeetingRequestDrink> Drinks { get; private set; }
-    public User User { get; set; }
+    public User User { get; private set; }
 
-    public void Update()
+    public bool IsSearching => Status == MeetingRequestStatusTypes.Searching;
+    public bool IsFound => Status == MeetingRequestStatusTypes.Found;
+
+    public void MarkAsSearching()
     {
+      Status = MeetingRequestStatusTypes.Searching;
       ModifiedDate = DateTimeOffset.UtcNow;
     }
 
-    public void UpdateStatus(string status)
+    public void MarkAsFound()
     {
-      Status = status;
-      Update();
+      Status = MeetingRequestStatusTypes.Found;
+      ModifiedDate = DateTimeOffset.UtcNow;
     }
 
-    public void Remove(string reason)
+    public void Abort()
     {
       IsRemoved = true;
       RemovedDate = DateTimeOffset.UtcNow;
-      RemovedReason = reason;
+      RemovedReason = MeetingRequestRemovedReasonTypes.Aborted;
+    }
+
+    public void Expire()
+    {
+      IsRemoved = true;
+      RemovedDate = DateTimeOffset.UtcNow;
+      RemovedReason = MeetingRequestRemovedReasonTypes.Expired;
     }
   }
 }

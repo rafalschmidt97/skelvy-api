@@ -36,13 +36,13 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
       {
         var meetingUsers = meetingsToRemove.SelectMany(x => x.Users);
         var meetingRequests = await _context.MeetingRequests
-          .Where(x => x.Status == MeetingRequestStatusTypes.Found && !x.IsRemoved)
+          .Where(x => x.IsFound && !x.IsRemoved)
           .ToListAsync();
 
         var meetingRequestsToRemove = meetingRequests.Where(x => meetingUsers.Any(y => y.UserId == x.UserId)).ToList();
 
-        meetingsToRemove.ForEach(x => x.Remove(MeetingRemovedReasonTypes.Expired));
-        meetingRequestsToRemove.ForEach(x => x.Remove(MeetingRequestRemovedReasonTypes.Expired));
+        meetingsToRemove.ForEach(x => x.Expire());
+        meetingRequestsToRemove.ForEach(x => x.Expire());
 
         isDataChanged = true;
       }

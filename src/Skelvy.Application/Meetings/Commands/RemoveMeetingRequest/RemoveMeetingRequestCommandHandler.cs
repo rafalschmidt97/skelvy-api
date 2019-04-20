@@ -28,14 +28,14 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
       }
 
       var meetingRequest = await _context.MeetingRequests
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingRequestStatusTypes.Searching && !x.IsRemoved);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.IsSearching && !x.IsRemoved);
 
       if (meetingRequest == null)
       {
         throw new NotFoundException($"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) not found.");
       }
 
-      meetingRequest.Remove(MeetingRequestRemovedReasonTypes.Aborted);
+      meetingRequest.Abort();
 
       await _context.SaveChangesAsync();
       return Unit.Value;

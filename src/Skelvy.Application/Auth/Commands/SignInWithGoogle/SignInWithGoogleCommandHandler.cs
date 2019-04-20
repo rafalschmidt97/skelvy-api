@@ -6,9 +6,9 @@ using Skelvy.Application.Auth.Infrastructure.Google;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
@@ -56,12 +56,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
         if (userByEmail == null)
         {
-          user = new User
-          {
-            Email = details.emails[0].value,
-            Language = request.Language,
-            GoogleId = verified.UserId,
-          };
+          user = new User((string)details.emails[0].value, request.Language);
+          user.RegisterGoogle(verified.UserId);
           _context.Users.Add(user);
 
           var birthday = details.birthday != null
@@ -71,24 +67,17 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
               CultureInfo.CurrentCulture).ToUniversalTime()
             : DateTimeOffset.UtcNow;
 
-          var profile = new UserProfile
-          {
-            Name = details.name.givenName,
-            Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-            Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-            UserId = user.Id,
-          };
+          var profile = new UserProfile(
+            (string)details.name.givenName,
+            birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
+            details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+            user.Id);
 
           _context.UserProfiles.Add(profile);
 
           if (details.image != null)
           {
-            var photo = new UserProfilePhoto
-            {
-              Url = details.image.url,
-              ProfileId = profile.Id,
-            };
-
+            var photo = new UserProfilePhoto((string)details.image.url, profile.Id);
             _context.UserProfilePhotos.Add(photo);
           }
         }
@@ -104,7 +93,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             throw new UnauthorizedException("User is disabled");
           }
 
-          userByEmail.GoogleId = verified.UserId;
+          userByEmail.RegisterGoogle(verified.UserId);
           user = userByEmail;
           isDataChanged = true;
         }

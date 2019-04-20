@@ -1,4 +1,4 @@
-namespace Skelvy.Application.Meetings.Commands
+namespace Skelvy.Domain.Enums.Meetings
 {
   public static class MeetingRequestStatusTypes
   {

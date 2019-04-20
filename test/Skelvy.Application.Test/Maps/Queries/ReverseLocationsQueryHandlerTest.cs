@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 using Skelvy.Application.Maps.Queries.ReverseLocations;
-using Skelvy.Application.Users.Commands;
+using Skelvy.Domain.Enums.Users;
 using Xunit;
 
 namespace Skelvy.Application.Test.Maps.Queries

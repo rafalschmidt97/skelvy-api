@@ -5,7 +5,7 @@ using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
 using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
-using Skelvy.Application.Users.Commands;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI.Controllers
