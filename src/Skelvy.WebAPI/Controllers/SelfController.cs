@@ -10,13 +10,13 @@ namespace Skelvy.WebAPI.Controllers
     [HttpGet("{id}")]
     public async Task<SelfViewModel> Find(int id)
     {
-      return await Mediator.Send(new FindSelfQuery { UserId = id });
+      return await Mediator.Send(new FindSelfQuery(id));
     }
 
     [HttpGet]
     public async Task<SelfViewModel> FindSelf()
     {
-      return await Mediator.Send(new FindSelfQuery { UserId = UserId });
+      return await Mediator.Send(new FindSelfQuery(UserId));
     }
   }
 }

@@ -85,12 +85,7 @@ namespace Skelvy.Infrastructure.Notifications
 
     private async Task SendNotification(int userId, PushNotificationContent notification)
     {
-      var message = new PushNotificationMessage
-      {
-        To = $"/topics/user-{userId}",
-        Notification = notification,
-      };
-
+      var message = new PushNotificationMessage($"/topics/user-{userId}", notification);
       await HttpClient.PostAsync("send", PrepareData(message));
     }
   }

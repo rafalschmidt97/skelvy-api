@@ -19,7 +19,7 @@ namespace Skelvy.Application.Test.Users.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new DisableUserCommand { Id = 1, Reason = "XYZ" };
+      var request = new DisableUserCommand(1, "XYZ");
       var handler = new DisableUserCommandHandler(InitializedDbContext(), _notifications.Object);
 
       await handler.Handle(request);
@@ -28,7 +28,7 @@ namespace Skelvy.Application.Test.Users.Commands
     [Fact]
     public async Task ShouldThrowNotFoundException()
     {
-      var request = new DisableUserCommand { Id = 1, Reason = "XYZ" };
+      var request = new DisableUserCommand(1, "XYZ");
       var handler = new DisableUserCommandHandler(DbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

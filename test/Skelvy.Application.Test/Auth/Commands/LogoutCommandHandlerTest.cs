@@ -19,7 +19,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new LogoutCommand { RefreshToken = RefreshToken };
+      var request = new LogoutCommand(RefreshToken);
       var handler = new LogoutCommandHandler(_tokenService.Object);
 
       await handler.Handle(request);

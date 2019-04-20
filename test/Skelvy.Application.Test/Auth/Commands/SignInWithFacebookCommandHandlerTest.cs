@@ -20,7 +20,9 @@ namespace Skelvy.Application.Test.Auth.Commands
   public class SignInWithFacebookCommandHandlerTest : RequestTestBase
   {
     private const string AuthToken = "Token";
-    private static readonly AccessVerification Access = new AccessVerification { UserId = "1" };
+    private const string RefreshToken = "Token";
+    private static readonly AccessVerification Access =
+      new AccessVerification("1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessTypes.Facebook);
 
     private readonly Mock<IFacebookService> _facebookService;
     private readonly Mock<ITokenService> _tokenService;
@@ -36,10 +38,10 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithInitializedUser()
     {
-      var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>())).ReturnsAsync(new Token());
+        x.Generate(It.IsAny<User>())).ReturnsAsync(new Token(AuthToken, RefreshToken));
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContext(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
@@ -51,13 +53,13 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithNotInitializedUser()
     {
-      var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
       _facebookService
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync((object)GraphResponse());
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>())).ReturnsAsync(new Token());
+        x.Generate(It.IsAny<User>())).ReturnsAsync(new Token(AuthToken, RefreshToken));
       var handler = new SignInWithFacebookCommandHandler(DbContext(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request);
@@ -68,7 +70,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithNotVerifiedUser()
     {
-      var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContext(), _facebookService.Object, _tokenService.Object, _notifications.Object);
@@ -80,7 +82,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithRemovedUser()
     {
-      var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContextWithRemovedUser(), _facebookService.Object, _tokenService.Object, _notifications.Object);
@@ -92,7 +94,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithDisabledUser()
     {
-      var request = new SignInWithFacebookCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContextWithDisabledUser(), _facebookService.Object, _tokenService.Object, _notifications.Object);

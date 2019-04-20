@@ -95,20 +95,18 @@ namespace Skelvy.Application.Test.Meetings.Commands
 
     private static CreateMeetingRequestCommand Request()
     {
-      return new CreateMeetingRequestCommand
-      {
-        UserId = 1,
-        MinDate = DateTimeOffset.UtcNow,
-        MaxDate = DateTimeOffset.UtcNow.AddDays(2),
-        MinAge = 18,
-        MaxAge = 25,
-        Latitude = 1,
-        Longitude = 1,
-        Drinks = new List<CreateMeetingRequestDrink>
+      return new CreateMeetingRequestCommand(
+        1,
+        DateTimeOffset.UtcNow,
+        DateTimeOffset.UtcNow.AddDays(2),
+        18,
+        25,
+        1,
+        1,
+        new List<CreateMeetingRequestDrink>
         {
-          new CreateMeetingRequestDrink { Id = 1 },
-        },
-      };
+          new CreateMeetingRequestDrink(1),
+        });
     }
 
     private static SkelvyContext TestDbContext()

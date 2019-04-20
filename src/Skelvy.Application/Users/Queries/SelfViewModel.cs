@@ -4,7 +4,18 @@ namespace Skelvy.Application.Users.Queries
 {
   public class SelfViewModel
   {
-    public UserDto User { get; set; }
-    public MeetingViewModel MeetingModel { get; set; }
+    public SelfViewModel(UserDto user, MeetingViewModel meetingModel)
+    {
+      User = user;
+      MeetingModel = meetingModel;
+    }
+
+    public SelfViewModel(UserDto user)
+    {
+      User = user;
+    }
+
+    public UserDto User { get; }
+    public MeetingViewModel MeetingModel { get; }
   }
 }

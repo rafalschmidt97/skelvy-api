@@ -6,6 +6,12 @@ namespace Skelvy.Application.Maps.Queries.SearchLocations
 {
   public class SearchLocationsQuery : IQuery<IList<Location>>
   {
+    public SearchLocationsQuery(string search, string language)
+    {
+      Search = search;
+      Language = language;
+    }
+
     public string Search { get; set; }
     public string Language { get; set; }
   }

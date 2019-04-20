@@ -9,6 +9,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 {
   public class RefreshTokenCommandHandlerTest : RequestTestBase
   {
+    private const string AccessToken = "Token";
     private const string RefreshToken = "Token";
     private readonly Mock<ITokenService> _tokenService;
 
@@ -20,9 +21,9 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new RefreshTokenCommand { RefreshToken = RefreshToken };
+      var request = new RefreshTokenCommand(RefreshToken);
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<string>())).ReturnsAsync(new Token());
+        x.Generate(It.IsAny<string>())).ReturnsAsync(new Token(AccessToken, RefreshToken));
       var handler = new RefreshTokenCommandHandler(_tokenService.Object);
 
       await handler.Handle(request);
@@ -31,7 +32,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new RefreshTokenCommand { RefreshToken = RefreshToken };
+      var request = new RefreshTokenCommand(RefreshToken);
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler = new RefreshTokenCommandHandler(_tokenService.Object);

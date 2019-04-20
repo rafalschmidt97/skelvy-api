@@ -16,7 +16,7 @@ namespace Skelvy.Application.Test.Core.Pipes
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new SignInWithFacebookCommand();
+      var request = new SignInWithFacebookCommand("", "X");
       var validators = new List<IValidator<SignInWithFacebookCommand>> { new SignInWithFacebookCommandValidator() };
       var pipe = new RequestValidation<SignInWithFacebookCommand>(validators);
 
@@ -27,7 +27,7 @@ namespace Skelvy.Application.Test.Core.Pipes
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new SignInWithFacebookCommand { AuthToken = Token, Language = LanguageTypes.EN };
+      var request = new SignInWithFacebookCommand(Token, LanguageTypes.EN);
       var validators = new List<IValidator<SignInWithFacebookCommand>> { new SignInWithFacebookCommandValidator() };
       var pipe = new RequestValidation<SignInWithFacebookCommand>(validators);
 

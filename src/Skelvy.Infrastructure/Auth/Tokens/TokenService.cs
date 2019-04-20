@@ -39,11 +39,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       var refreshToken = await GetRefreshToken(user);
       var accessToken = GetAccessToken(user);
 
-      return new Token
-      {
-        AccessToken = accessToken,
-        RefreshToken = refreshToken,
-      };
+      return new Token(accessToken, refreshToken);
     }
 
     public async Task<Token> Generate(string refreshToken)
@@ -51,11 +47,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       var user = await UpdateRefreshToken(refreshToken);
       var accessToken = GetAccessToken(user);
 
-      return new Token
-      {
-        AccessToken = accessToken,
-        RefreshToken = refreshToken,
-      };
+      return new Token(accessToken, refreshToken);
     }
 
     public async Task Invalidate(string refreshToken)

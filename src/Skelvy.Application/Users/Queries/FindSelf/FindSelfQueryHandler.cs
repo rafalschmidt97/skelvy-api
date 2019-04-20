@@ -42,34 +42,23 @@ namespace Skelvy.Application.Users.Queries.FindSelf
         {
           var messages = await FindMeetingChatMessages(meeting.Id);
 
-          return new SelfViewModel
-          {
-            User = _mapper.Map<UserDto>(user),
-            MeetingModel = new MeetingViewModel
-            {
-              Status = MeetingRequestStatusTypes.Found,
-              Meeting = _mapper.Map<MeetingDto>(meeting),
-              MeetingMessages = _mapper.Map<IList<MeetingChatMessageDto>>(messages),
-              Request = _mapper.Map<MeetingRequestDto>(meetingRequest),
-            },
-          };
+          return new SelfViewModel(
+            _mapper.Map<UserDto>(user),
+            new MeetingViewModel(
+              MeetingRequestStatusTypes.Found,
+              _mapper.Map<MeetingDto>(meeting),
+              _mapper.Map<IList<MeetingChatMessageDto>>(messages),
+              _mapper.Map<MeetingRequestDto>(meetingRequest)));
         }
 
-        return new SelfViewModel
-        {
-          User = _mapper.Map<UserDto>(user),
-          MeetingModel = new MeetingViewModel
-          {
-            Status = MeetingRequestStatusTypes.Searching,
-            Request = _mapper.Map<MeetingRequestDto>(meetingRequest),
-          },
-        };
+        return new SelfViewModel(
+          _mapper.Map<UserDto>(user),
+          new MeetingViewModel(
+            MeetingRequestStatusTypes.Searching,
+            _mapper.Map<MeetingRequestDto>(meetingRequest)));
       }
 
-      return new SelfViewModel
-      {
-        User = _mapper.Map<UserDto>(user),
-      };
+      return new SelfViewModel(_mapper.Map<UserDto>(user));
     }
 
     private async Task<User> FindUser(int userId)

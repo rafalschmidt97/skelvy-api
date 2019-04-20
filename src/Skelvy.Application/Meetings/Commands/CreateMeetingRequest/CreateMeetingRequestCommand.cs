@@ -6,6 +6,26 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 {
   public class CreateMeetingRequestCommand : ICommand
   {
+    public CreateMeetingRequestCommand(
+      int userId,
+      DateTimeOffset minDate,
+      DateTimeOffset maxDate,
+      int minAge,
+      int maxAge,
+      double latitude,
+      double longitude,
+      IList<CreateMeetingRequestDrink> drinks)
+    {
+      UserId = userId;
+      MinDate = minDate;
+      MaxDate = maxDate;
+      MinAge = minAge;
+      MaxAge = maxAge;
+      Latitude = latitude;
+      Longitude = longitude;
+      Drinks = drinks;
+    }
+
     public int UserId { get; set; }
     public DateTimeOffset MinDate { get; set; }
     public DateTimeOffset MaxDate { get; set; }
@@ -18,6 +38,11 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
   public class CreateMeetingRequestDrink
   {
+    public CreateMeetingRequestDrink(int id)
+    {
+      Id = id;
+    }
+
     public int Id { get; set; }
   }
 }

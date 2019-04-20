@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Maps.Queries
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new ReverseLocationsQuery { Latitude = 1, Longitude = 1, Language = LanguageTypes.EN };
+      var request = new ReverseLocationsQuery(1, 1, LanguageTypes.EN);
       _cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((byte[])null);
       var handler = new ReverseLocationsQueryHandler(_mapsService.Object, _cache.Object);
 

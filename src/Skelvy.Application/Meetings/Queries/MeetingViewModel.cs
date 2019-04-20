@@ -4,9 +4,23 @@ namespace Skelvy.Application.Meetings.Queries
 {
   public class MeetingViewModel
   {
-    public string Status { get; set; }
-    public MeetingDto Meeting { get; set; }
-    public IList<MeetingChatMessageDto> MeetingMessages { get; set; }
-    public MeetingRequestDto Request { get; set; }
+    public MeetingViewModel(string status, MeetingDto meeting, IList<MeetingChatMessageDto> meetingMessages, MeetingRequestDto request)
+    {
+      Status = status;
+      Meeting = meeting;
+      MeetingMessages = meetingMessages;
+      Request = request;
+    }
+
+    public MeetingViewModel(string status, MeetingRequestDto request)
+    {
+      Status = status;
+      Request = request;
+    }
+
+    public string Status { get; }
+    public MeetingDto Meeting { get; }
+    public IList<MeetingChatMessageDto> MeetingMessages { get; }
+    public MeetingRequestDto Request { get; }
   }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
@@ -19,7 +20,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new AddMeetingChatMessageCommand { Message = "Hello World", UserId = 2 };
+      var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", 2);
       var handler = new AddMeetingChatMessageCommandHandler(InitializedDbContext(), _notifications.Object);
 
       await handler.Handle(request);
@@ -28,7 +29,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new AddMeetingChatMessageCommand { Message = "Hello World", UserId = 2 };
+      var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", 2);
       var handler = new AddMeetingChatMessageCommandHandler(DbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

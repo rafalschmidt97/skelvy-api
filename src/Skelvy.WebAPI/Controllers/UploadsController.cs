@@ -18,12 +18,7 @@ namespace Skelvy.WebAPI.Controllers
       }
 
       var file = files[0];
-      var request = new UploadPhotoCommand
-      {
-        Data = file.OpenReadStream(),
-        Name = file.FileName,
-        ServerPath = Request.Host.Value,
-      };
+      var request = new UploadPhotoCommand(file.FileName, file.OpenReadStream(), Request.Host.Value);
 
       var url = await Mediator.Send(request);
       return Ok(new { url });

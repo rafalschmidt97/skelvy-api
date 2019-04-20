@@ -37,20 +37,16 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
       {
         var messages = await FindMeetingChatMessages(meeting.Id);
 
-        return new MeetingViewModel
-        {
-          Status = MeetingRequestStatusTypes.Found,
-          Meeting = _mapper.Map<MeetingDto>(meeting),
-          MeetingMessages = _mapper.Map<IList<MeetingChatMessageDto>>(messages),
-          Request = _mapper.Map<MeetingRequestDto>(meetingRequest),
-        };
+        return new MeetingViewModel(
+          MeetingRequestStatusTypes.Found,
+          _mapper.Map<MeetingDto>(meeting),
+          _mapper.Map<IList<MeetingChatMessageDto>>(messages),
+          _mapper.Map<MeetingRequestDto>(meetingRequest));
       }
 
-      return new MeetingViewModel
-      {
-        Status = MeetingRequestStatusTypes.Searching,
-        Request = _mapper.Map<MeetingRequestDto>(meetingRequest),
-      };
+      return new MeetingViewModel(
+        MeetingRequestStatusTypes.Searching,
+        _mapper.Map<MeetingRequestDto>(meetingRequest));
     }
 
     private async Task<MeetingRequest> FindMeetingRequest(int userId)

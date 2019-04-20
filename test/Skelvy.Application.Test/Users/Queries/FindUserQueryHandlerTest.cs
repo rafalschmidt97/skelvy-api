@@ -11,7 +11,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldReturnUser()
     {
-      var request = new FindUserQuery { Id = 1 };
+      var request = new FindUserQuery(1);
       var handler = new FindUserQueryHandler(InitializedDbContext(), Mapper());
 
       var result = await handler.Handle(request);
@@ -22,7 +22,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new FindUserQuery { Id = 1 };
+      var request = new FindUserQuery(1);
       var handler = new FindUserQueryHandler(DbContext(), Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

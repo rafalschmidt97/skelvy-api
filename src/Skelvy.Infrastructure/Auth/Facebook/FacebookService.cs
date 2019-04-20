@@ -56,13 +56,11 @@ namespace Skelvy.Infrastructure.Auth.Facebook
         throw new UnauthorizedException("Facebook Token is not valid.");
       }
 
-      return new AccessVerification
-      {
-        UserId = response.data.user_id,
-        AccessToken = accessToken,
-        ExpiresAt = UnixTimestampToDateTime(response.data.expires_at),
-        AccessType = AccessTypes.Facebook,
-      };
+      return new AccessVerification(
+        response.data.user_id,
+        accessToken,
+        UnixTimestampToDateTime(response.data.expires_at),
+        AccessTypes.Facebook);
     }
 
     private static DateTime UnixTimestampToDateTime(dynamic unixTime)

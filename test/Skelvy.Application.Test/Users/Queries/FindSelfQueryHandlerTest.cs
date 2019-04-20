@@ -11,7 +11,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldReturnModel()
     {
-      var request = new FindSelfQuery { UserId = 1 };
+      var request = new FindSelfQuery(1);
       var handler = new FindSelfQueryHandler(InitializedDbContext(), Mapper());
 
       var result = await handler.Handle(request);
@@ -22,7 +22,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new FindSelfQuery { UserId = 1 };
+      var request = new FindSelfQuery(1);
       var handler = new FindSelfQueryHandler(DbContext(), Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
