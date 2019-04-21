@@ -57,7 +57,7 @@ namespace Skelvy.Infrastructure.Auth.Facebook
       }
 
       return new AccessVerification(
-        response.data.user_id,
+        (string)response.data.user_id,
         accessToken,
         UnixTimestampToDateTime(response.data.expires_at),
         AccessTypes.Facebook);

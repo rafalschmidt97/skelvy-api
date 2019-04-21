@@ -52,7 +52,7 @@ namespace Skelvy.Infrastructure.Auth.Google
       }
 
       return new AccessVerification(
-        response.sub,
+        (string)response.sub,
         accessToken,
         UnixTimestampToDateTime(response.exp),
         AccessTypes.Google);
