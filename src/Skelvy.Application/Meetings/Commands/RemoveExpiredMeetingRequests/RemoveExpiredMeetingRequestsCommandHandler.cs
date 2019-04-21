@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
@@ -26,7 +27,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
     {
       var today = DateTimeOffset.UtcNow;
       var requestsToRemove = await _context.MeetingRequests
-        .Where(x => x.MaxDate < today && x.IsSearching && !x.IsRemoved)
+        .Where(x => x.MaxDate < today && x.Status == MeetingRequestStatusTypes.Searching && !x.IsRemoved)
         .ToListAsync();
 
       var isDataChanged = false;

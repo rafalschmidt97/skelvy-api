@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Persistence;
 using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMeetingRequestHelper;
 
@@ -29,7 +30,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         .ThenInclude(x => x.Profile)
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
-        .Where(x => x.IsSearching && !x.IsRemoved)
+        .Where(x => x.Status == MeetingRequestStatusTypes.Searching && !x.IsRemoved)
         .ToListAsync();
 
       var isDataChanged = false;

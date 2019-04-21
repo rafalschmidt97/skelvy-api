@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
@@ -28,7 +29,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
       }
 
       var meetingRequest = await _context.MeetingRequests
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.IsSearching && !x.IsRemoved);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingRequestStatusTypes.Searching && !x.IsRemoved);
 
       if (meetingRequest == null)
       {

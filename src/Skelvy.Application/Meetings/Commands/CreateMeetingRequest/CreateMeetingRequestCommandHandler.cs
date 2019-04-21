@@ -7,6 +7,7 @@ using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Persistence;
 using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMeetingRequestHelper;
 
@@ -175,7 +176,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
         .Where(x => x.Id != newRequest.Id &&
-                    x.IsSearching &&
+                    x.Status == MeetingRequestStatusTypes.Searching &&
                     !x.IsRemoved &&
                     x.MinDate <= newRequest.MaxDate &&
                     x.MaxDate >= newRequest.MinDate)

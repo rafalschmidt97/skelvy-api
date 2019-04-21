@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
@@ -36,7 +37,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
       {
         var meetingUsers = meetingsToRemove.SelectMany(x => x.Users);
         var meetingRequests = await _context.MeetingRequests
-          .Where(x => x.IsFound && !x.IsRemoved)
+          .Where(x => x.Status == MeetingRequestStatusTypes.Found && !x.IsRemoved)
           .ToListAsync();
 
         var meetingRequestsToRemove = meetingRequests.Where(x => meetingUsers.Any(y => y.UserId == x.UserId)).ToList();
