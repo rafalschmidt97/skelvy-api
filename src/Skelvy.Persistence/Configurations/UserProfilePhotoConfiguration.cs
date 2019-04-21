@@ -8,6 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<UserProfilePhoto> builder)
     {
+      builder.HasOne(x => x.Profile).WithMany(x => x.Photos).OnDelete(DeleteBehavior.Restrict);
       builder.Property(e => e.Url).IsRequired().HasMaxLength(2048);
     }
   }

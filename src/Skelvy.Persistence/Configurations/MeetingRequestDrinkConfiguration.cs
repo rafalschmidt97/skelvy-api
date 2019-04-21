@@ -8,6 +8,8 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<MeetingRequestDrink> builder)
     {
+      builder.HasOne(x => x.MeetingRequest).WithMany(x => x.Drinks).OnDelete(DeleteBehavior.Restrict);
+      builder.HasOne(x => x.Drink).WithMany().OnDelete(DeleteBehavior.Restrict);
       builder.HasKey(x => new { x.MeetingRequestId, x.DrinkId });
     }
   }

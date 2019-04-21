@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190421142643_Initial")]
+    [Migration("20190421161209_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -291,7 +291,7 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.Drink", "Drink")
                         .WithMany()
                         .HasForeignKey("DrinkId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingChatMessage", b =>
@@ -299,12 +299,12 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.Meeting", "Meeting")
                         .WithMany("ChatMessages")
                         .HasForeignKey("MeetingId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithMany("MeetingChatMessages")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequest", b =>
@@ -312,7 +312,7 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithMany("MeetingRequests")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequestDrink", b =>
@@ -320,12 +320,12 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.Drink", "Drink")
                         .WithMany()
                         .HasForeignKey("DrinkId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Skelvy.Domain.Entities.MeetingRequest", "MeetingRequest")
                         .WithMany("Drinks")
                         .HasForeignKey("MeetingRequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingUser", b =>
@@ -333,7 +333,7 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.Meeting", "Meeting")
                         .WithMany("Users")
                         .HasForeignKey("MeetingId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Skelvy.Domain.Entities.MeetingRequest", "MeetingRequest")
                         .WithMany()
@@ -343,7 +343,7 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.UserProfile", b =>
@@ -351,7 +351,7 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithOne("Profile")
                         .HasForeignKey("Skelvy.Domain.Entities.UserProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.UserProfilePhoto", b =>
@@ -359,7 +359,7 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.UserProfile", "Profile")
                         .WithMany("Photos")
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.UserRole", b =>
@@ -367,7 +367,7 @@ namespace Skelvy.Persistence.Migrations
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

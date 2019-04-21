@@ -8,6 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<Meeting> builder)
     {
+      builder.HasOne(x => x.Drink).WithMany().OnDelete(DeleteBehavior.Restrict);
       builder.Property(e => e.RemovedReason).HasMaxLength(15);
     }
   }

@@ -8,6 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<UserProfile> builder)
     {
+      builder.HasOne(x => x.User).WithOne(x => x.Profile).OnDelete(DeleteBehavior.Restrict);
       builder.Property(e => e.Name).IsRequired().HasMaxLength(50);
       builder.Property(e => e.Gender).IsRequired().HasMaxLength(15);
       builder.Property(e => e.Description).HasMaxLength(500);
