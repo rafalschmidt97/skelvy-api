@@ -160,9 +160,6 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<DateTimeOffset?>("RemovedAt");
 
-                    b.Property<string>("RemovedReason")
-                        .HasMaxLength(15);
-
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");

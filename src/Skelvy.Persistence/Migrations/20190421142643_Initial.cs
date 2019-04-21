@@ -208,7 +208,6 @@ namespace Skelvy.Persistence.Migrations
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     IsRemoved = table.Column<bool>(nullable: false),
                     RemovedAt = table.Column<DateTimeOffset>(nullable: true),
-                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                     MeetingId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     MeetingRequestId = table.Column<int>(nullable: false)

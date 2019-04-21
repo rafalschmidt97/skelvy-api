@@ -61,14 +61,14 @@ namespace Skelvy.Application.Users.Commands.DisableUser
 
         var userDetails = meetingUsers.First(x => x.UserId == meetingUser.UserId);
 
-        userDetails.Abort();
+        userDetails.Leave();
         userDetails.MeetingRequest.Abort();
 
         if (meetingUsers.Count == 2)
         {
           var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
 
-          anotherUserDetails.Abort();
+          anotherUserDetails.Leave();
           anotherUserDetails.MeetingRequest.MarkAsSearching();
           meetingUser.Meeting.Abort();
 

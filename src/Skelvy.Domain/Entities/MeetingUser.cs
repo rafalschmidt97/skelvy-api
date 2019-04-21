@@ -1,6 +1,5 @@
 using System;
 using Skelvy.Domain.Entities.Base;
-using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Domain.Entities
 {
@@ -25,7 +24,6 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset CreatedAt { get; private set; }
     public bool IsRemoved { get; private set; }
     public DateTimeOffset? RemovedAt { get; private set; }
-    public string RemovedReason { get; private set; }
     public int MeetingId { get; private set; }
     public int UserId { get; private set; }
     public int MeetingRequestId { get; private set; }
@@ -34,18 +32,10 @@ namespace Skelvy.Domain.Entities
     public User User { get; private set; }
     public MeetingRequest MeetingRequest { get; private set; }
 
-    public void Abort()
+    public void Leave()
     {
       IsRemoved = true;
       RemovedAt = DateTimeOffset.UtcNow;
-      RemovedReason = MeetingUserRemovedReasonTypes.Aborted;
-    }
-
-    public void Expire()
-    {
-      IsRemoved = true;
-      RemovedAt = DateTimeOffset.UtcNow;
-      RemovedReason = MeetingRequestRemovedReasonTypes.Expired;
     }
   }
 }

@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190421121257_Initial")]
+    [Migration("20190421142643_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,9 +161,6 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<int>("MeetingRequestId");
 
                     b.Property<DateTimeOffset?>("RemovedAt");
-
-                    b.Property<string>("RemovedReason")
-                        .HasMaxLength(15);
 
                     b.Property<int>("UserId");
 
