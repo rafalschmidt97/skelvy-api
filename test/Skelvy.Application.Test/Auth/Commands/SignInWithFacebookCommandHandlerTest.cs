@@ -21,8 +21,7 @@ namespace Skelvy.Application.Test.Auth.Commands
   {
     private const string AuthToken = "Token";
     private const string RefreshToken = "Token";
-    private static readonly AccessVerification Access =
-      new AccessVerification("1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessTypes.Facebook);
+    private readonly AccessVerification _access;
 
     private readonly Mock<IFacebookService> _facebookService;
     private readonly Mock<ITokenService> _tokenService;
@@ -30,6 +29,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
     public SignInWithFacebookCommandHandlerTest()
     {
+      _access = new AccessVerification("facebook1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessTypes.Facebook);
       _facebookService = new Mock<IFacebookService>();
       _tokenService = new Mock<ITokenService>();
       _notifications = new Mock<INotificationsService>();
@@ -39,7 +39,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldReturnTokenWithInitializedUser()
     {
       var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
-      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>())).ReturnsAsync(new Token(AuthToken, RefreshToken));
       var handler =
@@ -54,7 +54,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldReturnTokenWithNotInitializedUser()
     {
       var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
-      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _facebookService
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync((object)GraphResponse());
@@ -83,7 +83,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldThrowExceptionWithRemovedUser()
     {
       var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
-      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContextWithRemovedUser(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
@@ -95,7 +95,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     public async Task ShouldThrowExceptionWithDisabledUser()
     {
       var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
-      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       var handler =
         new SignInWithFacebookCommandHandler(InitializedDbContextWithDisabledUser(), _facebookService.Object, _tokenService.Object, _notifications.Object);
 
@@ -103,11 +103,11 @@ namespace Skelvy.Application.Test.Auth.Commands
         handler.Handle(request));
     }
 
-    private static SkelvyContext InitializedDbContextWithRemovedUser()
+    private SkelvyContext InitializedDbContextWithRemovedUser()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
-      var user = context.Users.FirstOrDefault(x => x.FacebookId == Access.UserId);
+      var user = context.Users.FirstOrDefault(x => x.FacebookId == _access.UserId);
 
       if (user != null)
       {
@@ -119,11 +119,11 @@ namespace Skelvy.Application.Test.Auth.Commands
       return context;
     }
 
-    private static SkelvyContext InitializedDbContextWithDisabledUser()
+    private SkelvyContext InitializedDbContextWithDisabledUser()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
-      var user = context.Users.FirstOrDefault(x => x.FacebookId == Access.UserId);
+      var user = context.Users.FirstOrDefault(x => x.FacebookId == _access.UserId);
 
       if (user != null)
       {

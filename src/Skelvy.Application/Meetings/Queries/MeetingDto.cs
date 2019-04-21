@@ -21,6 +21,10 @@ namespace Skelvy.Application.Meetings.Queries
       Drink = drink;
     }
 
+    public MeetingDto()
+    {
+    }
+
     public int Id { get; }
     public DateTimeOffset Date { get; }
     public double Latitude { get; }

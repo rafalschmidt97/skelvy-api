@@ -8,6 +8,10 @@ namespace Skelvy.Application.Drinks.Queries
       Name = name;
     }
 
+    public DrinkDto()
+    {
+    }
+
     public int Id { get; }
     public string Name { get; }
   }

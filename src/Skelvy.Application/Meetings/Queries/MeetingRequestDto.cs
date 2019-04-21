@@ -30,6 +30,10 @@ namespace Skelvy.Application.Meetings.Queries
       Drinks = drinks;
     }
 
+    public MeetingRequestDto()
+    {
+    }
+
     public int Id { get; }
     public DateTimeOffset MinDate { get; }
     public DateTimeOffset MaxDate { get; }

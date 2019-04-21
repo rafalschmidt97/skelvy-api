@@ -34,6 +34,13 @@ namespace Skelvy.Application.Core.Initializers
         new User("user3@gmail.com", LanguageTypes.EN),
       };
 
+      users[0].RegisterFacebook("facebook1");
+      users[0].RegisterGoogle("google1");
+      users[1].RegisterFacebook("facebook2");
+      users[1].RegisterGoogle("google2");
+      users[2].RegisterFacebook("facebook3");
+      users[2].RegisterGoogle("google3");
+
       context.Users.AddRange(users);
       context.SaveChanges();
     }

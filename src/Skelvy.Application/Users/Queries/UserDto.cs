@@ -11,6 +11,10 @@ namespace Skelvy.Application.Users.Queries
       Profile = profile;
     }
 
+    public UserDto()
+    {
+    }
+
     public int Id { get; }
     public UserProfileDto Profile { get; }
   }
@@ -24,6 +28,10 @@ namespace Skelvy.Application.Users.Queries
       Gender = gender;
       Description = description;
       Photos = photos;
+    }
+
+    public UserProfileDto()
+    {
     }
 
     public string Name { get; }
