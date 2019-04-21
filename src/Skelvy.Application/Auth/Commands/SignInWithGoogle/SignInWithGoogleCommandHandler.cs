@@ -13,7 +13,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 {
-  public class SignInWithGoogleCommandHandler : QueryHandler<SignInWithGoogleCommand, Token>
+  public class SignInWithGoogleCommandHandler : QueryHandler<SignInWithGoogleCommand, AuthDto>
   {
     private readonly SkelvyContext _context;
     private readonly IGoogleService _googleService;
@@ -32,7 +32,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
       _notifications = notifications;
     }
 
-    public override async Task<Token> Handle(SignInWithGoogleCommand request)
+    public override async Task<AuthDto> Handle(SignInWithGoogleCommand request)
     {
       var verified = await _googleService.Verify(request.AuthToken);
 

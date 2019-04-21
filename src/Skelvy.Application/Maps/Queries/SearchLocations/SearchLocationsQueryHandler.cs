@@ -8,7 +8,7 @@ using Skelvy.Common.Serializers;
 
 namespace Skelvy.Application.Maps.Queries.SearchLocations
 {
-  public class SearchLocationsQueryHandler : QueryHandler<SearchLocationsQuery, IList<Location>>
+  public class SearchLocationsQueryHandler : QueryHandler<SearchLocationsQuery, IList<LocationDto>>
   {
     private readonly IMapsService _mapsService;
     private readonly IDistributedCache _cache;
@@ -19,14 +19,14 @@ namespace Skelvy.Application.Maps.Queries.SearchLocations
       _cache = cache;
     }
 
-    public override async Task<IList<Location>> Handle(SearchLocationsQuery request)
+    public override async Task<IList<LocationDto>> Handle(SearchLocationsQuery request)
     {
       var cacheKey = $"maps:search#{request.Search}#{request.Language}";
       var cachedLocationBytes = await _cache.GetAsync(cacheKey);
 
       if (cachedLocationBytes != null)
       {
-        return cachedLocationBytes.Deserialize<IList<Location>>();
+        return cachedLocationBytes.Deserialize<IList<LocationDto>>();
       }
 
       var locations = await _mapsService.Search(request.Search, request.Language);

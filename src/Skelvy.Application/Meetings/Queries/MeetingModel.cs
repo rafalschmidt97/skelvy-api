@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Skelvy.Application.Meetings.Queries
 {
-  public class MeetingViewModel
+  public class MeetingModel
   {
-    public MeetingViewModel(string status, MeetingDto meeting, IList<MeetingChatMessageDto> meetingMessages, MeetingRequestDto request)
+    public MeetingModel(string status, MeetingDto meeting, IList<MeetingChatMessageDto> meetingMessages, MeetingRequestDto request)
     {
       Status = status;
       Meeting = meeting;
@@ -12,7 +12,7 @@ namespace Skelvy.Application.Meetings.Queries
       Request = request;
     }
 
-    public MeetingViewModel(string status, MeetingRequestDto request)
+    public MeetingModel(string status, MeetingRequestDto request)
     {
       Status = status;
       Request = request;

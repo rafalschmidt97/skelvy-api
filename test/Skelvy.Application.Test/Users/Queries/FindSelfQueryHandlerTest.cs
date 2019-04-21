@@ -16,7 +16,7 @@ namespace Skelvy.Application.Test.Users.Queries
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<SelfViewModel>(result);
+      Assert.IsType<SelfModel>(result);
     }
 
     [Fact]

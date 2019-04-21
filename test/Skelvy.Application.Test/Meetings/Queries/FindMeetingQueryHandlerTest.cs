@@ -16,7 +16,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<MeetingViewModel>(result);
+      Assert.IsType<MeetingModel>(result);
       Assert.NotNull(result.Meeting);
     }
 
@@ -28,7 +28,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<MeetingViewModel>(result);
+      Assert.IsType<MeetingModel>(result);
       Assert.NotNull(result.Request);
     }
 

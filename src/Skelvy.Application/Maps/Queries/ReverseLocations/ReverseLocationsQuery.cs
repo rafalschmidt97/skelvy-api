@@ -4,7 +4,7 @@ using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 
 namespace Skelvy.Application.Maps.Queries.ReverseLocations
 {
-  public class ReverseLocationsQuery : IQuery<IList<Location>>
+  public class ReverseLocationsQuery : IQuery<IList<LocationDto>>
   {
     public ReverseLocationsQuery(double latitude, double longitude, string language)
     {

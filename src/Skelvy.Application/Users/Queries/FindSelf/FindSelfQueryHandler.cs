@@ -12,7 +12,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Users.Queries.FindSelf
 {
-  public class FindSelfQueryHandler : QueryHandler<FindSelfQuery, SelfViewModel>
+  public class FindSelfQueryHandler : QueryHandler<FindSelfQuery, SelfModel>
   {
     private readonly SkelvyContext _context;
     private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace Skelvy.Application.Users.Queries.FindSelf
       _mapper = mapper;
     }
 
-    public override async Task<SelfViewModel> Handle(FindSelfQuery request)
+    public override async Task<SelfModel> Handle(FindSelfQuery request)
     {
       var user = await FindUser(request.UserId);
 
@@ -42,23 +42,23 @@ namespace Skelvy.Application.Users.Queries.FindSelf
         {
           var messages = await FindMeetingChatMessages(meeting.Id);
 
-          return new SelfViewModel(
+          return new SelfModel(
             _mapper.Map<UserDto>(user),
-            new MeetingViewModel(
+            new MeetingModel(
               MeetingRequestStatusTypes.Found,
               _mapper.Map<MeetingDto>(meeting),
               _mapper.Map<IList<MeetingChatMessageDto>>(messages),
               _mapper.Map<MeetingRequestDto>(meetingRequest)));
         }
 
-        return new SelfViewModel(
+        return new SelfModel(
           _mapper.Map<UserDto>(user),
-          new MeetingViewModel(
+          new MeetingModel(
             MeetingRequestStatusTypes.Searching,
             _mapper.Map<MeetingRequestDto>(meetingRequest)));
       }
 
-      return new SelfViewModel(_mapper.Map<UserDto>(user));
+      return new SelfModel(_mapper.Map<UserDto>(user));
     }
 
     private async Task<User> FindUser(int userId)

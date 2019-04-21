@@ -13,7 +13,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 {
-  public class SignInWithFacebookCommandHandler : QueryHandler<SignInWithFacebookCommand, Token>
+  public class SignInWithFacebookCommandHandler : QueryHandler<SignInWithFacebookCommand, AuthDto>
   {
     private readonly SkelvyContext _context;
     private readonly IFacebookService _facebookService;
@@ -32,7 +32,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       _notifications = notifications;
     }
 
-    public override async Task<Token> Handle(SignInWithFacebookCommand request)
+    public override async Task<AuthDto> Handle(SignInWithFacebookCommand request)
     {
       var verified = await _facebookService.Verify(request.AuthToken);
 

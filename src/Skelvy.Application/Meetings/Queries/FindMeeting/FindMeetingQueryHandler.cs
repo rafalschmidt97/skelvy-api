@@ -11,7 +11,7 @@ using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Queries.FindMeeting
 {
-  public class FindMeetingQueryHandler : QueryHandler<FindMeetingQuery, MeetingViewModel>
+  public class FindMeetingQueryHandler : QueryHandler<FindMeetingQuery, MeetingModel>
   {
     private readonly SkelvyContext _context;
     private readonly IMapper _mapper;
@@ -22,7 +22,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
       _mapper = mapper;
     }
 
-    public override async Task<MeetingViewModel> Handle(FindMeetingQuery request)
+    public override async Task<MeetingModel> Handle(FindMeetingQuery request)
     {
       var meetingRequest = await FindMeetingRequest(request.UserId);
 
@@ -37,14 +37,14 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
       {
         var messages = await FindMeetingChatMessages(meeting.Id);
 
-        return new MeetingViewModel(
+        return new MeetingModel(
           MeetingRequestStatusTypes.Found,
           _mapper.Map<MeetingDto>(meeting),
           _mapper.Map<IList<MeetingChatMessageDto>>(messages),
           _mapper.Map<MeetingRequestDto>(meetingRequest));
       }
 
-      return new MeetingViewModel(
+      return new MeetingModel(
         MeetingRequestStatusTypes.Searching,
         _mapper.Map<MeetingRequestDto>(meetingRequest));
     }

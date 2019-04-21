@@ -14,13 +14,13 @@ namespace Skelvy.WebAPI.Controllers
   {
     [HttpGet("{id}")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task<MeetingViewModel> Find(int id)
+    public async Task<MeetingModel> Find(int id)
     {
       return await Mediator.Send(new FindMeetingQuery(id));
     }
 
     [HttpGet("self")]
-    public async Task<MeetingViewModel> FindSelf()
+    public async Task<MeetingModel> FindSelf()
     {
       return await Mediator.Send(new FindMeetingQuery(UserId));
     }

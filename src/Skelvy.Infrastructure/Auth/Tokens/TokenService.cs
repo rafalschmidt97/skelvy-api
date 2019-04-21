@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Common.Exceptions;
 using Skelvy.Common.Serializers;
@@ -34,20 +35,20 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       _context = context;
     }
 
-    public async Task<Token> Generate(User user)
+    public async Task<AuthDto> Generate(User user)
     {
       var refreshToken = await GetRefreshToken(user);
       var accessToken = GetAccessToken(user);
 
-      return new Token(accessToken, refreshToken);
+      return new AuthDto(accessToken, refreshToken);
     }
 
-    public async Task<Token> Generate(string refreshToken)
+    public async Task<AuthDto> Generate(string refreshToken)
     {
       var user = await UpdateRefreshToken(refreshToken);
       var accessToken = GetAccessToken(user);
 
-      return new Token(accessToken, refreshToken);
+      return new AuthDto(accessToken, refreshToken);
     }
 
     public async Task Invalidate(string refreshToken)

@@ -3,9 +3,9 @@ using System;
 namespace Skelvy.Application.Maps.Infrastructure.GoogleMaps
 {
   [Serializable]
-  public class Location
+  public class LocationDto
   {
-    public Location(double latitude, double longitude, string country, string state, string district, string city, string type)
+    public LocationDto(double latitude, double longitude, string country, string state, string district, string city, string type)
     {
       Latitude = latitude;
       Longitude = longitude;
@@ -16,7 +16,7 @@ namespace Skelvy.Application.Maps.Infrastructure.GoogleMaps
       Type = type;
     }
 
-    public Location()
+    public LocationDto()
     {
     }
 

@@ -8,7 +8,7 @@ using Skelvy.Common.Serializers;
 
 namespace Skelvy.Application.Maps.Queries.ReverseLocations
 {
-  public class ReverseLocationsQueryHandler : QueryHandler<ReverseLocationsQuery, IList<Location>>
+  public class ReverseLocationsQueryHandler : QueryHandler<ReverseLocationsQuery, IList<LocationDto>>
   {
     private readonly IMapsService _mapsService;
     private readonly IDistributedCache _cache;
@@ -19,14 +19,14 @@ namespace Skelvy.Application.Maps.Queries.ReverseLocations
       _cache = cache;
     }
 
-    public override async Task<IList<Location>> Handle(ReverseLocationsQuery request)
+    public override async Task<IList<LocationDto>> Handle(ReverseLocationsQuery request)
     {
       var cacheKey = $"maps:reverse#{request.Latitude}#{request.Longitude}#{request.Language}";
       var cachedLocationBytes = await _cache.GetAsync(cacheKey);
 
       if (cachedLocationBytes != null)
       {
-        return cachedLocationBytes.Deserialize<IList<Location>>();
+        return cachedLocationBytes.Deserialize<IList<LocationDto>>();
       }
 
       var locations = await _mapsService.Search(request.Latitude, request.Longitude, request.Language);
