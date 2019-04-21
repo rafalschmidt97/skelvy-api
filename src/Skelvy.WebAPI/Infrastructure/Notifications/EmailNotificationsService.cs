@@ -24,25 +24,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     public async Task BroadcastUserCreated(User user)
     {
-      var message = new EmailMessage
-      {
-        To = user.Email,
-        Subject = "Account has been created",
-        TemplateName = "Created",
-      };
+      var message = new EmailMessage(user.Email, "Account has been created", "Created");
 
       await SendEmail(message);
     }
 
     public async Task BroadcastUserRemoved(User user)
     {
-      var message = new EmailMessage
-      {
-        To = user.Email,
-        Subject = "Account has been deleted",
-        TemplateName = "Removed",
-      };
-
+      var message = new EmailMessage(user.Email, "Account has been deleted", "Removed");
       await SendEmail(message);
     }
 
@@ -51,14 +40,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       dynamic model = new ExpandoObject();
       model.Reason = reason;
 
-      var message = new EmailMessage
-      {
-        To = user.Email,
-        Subject = "Account has been disabled",
-        TemplateName = "Disabled",
-        Model = model,
-      };
-
+      var message = new EmailMessage(user.Email, "Account has been disabled", "Disabled", model);
       await SendEmail(message);
     }
 
@@ -66,7 +48,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     {
       var body = await GetHtmlBody(message);
 
-      var email = new MailMessage
+      var email = new MailMessage()
       {
         From = new MailAddress(_configuration["Email:Username"], _configuration["Email:Name"]),
         To = { message.To },
@@ -97,13 +79,5 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
       return await _templateRenderer.ParseAsync(template, message.Model);
     }
-  }
-
-  public class EmailMessage
-  {
-    public string To { get; set; }
-    public string Subject { get; set; }
-    public string TemplateName { get; set; }
-    public object Model { get; set; }
   }
 }

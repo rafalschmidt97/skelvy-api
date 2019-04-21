@@ -5,7 +5,7 @@ namespace Skelvy.Application.Maps.Infrastructure.GoogleMaps
 {
   public interface IMapsService
   {
-    Task<IList<Location>> Search(string search, string language);
-    Task<IList<Location>> Search(double latitude, double longitude, string language);
+    Task<IList<LocationDto>> Search(string search, string language);
+    Task<IList<LocationDto>> Search(double latitude, double longitude, string language);
   }
 }

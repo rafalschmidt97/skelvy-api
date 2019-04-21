@@ -10,7 +10,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new RemoveMeetingRequestCommand { UserId = 1 };
+      var request = new RemoveMeetingRequestCommand(1);
       var handler = new RemoveMeetingRequestCommandHandler(InitializedDbContext());
 
       await handler.Handle(request);
@@ -19,7 +19,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithExistingMeeting()
     {
-      var request = new RemoveMeetingRequestCommand { UserId = 2 };
+      var request = new RemoveMeetingRequestCommand(2);
       var handler = new RemoveMeetingRequestCommandHandler(InitializedDbContext());
 
       await Assert.ThrowsAsync<ConflictException>(() =>
@@ -29,7 +29,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new RemoveMeetingRequestCommand { UserId = 1 };
+      var request = new RemoveMeetingRequestCommand(1);
       var handler = new RemoveMeetingRequestCommandHandler(DbContext());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

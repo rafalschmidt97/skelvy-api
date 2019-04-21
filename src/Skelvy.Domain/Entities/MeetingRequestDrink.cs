@@ -2,10 +2,16 @@ namespace Skelvy.Domain.Entities
 {
   public class MeetingRequestDrink
   {
-    public int MeetingRequestId { get; set; }
-    public int DrinkId { get; set; }
+    public MeetingRequestDrink(int meetingRequestId, int drinkId)
+    {
+      MeetingRequestId = meetingRequestId;
+      DrinkId = drinkId;
+    }
 
-    public MeetingRequest MeetingRequest { get; set; }
-    public Drink Drink { get; set; }
+    public int MeetingRequestId { get; private set; }
+    public int DrinkId { get; private set; }
+
+    public MeetingRequest MeetingRequest { get; private set; }
+    public Drink Drink { get; private set; }
   }
 }

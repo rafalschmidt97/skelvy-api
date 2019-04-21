@@ -5,21 +5,49 @@ namespace Skelvy.Application.Users.Queries
 {
   public class UserDto
   {
-    public int Id { get; set; }
-    public UserProfileDto Profile { get; set; }
+    public UserDto(int id, UserProfileDto profile)
+    {
+      Id = id;
+      Profile = profile;
+    }
+
+    public UserDto()
+    {
+    }
+
+    public int Id { get; }
+    public UserProfileDto Profile { get; }
   }
 
   public class UserProfileDto
   {
-    public string Name { get; set; }
-    public DateTimeOffset Birthday { get; set; }
-    public string Gender { get; set; }
-    public string Description { get; set; }
-    public IList<UserProfilePhotoDto> Photos { get; set; }
+    public UserProfileDto(string name, DateTimeOffset birthday, string gender, string description, IList<UserProfilePhotoDto> photos)
+    {
+      Name = name;
+      Birthday = birthday;
+      Gender = gender;
+      Description = description;
+      Photos = photos;
+    }
+
+    public UserProfileDto()
+    {
+    }
+
+    public string Name { get; }
+    public DateTimeOffset Birthday { get; }
+    public string Gender { get; }
+    public string Description { get; }
+    public IList<UserProfilePhotoDto> Photos { get; }
   }
 
   public class UserProfilePhotoDto
   {
-    public string Url { get; set; }
+    public UserProfilePhotoDto(string url)
+    {
+      Url = url;
+    }
+
+    public string Url { get; }
   }
 }

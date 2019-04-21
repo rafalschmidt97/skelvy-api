@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Common.Exceptions;
+using Skelvy.Domain.Enums.Users;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Commands
@@ -31,17 +31,15 @@ namespace Skelvy.Application.Test.Users.Commands
 
     private static UpdateUserProfileCommand Request()
     {
-      return new UpdateUserProfileCommand
-      {
-        UserId = 1,
-        Name = "Example",
-        Gender = GenderTypes.Female,
-        Birthday = DateTimeOffset.UtcNow.AddYears(-18),
-        Photos = new List<UpdateUserProfilePhotos>
+      return new UpdateUserProfileCommand(
+        1,
+        "Example",
+        DateTimeOffset.UtcNow.AddYears(-18),
+        GenderTypes.Female,
+        new List<UpdateUserProfilePhotos>
         {
-          new UpdateUserProfilePhotos { Url = "Url" },
-        },
-      };
+          new UpdateUserProfilePhotos("Url"),
+        });
     }
   }
 }

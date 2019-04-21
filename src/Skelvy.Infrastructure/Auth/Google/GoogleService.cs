@@ -51,13 +51,11 @@ namespace Skelvy.Infrastructure.Auth.Google
         throw new UnauthorizedException("Google Token Client is not valid.");
       }
 
-      return new AccessVerification
-      {
-        UserId = response.sub,
-        AccessToken = accessToken,
-        ExpiresAt = UnixTimestampToDateTime(response.exp),
-        AccessType = AccessTypes.Google,
-      };
+      return new AccessVerification(
+        (string)response.sub,
+        accessToken,
+        UnixTimestampToDateTime(response.exp),
+        AccessTypes.Google);
     }
 
     private static DateTime UnixTimestampToDateTime(dynamic unixTime)

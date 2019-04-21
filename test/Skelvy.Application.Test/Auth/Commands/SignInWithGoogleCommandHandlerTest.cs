@@ -1,3 +1,4 @@
+using System;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +9,9 @@ using Skelvy.Application.Auth.Infrastructure.Google;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Initializers;
 using Skelvy.Application.Notifications;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.Persistence;
 using Xunit;
 
@@ -19,7 +20,8 @@ namespace Skelvy.Application.Test.Auth.Commands
   public class SignInWithGoogleCommandHandlerTest : RequestTestBase
   {
     private const string AuthToken = "Token";
-    private static readonly AccessVerification Access = new AccessVerification { UserId = "1" };
+    private const string RefreshToken = "Token";
+    private readonly AccessVerification _access;
 
     private readonly Mock<IGoogleService> _googleService;
     private readonly Mock<ITokenService> _tokenService;
@@ -27,6 +29,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
     public SignInWithGoogleCommandHandlerTest()
     {
+      _access = new AccessVerification("google1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessTypes.Google);
       _googleService = new Mock<IGoogleService>();
       _tokenService = new Mock<ITokenService>();
       _notifications = new Mock<INotificationsService>();
@@ -35,39 +38,39 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithInitializedUser()
     {
-      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
-      _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>())).ReturnsAsync(new Token());
+        x.Generate(It.IsAny<User>())).ReturnsAsync(new AuthDto(AuthToken, RefreshToken));
       var handler =
         new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<Token>(result);
+      Assert.IsType<AuthDto>(result);
     }
 
     [Fact]
     public async Task ShouldReturnTokenWithNotInitializedUser()
     {
-      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
-      _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(Access);
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _googleService
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync((object)PeopleResponse());
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>())).ReturnsAsync(new Token());
+        x.Generate(It.IsAny<User>())).ReturnsAsync(new AuthDto(AuthToken, RefreshToken));
       var handler = new SignInWithGoogleCommandHandler(DbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<Token>(result);
+      Assert.IsType<AuthDto>(result);
     }
 
     [Fact]
     public async Task ShouldThrowExceptionWithNotVerifiedUser()
     {
-      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler =
         new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
@@ -79,7 +82,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithRemovedUser()
     {
-      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler =
         new SignInWithGoogleCommandHandler(InitializedDbContextWithRemovedUser(), _googleService.Object, _tokenService.Object, _notifications.Object);
@@ -91,7 +94,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithDisabledUser()
     {
-      var request = new SignInWithGoogleCommand { AuthToken = AuthToken, Language = LanguageTypes.EN };
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler =
         new SignInWithGoogleCommandHandler(InitializedDbContextWithDisabledUser(), _googleService.Object, _tokenService.Object, _notifications.Object);
@@ -100,15 +103,15 @@ namespace Skelvy.Application.Test.Auth.Commands
         handler.Handle(request));
     }
 
-    private static SkelvyContext InitializedDbContextWithRemovedUser()
+    private SkelvyContext InitializedDbContextWithRemovedUser()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
-      var user = context.Users.FirstOrDefault(x => x.FacebookId == Access.UserId);
+      var user = context.Users.FirstOrDefault(x => x.FacebookId == _access.UserId);
 
       if (user != null)
       {
-        user.IsRemoved = true;
+        user.Remove(DateTimeOffset.UtcNow);
       }
 
       context.SaveChanges();
@@ -116,15 +119,15 @@ namespace Skelvy.Application.Test.Auth.Commands
       return context;
     }
 
-    private static SkelvyContext InitializedDbContextWithDisabledUser()
+    private SkelvyContext InitializedDbContextWithDisabledUser()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
-      var user = context.Users.FirstOrDefault(x => x.FacebookId == Access.UserId);
+      var user = context.Users.FirstOrDefault(x => x.FacebookId == _access.UserId);
 
       if (user != null)
       {
-        user.IsDisabled = true;
+        user.Disable("Test");
       }
 
       context.SaveChanges();

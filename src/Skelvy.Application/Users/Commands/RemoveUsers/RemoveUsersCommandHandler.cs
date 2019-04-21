@@ -22,8 +22,10 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       var today = DateTimeOffset.UtcNow;
 
       var usersToRemove = await _context.Users
-        .Where(x => x.IsRemoved && x.RemovedDate < today)
+        .Where(x => x.IsRemoved && x.ForgottenAt < today)
         .ToListAsync();
+
+      // TODO: Remove cascade and add manual implementation
 
       _context.Users.RemoveRange(usersToRemove);
       await _context.SaveChangesAsync();

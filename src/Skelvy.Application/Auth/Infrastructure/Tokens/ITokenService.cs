@@ -1,12 +1,13 @@
 using System.Threading.Tasks;
+using Skelvy.Application.Auth.Commands;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Auth.Infrastructure.Tokens
 {
   public interface ITokenService
   {
-    Task<Token> Generate(User user);
-    Task<Token> Generate(string refreshToken);
+    Task<AuthDto> Generate(User user);
+    Task<AuthDto> Generate(string refreshToken);
     Task Invalidate(string refreshToken);
   }
 }

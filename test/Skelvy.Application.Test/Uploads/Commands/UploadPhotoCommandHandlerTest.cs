@@ -20,7 +20,7 @@ namespace Skelvy.Application.Test.Uploads.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new UploadPhotoCommand { Name = "photo.jpg", ServerPath = "localhost" };
+      var request = new UploadPhotoCommand("photo.jpg", Stream.Null, "localhost");
       var handler = new UploadPhotoCommandHandler(_uploadService.Object);
 
       await handler.Handle(request);
@@ -29,7 +29,7 @@ namespace Skelvy.Application.Test.Uploads.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new UploadPhotoCommand { Name = "photo.jppg", ServerPath = "localhost" };
+      var request = new UploadPhotoCommand("photo.jppg", Stream.Null, "localhost");
       _uploadService
         .Setup(x => x.Upload(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>()))
         .Throws<BadRequestException>();

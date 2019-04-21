@@ -1,5 +1,5 @@
 using FluentValidation;
-using Skelvy.Application.Users.Commands;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Application.Maps.Queries.ReverseLocations
 {

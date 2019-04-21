@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 using Skelvy.Application.Maps.Queries.SearchLocations;
-using Skelvy.Application.Users.Commands;
+using Skelvy.Domain.Enums.Users;
 using Xunit;
 
 namespace Skelvy.Application.Test.Maps.Queries
@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Maps.Queries
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new SearchLocationsQuery { Search = "Warsaw", Language = LanguageTypes.EN };
+      var request = new SearchLocationsQuery("Warsaw", LanguageTypes.EN);
       _cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((byte[])null);
       var handler = new SearchLocationsQueryHandler(_mapsService.Object, _cache.Object);
 

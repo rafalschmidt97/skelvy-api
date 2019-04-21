@@ -16,7 +16,7 @@ namespace Skelvy.Infrastructure.Maps.GoogleMaps
       _geocoder = new GoogleGeocoder { ApiKey = configuration["Google:KeyWeb"] };
     }
 
-    public async Task<IList<Location>> Search(string search, string language)
+    public async Task<IList<LocationDto>> Search(string search, string language)
     {
       _geocoder.Language = language;
       var response = await _geocoder.GeocodeAsync(search);
@@ -24,7 +24,7 @@ namespace Skelvy.Infrastructure.Maps.GoogleMaps
       return MapToLocations(filteredResponse);
     }
 
-    public async Task<IList<Location>> Search(double latitude, double longitude, string language)
+    public async Task<IList<LocationDto>> Search(double latitude, double longitude, string language)
     {
       _geocoder.Language = language;
       var response = await _geocoder.ReverseGeocodeAsync(latitude, longitude);
@@ -40,14 +40,14 @@ namespace Skelvy.Infrastructure.Maps.GoogleMaps
           locality.Type == GoogleAddressType.AdministrativeAreaLevel3);
     }
 
-    private static IList<Location> MapToLocations(IEnumerable<GoogleAddress> response)
+    private static IList<LocationDto> MapToLocations(IEnumerable<GoogleAddress> response)
     {
       return response.Select(MapToLocation).ToList();
     }
 
-    private static Location MapToLocation(GoogleAddress address)
+    private static LocationDto MapToLocation(GoogleAddress address)
     {
-      var location = new Location();
+      var location = new LocationDto();
       string administrativeAreaLevel3 = null;
 
       foreach (var component in address.Components)

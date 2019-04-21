@@ -5,7 +5,7 @@ using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
 using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
-using Skelvy.Application.Users.Commands;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI.Controllers
@@ -14,28 +14,28 @@ namespace Skelvy.WebAPI.Controllers
   {
     [HttpGet("{id}")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task<MeetingViewModel> Find(int id)
+    public async Task<MeetingModel> Find(int id)
     {
-      return await Mediator.Send(new FindMeetingQuery { UserId = id });
+      return await Mediator.Send(new FindMeetingQuery(id));
     }
 
     [HttpGet("self")]
-    public async Task<MeetingViewModel> FindSelf()
+    public async Task<MeetingModel> FindSelf()
     {
-      return await Mediator.Send(new FindMeetingQuery { UserId = UserId });
+      return await Mediator.Send(new FindMeetingQuery(UserId));
     }
 
     [HttpDelete("{id}")]
     [AuthorizeRole(RoleTypes.Admin)]
     public async Task Remove(int id)
     {
-      await Mediator.Send(new LeaveMeetingCommand { UserId = id });
+      await Mediator.Send(new LeaveMeetingCommand(id));
     }
 
     [HttpDelete("self")]
     public async Task RemoveSelf()
     {
-      await Mediator.Send(new LeaveMeetingCommand { UserId = UserId });
+      await Mediator.Send(new LeaveMeetingCommand(UserId));
     }
 
     [HttpGet("{id}/chat")]

@@ -27,7 +27,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
       var today = DateTimeOffset.UtcNow;
       var meetingsToRemove = await _context.Meetings
         .Include(x => x.Users)
-        .Where(x => x.Date < today && x.Status == MeetingStatusTypes.Active)
+        .Where(x => x.Date < today && !x.IsRemoved)
         .ToListAsync();
 
       var isDataChanged = false;
@@ -35,11 +35,14 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
       if (meetingsToRemove.Count != 0)
       {
         var meetingUsers = meetingsToRemove.SelectMany(x => x.Users);
-        var meetingRequests = await _context.MeetingRequests.Where(x => x.Status == MeetingRequestStatusTypes.Found).ToListAsync();
+        var meetingRequests = await _context.MeetingRequests
+          .Where(x => x.IsFound && !x.IsRemoved)
+          .ToListAsync();
+
         var meetingRequestsToRemove = meetingRequests.Where(x => meetingUsers.Any(y => y.UserId == x.UserId)).ToList();
 
-        meetingsToRemove.ForEach(x => { x.Status = MeetingStatusTypes.Expired; });
-        meetingRequestsToRemove.ForEach(x => { x.Status = MeetingRequestStatusTypes.Expired; });
+        meetingsToRemove.ForEach(x => x.Expire());
+        meetingRequestsToRemove.ForEach(x => x.Expire());
 
         isDataChanged = true;
       }

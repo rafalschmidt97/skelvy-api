@@ -10,16 +10,16 @@ namespace Skelvy.Persistence
     {
     }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<UserRole> UserRoles { get; set; }
-    public DbSet<UserProfile> UserProfiles { get; set; }
-    public DbSet<UserProfilePhoto> UserProfilePhotos { get; set; }
-    public DbSet<Drink> Drinks { get; set; }
-    public DbSet<MeetingRequest> MeetingRequests { get; set; }
-    public DbSet<MeetingRequestDrink> MeetingRequestDrinks { get; set; }
-    public DbSet<Meeting> Meetings { get; set; }
-    public DbSet<MeetingUser> MeetingUsers { get; set; }
-    public DbSet<MeetingChatMessage> MeetingChatMessages { get; set; }
+    public DbSet<User> Users { get; private set; }
+    public DbSet<UserRole> UserRoles { get; private set; }
+    public DbSet<UserProfile> UserProfiles { get; private set; }
+    public DbSet<UserProfilePhoto> UserProfilePhotos { get; private set; }
+    public DbSet<Drink> Drinks { get; private set; }
+    public DbSet<MeetingRequest> MeetingRequests { get; private set; }
+    public DbSet<MeetingRequestDrink> MeetingRequestDrinks { get; private set; }
+    public DbSet<Meeting> Meetings { get; private set; }
+    public DbSet<MeetingUser> MeetingUsers { get; private set; }
+    public DbSet<MeetingChatMessage> MeetingChatMessages { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

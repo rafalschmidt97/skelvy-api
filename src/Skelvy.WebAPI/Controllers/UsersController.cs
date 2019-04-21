@@ -2,13 +2,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindUser;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI.Controllers
@@ -19,20 +19,20 @@ namespace Skelvy.WebAPI.Controllers
     [AuthorizeRole(RoleTypes.Admin)]
     public async Task<UserDto> Find(int id)
     {
-      return await Mediator.Send(new FindUserQuery { Id = id });
+      return await Mediator.Send(new FindUserQuery(id));
     }
 
     [HttpGet("self")]
     public async Task<UserDto> FindSelf()
     {
-      return await Mediator.Send(new FindUserQuery { Id = UserId });
+      return await Mediator.Send(new FindUserQuery(UserId));
     }
 
     [HttpDelete("{id}")]
     [AuthorizeRole(RoleTypes.Admin)]
     public async Task Remove(int id)
     {
-      await Mediator.Send(new RemoveUserCommand { Id = id });
+      await Mediator.Send(new RemoveUserCommand(id));
     }
 
     [HttpPatch("{id}/disabled")]
@@ -92,13 +92,13 @@ namespace Skelvy.WebAPI.Controllers
     [AuthorizeRole(RoleTypes.Admin)]
     public async Task RemoveRequest(int id)
     {
-      await Mediator.Send(new RemoveMeetingRequestCommand { UserId = id });
+      await Mediator.Send(new RemoveMeetingRequestCommand(id));
     }
 
     [HttpDelete("self/request")]
     public async Task RemoveRequestSelf()
     {
-      await Mediator.Send(new RemoveMeetingRequestCommand { UserId = UserId });
+      await Mediator.Send(new RemoveMeetingRequestCommand(UserId));
     }
   }
 }

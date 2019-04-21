@@ -23,23 +23,15 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 
     public override async Task<Unit> Handle(AddMeetingChatMessageCommand request)
     {
-      var meetingUser =
-        await _context.MeetingUsers.FirstOrDefaultAsync(
-          x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
+      var meetingUser = await _context.MeetingUsers
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && !x.IsRemoved);
 
       if (meetingUser == null)
       {
         throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var message = new MeetingChatMessage
-      {
-        Message = request.Message.Trim(),
-        Date = request.Date,
-        UserId = meetingUser.UserId,
-        MeetingId = meetingUser.MeetingId,
-      };
-
+      var message = new MeetingChatMessage(request.Message, request.Date, meetingUser.UserId, meetingUser.MeetingId);
       _context.MeetingChatMessages.Add(message);
 
       await _context.SaveChangesAsync();
@@ -50,7 +42,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
     private async Task BroadcastMessage(MeetingChatMessage message)
     {
       var meetingUsers = await _context.MeetingUsers
-        .Where(x => x.MeetingId == message.MeetingId)
+        .Where(x => x.MeetingId == message.MeetingId && !x.IsRemoved)
         .ToListAsync();
 
       var meetingUserIds = meetingUsers.Select(x => x.UserId).ToList();

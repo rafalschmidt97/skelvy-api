@@ -10,13 +10,13 @@ namespace Skelvy.WebAPI.Controllers
   public class MapsController : BaseController
   {
     [HttpGet("search")]
-    public async Task<IList<Location>> Search([FromQuery] SearchLocationsQuery request)
+    public async Task<IList<LocationDto>> Search([FromQuery] SearchLocationsQuery request)
     {
       return await Mediator.Send(request);
     }
 
     [HttpGet("reverse")]
-    public async Task<IList<Location>> Reverse([FromQuery] ReverseLocationsQuery request)
+    public async Task<IList<LocationDto>> Reverse([FromQuery] ReverseLocationsQuery request)
     {
       return await Mediator.Send(request);
     }

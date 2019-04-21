@@ -32,9 +32,14 @@ namespace Skelvy.Persistence.Migrations
                     Language = table.Column<string>(maxLength: 15, nullable: false),
                     FacebookId = table.Column<string>(maxLength: 50, nullable: true),
                     GoogleId = table.Column<string>(maxLength: 50, nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedDate = table.Column<DateTimeOffset>(nullable: true),
-                    IsDisabled = table.Column<bool>(nullable: false)
+                    RemovedAt = table.Column<DateTimeOffset>(nullable: true),
+                    ForgottenAt = table.Column<DateTimeOffset>(nullable: true),
+                    IsDisabled = table.Column<bool>(nullable: false),
+                    DisabledAt = table.Column<DateTimeOffset>(nullable: true),
+                    DisabledReason = table.Column<string>(maxLength: 1024, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,10 +52,13 @@ namespace Skelvy.Persistence.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(maxLength: 15, nullable: false),
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    IsRemoved = table.Column<bool>(nullable: false),
+                    RemovedAt = table.Column<DateTimeOffset>(nullable: true),
+                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                     DrinkId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -77,6 +85,11 @@ namespace Skelvy.Persistence.Migrations
                     MaxAge = table.Column<int>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
+                    IsRemoved = table.Column<bool>(nullable: false),
+                    RemovedAt = table.Column<DateTimeOffset>(nullable: true),
+                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -100,6 +113,7 @@ namespace Skelvy.Persistence.Migrations
                     Birthday = table.Column<DateTimeOffset>(nullable: false),
                     Gender = table.Column<string>(maxLength: 15, nullable: false),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
+                    ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -191,7 +205,9 @@ namespace Skelvy.Persistence.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(maxLength: 15, nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    IsRemoved = table.Column<bool>(nullable: false),
+                    RemovedAt = table.Column<DateTimeOffset>(nullable: true),
                     MeetingId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     MeetingRequestId = table.Column<int>(nullable: false)

@@ -40,16 +40,21 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedAt");
+
                     b.Property<DateTimeOffset>("Date");
 
                     b.Property<int>("DrinkId");
+
+                    b.Property<bool>("IsRemoved");
 
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<DateTimeOffset?>("RemovedAt");
+
+                    b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
 
                     b.HasKey("Id");
@@ -90,6 +95,10 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedAt");
+
+                    b.Property<bool>("IsRemoved");
+
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
@@ -101,6 +110,13 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<int>("MinAge");
 
                     b.Property<DateTimeOffset>("MinDate");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt");
+
+                    b.Property<DateTimeOffset?>("RemovedAt");
+
+                    b.Property<string>("RemovedReason")
+                        .HasMaxLength(15);
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -134,13 +150,15 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedAt");
+
+                    b.Property<bool>("IsRemoved");
+
                     b.Property<int>("MeetingId");
 
                     b.Property<int>("MeetingRequestId");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(15);
+                    b.Property<DateTimeOffset?>("RemovedAt");
 
                     b.Property<int>("UserId");
 
@@ -161,12 +179,21 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedAt");
+
+                    b.Property<DateTimeOffset?>("DisabledAt");
+
+                    b.Property<string>("DisabledReason")
+                        .HasMaxLength(1024);
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("FacebookId")
                         .HasMaxLength(50);
+
+                    b.Property<DateTimeOffset?>("ForgottenAt");
 
                     b.Property<string>("GoogleId")
                         .HasMaxLength(50);
@@ -179,7 +206,9 @@ namespace Skelvy.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(15);
 
-                    b.Property<DateTimeOffset?>("RemovedDate");
+                    b.Property<DateTimeOffset?>("ModifiedAt");
+
+                    b.Property<DateTimeOffset?>("RemovedAt");
 
                     b.HasKey("Id");
 
@@ -200,6 +229,8 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasMaxLength(15);
+
+                    b.Property<DateTimeOffset?>("ModifiedAt");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -66,9 +66,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         throw new NotFoundException(nameof(Drink), request.Drinks);
       }
 
-      var requestExists = _context.MeetingRequests
-        .Any(x => x.UserId == request.UserId &&
-                  (x.Status == MeetingRequestStatusTypes.Searching || x.Status == MeetingRequestStatusTypes.Found));
+      var requestExists = _context.MeetingRequests.Any(x => x.UserId == request.UserId && !x.IsRemoved);
 
       if (requestExists)
       {
@@ -76,8 +74,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
           $"Entity {nameof(MeetingRequest)}({nameof(request.UserId)}={request.UserId}) already exists.");
       }
 
-      var meetingExists = _context.MeetingUsers
-        .Any(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
+      var meetingExists = _context.MeetingUsers.Any(x => x.UserId == request.UserId && !x.IsRemoved);
 
       if (meetingExists)
       {
@@ -90,24 +87,21 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task<MeetingRequest> CreateNewMeetingRequest(CreateMeetingRequestCommand request)
     {
-      var meetingRequest = new MeetingRequest
-      {
-        Status = MeetingRequestStatusTypes.Searching,
-        MinDate = request.MinDate,
-        MaxDate = request.MaxDate,
-        MinAge = request.MinAge,
-        MaxAge = request.MaxAge,
-        Latitude = request.Latitude,
-        Longitude = request.Longitude,
-        UserId = request.UserId,
-      };
+      var meetingRequest = new MeetingRequest(
+        request.MinDate,
+        request.MaxDate,
+        request.MinAge,
+        request.MaxAge,
+        request.Latitude,
+        request.Longitude,
+        request.UserId);
+
       _context.MeetingRequests.Add(meetingRequest);
 
       var meetingRequestDrinks = PrepareDrinks(request.Drinks, meetingRequest);
       _context.MeetingRequestDrinks.AddRange(meetingRequestDrinks);
 
       await _context.SaveChangesAsync();
-
       return meetingRequest;
     }
 
@@ -121,7 +115,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .ThenInclude(x => x.MeetingRequest)
         .ThenInclude(x => x.Drinks)
         .ThenInclude(x => x.Drink)
-        .Where(x => x.Date >= newRequest.MinDate && x.Date <= newRequest.MaxDate && x.Status == MeetingStatusTypes.Active)
+        .Where(x => x.Date >= newRequest.MinDate && x.Date <= newRequest.MaxDate && !x.IsRemoved)
         .ToListAsync();
 
       return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, newRequest, user));
@@ -129,17 +123,17 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private static bool IsMeetingMatchRequest(Meeting meeting, MeetingRequest newRequest, User user)
     {
-      return meeting.Users.Where(x => x.Status == MeetingUserStatusTypes.Joined)
+      return meeting.Users.Where(x => !x.IsRemoved)
                .All(x => IsUserAgeWithinMeetingRequestAgeRange(
                  CalculateAge(x.User.Profile.Birthday),
                  newRequest.MinAge,
                  newRequest.MaxAge)) &&
-             meeting.Users.Where(x => x.Status == MeetingUserStatusTypes.Joined)
+             meeting.Users.Where(x => !x.IsRemoved)
                .All(x => IsUserAgeWithinMeetingRequestAgeRange(
                  CalculateAge(user.Profile.Birthday),
                  x.MeetingRequest.MinAge,
                  x.MeetingRequest.MaxAge)) &&
-             meeting.Users.Count(x => x.Status == MeetingUserStatusTypes.Joined) < 4 &&
+             meeting.Users.Count(x => !x.IsRemoved) < 4 &&
              CalculateDistance(
                meeting.Latitude,
                meeting.Longitude,
@@ -155,16 +149,9 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
     {
-      var meetingUser = new MeetingUser
-      {
-        MeetingId = meeting.Id,
-        UserId = newRequest.UserId,
-        MeetingRequestId = newRequest.Id,
-        Status = MeetingUserStatusTypes.Joined,
-      };
-
+      var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
       _context.MeetingUsers.Add(meetingUser);
-      newRequest.Status = MeetingRequestStatusTypes.Found;
+      newRequest.MarkAsFound();
 
       await _context.SaveChangesAsync();
       await BroadcastUserJoinedMeeting(meetingUser);
@@ -188,7 +175,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
         .Where(x => x.Id != newRequest.Id &&
-                    x.Status == MeetingRequestStatusTypes.Searching &&
+                    x.IsSearching &&
+                    !x.IsRemoved &&
                     x.MinDate <= newRequest.MaxDate &&
                     x.MaxDate >= newRequest.MinDate)
         .ToListAsync();
@@ -213,39 +201,24 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
     {
-      var meeting = new Meeting
-      {
-        Status = MeetingStatusTypes.Active,
-        Date = FindCommonDate(request1, request2),
-        Latitude = request1.Latitude,
-        Longitude = request1.Longitude,
-        DrinkId = FindCommonDrink(request1, request2),
-      };
+      var meeting = new Meeting(
+        FindCommonDate(request1, request2),
+        request1.Latitude,
+        request1.Longitude,
+        FindCommonDrink(request1, request2));
 
       _context.Meetings.Add(meeting);
 
       var meetingUsers = new[]
       {
-        new MeetingUser
-        {
-          MeetingId = meeting.Id,
-          UserId = request1.UserId,
-          MeetingRequestId = request1.Id,
-          Status = MeetingUserStatusTypes.Joined,
-        },
-        new MeetingUser
-        {
-          MeetingId = meeting.Id,
-          UserId = request2.UserId,
-          MeetingRequestId = request2.Id,
-          Status = MeetingUserStatusTypes.Joined,
-        },
+        new MeetingUser(meeting.Id, request1.UserId, request1.Id),
+        new MeetingUser(meeting.Id, request2.UserId, request2.Id),
       };
 
       _context.MeetingUsers.AddRange(meetingUsers);
 
-      request1.Status = MeetingRequestStatusTypes.Found;
-      request2.Status = MeetingRequestStatusTypes.Found;
+      request1.MarkAsFound();
+      request2.MarkAsFound();
 
       await _context.SaveChangesAsync();
       await BroadcastUserFoundMeeting(request1, request2);
@@ -271,11 +244,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       IEnumerable<CreateMeetingRequestDrink> requestDrinks,
       MeetingRequest request)
     {
-      return requestDrinks.Select(requestDrink => new MeetingRequestDrink
-      {
-        MeetingRequestId = request.Id,
-        DrinkId = requestDrink.Id,
-      });
+      return requestDrinks.Select(requestDrink => new MeetingRequestDrink(request.Id, requestDrink.Id));
     }
   }
 }

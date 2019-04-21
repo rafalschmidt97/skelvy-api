@@ -161,7 +161,7 @@ namespace Skelvy.Infrastructure.Notifications
       OfflineIds = new List<int>();
     }
 
-    public IList<int> OnlineIds { get; private set; }
-    public IList<int> OfflineIds { get; private set; }
+    public IList<int> OnlineIds { get; }
+    public IList<int> OfflineIds { get; }
   }
 }

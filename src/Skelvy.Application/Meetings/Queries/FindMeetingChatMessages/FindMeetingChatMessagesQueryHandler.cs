@@ -5,7 +5,6 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
@@ -26,7 +25,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
     public override async Task<IList<MeetingChatMessageDto>> Handle(FindMeetingChatMessagesQuery request)
     {
       var meetingUser = await _context.MeetingUsers
-          .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
+          .FirstOrDefaultAsync(x => x.UserId == request.UserId && !x.IsRemoved);
 
       if (meetingUser == null)
       {

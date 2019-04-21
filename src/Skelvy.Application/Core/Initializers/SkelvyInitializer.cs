@@ -1,9 +1,8 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using Skelvy.Application.Meetings.Commands;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Core.Initializers
@@ -30,10 +29,17 @@ namespace Skelvy.Application.Core.Initializers
 
       var users = new[]
       {
-        new User { Email = "user1@gmail.com", Language = LanguageTypes.EN, FacebookId = "1", GoogleId = "1", IsRemoved = false, IsDisabled = false },
-        new User { Email = "user2@gmail.com", Language = LanguageTypes.EN, FacebookId = "2", GoogleId = "2", IsRemoved = false, IsDisabled = false },
-        new User { Email = "user3@gmail.com", Language = LanguageTypes.EN, FacebookId = "3", GoogleId = "3", IsRemoved = false, IsDisabled = false },
+        new User("user1@gmail.com", LanguageTypes.EN),
+        new User("user2@gmail.com", LanguageTypes.EN),
+        new User("user3@gmail.com", LanguageTypes.EN),
       };
+
+      users[0].RegisterFacebook("facebook1");
+      users[0].RegisterGoogle("google1");
+      users[1].RegisterFacebook("facebook2");
+      users[1].RegisterGoogle("google2");
+      users[2].RegisterFacebook("facebook3");
+      users[2].RegisterGoogle("google3");
 
       context.Users.AddRange(users);
       context.SaveChanges();
@@ -50,27 +56,21 @@ namespace Skelvy.Application.Core.Initializers
 
       var profiles = new[]
       {
-        new UserProfile
-        {
-          Name = "User1",
-          Birthday = DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          Gender = GenderTypes.Male,
-          UserId = users[0].Id,
-        },
-        new UserProfile
-        {
-          Name = "User2",
-          Birthday = DateTimeOffset.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          Gender = GenderTypes.Male,
-          UserId = users[1].Id,
-        },
-        new UserProfile
-        {
-          Name = "User3",
-          Birthday = DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          Gender = GenderTypes.Male,
-          UserId = users[2].Id,
-        },
+        new UserProfile(
+          "User1",
+          DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
+          GenderTypes.Male,
+          users[0].Id),
+        new UserProfile(
+          "User1",
+          DateTimeOffset.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
+          GenderTypes.Male,
+          users[1].Id),
+        new UserProfile(
+          "User1",
+          DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
+          GenderTypes.Male,
+          users[2].Id),
       };
 
       context.UserProfiles.AddRange(profiles);
@@ -78,21 +78,9 @@ namespace Skelvy.Application.Core.Initializers
 
       var photos = new[]
       {
-        new UserProfilePhoto
-        {
-          Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=1",
-          ProfileId = profiles[0].Id,
-        },
-        new UserProfilePhoto
-        {
-          Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=2",
-          ProfileId = profiles[1].Id,
-        },
-        new UserProfilePhoto
-        {
-          Url = "https://via.placeholder.com/1000/ebebf0/ffffff?text=3",
-          ProfileId = profiles[2].Id,
-        },
+        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=1", profiles[0].Id),
+        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=2", profiles[1].Id),
+        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=3", profiles[2].Id),
       };
 
       context.UserProfilePhotos.AddRange(photos);
@@ -108,13 +96,13 @@ namespace Skelvy.Application.Core.Initializers
 
       var drinks = new[]
       {
-        new Drink { Name = "tea" },
-        new Drink { Name = "chocolate" },
-        new Drink { Name = "coffee" },
-        new Drink { Name = "beer" },
-        new Drink { Name = "wine" },
-        new Drink { Name = "vodka" },
-        new Drink { Name = "whiskey" },
+        new Drink("tea"),
+        new Drink("chocolate"),
+        new Drink("coffee"),
+        new Drink("beer"),
+        new Drink("wine"),
+        new Drink("vodka"),
+        new Drink("whiskey"),
       };
 
       context.Drinks.AddRange(drinks);
@@ -133,17 +121,7 @@ namespace Skelvy.Application.Core.Initializers
 
       var requests = new[]
       {
-        new MeetingRequest
-        {
-          Status = MeetingRequestStatusTypes.Searching,
-          MinDate = DateTimeOffset.UtcNow,
-          MaxDate = DateTimeOffset.UtcNow,
-          MinAge = 18,
-          MaxAge = 25,
-          Latitude = 1,
-          Longitude = 1,
-          UserId = users[0].Id,
-        },
+        new MeetingRequest(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1), 18, 25, 1, 1, users[0].Id),
       };
 
       context.MeetingRequests.AddRange(requests);
@@ -151,11 +129,7 @@ namespace Skelvy.Application.Core.Initializers
 
       var requestsDrinks = new[]
       {
-        new MeetingRequestDrink
-        {
-          MeetingRequestId = requests[0].Id,
-          DrinkId = drinks[0].Id,
-        },
+        new MeetingRequestDrink(requests[0].Id, drinks[0].Id),
       };
 
       context.MeetingRequestDrinks.AddRange(requestsDrinks);
@@ -174,59 +148,27 @@ namespace Skelvy.Application.Core.Initializers
 
       var requests = new[]
       {
-        new MeetingRequest
-        {
-          Status = MeetingRequestStatusTypes.Found,
-          MinDate = DateTimeOffset.UtcNow.AddDays(2),
-          MaxDate = DateTimeOffset.UtcNow.AddDays(4),
-          MinAge = 18,
-          MaxAge = 25,
-          Latitude = 1,
-          Longitude = 1,
-          UserId = users[1].Id,
-        },
-        new MeetingRequest
-        {
-          Status = MeetingRequestStatusTypes.Found,
-          MinDate = DateTimeOffset.UtcNow.AddDays(2),
-          MaxDate = DateTimeOffset.UtcNow.AddDays(4),
-          MinAge = 18,
-          MaxAge = 25,
-          Latitude = 1,
-          Longitude = 1,
-          UserId = users[2].Id,
-        },
+        new MeetingRequest(DateTimeOffset.UtcNow.AddDays(2), DateTimeOffset.UtcNow.AddDays(4), 18, 25, 1, 1, users[1].Id),
+        new MeetingRequest(DateTimeOffset.UtcNow.AddDays(2), DateTimeOffset.UtcNow.AddDays(4), 18, 25, 1, 1, users[2].Id),
       };
+
+      requests[0].MarkAsFound();
+      requests[1].MarkAsFound();
 
       context.MeetingRequests.AddRange(requests);
       context.SaveChanges();
 
       var requestsDrinks = new[]
       {
-        new MeetingRequestDrink
-        {
-          MeetingRequestId = requests[0].Id,
-          DrinkId = drinks[0].Id,
-        },
-        new MeetingRequestDrink
-        {
-          MeetingRequestId = requests[1].Id,
-          DrinkId = drinks[0].Id,
-        },
+        new MeetingRequestDrink(requests[0].Id, drinks[0].Id),
+        new MeetingRequestDrink(requests[1].Id, drinks[0].Id),
       };
 
       context.MeetingRequestDrinks.AddRange(requestsDrinks);
 
       var meetings = new[]
       {
-        new Meeting
-        {
-          Status = MeetingStatusTypes.Active,
-          Date = DateTimeOffset.UtcNow.AddDays(3),
-          Latitude = 1,
-          Longitude = 1,
-          DrinkId = drinks[0].Id,
-        },
+        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, drinks[0].Id),
       };
 
       context.Meetings.AddRange(meetings);
@@ -234,20 +176,8 @@ namespace Skelvy.Application.Core.Initializers
 
       var meetingUsers = new[]
       {
-        new MeetingUser
-        {
-          MeetingId = meetings[0].Id,
-          UserId = users[1].Id,
-          MeetingRequestId = requests[0].Id,
-          Status = MeetingUserStatusTypes.Joined,
-        },
-        new MeetingUser
-        {
-          MeetingId = meetings[0].Id,
-          UserId = users[2].Id,
-          MeetingRequestId = requests[1].Id,
-          Status = MeetingUserStatusTypes.Joined,
-        },
+        new MeetingUser(meetings[0].Id, users[1].Id, requests[0].Id),
+        new MeetingUser(meetings[0].Id, users[2].Id, requests[1].Id),
       };
 
       context.MeetingUsers.AddRange(meetingUsers);
@@ -266,20 +196,8 @@ namespace Skelvy.Application.Core.Initializers
 
       var messages = new[]
       {
-        new MeetingChatMessage
-        {
-          MeetingId = meetings[0].Id,
-          UserId = users[1].Id,
-          Date = DateTimeOffset.UtcNow.AddHours(-2),
-          Message = "Hello User3",
-        },
-        new MeetingChatMessage
-        {
-          MeetingId = meetings[0].Id,
-          UserId = users[2].Id,
-          Date = DateTimeOffset.UtcNow.AddHours(-1),
-          Message = "Hello User2",
-        },
+        new MeetingChatMessage("Hello User3", DateTimeOffset.UtcNow.AddHours(-2), users[1].Id, meetings[0].Id),
+        new MeetingChatMessage("Hello User2", DateTimeOffset.UtcNow.AddHours(-1), users[2].Id, meetings[0].Id),
       };
 
       context.MeetingChatMessages.AddRange(messages);

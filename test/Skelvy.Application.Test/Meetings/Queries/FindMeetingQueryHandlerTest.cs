@@ -11,31 +11,31 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldReturnMeeting()
     {
-      var request = new FindMeetingQuery { UserId = 2 };
+      var request = new FindMeetingQuery(2);
       var handler = new FindMeetingQueryHandler(InitializedDbContext(), Mapper());
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<MeetingViewModel>(result);
+      Assert.IsType<MeetingModel>(result);
       Assert.NotNull(result.Meeting);
     }
 
     [Fact]
     public async Task ShouldReturnRequest()
     {
-      var request = new FindMeetingQuery { UserId = 1 };
+      var request = new FindMeetingQuery(1);
       var handler = new FindMeetingQueryHandler(InitializedDbContext(), Mapper());
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<MeetingViewModel>(result);
+      Assert.IsType<MeetingModel>(result);
       Assert.NotNull(result.Request);
     }
 
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new FindMeetingQuery { UserId = 1 };
+      var request = new FindMeetingQuery(1);
       var handler = new FindMeetingQueryHandler(DbContext(), Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

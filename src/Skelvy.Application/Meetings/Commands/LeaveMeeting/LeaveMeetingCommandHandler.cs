@@ -26,7 +26,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
     {
       var meetingUser = await _context.MeetingUsers
         .Include(x => x.Meeting)
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingUserStatusTypes.Joined);
+        .FirstOrDefaultAsync(x => x.UserId == request.UserId && !x.IsRemoved);
 
       if (meetingUser == null)
       {
@@ -35,26 +35,25 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 
       var meetingUsers = await _context.MeetingUsers
         .Include(x => x.MeetingRequest)
-        .Where(x => x.MeetingId == meetingUser.MeetingId && x.Status == MeetingUserStatusTypes.Joined)
+        .Where(x => x.MeetingId == meetingUser.MeetingId && !x.IsRemoved)
         .ToListAsync();
 
-      meetingUser.Status = MeetingUserStatusTypes.Left;
+      var userDetails = meetingUsers.First(x => x.UserId == meetingUser.UserId);
 
-      var meetingUserRequest = await _context.MeetingRequests
-        .FirstOrDefaultAsync(x => x.Id == meetingUser.MeetingRequestId);
-
-      meetingUserRequest.Status = MeetingRequestStatusTypes.Aborted;
+      userDetails.Leave();
+      userDetails.MeetingRequest.Abort();
 
       if (meetingUsers.Count == 2)
       {
-        var anotherUser = meetingUsers.First(x => x.UserId != meetingUser.UserId);
-        anotherUser.MeetingRequest.Status = MeetingRequestStatusTypes.Searching;
-        anotherUser.Status = MeetingUserStatusTypes.Left;
-        meetingUser.Meeting.Status = MeetingStatusTypes.Aborted;
-      }
+        var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
 
-      await _context.SaveChangesAsync();
-      await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
+        anotherUserDetails.Leave();
+        anotherUserDetails.MeetingRequest.MarkAsSearching();
+        meetingUser.Meeting.Abort();
+
+        await _context.SaveChangesAsync();
+        await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
+      }
 
       return Unit.Value;
     }

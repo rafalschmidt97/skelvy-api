@@ -2,17 +2,20 @@ namespace Skelvy.Infrastructure.Notifications
 {
   public class PushNotificationMessage
   {
-    public string To { get; set; }
-    public PushNotificationContent Notification { get; set; }
-    public object Data { get; set; }
-  }
+    public PushNotificationMessage(string to, PushNotificationContent notification)
+    {
+      To = to;
+      Notification = notification;
+    }
 
-  public class PushNotificationContent
-  {
-    public string Title { get; set; }
-    public string Body { get; set; }
-    public string TitleLocKey { get; set; }
-    public string BodyLocKey { get; set; }
-    public string Sound { get; set; } = "default";
+    public PushNotificationMessage(string to, PushNotificationContent notification, object data)
+      : this(to, notification)
+    {
+      Data = data;
+    }
+
+    public string To { get; }
+    public PushNotificationContent Notification { get; }
+    public object Data { get; }
   }
 }

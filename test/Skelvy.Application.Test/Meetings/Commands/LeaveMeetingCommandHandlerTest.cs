@@ -19,7 +19,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new LeaveMeetingCommand { UserId = 2 };
+      var request = new LeaveMeetingCommand(2);
       var handler = new LeaveMeetingCommandHandler(InitializedDbContext(), _notifications.Object);
 
       await handler.Handle(request);
@@ -28,7 +28,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new LeaveMeetingCommand { UserId = 2 };
+      var request = new LeaveMeetingCommand(2);
       var handler = new LeaveMeetingCommandHandler(DbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

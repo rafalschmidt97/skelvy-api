@@ -19,7 +19,7 @@ namespace Skelvy.Application.Test.Users.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new RemoveUserCommand { Id = 1 };
+      var request = new RemoveUserCommand(1);
       var handler = new RemoveUserCommandHandler(InitializedDbContext(), _notifications.Object);
 
       await handler.Handle(request);
@@ -28,7 +28,7 @@ namespace Skelvy.Application.Test.Users.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new RemoveUserCommand { Id = 1 };
+      var request = new RemoveUserCommand(1);
       var handler = new RemoveUserCommandHandler(DbContext(), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

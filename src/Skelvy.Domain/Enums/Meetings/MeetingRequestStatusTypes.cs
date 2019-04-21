@@ -1,10 +1,8 @@
-namespace Skelvy.Application.Meetings.Commands
+namespace Skelvy.Domain.Enums.Meetings
 {
   public static class MeetingRequestStatusTypes
   {
     public const string Found = "found";
     public const string Searching = "searching";
-    public const string Aborted = "aborted";
-    public const string Expired = "expired";
   }
 }

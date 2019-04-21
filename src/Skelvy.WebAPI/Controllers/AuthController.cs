@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.Logout;
 using Skelvy.Application.Auth.Commands.RefreshToken;
 using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
-using Skelvy.Application.Auth.Infrastructure.Tokens;
 
 namespace Skelvy.WebAPI.Controllers
 {
@@ -13,14 +13,14 @@ namespace Skelvy.WebAPI.Controllers
   {
     [HttpPost("facebook")]
     [AllowAnonymous]
-    public async Task<Token> SignInWithFacebook(SignInWithFacebookCommand request)
+    public async Task<AuthDto> SignInWithFacebook(SignInWithFacebookCommand request)
     {
       return await Mediator.Send(request);
     }
 
     [HttpPost("google")]
     [AllowAnonymous]
-    public async Task<Token> SignInWithGoogle(SignInWithGoogleCommand request)
+    public async Task<AuthDto> SignInWithGoogle(SignInWithGoogleCommand request)
     {
       return await Mediator.Send(request);
     }
@@ -33,7 +33,7 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPost("refresh")]
     [AllowAnonymous]
-    public async Task<Token> Refresh(RefreshTokenCommand request)
+    public async Task<AuthDto> Refresh(RefreshTokenCommand request)
     {
       return await Mediator.Send(request);
     }

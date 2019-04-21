@@ -6,14 +6,14 @@ using Skelvy.Application.Auth.Infrastructure.Facebook;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
-using Skelvy.Application.Users.Commands;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 {
-  public class SignInWithFacebookCommandHandler : QueryHandler<SignInWithFacebookCommand, Token>
+  public class SignInWithFacebookCommandHandler : QueryHandler<SignInWithFacebookCommand, AuthDto>
   {
     private readonly SkelvyContext _context;
     private readonly IFacebookService _facebookService;
@@ -32,7 +32,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       _notifications = notifications;
     }
 
-    public override async Task<Token> Handle(SignInWithFacebookCommand request)
+    public override async Task<AuthDto> Handle(SignInWithFacebookCommand request)
     {
       var verified = await _facebookService.Verify(request.AuthToken);
 
@@ -56,14 +56,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
         if (userByEmail == null)
         {
-          user = new User
-          {
-            Email = details.email,
-            Language = request.Language,
-            FacebookId = verified.UserId,
-            IsRemoved = false,
-            IsDisabled = false,
-          };
+          user = new User((string)details.email, request.Language);
+          user.RegisterFacebook(verified.UserId);
           _context.Users.Add(user);
 
           var birthday = DateTimeOffset.ParseExact(
@@ -71,24 +65,17 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             "MM/dd/yyyy",
             CultureInfo.CurrentCulture).ToUniversalTime();
 
-          var profile = new UserProfile
-          {
-            Name = details.first_name,
-            Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-            Gender = details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-            UserId = user.Id,
-          };
+          var profile = new UserProfile(
+            (string)details.first_name,
+            birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
+            details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+            user.Id);
 
           _context.UserProfiles.Add(profile);
 
           if (details.picture != null)
           {
-            var photo = new UserProfilePhoto
-            {
-              Url = details.picture.data.url,
-              ProfileId = profile.Id,
-            };
-
+            var photo = new UserProfilePhoto((string)details.picture.data.url, profile.Id);
             _context.UserProfilePhotos.Add(photo);
           }
         }
@@ -104,7 +91,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             throw new UnauthorizedException("User is disabled");
           }
 
-          userByEmail.FacebookId = verified.UserId;
+          userByEmail.RegisterFacebook(verified.UserId);
           user = userByEmail;
           isDataChanged = true;
         }

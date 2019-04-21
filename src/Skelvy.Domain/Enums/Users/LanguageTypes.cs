@@ -1,4 +1,4 @@
-namespace Skelvy.Application.Users.Commands
+namespace Skelvy.Domain.Enums.Users
 {
   public static class LanguageTypes
   {
