@@ -11,7 +11,7 @@ namespace Skelvy.Domain.Entities
       Email = email;
       Language = language;
 
-      CreatedDate = DateTimeOffset.UtcNow;
+      CreatedAt = DateTimeOffset.UtcNow;
       Roles = new List<UserRole>();
       MeetingChatMessages = new List<MeetingChatMessage>();
       MeetingRequests = new List<MeetingRequest>();
@@ -28,13 +28,13 @@ namespace Skelvy.Domain.Entities
     public string Language { get; private set; }
     public string FacebookId { get; private set; }
     public string GoogleId { get; private set; }
-    public DateTimeOffset CreatedDate { get; private set; }
-    public DateTimeOffset? ModifiedDate { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedDate { get; private set; }
-    public DateTimeOffset? ForgottenDate { get; private set; }
+    public DateTimeOffset? RemovedAt { get; private set; }
+    public DateTimeOffset? ForgottenAt { get; private set; }
     public bool IsDisabled { get; private set; }
-    public DateTimeOffset? DisabledDate { get; private set; }
+    public DateTimeOffset? DisabledAt { get; private set; }
     public string DisabledReason { get; private set; }
 
     public UserProfile Profile { get; private set; }
@@ -55,20 +55,20 @@ namespace Skelvy.Domain.Entities
     public void UpdateLanguage(string language)
     {
       Language = language;
-      ModifiedDate = DateTimeOffset.UtcNow;
+      ModifiedAt = DateTimeOffset.UtcNow;
     }
 
-    public void Remove(DateTimeOffset forgottenDate)
+    public void Remove(DateTimeOffset forgottenAt)
     {
       IsRemoved = true;
-      RemovedDate = DateTimeOffset.UtcNow;
-      ForgottenDate = forgottenDate;
+      RemovedAt = DateTimeOffset.UtcNow;
+      ForgottenAt = forgottenAt;
     }
 
     public void Disable(string reason)
     {
       IsDisabled = true;
-      DisabledDate = DateTimeOffset.UtcNow;
+      DisabledAt = DateTimeOffset.UtcNow;
       DisabledReason = reason;
     }
   }

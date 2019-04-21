@@ -14,7 +14,7 @@ namespace Skelvy.Domain.Entities
       Longitude = longitude;
       DrinkId = drinkId;
 
-      CreatedDate = DateTimeOffset.UtcNow;
+      CreatedAt = DateTimeOffset.UtcNow;
       Users = new List<MeetingUser>();
       ChatMessages = new List<MeetingChatMessage>();
     }
@@ -29,9 +29,9 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset Date { get; private set; }
     public double Latitude { get; private set; }
     public double Longitude { get; private set; }
-    public DateTimeOffset CreatedDate { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedDate { get; private set; }
+    public DateTimeOffset? RemovedAt { get; private set; }
     public string RemovedReason { get; private set; }
     public int DrinkId { get; private set; }
 
@@ -42,14 +42,14 @@ namespace Skelvy.Domain.Entities
     public void Abort()
     {
       IsRemoved = true;
-      RemovedDate = DateTimeOffset.UtcNow;
+      RemovedAt = DateTimeOffset.UtcNow;
       RemovedReason = MeetingRemovedReasonTypes.Aborted;
     }
 
     public void Expire()
     {
       IsRemoved = true;
-      RemovedDate = DateTimeOffset.UtcNow;
+      RemovedAt = DateTimeOffset.UtcNow;
       RemovedReason = MeetingRemovedReasonTypes.Expired;
     }
   }

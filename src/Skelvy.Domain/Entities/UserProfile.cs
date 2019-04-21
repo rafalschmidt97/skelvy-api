@@ -27,7 +27,7 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset Birthday { get; private set; }
     public string Gender { get; private set; }
     public string Description { get; private set; }
-    public DateTimeOffset? ModifiedDate { get; private set; }
+    public DateTimeOffset? ModifiedAt { get; private set; }
     public int UserId { get; private set; }
 
     public IList<UserProfilePhoto> Photos { get; private set; }
@@ -44,7 +44,7 @@ namespace Skelvy.Domain.Entities
         Description = description.Trim();
       }
 
-      ModifiedDate = DateTimeOffset.UtcNow;
+      ModifiedAt = DateTimeOffset.UtcNow;
     }
   }
 }

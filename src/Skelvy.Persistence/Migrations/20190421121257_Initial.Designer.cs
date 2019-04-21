@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190420092328_Initial")]
+    [Migration("20190421121257_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,7 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset>("CreatedDate");
+                    b.Property<DateTimeOffset>("CreatedAt");
 
                     b.Property<DateTimeOffset>("Date");
 
@@ -54,7 +54,7 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<double>("Longitude");
 
-                    b.Property<DateTimeOffset?>("RemovedDate");
+                    b.Property<DateTimeOffset?>("RemovedAt");
 
                     b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
@@ -97,7 +97,7 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset>("CreatedDate");
+                    b.Property<DateTimeOffset>("CreatedAt");
 
                     b.Property<bool>("IsRemoved");
 
@@ -113,9 +113,9 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<DateTimeOffset>("MinDate");
 
-                    b.Property<DateTimeOffset?>("ModifiedDate");
+                    b.Property<DateTimeOffset?>("ModifiedAt");
 
-                    b.Property<DateTimeOffset?>("RemovedDate");
+                    b.Property<DateTimeOffset?>("RemovedAt");
 
                     b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
@@ -152,7 +152,7 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset>("CreatedDate");
+                    b.Property<DateTimeOffset>("CreatedAt");
 
                     b.Property<bool>("IsRemoved");
 
@@ -160,7 +160,7 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<int>("MeetingRequestId");
 
-                    b.Property<DateTimeOffset?>("RemovedDate");
+                    b.Property<DateTimeOffset?>("RemovedAt");
 
                     b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
@@ -184,9 +184,9 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset>("CreatedDate");
+                    b.Property<DateTimeOffset>("CreatedAt");
 
-                    b.Property<DateTimeOffset?>("DisabledDate");
+                    b.Property<DateTimeOffset?>("DisabledAt");
 
                     b.Property<string>("DisabledReason")
                         .HasMaxLength(1024);
@@ -198,7 +198,7 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<string>("FacebookId")
                         .HasMaxLength(50);
 
-                    b.Property<DateTimeOffset?>("ForgottenDate");
+                    b.Property<DateTimeOffset?>("ForgottenAt");
 
                     b.Property<string>("GoogleId")
                         .HasMaxLength(50);
@@ -211,9 +211,9 @@ namespace Skelvy.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(15);
 
-                    b.Property<DateTimeOffset?>("ModifiedDate");
+                    b.Property<DateTimeOffset?>("ModifiedAt");
 
-                    b.Property<DateTimeOffset?>("RemovedDate");
+                    b.Property<DateTimeOffset?>("RemovedAt");
 
                     b.HasKey("Id");
 
@@ -235,7 +235,7 @@ namespace Skelvy.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(15);
 
-                    b.Property<DateTimeOffset?>("ModifiedDate");
+                    b.Property<DateTimeOffset?>("ModifiedAt");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -4,6 +4,6 @@ namespace Skelvy.Domain.Entities.Base
 {
   public interface IModifiableEntity
   {
-    DateTimeOffset? ModifiedDate { get; }
+    DateTimeOffset? ModifiedAt { get; }
   }
 }

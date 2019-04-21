@@ -4,6 +4,6 @@ namespace Skelvy.Domain.Entities.Base
 {
   public interface ICreatableEntity
   {
-    DateTimeOffset CreatedDate { get; }
+    DateTimeOffset CreatedAt { get; }
   }
 }

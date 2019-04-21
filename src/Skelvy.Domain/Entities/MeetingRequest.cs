@@ -25,7 +25,7 @@ namespace Skelvy.Domain.Entities
       Longitude = longitude;
       UserId = userId;
 
-      CreatedDate = DateTimeOffset.UtcNow;
+      CreatedAt = DateTimeOffset.UtcNow;
       Drinks = new List<MeetingRequestDrink>();
     }
 
@@ -51,10 +51,10 @@ namespace Skelvy.Domain.Entities
     public int MaxAge { get; private set; }
     public double Latitude { get; private set; }
     public double Longitude { get; private set; }
-    public DateTimeOffset CreatedDate { get; private set; }
-    public DateTimeOffset? ModifiedDate { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedDate { get; private set; }
+    public DateTimeOffset? RemovedAt { get; private set; }
     public string RemovedReason { get; private set; }
     public int UserId { get; private set; }
 
@@ -67,26 +67,26 @@ namespace Skelvy.Domain.Entities
     public void MarkAsSearching()
     {
       Status = MeetingRequestStatusTypes.Searching;
-      ModifiedDate = DateTimeOffset.UtcNow;
+      ModifiedAt = DateTimeOffset.UtcNow;
     }
 
     public void MarkAsFound()
     {
       Status = MeetingRequestStatusTypes.Found;
-      ModifiedDate = DateTimeOffset.UtcNow;
+      ModifiedAt = DateTimeOffset.UtcNow;
     }
 
     public void Abort()
     {
       IsRemoved = true;
-      RemovedDate = DateTimeOffset.UtcNow;
+      RemovedAt = DateTimeOffset.UtcNow;
       RemovedReason = MeetingRequestRemovedReasonTypes.Aborted;
     }
 
     public void Expire()
     {
       IsRemoved = true;
-      RemovedDate = DateTimeOffset.UtcNow;
+      RemovedAt = DateTimeOffset.UtcNow;
       RemovedReason = MeetingRequestRemovedReasonTypes.Expired;
     }
   }

@@ -12,7 +12,7 @@ namespace Skelvy.Domain.Entities
       UserId = userId;
       MeetingRequestId = meetingRequestId;
 
-      CreatedDate = DateTimeOffset.UtcNow;
+      CreatedAt = DateTimeOffset.UtcNow;
     }
 
     public MeetingUser(int id, int meetingId, int userId, int meetingRequestId)
@@ -22,9 +22,9 @@ namespace Skelvy.Domain.Entities
     }
 
     public int Id { get; private set; }
-    public DateTimeOffset CreatedDate { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedDate { get; private set; }
+    public DateTimeOffset? RemovedAt { get; private set; }
     public string RemovedReason { get; private set; }
     public int MeetingId { get; private set; }
     public int UserId { get; private set; }
@@ -37,14 +37,14 @@ namespace Skelvy.Domain.Entities
     public void Abort()
     {
       IsRemoved = true;
-      RemovedDate = DateTimeOffset.UtcNow;
+      RemovedAt = DateTimeOffset.UtcNow;
       RemovedReason = MeetingUserRemovedReasonTypes.Aborted;
     }
 
     public void Expire()
     {
       IsRemoved = true;
-      RemovedDate = DateTimeOffset.UtcNow;
+      RemovedAt = DateTimeOffset.UtcNow;
       RemovedReason = MeetingRequestRemovedReasonTypes.Expired;
     }
   }
