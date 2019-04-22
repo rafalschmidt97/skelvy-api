@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
 using Skelvy.Common.Exceptions;
@@ -12,7 +13,11 @@ namespace Skelvy.Application.Test.Meetings.Queries
     public async Task ShouldReturnMessages()
     {
       var request = new FindMeetingChatMessagesQuery(2, 1);
-      var handler = new FindMeetingChatMessagesQueryHandler(InitializedDbContext(), Mapper());
+      var dbContext = InitializedDbContext();
+      var handler = new FindMeetingChatMessagesQueryHandler(
+        new MeetingUsersRepository(dbContext),
+        new MeetingChatMessagesRepository(dbContext),
+        Mapper());
 
       var result = await handler.Handle(request);
 
@@ -24,7 +29,11 @@ namespace Skelvy.Application.Test.Meetings.Queries
     public async Task ShouldThrowException()
     {
       var request = new FindMeetingChatMessagesQuery(1, 1);
-      var handler = new FindMeetingChatMessagesQueryHandler(DbContext(), Mapper());
+      var dbContext = DbContext();
+      var handler = new FindMeetingChatMessagesQueryHandler(
+        new MeetingUsersRepository(dbContext),
+        new MeetingChatMessagesRepository(dbContext),
+        Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Skelvy.Application.Core.Initializers;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Persistence;
 using Skelvy.WebAPI.Extensions;
 

@@ -1,30 +1,26 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
 
 namespace Skelvy.Application.Users.Queries.FindUser
 {
   public class FindUserQueryHandler : QueryHandler<FindUserQuery, UserDto>
   {
-    private readonly SkelvyContext _context;
+    private readonly IUsersRepository _repository;
     private readonly IMapper _mapper;
 
-    public FindUserQueryHandler(SkelvyContext context, IMapper mapper)
+    public FindUserQueryHandler(IUsersRepository repository, IMapper mapper)
     {
-      _context = context;
+      _repository = repository;
       _mapper = mapper;
     }
 
     public override async Task<UserDto> Handle(FindUserQuery request)
     {
-      var user = await _context.Users
-        .Include(x => x.Profile)
-        .ThenInclude(x => x.Photos)
-        .FirstOrDefaultAsync(x => x.Id == request.Id);
+      var user = await _repository.FindOneWithDetails(request.Id);
 
       if (user == null)
       {

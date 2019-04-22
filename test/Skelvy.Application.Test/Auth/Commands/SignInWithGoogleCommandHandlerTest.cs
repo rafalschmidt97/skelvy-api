@@ -6,18 +6,18 @@ using Moq;
 using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
 using Skelvy.Application.Auth.Infrastructure.Google;
+using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
-using Skelvy.Application.Core.Initializers;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
-using Skelvy.Persistence;
 using Xunit;
 
 namespace Skelvy.Application.Test.Auth.Commands
 {
-  public class SignInWithGoogleCommandHandlerTest : RequestTestBase
+  public class SignInWithGoogleCommandHandlerTest : DatabaseRequestTestBase
   {
     private const string AuthToken = "Token";
     private const string RefreshToken = "Token";
@@ -43,7 +43,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>())).ReturnsAsync(new AuthDto(AuthToken, RefreshToken));
       var handler =
-        new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
+        new SignInWithGoogleCommandHandler(AuthRepository(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request);
 
@@ -60,7 +60,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .ReturnsAsync((object)PeopleResponse());
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>())).ReturnsAsync(new AuthDto(AuthToken, RefreshToken));
-      var handler = new SignInWithGoogleCommandHandler(DbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
+      var handler = new SignInWithGoogleCommandHandler(AuthRepository(false), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request);
 
@@ -73,7 +73,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler =
-        new SignInWithGoogleCommandHandler(InitializedDbContext(), _googleService.Object, _tokenService.Object, _notifications.Object);
+        new SignInWithGoogleCommandHandler(AuthRepository(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request));
@@ -85,7 +85,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler =
-        new SignInWithGoogleCommandHandler(InitializedDbContextWithRemovedUser(), _googleService.Object, _tokenService.Object, _notifications.Object);
+        new SignInWithGoogleCommandHandler(AuthRepositoryWithRemovedUser(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request));
@@ -97,13 +97,13 @@ namespace Skelvy.Application.Test.Auth.Commands
       var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var handler =
-        new SignInWithGoogleCommandHandler(InitializedDbContextWithDisabledUser(), _googleService.Object, _tokenService.Object, _notifications.Object);
+        new SignInWithGoogleCommandHandler(AuthRepositoryWithDisabledUser(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request));
     }
 
-    private SkelvyContext InitializedDbContextWithRemovedUser()
+    private IAuthRepository AuthRepositoryWithRemovedUser()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
@@ -116,10 +116,10 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       context.SaveChanges();
 
-      return context;
+      return new AuthRepository(context);
     }
 
-    private SkelvyContext InitializedDbContextWithDisabledUser()
+    private IAuthRepository AuthRepositoryWithDisabledUser()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
@@ -132,7 +132,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       context.SaveChanges();
 
-      return context;
+      return new AuthRepository(context);
     }
 
     private static dynamic PeopleResponse()

@@ -5,13 +5,13 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Drinks.Queries
 {
-  public class FindDrinksQueryHandlerTest : RequestTestBase
+  public class FindDrinksQueryHandlerTest : DatabaseRequestTestBase
   {
     [Fact]
     public async Task ShouldReturnDrinks()
     {
       var request = new FindDrinksQuery();
-      var handler = new FindDrinksQueryHandler(InitializedDbContext(), Mapper());
+      var handler = new FindDrinksQueryHandler(DrinksRepository(), Mapper());
 
       var result = await handler.Handle(request);
 
@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Drinks.Queries
     public async Task ShouldReturnEmpty()
     {
       var request = new FindDrinksQuery();
-      var handler = new FindDrinksQueryHandler(DbContext(), Mapper());
+      var handler = new FindDrinksQueryHandler(DrinksRepository(false), Mapper());
 
       var result = await handler.Handle(request);
 

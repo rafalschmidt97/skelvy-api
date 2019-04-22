@@ -7,32 +7,31 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Skelvy.Application.Auth.Commands;
+using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Common.Exceptions;
 using Skelvy.Common.Serializers;
 using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
 
 namespace Skelvy.Infrastructure.Auth.Tokens
 {
   public class TokenService : ITokenService
   {
     private readonly IConfiguration _configuration;
+    private readonly IAuthRepository _authRepository;
     private readonly IDistributedCache _cache;
     private readonly IMapper _mapper;
-    private readonly SkelvyContext _context;
 
-    public TokenService(IConfiguration configuration, IDistributedCache cache, IMapper mapper, SkelvyContext context)
+    public TokenService(IConfiguration configuration, IAuthRepository authRepository, IDistributedCache cache, IMapper mapper)
     {
       _configuration = configuration;
+      _authRepository = authRepository;
       _cache = cache;
       _mapper = mapper;
-      _context = context;
     }
 
     public async Task<AuthDto> Generate(User user)
@@ -92,7 +91,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       }
 
       var tokenUser = cachedBytes.Deserialize<TokenUser>();
-      var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == tokenUser.Id);
+      var user = await _authRepository.FindOneWithRoles(tokenUser.Id);
 
       if (user == null)
       {

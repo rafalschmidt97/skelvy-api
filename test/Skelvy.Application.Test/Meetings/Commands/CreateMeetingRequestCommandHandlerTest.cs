@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Core.Initializers;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;

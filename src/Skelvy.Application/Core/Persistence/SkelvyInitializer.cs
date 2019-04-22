@@ -5,7 +5,7 @@ using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
 using Skelvy.Persistence;
 
-namespace Skelvy.Application.Core.Initializers
+namespace Skelvy.Application.Core.Persistence
 {
   public static class SkelvyInitializer
   {
