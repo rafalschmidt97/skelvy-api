@@ -27,5 +27,12 @@ namespace Skelvy.Application.Core.Persistence
 
       return messages.OrderBy(x => x.Date).ToList();
     }
+
+    public async Task<IList<MeetingChatMessage>> FindAllByUsersId(IEnumerable<int> usersId)
+    {
+      return await Context.MeetingChatMessages
+        .Where(x => usersId.Any(y => y == x.UserId))
+        .ToListAsync();
+    }
   }
 }

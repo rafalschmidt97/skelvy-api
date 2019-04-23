@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Users.Infrastructure.Repositories;
@@ -13,12 +16,25 @@ namespace Skelvy.Application.Core.Persistence
     {
     }
 
+    public async Task<User> FindOne(int id)
+    {
+      return await Context.Users
+        .FirstOrDefaultAsync(x => x.Id == id && !x.IsRemoved);
+    }
+
     public async Task<User> FindOneWithDetails(int id)
     {
       return await Context.Users
         .Include(x => x.Profile)
         .ThenInclude(x => x.Photos)
-        .FirstOrDefaultAsync(x => x.Id == id);
+        .FirstOrDefaultAsync(x => x.Id == id && !x.IsRemoved);
+    }
+
+    public async Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset date)
+    {
+      return await Context.Users
+        .Where(x => x.IsRemoved && x.ForgottenAt < date)
+        .ToListAsync();
     }
   }
 }

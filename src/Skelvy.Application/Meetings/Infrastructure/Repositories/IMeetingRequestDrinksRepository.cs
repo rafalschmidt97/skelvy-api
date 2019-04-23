@@ -5,9 +5,8 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Meetings.Infrastructure.Repositories
 {
-  public interface IMeetingRequestsRepository : IBaseRepository
+  public interface IMeetingRequestDrinksRepository : IBaseRepository
   {
-    Task<MeetingRequest> FindOneWithDrinksByUserId(int userId);
-    Task<IList<MeetingRequest>> FindAllByUsersId(IEnumerable<int> usersId);
+    Task<IList<MeetingRequestDrink>> FindAllByRequestsId(IEnumerable<int> requestsId);
   }
 }

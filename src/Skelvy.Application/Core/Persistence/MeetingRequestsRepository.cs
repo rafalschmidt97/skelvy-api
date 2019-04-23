@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
@@ -19,6 +21,13 @@ namespace Skelvy.Application.Core.Persistence
         .Include(x => x.Drinks)
         .ThenInclude(x => x.Drink)
         .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved);
+    }
+
+    public async Task<IList<MeetingRequest>> FindAllByUsersId(IEnumerable<int> usersId)
+    {
+      return await Context.MeetingRequests
+        .Where(x => usersId.Any(y => y == x.UserId))
+        .ToListAsync();
     }
   }
 }
