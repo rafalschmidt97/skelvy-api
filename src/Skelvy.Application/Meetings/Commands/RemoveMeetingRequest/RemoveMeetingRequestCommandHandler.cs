@@ -20,9 +20,9 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 
     public override async Task<Unit> Handle(RemoveMeetingRequestCommand request)
     {
-      var meetingUser = await _meetingUsersRepository.FindOneByUserId(request.UserId);
+      var meetingUserExists = await _meetingUsersRepository.ExistsOneByUserId(request.UserId);
 
-      if (meetingUser != null)
+      if (meetingUserExists)
       {
         throw new ConflictException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) exists. Leave meeting instead.");
       }
