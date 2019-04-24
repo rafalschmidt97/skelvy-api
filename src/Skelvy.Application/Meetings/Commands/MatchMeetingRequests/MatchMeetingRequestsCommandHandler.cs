@@ -6,7 +6,7 @@ using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
-using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMeetingRequestHelper;
+using Skelvy.Domain.Extensions;
 
 namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 {
@@ -57,13 +57,9 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       return request1.Id != request2.Id &&
              request1.MinDate <= request2.MaxDate &&
              request1.MaxDate >= request2.MinDate &&
-             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request1.User.Profile.Birthday), request2.MinAge, request2.MaxAge) &&
-             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request2.User.Profile.Birthday), request1.MinAge, request1.MaxAge) &&
-             CalculateDistance(
-               request1.Latitude,
-               request1.Longitude,
-               request2.Latitude,
-               request2.Longitude) <= 5 &&
+             IsUserAgeWithinMeetingRequestAgeRange(request1.User.Profile.GetAge(), request2.MinAge, request2.MaxAge) &&
+             IsUserAgeWithinMeetingRequestAgeRange(request2.User.Profile.GetAge(), request1.MinAge, request1.MaxAge) &&
+             request1.GetDistance(request2) <= 5 &&
              request2.Drinks.Any(x => request1.Drinks.Any(y => y.Drink.Id == x.DrinkId));
     }
 
@@ -77,10 +73,10 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       MeetingRequest request2)
     {
       var meeting = new Meeting(
-        FindCommonDate(request1, request2),
+        request1.FindCommonDate(request2),
         request1.Latitude,
         request1.Longitude,
-        FindCommonDrink(request1, request2));
+        request1.FindCommonDrinkId(request2));
 
       _meetingRequestsRepository.Context.Meetings.Add(meeting);
 

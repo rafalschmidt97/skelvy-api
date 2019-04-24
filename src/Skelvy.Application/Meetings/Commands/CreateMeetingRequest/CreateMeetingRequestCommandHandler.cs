@@ -9,7 +9,7 @@ using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMeetingRequestHelper;
+using Skelvy.Domain.Extensions;
 
 namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 {
@@ -134,10 +134,10 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
     {
       var meeting = new Meeting(
-        FindCommonDate(request1, request2),
+        request1.FindCommonDate(request2),
         request1.Latitude,
         request1.Longitude,
-        FindCommonDrink(request1, request2));
+        request1.FindCommonDrinkId(request2));
 
       _meetingsRepository.Context.Meetings.Add(meeting);
 

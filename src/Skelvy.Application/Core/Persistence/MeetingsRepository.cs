@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Extensions;
 using Skelvy.Persistence;
-using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMeetingRequestHelper;
 
 namespace Skelvy.Application.Core.Persistence
 {
@@ -53,28 +53,11 @@ namespace Skelvy.Application.Core.Persistence
 
     private static bool IsMeetingMatchRequest(Meeting meeting, MeetingRequest request, User requestUser)
     {
-      return meeting.Users.Where(x => !x.IsRemoved)
-               .All(x => IsUserAgeWithinMeetingRequestAgeRange(
-                 CalculateAge(x.User.Profile.Birthday),
-                 request.MinAge,
-                 request.MaxAge)) &&
-             meeting.Users.Where(x => !x.IsRemoved)
-               .All(x => IsUserAgeWithinMeetingRequestAgeRange(
-                 CalculateAge(requestUser.Profile.Birthday),
-                 x.MeetingRequest.MinAge,
-                 x.MeetingRequest.MaxAge)) &&
+      return meeting.Users.Where(x => !x.IsRemoved).All(x => x.User.Profile.IsWithinMeetingRequestAgeRange(request)) &&
+             meeting.Users.Where(x => !x.IsRemoved).All(x => requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
              meeting.Users.Count(x => !x.IsRemoved) < 4 &&
-             CalculateDistance(
-               meeting.Latitude,
-               meeting.Longitude,
-               request.Latitude,
-               request.Longitude) <= 5 &&
+             meeting.GetDistance(request) <= 5 &&
              request.Drinks.Any(x => x.DrinkId == meeting.DrinkId);
-    }
-
-    private static bool IsUserAgeWithinMeetingRequestAgeRange(int age, int minAge, int maxAge)
-    {
-      return age >= minAge && (maxAge >= 55 || age <= maxAge);
     }
   }
 }

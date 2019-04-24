@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Extensions;
 using Skelvy.Persistence;
-using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMeetingRequestHelper;
 
 namespace Skelvy.Application.Core.Persistence
 {
@@ -83,19 +83,10 @@ namespace Skelvy.Application.Core.Persistence
 
     private static bool AreRequestsMatch(MeetingRequest request1, MeetingRequest request2, User requestUser)
     {
-      return IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request1.User.Profile.Birthday), request2.MinAge, request2.MaxAge) &&
-             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(requestUser.Profile.Birthday), request1.MinAge, request1.MaxAge) &&
-             CalculateDistance(
-               request1.Latitude,
-               request1.Longitude,
-               request2.Latitude,
-               request2.Longitude) <= 5 &&
+      return request1.User.Profile.IsWithinMeetingRequestAgeRange(request2) &&
+             requestUser.Profile.IsWithinMeetingRequestAgeRange(request1) &&
+             request1.GetDistance(request2) <= 5 &&
              request2.Drinks.Any(x => request1.Drinks.Any(y => y.Drink.Id == x.DrinkId));
-    }
-
-    private static bool IsUserAgeWithinMeetingRequestAgeRange(int age, int minAge, int maxAge)
-    {
-      return age >= minAge && (maxAge >= 55 || age <= maxAge);
     }
   }
 }
