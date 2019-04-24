@@ -3,14 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Auth.Infrastructure.Repositories;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
 
-namespace Skelvy.Application.Core.Persistence
+namespace Skelvy.Persistence.Repositories
 {
   public class AuthRolesRepository : BaseRepository, IAuthRolesRepository
   {
-    public AuthRolesRepository(SkelvyContext context)
+    public AuthRolesRepository(ISkelvyContext context)
       : base(context)
     {
     }

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Enums.Users;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Commands

@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Common.Exceptions;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Commands

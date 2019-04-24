@@ -14,6 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Skelvy.Domain\Skelvy.Domain.csproj" />
+    <ProjectReference Include="..\Skelvy.Application\Skelvy.Application.csproj" />
   </ItemGroup>
 </Project>

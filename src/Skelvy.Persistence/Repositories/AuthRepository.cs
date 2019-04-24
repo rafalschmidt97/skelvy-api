@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Auth.Infrastructure.Repositories;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
 
-namespace Skelvy.Application.Core.Persistence
+namespace Skelvy.Persistence.Repositories
 {
   public class AuthRepository : BaseRepository, IAuthRepository
   {
-    public AuthRepository(SkelvyContext context)
+    public AuthRepository(ISkelvyContext context)
       : base(context)
     {
     }

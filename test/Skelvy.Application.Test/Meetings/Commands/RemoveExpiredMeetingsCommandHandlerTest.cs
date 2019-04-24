@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Moq;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings;
 using Skelvy.Application.Notifications;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands

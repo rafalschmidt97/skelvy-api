@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Users.Commands.RemoveUsers;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Commands

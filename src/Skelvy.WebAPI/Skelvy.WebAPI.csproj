@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Skelvy.Application\Skelvy.Application.csproj" />
     <ProjectReference Include="..\Skelvy.Infrastructure\Skelvy.Infrastructure.csproj" />
+    <ProjectReference Include="..\Skelvy.Persistence\Skelvy.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>

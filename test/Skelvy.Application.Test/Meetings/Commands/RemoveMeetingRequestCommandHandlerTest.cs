@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
 using Skelvy.Common.Exceptions;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands

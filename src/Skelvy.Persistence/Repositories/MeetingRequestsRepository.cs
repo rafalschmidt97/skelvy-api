@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Domain.Extensions;
-using Skelvy.Persistence;
 
-namespace Skelvy.Application.Core.Persistence
+namespace Skelvy.Persistence.Repositories
 {
   public class MeetingRequestsRepository : BaseRepository, IMeetingRequestsRepository
   {
-    public MeetingRequestsRepository(SkelvyContext context)
+    public MeetingRequestsRepository(ISkelvyContext context)
       : base(context)
     {
     }

@@ -1,4 +1,4 @@
-using Skelvy.Application.Core.Persistence;
+using Skelvy.Persistence.Repositories;
 
 namespace Skelvy.Application.Test
 {

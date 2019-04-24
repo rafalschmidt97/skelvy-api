@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
 using Skelvy.Common.Exceptions;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Queries

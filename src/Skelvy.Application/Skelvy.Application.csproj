@@ -10,11 +10,11 @@
     <PackageReference Include="FluentValidation" Version="8.1.2" />
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Skelvy.Domain\Skelvy.Domain.csproj" />
-    <ProjectReference Include="..\Skelvy.Persistence\Skelvy.Persistence.csproj" />
     <ProjectReference Include="..\Skelvy.Common\Skelvy.Common.csproj" />
   </ItemGroup>
 </Project>

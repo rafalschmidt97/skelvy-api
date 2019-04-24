@@ -7,6 +7,7 @@ using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
@@ -158,7 +159,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         });
     }
 
-    private static SkelvyContext TestDbContext()
+    private static ISkelvyContext TestDbContext()
     {
       var context = DbContext();
       SkelvyInitializer.SeedUsers(context);
@@ -167,14 +168,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
       return context;
     }
 
-    private static SkelvyContext TestDbContextWithRequests()
+    private static ISkelvyContext TestDbContextWithRequests()
     {
       var context = TestDbContext();
       SkelvyInitializer.SeedMeetingRequests(context);
       return context;
     }
 
-    private static SkelvyContext TestDbContextWithMeetings()
+    private static ISkelvyContext TestDbContextWithMeetings()
     {
       var context = TestDbContext();
       SkelvyInitializer.SeedMeetings(context);

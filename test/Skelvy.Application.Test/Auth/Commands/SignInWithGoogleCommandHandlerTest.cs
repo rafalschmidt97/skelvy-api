@@ -8,11 +8,12 @@ using Skelvy.Application.Auth.Commands.SignInWithGoogle;
 using Skelvy.Application.Auth.Infrastructure.Google;
 using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
+using Skelvy.Persistence;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Auth.Commands

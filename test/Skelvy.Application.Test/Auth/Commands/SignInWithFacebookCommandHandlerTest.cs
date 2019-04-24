@@ -8,11 +8,12 @@ using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Auth.Infrastructure.Facebook;
 using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
+using Skelvy.Persistence;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Auth.Commands

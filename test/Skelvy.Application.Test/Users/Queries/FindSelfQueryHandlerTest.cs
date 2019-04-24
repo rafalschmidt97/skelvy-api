@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindSelf;
 using Skelvy.Common.Exceptions;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Users.Queries

@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
 
-namespace Skelvy.Application.Core.Persistence
+namespace Skelvy.Persistence.Repositories
 {
   public class MeetingRequestDrinksRepository : BaseRepository, IMeetingRequestDrinksRepository
   {
-    public MeetingRequestDrinksRepository(SkelvyContext context)
+    public MeetingRequestDrinksRepository(ISkelvyContext context)
       : base(context)
     {
     }

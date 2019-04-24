@@ -9,7 +9,7 @@ namespace Skelvy.Application.Test
 {
   public abstract class RequestTestBase
   {
-    protected static SkelvyContext DbContext(bool sqlLite = true)
+    protected static ISkelvyContext DbContext(bool sqlLite = true)
     {
       var builder = new DbContextOptionsBuilder<SkelvyContext>();
 
@@ -34,7 +34,7 @@ namespace Skelvy.Application.Test
       return dbContext;
     }
 
-    protected static SkelvyContext InitializedDbContext()
+    protected static ISkelvyContext InitializedDbContext()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
