@@ -6,13 +6,13 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Users.Commands
 {
-  public class UpdateUserLanguageCommandHandlerTest : RequestTestBase
+  public class UpdateUserLanguageCommandHandlerTest : DatabaseRequestTestBase
   {
     [Fact]
     public async Task ShouldNotThrowException()
     {
       var request = new UpdateUserLanguageCommand(1, LanguageTypes.EN);
-      var handler = new UpdateUserLanguageCommandHandler(InitializedDbContext());
+      var handler = new UpdateUserLanguageCommandHandler(UsersRepository());
 
       await handler.Handle(request);
     }
@@ -21,7 +21,7 @@ namespace Skelvy.Application.Test.Users.Commands
     public async Task ShouldThrowException()
     {
       var request = new UpdateUserLanguageCommand(1, LanguageTypes.EN);
-      var handler = new UpdateUserLanguageCommandHandler(DbContext());
+      var handler = new UpdateUserLanguageCommandHandler(UsersRepository(false));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Moq;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Common.Exceptions;
@@ -20,7 +21,11 @@ namespace Skelvy.Application.Test.Users.Commands
     public async Task ShouldNotThrowException()
     {
       var request = new DisableUserCommand(1, "XYZ");
-      var handler = new DisableUserCommandHandler(InitializedDbContext(), _notifications.Object);
+      var dbContext = InitializedDbContext();
+      var handler = new DisableUserCommandHandler(
+        new UsersRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await handler.Handle(request);
     }
@@ -29,7 +34,11 @@ namespace Skelvy.Application.Test.Users.Commands
     public async Task ShouldThrowNotFoundException()
     {
       var request = new DisableUserCommand(1, "XYZ");
-      var handler = new DisableUserCommandHandler(DbContext(), _notifications.Object);
+      var dbContext = DbContext();
+      var handler = new DisableUserCommandHandler(
+        new UsersRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

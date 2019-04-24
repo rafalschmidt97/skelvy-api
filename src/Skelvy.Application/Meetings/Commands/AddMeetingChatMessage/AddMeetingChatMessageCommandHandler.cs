@@ -1,30 +1,28 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 {
   public class AddMeetingChatMessageCommandHandler : CommandHandler<AddMeetingChatMessageCommand>
   {
-    private readonly SkelvyContext _context;
+    private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly INotificationsService _notifications;
 
-    public AddMeetingChatMessageCommandHandler(SkelvyContext context, INotificationsService notifications)
+    public AddMeetingChatMessageCommandHandler(IMeetingUsersRepository meetingUsersRepository, INotificationsService notifications)
     {
-      _context = context;
+      _meetingUsersRepository = meetingUsersRepository;
       _notifications = notifications;
     }
 
     public override async Task<Unit> Handle(AddMeetingChatMessageCommand request)
     {
-      var meetingUser = await _context.MeetingUsers
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && !x.IsRemoved);
+      var meetingUser = await _meetingUsersRepository.FindOneByUserId(request.UserId);
 
       if (meetingUser == null)
       {
@@ -32,19 +30,16 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
       }
 
       var message = new MeetingChatMessage(request.Message, request.Date, meetingUser.UserId, meetingUser.MeetingId);
-      _context.MeetingChatMessages.Add(message);
+      _meetingUsersRepository.Context.MeetingChatMessages.Add(message);
 
-      await _context.SaveChangesAsync();
+      await _meetingUsersRepository.Context.SaveChangesAsync();
       await BroadcastMessage(message);
       return Unit.Value;
     }
 
     private async Task BroadcastMessage(MeetingChatMessage message)
     {
-      var meetingUsers = await _context.MeetingUsers
-        .Where(x => x.MeetingId == message.MeetingId && !x.IsRemoved)
-        .ToListAsync();
-
+      var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(message.MeetingId);
       var meetingUserIds = meetingUsers.Select(x => x.UserId).ToList();
       await _notifications.BroadcastUserSentMeetingChatMessage(message, meetingUserIds);
     }

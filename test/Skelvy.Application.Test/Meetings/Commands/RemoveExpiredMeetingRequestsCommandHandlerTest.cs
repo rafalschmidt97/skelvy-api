@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
 {
-  public class RemoveExpiredMeetingRequestsCommandHandlerTest : RequestTestBase
+  public class RemoveExpiredMeetingRequestsCommandHandlerTest : DatabaseRequestTestBase
   {
     private readonly Mock<INotificationsService> _notifications;
 
@@ -19,7 +19,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldNotThrowException()
     {
       var request = new RemoveExpiredMeetingRequestsCommand();
-      var handler = new RemoveExpiredMeetingRequestsCommandHandler(InitializedDbContext(), _notifications.Object);
+      var handler = new RemoveExpiredMeetingRequestsCommandHandler(MeetingRequestsRepository(), _notifications.Object);
 
       await handler.Handle(request);
     }

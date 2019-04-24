@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
 {
-  public class LeaveMeetingCommandHandlerTest : RequestTestBase
+  public class LeaveMeetingCommandHandlerTest : DatabaseRequestTestBase
   {
     private readonly Mock<INotificationsService> _notifications;
 
@@ -20,7 +20,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldNotThrowException()
     {
       var request = new LeaveMeetingCommand(2);
-      var handler = new LeaveMeetingCommandHandler(InitializedDbContext(), _notifications.Object);
+      var handler = new LeaveMeetingCommandHandler(MeetingUsersRepository(), _notifications.Object);
 
       await handler.Handle(request);
     }
@@ -29,7 +29,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldThrowException()
     {
       var request = new LeaveMeetingCommand(2);
-      var handler = new LeaveMeetingCommandHandler(DbContext(), _notifications.Object);
+      var handler = new LeaveMeetingCommandHandler(MeetingUsersRepository(false), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

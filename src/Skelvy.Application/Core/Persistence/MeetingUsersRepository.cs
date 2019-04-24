@@ -28,6 +28,13 @@ namespace Skelvy.Application.Core.Persistence
         .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved);
     }
 
+    public async Task<IList<MeetingUser>> FindAllByMeetingId(int meetingId)
+    {
+      return await Context.MeetingUsers
+        .Where(x => x.MeetingId == meetingId && !x.IsRemoved)
+        .ToListAsync();
+    }
+
     public async Task<IList<MeetingUser>> FindAllWithMeetingRequestByMeetingId(int meetingId)
     {
       return await Context.MeetingUsers
@@ -36,11 +43,25 @@ namespace Skelvy.Application.Core.Persistence
         .ToListAsync();
     }
 
-    public async Task<IList<MeetingUser>> FindAllByUsersId(IEnumerable<int> usersId)
+    public async Task<IList<MeetingUser>> FindAllWithMeetingRequestByMeetingsId(IEnumerable<int> meetingsId)
+    {
+      return await Context.MeetingUsers
+        .Include(x => x.MeetingRequest)
+        .Where(x => meetingsId.Any(y => y == x.MeetingId) && !x.IsRemoved)
+        .ToListAsync();
+    }
+
+    public async Task<IList<MeetingUser>> FindAllWithRemovedByUsersId(IEnumerable<int> usersId)
     {
       return await Context.MeetingUsers
         .Where(x => usersId.Any(y => y == x.UserId))
         .ToListAsync();
+    }
+
+    public async Task<bool> ExistsOneByUserId(int userId)
+    {
+      return await Context.MeetingUsers
+        .AnyAsync(x => x.UserId == userId && !x.IsRemoved);
     }
   }
 }

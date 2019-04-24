@@ -7,6 +7,7 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
 {
   public interface IUserProfilesRepository : IBaseRepository
   {
+    Task<UserProfile> FindOneByUserId(int userId);
     Task<IList<UserProfile>> FindAllByUsersId(IEnumerable<int> usersId);
   }
 }

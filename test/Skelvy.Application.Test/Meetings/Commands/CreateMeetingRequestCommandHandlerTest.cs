@@ -26,7 +26,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = Request();
       request.MinDate = DateTimeOffset.UtcNow.AddDays(2);
       request.MaxDate = DateTimeOffset.UtcNow.AddDays(4);
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithMeetings(), _notifications.Object);
+      var dbContext = TestDbContextWithMeetings();
+      var handler = new CreateMeetingRequestCommandHandler(
+        new UsersRepository(dbContext),
+        new DrinksRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await handler.Handle(request);
     }
@@ -35,7 +42,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldAddRequest()
     {
       var request = Request();
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
+      var dbContext = TestDbContext();
+      var handler = new CreateMeetingRequestCommandHandler(
+        new UsersRepository(dbContext),
+        new DrinksRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await handler.Handle(request);
     }
@@ -45,7 +59,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       request.UserId = 2;
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContextWithRequests(), _notifications.Object);
+      var dbContext = TestDbContextWithRequests();
+      var handler = new CreateMeetingRequestCommandHandler(
+        new UsersRepository(dbContext),
+        new DrinksRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await handler.Handle(request);
     }
@@ -55,7 +76,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       request.UserId = 100;
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
+      var dbContext = TestDbContext();
+      var handler = new CreateMeetingRequestCommandHandler(
+        new UsersRepository(dbContext),
+        new DrinksRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -66,7 +94,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       request.Drinks[0].Id = 10;
-      var handler = new CreateMeetingRequestCommandHandler(TestDbContext(), _notifications.Object);
+      var dbContext = TestDbContext();
+      var handler = new CreateMeetingRequestCommandHandler(
+        new UsersRepository(dbContext),
+        new DrinksRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -76,7 +111,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldThrowExceptionWithExistingRequest()
     {
       var request = Request();
-      var handler = new CreateMeetingRequestCommandHandler(InitializedDbContext(), _notifications.Object);
+      var dbContext = InitializedDbContext();
+      var handler = new CreateMeetingRequestCommandHandler(
+        new UsersRepository(dbContext),
+        new DrinksRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));
@@ -87,7 +129,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       request.UserId = 2;
-      var handler = new CreateMeetingRequestCommandHandler(InitializedDbContext(), _notifications.Object);
+      var dbContext = InitializedDbContext();
+      var handler = new CreateMeetingRequestCommandHandler(
+        new UsersRepository(dbContext),
+        new DrinksRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));

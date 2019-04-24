@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Enums.Users;
@@ -14,7 +15,10 @@ namespace Skelvy.Application.Test.Users.Commands
     public async Task ShouldNotThrowException()
     {
       var request = Request();
-      var handler = new UpdateUserProfileCommandHandler(InitializedDbContext());
+      var dbContext = InitializedDbContext();
+      var handler = new UpdateUserProfileCommandHandler(
+        new UserProfilesRepository(dbContext),
+        new UserProfilePhotosRepository(dbContext));
 
       await handler.Handle(request);
     }
@@ -23,7 +27,10 @@ namespace Skelvy.Application.Test.Users.Commands
     public async Task ShouldThrowException()
     {
       var request = Request();
-      var handler = new UpdateUserProfileCommandHandler(DbContext());
+      var dbContext = DbContext();
+      var handler = new UpdateUserProfileCommandHandler(
+        new UserProfilesRepository(dbContext),
+        new UserProfilePhotosRepository(dbContext));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

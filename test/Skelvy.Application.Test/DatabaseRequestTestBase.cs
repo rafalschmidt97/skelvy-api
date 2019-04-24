@@ -45,5 +45,12 @@ namespace Skelvy.Application.Test
         new MeetingsRepository(InitializedDbContext()) :
         new MeetingsRepository(DbContext());
     }
+
+    protected static MeetingUsersRepository MeetingUsersRepository(bool initialized = true)
+    {
+      return initialized ?
+        new MeetingUsersRepository(InitializedDbContext()) :
+        new MeetingUsersRepository(DbContext());
+    }
   }
 }

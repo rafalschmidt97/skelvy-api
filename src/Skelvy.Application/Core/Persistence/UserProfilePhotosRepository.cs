@@ -15,7 +15,14 @@ namespace Skelvy.Application.Core.Persistence
     {
     }
 
-    public async Task<IList<UserProfilePhoto>> FindAllByProfilesId(IEnumerable<int> profilesId)
+    public async Task<IList<UserProfilePhoto>> FindAllByProfileId(int profileId)
+    {
+      return await Context.UserProfilePhotos
+        .Where(x => x.ProfileId == profileId)
+        .ToListAsync();
+    }
+
+    public async Task<IList<UserProfilePhoto>> FindAllWithRemovedByProfilesId(IEnumerable<int> profilesId)
     {
       return await Context.UserProfilePhotos
         .Where(x => profilesId.Any(y => y == x.ProfileId))

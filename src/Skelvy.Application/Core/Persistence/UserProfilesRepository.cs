@@ -15,6 +15,12 @@ namespace Skelvy.Application.Core.Persistence
     {
     }
 
+    public async Task<UserProfile> FindOneByUserId(int userId)
+    {
+      return await Context.UserProfiles
+        .FirstOrDefaultAsync(x => x.UserId == userId);
+    }
+
     public async Task<IList<UserProfile>> FindAllByUsersId(IEnumerable<int> usersId)
     {
       return await Context.UserProfiles

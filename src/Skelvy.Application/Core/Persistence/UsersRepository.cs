@@ -22,6 +22,12 @@ namespace Skelvy.Application.Core.Persistence
         .FirstOrDefaultAsync(x => x.Id == id && !x.IsRemoved);
     }
 
+    public async Task<bool> ExistsOne(int id)
+    {
+      return await Context.Users
+        .AnyAsync(x => x.Id == id && !x.IsRemoved);
+    }
+
     public async Task<User> FindOneWithDetails(int id)
     {
       return await Context.Users
@@ -30,10 +36,10 @@ namespace Skelvy.Application.Core.Persistence
         .FirstOrDefaultAsync(x => x.Id == id && !x.IsRemoved);
     }
 
-    public async Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset date)
+    public async Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset maxDate)
     {
       return await Context.Users
-        .Where(x => x.IsRemoved && x.ForgottenAt < date)
+        .Where(x => x.IsRemoved && x.ForgottenAt < maxDate)
         .ToListAsync();
     }
   }

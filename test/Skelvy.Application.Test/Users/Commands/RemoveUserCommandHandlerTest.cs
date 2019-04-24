@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Moq;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Common.Exceptions;
@@ -20,7 +21,11 @@ namespace Skelvy.Application.Test.Users.Commands
     public async Task ShouldNotThrowException()
     {
       var request = new RemoveUserCommand(1);
-      var handler = new RemoveUserCommandHandler(InitializedDbContext(), _notifications.Object);
+      var dbContext = InitializedDbContext();
+      var handler = new RemoveUserCommandHandler(
+        new UsersRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await handler.Handle(request);
     }
@@ -29,7 +34,11 @@ namespace Skelvy.Application.Test.Users.Commands
     public async Task ShouldThrowException()
     {
       var request = new RemoveUserCommand(1);
-      var handler = new RemoveUserCommandHandler(DbContext(), _notifications.Object);
+      var dbContext = DbContext();
+      var handler = new RemoveUserCommandHandler(
+        new UsersRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

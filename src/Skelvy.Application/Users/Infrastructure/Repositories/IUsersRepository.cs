@@ -9,7 +9,8 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
   public interface IUsersRepository : IBaseRepository
   {
     Task<User> FindOne(int id);
+    Task<bool> ExistsOne(int id);
     Task<User> FindOneWithDetails(int id);
-    Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset date);
+    Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset maxDate);
   }
 }
