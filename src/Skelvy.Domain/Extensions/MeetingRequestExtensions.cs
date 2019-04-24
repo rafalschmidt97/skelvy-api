@@ -20,14 +20,13 @@ namespace Skelvy.Domain.Extensions
 
       foreach (var date in dates)
       {
-        if (date >= request1.MinDate && date < request1.MaxDate &&
-            date >= request2.MinDate && date < request2.MaxDate)
+        if (date >= request2.MinDate && date < request2.MaxDate)
         {
           commonDates.Add(date);
         }
       }
 
-      return dates;
+      return commonDates;
     }
 
     public static DateTimeOffset FindCommonDate(this MeetingRequest request1, MeetingRequest request2)
