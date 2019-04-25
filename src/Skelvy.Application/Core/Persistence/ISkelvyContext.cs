@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Core.Persistence
@@ -17,6 +18,7 @@ namespace Skelvy.Application.Core.Persistence
     DbSet<Meeting> Meetings { get; }
     DbSet<MeetingUser> MeetingUsers { get; }
     DbSet<MeetingChatMessage> MeetingChatMessages { get; }
+    DatabaseFacade Database { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
     int SaveChanges();

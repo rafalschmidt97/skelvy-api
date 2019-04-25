@@ -34,9 +34,9 @@ namespace Skelvy.Application.Test
       return dbContext;
     }
 
-    protected static ISkelvyContext InitializedDbContext()
+    protected static ISkelvyContext InitializedDbContext(bool sqlLite = true)
     {
-      var context = DbContext();
+      var context = DbContext(sqlLite);
       SkelvyInitializer.Initialize(context);
       return context;
     }
