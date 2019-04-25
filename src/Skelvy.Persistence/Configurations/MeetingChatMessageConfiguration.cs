@@ -10,6 +10,9 @@ namespace Skelvy.Persistence.Configurations
     {
       builder.HasOne(x => x.User).WithMany(x => x.MeetingChatMessages).OnDelete(DeleteBehavior.Restrict);
       builder.HasOne(x => x.Meeting).WithMany(x => x.ChatMessages).OnDelete(DeleteBehavior.Restrict);
+
+      builder.HasIndex(e => e.Date);
+
       builder.Property(e => e.Message).IsRequired().HasMaxLength(500);
     }
   }

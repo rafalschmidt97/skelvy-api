@@ -11,6 +11,8 @@ namespace Skelvy.Persistence.Configurations
       builder.HasOne(x => x.Meeting).WithMany(x => x.Users).OnDelete(DeleteBehavior.Restrict);
       builder.HasOne(x => x.User).WithMany().OnDelete(DeleteBehavior.Restrict);
       builder.HasOne(x => x.MeetingRequest).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+      builder.HasIndex(e => e.IsRemoved);
     }
   }
 }
