@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
 {
-  public class MatchMeetingRequestsCommandHandlerTest : RequestTestBase
+  public class MatchMeetingRequestsCommandHandlerTest : DatabaseRequestTestBase
   {
     private readonly Mock<INotificationsService> _notifications;
 
@@ -19,7 +19,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldNotThrowException()
     {
       var request = new MatchMeetingRequestsCommand();
-      var handler = new MatchMeetingRequestsCommandHandler(InitializedDbContext(), _notifications.Object);
+      var handler = new MatchMeetingRequestsCommandHandler(MeetingRequestsRepository(), _notifications.Object);
 
       await handler.Handle(request);
     }

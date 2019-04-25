@@ -1,7 +1,7 @@
 using Skelvy.Domain.Entities;
 using Xunit;
 
-namespace Skelvy.Domain.Test
+namespace Skelvy.Domain.Test.Entities
 {
   public class MeetingUserTest
   {

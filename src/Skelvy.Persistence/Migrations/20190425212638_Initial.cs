@@ -256,6 +256,11 @@ namespace Skelvy.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_MeetingChatMessages_Date",
+                table: "MeetingChatMessages",
+                column: "Date");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MeetingChatMessages_MeetingId",
                 table: "MeetingChatMessages",
                 column: "MeetingId");
@@ -271,14 +276,79 @@ namespace Skelvy.Persistence.Migrations
                 column: "DrinkId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_IsRemoved",
+                table: "MeetingRequests",
+                column: "IsRemoved");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_Latitude",
+                table: "MeetingRequests",
+                column: "Latitude");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_Longitude",
+                table: "MeetingRequests",
+                column: "Longitude");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_MaxAge",
+                table: "MeetingRequests",
+                column: "MaxAge");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_MaxDate",
+                table: "MeetingRequests",
+                column: "MaxDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_MinAge",
+                table: "MeetingRequests",
+                column: "MinAge");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_MinDate",
+                table: "MeetingRequests",
+                column: "MinDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingRequests_Status",
+                table: "MeetingRequests",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MeetingRequests_UserId",
                 table: "MeetingRequests",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Meetings_Date",
+                table: "Meetings",
+                column: "Date");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Meetings_DrinkId",
                 table: "Meetings",
                 column: "DrinkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Meetings_IsRemoved",
+                table: "Meetings",
+                column: "IsRemoved");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Meetings_Latitude",
+                table: "Meetings",
+                column: "Latitude");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Meetings_Longitude",
+                table: "Meetings",
+                column: "Longitude");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeetingUsers_IsRemoved",
+                table: "MeetingUsers",
+                column: "IsRemoved");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MeetingUsers_MeetingId",
@@ -301,6 +371,16 @@ namespace Skelvy.Persistence.Migrations
                 column: "ProfileId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserProfiles_Birthday",
+                table: "UserProfiles",
+                column: "Birthday");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfiles_Gender",
+                table: "UserProfiles",
+                column: "Gender");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserProfiles_UserId",
                 table: "UserProfiles",
                 column: "UserId",
@@ -310,6 +390,26 @@ namespace Skelvy.Persistence.Migrations
                 name: "IX_UserRoles_UserId",
                 table: "UserRoles",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_FacebookId",
+                table: "Users",
+                column: "FacebookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_GoogleId",
+                table: "Users",
+                column: "GoogleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_IsRemoved",
+                table: "Users",
+                column: "IsRemoved");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

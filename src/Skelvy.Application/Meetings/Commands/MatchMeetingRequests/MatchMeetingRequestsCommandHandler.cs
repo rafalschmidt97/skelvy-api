@@ -2,36 +2,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Meetings;
-using Skelvy.Persistence;
-using static Skelvy.Application.Meetings.Commands.CreateMeetingRequest.CreateMeetingRequestHelper;
+using Skelvy.Domain.Extensions;
 
 namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 {
   public class MatchMeetingRequestsCommandHandler : CommandHandler<MatchMeetingRequestsCommand>
   {
-    private readonly SkelvyContext _context;
+    private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly INotificationsService _notifications;
 
-    public MatchMeetingRequestsCommandHandler(SkelvyContext context, INotificationsService notifications)
+    public MatchMeetingRequestsCommandHandler(IMeetingRequestsRepository meetingRequestsRepository, INotificationsService notifications)
     {
-      _context = context;
+      _meetingRequestsRepository = meetingRequestsRepository;
       _notifications = notifications;
     }
 
     public override async Task<Unit> Handle(MatchMeetingRequestsCommand request)
     {
-      var requests = await _context.MeetingRequests
-        .Include(x => x.User)
-        .ThenInclude(x => x.Profile)
-        .Include(x => x.Drinks)
-        .ThenInclude(x => x.Drink)
-        .Where(x => x.Status == MeetingRequestStatusTypes.Searching && !x.IsRemoved)
-        .ToListAsync();
+      var requests = await _meetingRequestsRepository.FindAllSearchingWithUsersDetailsAndDrinks();
 
       var isDataChanged = false;
       var updatedRequests = new List<MeetingRequest>();
@@ -51,7 +43,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
       if (isDataChanged)
       {
-        await _context.SaveChangesAsync();
+        await _meetingRequestsRepository.Context.SaveChangesAsync();
         await BroadcastUserFoundMeeting(updatedRequests);
       }
 
@@ -65,13 +57,9 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       return request1.Id != request2.Id &&
              request1.MinDate <= request2.MaxDate &&
              request1.MaxDate >= request2.MinDate &&
-             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request1.User.Profile.Birthday), request2.MinAge, request2.MaxAge) &&
-             IsUserAgeWithinMeetingRequestAgeRange(CalculateAge(request2.User.Profile.Birthday), request1.MinAge, request1.MaxAge) &&
-             CalculateDistance(
-               request1.Latitude,
-               request1.Longitude,
-               request2.Latitude,
-               request2.Longitude) <= 5 &&
+             IsUserAgeWithinMeetingRequestAgeRange(request1.User.Profile.GetAge(), request2.MinAge, request2.MaxAge) &&
+             IsUserAgeWithinMeetingRequestAgeRange(request2.User.Profile.GetAge(), request1.MinAge, request1.MaxAge) &&
+             request1.GetDistance(request2) <= 5 &&
              request2.Drinks.Any(x => request1.Drinks.Any(y => y.Drink.Id == x.DrinkId));
     }
 
@@ -85,12 +73,12 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       MeetingRequest request2)
     {
       var meeting = new Meeting(
-        FindCommonDate(request1, request2),
+        request1.FindCommonDate(request2),
         request1.Latitude,
         request1.Longitude,
-        FindCommonDrink(request1, request2));
+        request1.FindCommonDrinkId(request2));
 
-      _context.Meetings.Add(meeting);
+      _meetingRequestsRepository.Context.Meetings.Add(meeting);
 
       var meetingUsers = new[]
       {
@@ -98,7 +86,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         new MeetingUser(meeting.Id, request2.UserId, request2.Id),
       };
 
-      _context.MeetingUsers.AddRange(meetingUsers);
+      _meetingRequestsRepository.Context.MeetingUsers.AddRange(meetingUsers);
 
       request1.MarkAsFound();
       request2.MarkAsFound();

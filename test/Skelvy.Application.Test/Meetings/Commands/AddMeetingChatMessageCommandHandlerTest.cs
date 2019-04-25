@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
 {
-  public class AddMeetingChatMessageCommandHandlerTest : RequestTestBase
+  public class AddMeetingChatMessageCommandHandlerTest : DatabaseRequestTestBase
   {
     private readonly Mock<INotificationsService> _notifications;
 
@@ -21,7 +21,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldNotThrowException()
     {
       var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", 2);
-      var handler = new AddMeetingChatMessageCommandHandler(InitializedDbContext(), _notifications.Object);
+      var handler = new AddMeetingChatMessageCommandHandler(MeetingUsersRepository(), _notifications.Object);
 
       await handler.Handle(request);
     }
@@ -30,7 +30,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldThrowException()
     {
       var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", 2);
-      var handler = new AddMeetingChatMessageCommandHandler(DbContext(), _notifications.Object);
+      var handler = new AddMeetingChatMessageCommandHandler(MeetingUsersRepository(false), _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

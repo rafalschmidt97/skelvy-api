@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190421161209_Initial")]
+    [Migration("20190425212638_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,15 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Date");
+
                     b.HasIndex("DrinkId");
+
+                    b.HasIndex("IsRemoved");
+
+                    b.HasIndex("Latitude");
+
+                    b.HasIndex("Longitude");
 
                     b.ToTable("Meetings");
                 });
@@ -83,6 +91,8 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Date");
 
                     b.HasIndex("MeetingId");
 
@@ -128,6 +138,22 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IsRemoved");
+
+                    b.HasIndex("Latitude");
+
+                    b.HasIndex("Longitude");
+
+                    b.HasIndex("MaxAge");
+
+                    b.HasIndex("MaxDate");
+
+                    b.HasIndex("MinAge");
+
+                    b.HasIndex("MinDate");
+
+                    b.HasIndex("Status");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("MeetingRequests");
@@ -165,6 +191,8 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IsRemoved");
 
                     b.HasIndex("MeetingId");
 
@@ -214,6 +242,14 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email");
+
+                    b.HasIndex("FacebookId");
+
+                    b.HasIndex("GoogleId");
+
+                    b.HasIndex("IsRemoved");
+
                     b.ToTable("Users");
                 });
 
@@ -241,6 +277,10 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Birthday");
+
+                    b.HasIndex("Gender");
 
                     b.HasIndex("UserId")
                         .IsUnique();

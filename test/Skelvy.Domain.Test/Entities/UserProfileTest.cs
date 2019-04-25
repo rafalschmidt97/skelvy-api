@@ -3,7 +3,7 @@ using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
 using Xunit;
 
-namespace Skelvy.Domain.Test
+namespace Skelvy.Domain.Test.Entities
 {
   public class UserProfileTest
   {

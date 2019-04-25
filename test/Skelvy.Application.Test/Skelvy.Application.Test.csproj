@@ -18,5 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Skelvy.Application\Skelvy.Application.csproj" />
+    <ProjectReference Include="..\..\src\Skelvy.Persistence\Skelvy.Persistence.csproj" />
   </ItemGroup>
 </Project>

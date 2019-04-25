@@ -6,13 +6,13 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Users.Queries
 {
-  public class FindUserQueryHandlerTest : RequestTestBase
+  public class FindUserQueryHandlerTest : DatabaseRequestTestBase
   {
     [Fact]
     public async Task ShouldReturnUser()
     {
       var request = new FindUserQuery(1);
-      var handler = new FindUserQueryHandler(InitializedDbContext(), Mapper());
+      var handler = new FindUserQueryHandler(UsersRepository(), Mapper());
 
       var result = await handler.Handle(request);
 
@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Users.Queries
     public async Task ShouldThrowException()
     {
       var request = new FindUserQuery(1);
-      var handler = new FindUserQueryHandler(DbContext(), Mapper());
+      var handler = new FindUserQueryHandler(UsersRepository(false), Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

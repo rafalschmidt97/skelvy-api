@@ -1,27 +1,26 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Persistence;
+using Skelvy.Application.Drinks.Infrastructure.Repositories;
 
 namespace Skelvy.Application.Drinks.Queries.FindDrinks
 {
   public class FindDrinksQueryHandler : QueryHandler<FindDrinksQuery, IList<DrinkDto>>
   {
-    private readonly SkelvyContext _context;
+    private readonly IDrinksRepository _repository;
     private readonly IMapper _mapper;
 
-    public FindDrinksQueryHandler(SkelvyContext context, IMapper mapper)
+    public FindDrinksQueryHandler(IDrinksRepository repository, IMapper mapper)
     {
-      _context = context;
+      _repository = repository;
       _mapper = mapper;
     }
 
     public override async Task<IList<DrinkDto>> Handle(FindDrinksQuery request)
     {
-      return await _context.Drinks.ProjectTo<DrinkDto>(_mapper.ConfigurationProvider).ToListAsync();
+      var drinks = await _repository.FindAll();
+      return _mapper.Map<IList<DrinkDto>>(drinks);
     }
   }
 }

@@ -21,7 +21,6 @@ namespace Skelvy.Common.Serializers
     }
 
     public static T Deserialize<T>(this byte[] bytesToDeserialize)
-      where T : class
     {
       if (bytesToDeserialize == null)
       {
@@ -31,7 +30,7 @@ namespace Skelvy.Common.Serializers
       var binaryFormatter = new BinaryFormatter();
       using (var memoryStream = new MemoryStream(bytesToDeserialize))
       {
-        return binaryFormatter.Deserialize(memoryStream) as T;
+        return (T)binaryFormatter.Deserialize(memoryStream);
       }
     }
   }

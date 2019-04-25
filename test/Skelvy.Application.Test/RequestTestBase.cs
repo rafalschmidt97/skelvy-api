@@ -1,15 +1,15 @@
 using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Initializers;
 using Skelvy.Application.Core.Mappers;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Persistence;
 
 namespace Skelvy.Application.Test
 {
   public abstract class RequestTestBase
   {
-    protected static SkelvyContext DbContext(bool sqlLite = true)
+    protected static ISkelvyContext DbContext(bool sqlLite = true)
     {
       var builder = new DbContextOptionsBuilder<SkelvyContext>();
 
@@ -34,9 +34,9 @@ namespace Skelvy.Application.Test
       return dbContext;
     }
 
-    protected static SkelvyContext InitializedDbContext()
+    protected static ISkelvyContext InitializedDbContext(bool sqlLite = true)
     {
-      var context = DbContext();
+      var context = DbContext(sqlLite);
       SkelvyInitializer.Initialize(context);
       return context;
     }

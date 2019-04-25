@@ -3,54 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
+using Skelvy.Common.Extensions;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Meetings;
-using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
 {
   public class RemoveExpiredMeetingsCommandHandler : CommandHandler<RemoveExpiredMeetingsCommand>
   {
-    private readonly SkelvyContext _context;
+    private readonly IMeetingsRepository _meetingsRepository;
+    private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly INotificationsService _notifications;
 
-    public RemoveExpiredMeetingsCommandHandler(SkelvyContext context, INotificationsService notifications)
+    public RemoveExpiredMeetingsCommandHandler(
+      IMeetingsRepository meetingsRepository,
+      IMeetingUsersRepository meetingUsersRepository,
+      INotificationsService notifications)
     {
-      _context = context;
+      _meetingsRepository = meetingsRepository;
+      _meetingUsersRepository = meetingUsersRepository;
       _notifications = notifications;
     }
 
     public override async Task<Unit> Handle(RemoveExpiredMeetingsCommand request)
     {
       var today = DateTimeOffset.UtcNow;
-      var meetingsToRemove = await _context.Meetings
-        .Include(x => x.Users)
-        .Where(x => x.Date < today && !x.IsRemoved)
-        .ToListAsync();
+      var meetingsToRemove = await _meetingsRepository.FindAllAfterDate(today);
 
       var isDataChanged = false;
 
       if (meetingsToRemove.Count != 0)
       {
-        var meetingUsers = meetingsToRemove.SelectMany(x => x.Users);
-        var meetingRequests = await _context.MeetingRequests
-          .Where(x => x.Status == MeetingRequestStatusTypes.Found && !x.IsRemoved)
-          .ToListAsync();
-
-        var meetingRequestsToRemove = meetingRequests.Where(x => meetingUsers.Any(y => y.UserId == x.UserId)).ToList();
+        var meetingsId = meetingsToRemove.Select(x => x.Id);
+        var meetingUsers = await _meetingUsersRepository.FindAllWithMeetingRequestByMeetingsId(meetingsId);
 
         meetingsToRemove.ForEach(x => x.Expire());
-        meetingRequestsToRemove.ForEach(x => x.Expire());
+        meetingUsers.Select(x => x.MeetingRequest).ForEach(x => x.Expire());
 
         isDataChanged = true;
       }
 
       if (isDataChanged)
       {
-        await _context.SaveChangesAsync();
+        await _meetingsRepository.Context.SaveChangesAsync();
         await BroadcastMeetingExpired(meetingsToRemove);
       }
 

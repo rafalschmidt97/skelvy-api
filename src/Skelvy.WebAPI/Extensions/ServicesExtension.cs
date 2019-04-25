@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.Infrastructure.Maps.GoogleMaps;
+using Skelvy.Persistence.Repositories;
 
 namespace Skelvy.WebAPI.Extensions
 {
@@ -10,9 +11,10 @@ namespace Skelvy.WebAPI.Extensions
     {
       var infrastructureAssembly = typeof(MapsService).GetTypeInfo().Assembly;
       var presentationAssembly = typeof(Startup).GetTypeInfo().Assembly;
+      var persistenceAssembly = typeof(UsersRepository).GetTypeInfo().Assembly;
 
       services.Scan(scan =>
-        scan.FromAssemblies(infrastructureAssembly, presentationAssembly)
+        scan.FromAssemblies(infrastructureAssembly, presentationAssembly, persistenceAssembly)
           .AddClasses()
           .AsMatchingInterface());
     }

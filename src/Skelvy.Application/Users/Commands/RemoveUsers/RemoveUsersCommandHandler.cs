@@ -2,54 +2,77 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Persistence;
+using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Users.Infrastructure.Repositories;
 
 namespace Skelvy.Application.Users.Commands.RemoveUsers
 {
   public class RemoveUsersCommandHandler : CommandHandler<RemoveUsersCommand>
   {
-    private readonly SkelvyContext _context;
+    private readonly IUsersRepository _usersRepository;
+    private readonly IAuthRolesRepository _rolesRepository;
+    private readonly IUserProfilesRepository _profilesRepository;
+    private readonly IUserProfilePhotosRepository _profilePhotosRepository;
+    private readonly IMeetingRequestsRepository _requestsRepository;
+    private readonly IMeetingRequestDrinksRepository _requestDrinksRepository;
+    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IMeetingChatMessagesRepository _messagesRepository;
 
-    public RemoveUsersCommandHandler(SkelvyContext context)
+    public RemoveUsersCommandHandler(
+      IUsersRepository usersRepository,
+      IAuthRolesRepository rolesRepository,
+      IUserProfilesRepository profilesRepository,
+      IUserProfilePhotosRepository profilePhotosRepository,
+      IMeetingRequestsRepository requestsRepository,
+      IMeetingRequestDrinksRepository requestDrinksRepository,
+      IMeetingUsersRepository meetingUsersRepository,
+      IMeetingChatMessagesRepository messagesRepository)
     {
-      _context = context;
+      _usersRepository = usersRepository;
+      _rolesRepository = rolesRepository;
+      _profilesRepository = profilesRepository;
+      _profilePhotosRepository = profilePhotosRepository;
+      _requestsRepository = requestsRepository;
+      _requestDrinksRepository = requestDrinksRepository;
+      _meetingUsersRepository = meetingUsersRepository;
+      _messagesRepository = messagesRepository;
     }
 
     public override async Task<Unit> Handle(RemoveUsersCommand request)
     {
       var today = DateTimeOffset.UtcNow;
 
-      var usersToRemove = await _context.Users.Where(x => x.IsRemoved && x.ForgottenAt < today).ToListAsync();
-      _context.Users.RemoveRange(usersToRemove);
+      var usersToRemove = await _usersRepository.FindAllRemovedAfterForgottenAt(today);
+      _usersRepository.Context.Users.RemoveRange(usersToRemove);
 
-      var usersId = usersToRemove.Select(x => x.Id);
+      var usersId = usersToRemove.Select(x => x.Id).ToList();
 
-      var userRolesToRemove = await _context.UserRoles.Where(x => usersId.Any(y => y == x.UserId)).ToListAsync();
-      _context.UserRoles.RemoveRange(userRolesToRemove);
+      var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
+      _rolesRepository.Context.UserRoles.RemoveRange(userRolesToRemove);
 
-      var userProfilesToRemove = await _context.UserProfiles.Where(x => usersId.Any(y => y == x.UserId)).ToListAsync();
-      _context.UserProfiles.RemoveRange(userProfilesToRemove);
+      var userProfilesToRemove = await _profilesRepository.FindAllByUsersId(usersId);
+      _profilesRepository.Context.UserProfiles.RemoveRange(userProfilesToRemove);
 
-      var userProfilesId = userProfilesToRemove.Select(y => y.Id);
-      var userProfilePhotosToRemove = await _context.UserProfilePhotos.Where(x => userProfilesId.Any(y => y == x.ProfileId)).ToListAsync();
-      _context.UserProfilePhotos.RemoveRange(userProfilePhotosToRemove);
+      var userProfilesId = userProfilesToRemove.Select(y => y.Id).ToList();
+      var userProfilePhotosToRemove = await _profilePhotosRepository.FindAllWithRemovedByProfilesId(userProfilesId);
+      _profilePhotosRepository.Context.UserProfilePhotos.RemoveRange(userProfilePhotosToRemove);
 
-      var meetingRequestsToRemove = await _context.MeetingRequests.Where(x => usersId.Any(y => y == x.UserId)).ToListAsync();
-      _context.MeetingRequests.RemoveRange(meetingRequestsToRemove);
+      var meetingRequestsToRemove = await _requestsRepository.FindAllWithRemovedByUsersId(usersId);
+      _requestsRepository.Context.MeetingRequests.RemoveRange(meetingRequestsToRemove);
 
       var meetingRequestsId = meetingRequestsToRemove.Select(y => y.Id);
-      var meetingRequestDrinksToRemove = await _context.MeetingRequestDrinks.Where(x => meetingRequestsId.Any(y => y == x.MeetingRequestId)).ToListAsync();
-      _context.MeetingRequestDrinks.RemoveRange(meetingRequestDrinksToRemove);
+      var meetingRequestDrinksToRemove = await _requestDrinksRepository.FindAllByRequestsId(meetingRequestsId);
+      _requestDrinksRepository.Context.MeetingRequestDrinks.RemoveRange(meetingRequestDrinksToRemove);
 
-      var meetingUsersToRemove = await _context.MeetingUsers.Where(x => usersId.Any(y => y == x.UserId)).ToListAsync();
-      _context.MeetingUsers.RemoveRange(meetingUsersToRemove);
+      var meetingUsersToRemove = await _meetingUsersRepository.FindAllWithRemovedByUsersId(usersId);
+      _meetingUsersRepository.Context.MeetingUsers.RemoveRange(meetingUsersToRemove);
 
-      var messagesToRemove = await _context.MeetingChatMessages.Where(x => usersId.Any(y => y == x.UserId)).ToListAsync();
-      _context.MeetingChatMessages.RemoveRange(messagesToRemove);
+      var messagesToRemove = await _messagesRepository.FindAllByUsersId(usersId);
+      _messagesRepository.Context.MeetingChatMessages.RemoveRange(messagesToRemove);
 
-      await _context.SaveChangesAsync();
+      await _usersRepository.Context.SaveChangesAsync();
 
       return Unit.Value;
     }

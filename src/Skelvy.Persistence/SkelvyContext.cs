@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence
 {
-  public class SkelvyContext : DbContext
+  public class SkelvyContext : DbContext, ISkelvyContext
   {
     public SkelvyContext(DbContextOptions options)
       : base(options)

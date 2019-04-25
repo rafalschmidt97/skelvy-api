@@ -7,32 +7,30 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Skelvy.Application.Auth.Commands;
+using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
+using Skelvy.Application.Core.Cache;
 using Skelvy.Common.Exceptions;
-using Skelvy.Common.Serializers;
 using Skelvy.Domain.Entities;
-using Skelvy.Persistence;
 
 namespace Skelvy.Infrastructure.Auth.Tokens
 {
   public class TokenService : ITokenService
   {
     private readonly IConfiguration _configuration;
-    private readonly IDistributedCache _cache;
+    private readonly IAuthRepository _authRepository;
+    private readonly ICacheService _cache;
     private readonly IMapper _mapper;
-    private readonly SkelvyContext _context;
 
-    public TokenService(IConfiguration configuration, IDistributedCache cache, IMapper mapper, SkelvyContext context)
+    public TokenService(IConfiguration configuration, IAuthRepository authRepository, ICacheService cache, IMapper mapper)
     {
       _configuration = configuration;
+      _authRepository = authRepository;
       _cache = cache;
       _mapper = mapper;
-      _context = context;
     }
 
     public async Task<AuthDto> Generate(User user)
@@ -53,8 +51,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
 
     public async Task Invalidate(string refreshToken)
     {
-      var cacheKey = $"auth:refresh#{refreshToken}";
-      await _cache.RemoveAsync(cacheKey);
+      await _cache.RemoveData($"auth:refresh#{refreshToken}");
     }
 
     private string GetAccessToken(User user)
@@ -73,26 +70,21 @@ namespace Skelvy.Infrastructure.Auth.Tokens
     private async Task<string> GetRefreshToken(User user)
     {
       var refreshToken = GenerateRefreshToken();
-
-      var cacheKey = $"auth:refresh#{refreshToken}";
-      var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(15));
-      await _cache.SetAsync(cacheKey, _mapper.Map<TokenUser>(user).Serialize(), options);
-
+      await _cache.SetData($"auth:refresh#{refreshToken}", TimeSpan.FromDays(15), _mapper.Map<TokenUser>(user));
       return refreshToken;
     }
 
     private async Task<User> UpdateRefreshToken(string refreshToken)
     {
-      var cacheKey = $"auth:refresh#{refreshToken}";
-      var cachedBytes = await _cache.GetAsync(cacheKey);
+      var key = $"auth:refresh#{refreshToken}";
+      var tokenUser = await _cache.GetData<TokenUser>(key);
 
-      if (cachedBytes == null)
+      if (tokenUser == null)
       {
         throw new UnauthorizedException("Refresh Token has expired");
       }
 
-      var tokenUser = cachedBytes.Deserialize<TokenUser>();
-      var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == tokenUser.Id);
+      var user = await _authRepository.FindOneWithRoles(tokenUser.Id);
 
       if (user == null)
       {
@@ -109,7 +101,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
         throw new UnauthorizedException("User is disabled");
       }
 
-      await _cache.RefreshAsync(cacheKey);
+      await _cache.RefreshData(key);
       return user;
     }
 

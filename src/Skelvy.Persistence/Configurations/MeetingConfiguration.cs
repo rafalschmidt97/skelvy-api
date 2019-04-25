@@ -9,6 +9,12 @@ namespace Skelvy.Persistence.Configurations
     public void Configure(EntityTypeBuilder<Meeting> builder)
     {
       builder.HasOne(x => x.Drink).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+      builder.HasIndex(e => e.IsRemoved);
+      builder.HasIndex(e => e.Date);
+      builder.HasIndex(e => e.Latitude);
+      builder.HasIndex(e => e.Longitude);
+
       builder.Property(e => e.RemovedReason).HasMaxLength(15);
     }
   }

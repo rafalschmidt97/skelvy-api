@@ -1,35 +1,33 @@
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Meetings;
-using Skelvy.Persistence;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 {
   public class RemoveMeetingRequestCommandHandler : CommandHandler<RemoveMeetingRequestCommand>
   {
-    private readonly SkelvyContext _context;
+    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IMeetingRequestsRepository _requestsRepository;
 
-    public RemoveMeetingRequestCommandHandler(SkelvyContext context)
+    public RemoveMeetingRequestCommandHandler(IMeetingUsersRepository meetingUsersRepository, IMeetingRequestsRepository requestsRepository)
     {
-      _context = context;
+      _meetingUsersRepository = meetingUsersRepository;
+      _requestsRepository = requestsRepository;
     }
 
     public override async Task<Unit> Handle(RemoveMeetingRequestCommand request)
     {
-      var meetingUser = await _context.MeetingUsers
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && !x.IsRemoved);
+      var meetingUserExists = await _meetingUsersRepository.ExistsOneByUserId(request.UserId);
 
-      if (meetingUser != null)
+      if (meetingUserExists)
       {
         throw new ConflictException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) exists. Leave meeting instead.");
       }
 
-      var meetingRequest = await _context.MeetingRequests
-        .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Status == MeetingRequestStatusTypes.Searching && !x.IsRemoved);
+      var meetingRequest = await _requestsRepository.FindOneSearchingByUserId(request.UserId);
 
       if (meetingRequest == null)
       {
@@ -38,7 +36,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 
       meetingRequest.Abort();
 
-      await _context.SaveChangesAsync();
+      await _requestsRepository.Context.SaveChangesAsync();
       return Unit.Value;
     }
   }
