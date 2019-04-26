@@ -75,16 +75,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         }
         else
         {
-          if (userByEmail.IsRemoved)
-          {
-            throw new UnauthorizedException("User is in safety retention window for deletion");
-          }
-
-          if (userByEmail.IsDisabled)
-          {
-            throw new UnauthorizedException("User is disabled");
-          }
-
+          ValidateUser(userByEmail);
           userByEmail.RegisterFacebook(verified.UserId);
           user = userByEmail;
           isDataChanged = true;
@@ -99,18 +90,23 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       }
       else
       {
-        if (user.IsRemoved)
-        {
-          throw new UnauthorizedException("User is in safety retention window for deletion");
-        }
-
-        if (user.IsDisabled)
-        {
-          throw new UnauthorizedException("User is disabled");
-        }
+        ValidateUser(user);
       }
 
       return await _tokenService.Generate(user);
+    }
+
+    private static void ValidateUser(User user)
+    {
+      if (user.IsRemoved)
+      {
+        throw new UnauthorizedException("User is in safety retention window for deletion");
+      }
+
+      if (user.IsDisabled)
+      {
+        throw new UnauthorizedException("User is disabled");
+      }
     }
   }
 }

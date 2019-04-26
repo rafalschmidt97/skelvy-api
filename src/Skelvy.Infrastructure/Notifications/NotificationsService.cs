@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,92 +26,50 @@ namespace Skelvy.Infrastructure.Notifications
 
     public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IList<int> userIds)
     {
-      var connections = GetConnections(userIds);
-
-      if (connections.OnlineIds.Count > 0)
-      {
-        await _socketService.BroadcastUserSentMeetingChatMessage(message, userIds);
-      }
-
-      if (connections.OfflineIds.Count > 0)
-      {
-        await _pushService.BroadcastUserSentMeetingChatMessage(message, userIds);
-      }
+      await BroadcastActionDependingOnConnection(
+        userIds,
+        async (onlineIds) => await _socketService.BroadcastUserSentMeetingChatMessage(message, onlineIds),
+        async (offlineIds) => await _pushService.BroadcastUserSentMeetingChatMessage(message, offlineIds));
     }
 
     public async Task BroadcastUserJoinedMeeting(MeetingUser user, IList<int> userIds)
     {
-      var connections = GetConnections(userIds);
-
-      if (connections.OnlineIds.Count > 0)
-      {
-        await _socketService.BroadcastUserJoinedMeeting(user, userIds);
-      }
-
-      if (connections.OfflineIds.Count > 0)
-      {
-        await _pushService.BroadcastUserJoinedMeeting(user, userIds);
-      }
+      await BroadcastActionDependingOnConnection(
+        userIds,
+        async (onlineIds) => await _socketService.BroadcastUserJoinedMeeting(user, onlineIds),
+        async (offlineIds) => await _pushService.BroadcastUserJoinedMeeting(user, offlineIds));
     }
 
     public async Task BroadcastUserFoundMeeting(IList<int> userIds)
     {
-      var connections = GetConnections(userIds);
-
-      if (connections.OnlineIds.Count > 0)
-      {
-        await _socketService.BroadcastUserFoundMeeting(userIds);
-      }
-
-      if (connections.OfflineIds.Count > 0)
-      {
-        await _pushService.BroadcastUserFoundMeeting(userIds);
-      }
+      await BroadcastActionDependingOnConnection(
+        userIds,
+        async (onlineIds) => await _socketService.BroadcastUserFoundMeeting(onlineIds),
+        async (offlineIds) => await _pushService.BroadcastUserFoundMeeting(offlineIds));
     }
 
     public async Task BroadcastUserLeftMeeting(MeetingUser user, IList<int> userIds)
     {
-      var connections = GetConnections(userIds);
-
-      if (connections.OnlineIds.Count > 0)
-      {
-        await _socketService.BroadcastUserLeftMeeting(user, userIds);
-      }
-
-      if (connections.OfflineIds.Count > 0)
-      {
-        await _pushService.BroadcastUserLeftMeeting(user, userIds);
-      }
+      await BroadcastActionDependingOnConnection(
+        userIds,
+        async (onlineIds) => await _socketService.BroadcastUserLeftMeeting(user, onlineIds),
+        async (offlineIds) => await _pushService.BroadcastUserLeftMeeting(user, offlineIds));
     }
 
     public async Task BroadcastMeetingRequestExpired(IList<int> userIds)
     {
-      var connections = GetConnections(userIds);
-
-      if (connections.OnlineIds.Count > 0)
-      {
-        await _socketService.BroadcastMeetingRequestExpired(userIds);
-      }
-
-      if (connections.OfflineIds.Count > 0)
-      {
-        await _pushService.BroadcastMeetingRequestExpired(userIds);
-      }
+      await BroadcastActionDependingOnConnection(
+        userIds,
+        async (onlineIds) => await _socketService.BroadcastMeetingRequestExpired(onlineIds),
+        async (offlineIds) => await _pushService.BroadcastMeetingRequestExpired(offlineIds));
     }
 
     public async Task BroadcastMeetingExpired(IList<int> userIds)
     {
-      var connections = GetConnections(userIds);
-
-      if (connections.OnlineIds.Count > 0)
-      {
-        await _socketService.BroadcastMeetingExpired(userIds);
-      }
-
-      if (connections.OfflineIds.Count > 0)
-      {
-        await _pushService.BroadcastMeetingExpired(userIds);
-      }
+      await BroadcastActionDependingOnConnection(
+        userIds,
+        async (onlineIds) => await _socketService.BroadcastMeetingExpired(onlineIds),
+        async (offlineIds) => await _pushService.BroadcastMeetingExpired(offlineIds));
     }
 
     public async Task BroadcastUserCreated(User user)
@@ -131,6 +90,26 @@ namespace Skelvy.Infrastructure.Notifications
     public static bool IsConnected(int userId)
     {
       return Connections.FirstOrDefault(x => x == userId) != default(int);
+    }
+
+    private static Task BroadcastActionDependingOnConnection(
+      IEnumerable<int> connectedIds,
+      Action<IList<int>> socketAction,
+      Action<IList<int>> pushAction)
+    {
+      var connections = GetConnections(connectedIds);
+
+      if (connections.OnlineIds.Count > 0)
+      {
+        socketAction(connections.OnlineIds);
+      }
+
+      if (connections.OfflineIds.Count > 0)
+      {
+        pushAction(connections.OfflineIds);
+      }
+
+      return Task.CompletedTask;
     }
 
     private static Connections GetConnections(IEnumerable<int> userIds)

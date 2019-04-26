@@ -4,6 +4,7 @@ using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 {
@@ -32,6 +33,13 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
       if (meetingRequest == null)
       {
         throw new NotFoundException($"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) not found.");
+      }
+
+      if (meetingRequest.IsFound)
+      {
+        throw new InternalServerErrorException(
+          $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusTypes.Found}' " +
+          $"while {nameof(MeetingUser)} does not exists");
       }
 
       meetingRequest.Abort();

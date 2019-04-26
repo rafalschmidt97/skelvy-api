@@ -46,10 +46,16 @@ namespace Skelvy.Application.Users.Queries.FindSelf
 
       if (meetingRequest != null)
       {
-        var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndDrinkByUserId(request.UserId);
-
-        if (meeting != null)
+        if (meetingRequest.IsFound)
         {
+          var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndDrinkByUserId(request.UserId);
+
+          if (meeting == null)
+          {
+            throw new InternalServerErrorException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) not found " +
+                                        $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusTypes.Found}'");
+          }
+
           var messages = await _chatMessagesRepository.FindPageByMeetingId(meeting.Id);
 
           return new SelfModel(

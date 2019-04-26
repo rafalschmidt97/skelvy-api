@@ -85,22 +85,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       }
 
       var user = await _authRepository.FindOneWithRoles(tokenUser.Id);
-
-      if (user == null)
-      {
-        throw new UnauthorizedException("User from Refresh Token does not exists");
-      }
-
-      if (user.IsRemoved)
-      {
-        throw new UnauthorizedException("User is in safety retention window for deletion");
-      }
-
-      if (user.IsDisabled)
-      {
-        throw new UnauthorizedException("User is disabled");
-      }
-
+      ValidateUser(user);
       await _cache.RefreshData(key);
       return user;
     }
@@ -127,6 +112,24 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       {
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
+      }
+    }
+
+    private static void ValidateUser(User user)
+    {
+      if (user == null)
+      {
+        throw new UnauthorizedException("User from Refresh Token does not exists");
+      }
+
+      if (user.IsRemoved)
+      {
+        throw new UnauthorizedException("User is in safety retention window for deletion");
+      }
+
+      if (user.IsDisabled)
+      {
+        throw new UnauthorizedException("User is disabled");
       }
     }
   }

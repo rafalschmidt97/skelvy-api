@@ -25,7 +25,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     public async Task BroadcastUserCreated(User user)
     {
       var message = new EmailMessage(user.Email, "Account has been created", "Created");
-
       await SendEmail(message);
     }
 

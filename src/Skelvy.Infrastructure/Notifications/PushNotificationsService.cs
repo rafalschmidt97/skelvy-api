@@ -17,65 +17,53 @@ namespace Skelvy.Infrastructure.Notifications
 
     public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds)
     {
-      var notification = new PushNotificationContent
+      await SendNotification(userIds, new PushNotificationContent
       {
         Body = message.Message,
-      };
-
-      await SendNotifications(userIds, notification);
+      });
     }
 
     public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds)
     {
-      var notification = new PushNotificationContent
+      await SendNotification(userIds, new PushNotificationContent
       {
         BodyLocKey = "USER_JOINED_MEETING",
-      };
-
-      await SendNotifications(userIds, notification);
+      });
     }
 
     public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds)
     {
-      var notification = new PushNotificationContent
+      await SendNotification(userIds, new PushNotificationContent
       {
         BodyLocKey = "USER_FOUND_MEETING",
-      };
-
-      await SendNotifications(userIds, notification);
+      });
     }
 
     public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds)
     {
-      var notification = new PushNotificationContent
+      await SendNotification(userIds, new PushNotificationContent
       {
         BodyLocKey = "USER_LEFT_MEETING",
-      };
-
-      await SendNotifications(userIds, notification);
+      });
     }
 
     public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds)
     {
-      var notification = new PushNotificationContent
+      await SendNotification(userIds, new PushNotificationContent
       {
         BodyLocKey = "MEETING_REQUEST_EXPIRED",
-      };
-
-      await SendNotifications(userIds, notification);
+      });
     }
 
     public async Task BroadcastMeetingExpired(IEnumerable<int> userIds)
     {
-      var notification = new PushNotificationContent
+      await SendNotification(userIds, new PushNotificationContent
       {
         BodyLocKey = "MEETING_EXPIRED",
-      };
-
-      await SendNotifications(userIds, notification);
+      });
     }
 
-    private async Task SendNotifications(IEnumerable<int> userIds, PushNotificationContent notification)
+    private async Task SendNotification(IEnumerable<int> userIds, PushNotificationContent notification)
     {
       foreach (var userId in userIds)
       {

@@ -19,32 +19,42 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserSentMeetingChatMessage", message);
+      await SendNotification("UserSentMeetingChatMessage", userIds, message);
     }
 
     public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserJoinedMeeting");
+      await SendNotification("UserJoinedMeeting", userIds);
     }
 
     public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserFoundMeeting");
+      await SendNotification("UserFoundMeeting", userIds);
     }
 
     public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("UserLeftMeeting");
+      await SendNotification("UserLeftMeeting", userIds);
     }
 
     public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingRequestExpired");
+      await SendNotification("MeetingRequestExpired", userIds);
     }
 
     public async Task BroadcastMeetingExpired(IEnumerable<int> userIds)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync("MeetingExpired");
+      await SendNotification("MeetingExpired", userIds);
+    }
+
+    private async Task SendNotification(string action, IEnumerable<int> userIds, object data)
+    {
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync(action, data);
+    }
+
+    private async Task SendNotification(string action, IEnumerable<int> userIds)
+    {
+      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync(action);
     }
 
     private static IReadOnlyList<string> PrepareUsers(IEnumerable<int> userIds)

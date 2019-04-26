@@ -7,6 +7,7 @@ using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 {
@@ -31,8 +32,14 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
       }
 
       var meetingUsers = await _meetingUsersRepository.FindAllWithMeetingRequestByMeetingId(meetingUser.MeetingId);
-
       var userDetails = meetingUsers.First(x => x.UserId == meetingUser.UserId);
+
+      if (userDetails.MeetingRequest.IsSearching)
+      {
+        throw new InternalServerErrorException(
+          $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusTypes.Searching}' " +
+          $"while {nameof(MeetingUser)} exists");
+      }
 
       userDetails.Leave();
       userDetails.MeetingRequest.Abort();

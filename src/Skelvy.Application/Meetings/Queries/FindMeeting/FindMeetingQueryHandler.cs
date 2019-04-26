@@ -34,13 +34,19 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
 
       if (meetingRequest == null)
       {
-        throw new NotFoundException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) not found.");
       }
 
-      var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndDrinkByUserId(request.UserId);
-
-      if (meeting != null)
+      if (meetingRequest.IsFound)
       {
+        var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndDrinkByUserId(request.UserId);
+
+        if (meeting == null)
+        {
+          throw new InternalServerErrorException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) not found " +
+                                                 $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusTypes.Found}'");
+        }
+
         var messages = await _messagesRepository.FindPageByMeetingId(meeting.Id);
 
         return new MeetingModel(
