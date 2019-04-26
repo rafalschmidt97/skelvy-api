@@ -24,52 +24,52 @@ namespace Skelvy.Infrastructure.Notifications
       _emailService = emailService;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IList<int> userIds)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IList<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
-        userIds,
-        async (onlineIds) => await _socketService.BroadcastUserSentMeetingChatMessage(message, onlineIds),
-        async (offlineIds) => await _pushService.BroadcastUserSentMeetingChatMessage(message, offlineIds));
+        usersId,
+        async (online) => await _socketService.BroadcastUserSentMeetingChatMessage(message, online),
+        async (offline) => await _pushService.BroadcastUserSentMeetingChatMessage(message, offline));
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IList<int> userIds)
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IList<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
-        userIds,
-        async (onlineIds) => await _socketService.BroadcastUserJoinedMeeting(user, onlineIds),
-        async (offlineIds) => await _pushService.BroadcastUserJoinedMeeting(user, offlineIds));
+        usersId,
+        async (online) => await _socketService.BroadcastUserJoinedMeeting(user, online),
+        async (offline) => await _pushService.BroadcastUserJoinedMeeting(user, offline));
     }
 
-    public async Task BroadcastUserFoundMeeting(IList<int> userIds)
+    public async Task BroadcastUserFoundMeeting(IList<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
-        userIds,
-        async (onlineIds) => await _socketService.BroadcastUserFoundMeeting(onlineIds),
-        async (offlineIds) => await _pushService.BroadcastUserFoundMeeting(offlineIds));
+        usersId,
+        async (online) => await _socketService.BroadcastUserFoundMeeting(online),
+        async (offline) => await _pushService.BroadcastUserFoundMeeting(offline));
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, IList<int> userIds)
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, IList<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
-        userIds,
-        async (onlineIds) => await _socketService.BroadcastUserLeftMeeting(user, onlineIds),
-        async (offlineIds) => await _pushService.BroadcastUserLeftMeeting(user, offlineIds));
+        usersId,
+        async (online) => await _socketService.BroadcastUserLeftMeeting(user, online),
+        async (offline) => await _pushService.BroadcastUserLeftMeeting(user, offline));
     }
 
-    public async Task BroadcastMeetingRequestExpired(IList<int> userIds)
+    public async Task BroadcastMeetingRequestExpired(IList<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
-        userIds,
-        async (onlineIds) => await _socketService.BroadcastMeetingRequestExpired(onlineIds),
-        async (offlineIds) => await _pushService.BroadcastMeetingRequestExpired(offlineIds));
+        usersId,
+        async (online) => await _socketService.BroadcastMeetingRequestExpired(online),
+        async (offline) => await _pushService.BroadcastMeetingRequestExpired(offline));
     }
 
-    public async Task BroadcastMeetingExpired(IList<int> userIds)
+    public async Task BroadcastMeetingExpired(IList<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
-        userIds,
-        async (onlineIds) => await _socketService.BroadcastMeetingExpired(onlineIds),
-        async (offlineIds) => await _pushService.BroadcastMeetingExpired(offlineIds));
+        usersId,
+        async (online) => await _socketService.BroadcastMeetingExpired(online),
+        async (offline) => await _pushService.BroadcastMeetingExpired(offline));
     }
 
     public async Task BroadcastUserCreated(User user)
@@ -93,38 +93,38 @@ namespace Skelvy.Infrastructure.Notifications
     }
 
     private static Task BroadcastActionDependingOnConnection(
-      IEnumerable<int> connectedIds,
+      IEnumerable<int> connected,
       Action<IList<int>> socketAction,
       Action<IList<int>> pushAction)
     {
-      var connections = GetConnections(connectedIds);
+      var connections = GetConnections(connected);
 
-      if (connections.OnlineIds.Count > 0)
+      if (connections.Online.Count > 0)
       {
-        socketAction(connections.OnlineIds);
+        socketAction(connections.Online);
       }
 
-      if (connections.OfflineIds.Count > 0)
+      if (connections.Offline.Count > 0)
       {
-        pushAction(connections.OfflineIds);
+        pushAction(connections.Offline);
       }
 
       return Task.CompletedTask;
     }
 
-    private static Connections GetConnections(IEnumerable<int> userIds)
+    private static Connections GetConnections(IEnumerable<int> usersId)
     {
       var connections = new Connections();
 
-      foreach (var userId in userIds)
+      foreach (var userId in usersId)
       {
         if (IsConnected(userId))
         {
-          connections.OnlineIds.Add(userId);
+          connections.Online.Add(userId);
         }
         else
         {
-          connections.OfflineIds.Add(userId);
+          connections.Offline.Add(userId);
         }
       }
 
@@ -136,11 +136,11 @@ namespace Skelvy.Infrastructure.Notifications
   {
     public Connections()
     {
-      OnlineIds = new List<int>();
-      OfflineIds = new List<int>();
+      Online = new List<int>();
+      Offline = new List<int>();
     }
 
-    public IList<int> OnlineIds { get; }
-    public IList<int> OfflineIds { get; }
+    public IList<int> Online { get; }
+    public IList<int> Offline { get; }
   }
 }

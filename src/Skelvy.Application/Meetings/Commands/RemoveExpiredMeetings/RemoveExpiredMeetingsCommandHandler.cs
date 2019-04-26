@@ -58,8 +58,8 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
     {
       foreach (var meeting in meetingsToRemove)
       {
-        var userIds = meeting.Users.Select(x => x.UserId).ToList();
-        await _notifications.BroadcastMeetingExpired(userIds);
+        var usersId = meeting.Users.Select(x => x.UserId).ToList();
+        await _notifications.BroadcastMeetingExpired(usersId);
       }
     }
   }

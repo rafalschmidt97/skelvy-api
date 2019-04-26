@@ -40,8 +40,8 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
     private async Task BroadcastMessage(MeetingChatMessage message)
     {
       var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(message.MeetingId);
-      var meetingUserIds = meetingUsers.Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserSentMeetingChatMessage(message, meetingUserIds);
+      var meetingUsersId = meetingUsers.Select(x => x.UserId).ToList();
+      await _notifications.BroadcastUserSentMeetingChatMessage(message, meetingUsersId);
     }
   }
 }

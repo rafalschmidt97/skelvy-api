@@ -94,8 +94,8 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
     private async Task BroadcastUserFoundMeeting(IEnumerable<MeetingRequest> updatedRequests)
     {
-      var userIds = updatedRequests.Select(x => x.User.Id).ToList();
-      await _notifications.BroadcastUserFoundMeeting(userIds);
+      var usersId = updatedRequests.Select(x => x.User.Id).ToList();
+      await _notifications.BroadcastUserFoundMeeting(usersId);
     }
   }
 }

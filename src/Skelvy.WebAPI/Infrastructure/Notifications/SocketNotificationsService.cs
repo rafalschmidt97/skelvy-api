@@ -17,49 +17,49 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _hubContext = hubContext;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds)
+    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> usersId)
     {
-      await SendNotification("UserSentMeetingChatMessage", userIds, message);
+      await SendNotification("UserSentMeetingChatMessage", usersId, message);
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds)
+    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> usersId)
     {
-      await SendNotification("UserJoinedMeeting", userIds);
+      await SendNotification("UserJoinedMeeting", usersId);
     }
 
-    public async Task BroadcastUserFoundMeeting(IEnumerable<int> userIds)
+    public async Task BroadcastUserFoundMeeting(IEnumerable<int> usersId)
     {
-      await SendNotification("UserFoundMeeting", userIds);
+      await SendNotification("UserFoundMeeting", usersId);
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds)
+    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> usersId)
     {
-      await SendNotification("UserLeftMeeting", userIds);
+      await SendNotification("UserLeftMeeting", usersId);
     }
 
-    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds)
+    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> usersId)
     {
-      await SendNotification("MeetingRequestExpired", userIds);
+      await SendNotification("MeetingRequestExpired", usersId);
     }
 
-    public async Task BroadcastMeetingExpired(IEnumerable<int> userIds)
+    public async Task BroadcastMeetingExpired(IEnumerable<int> usersId)
     {
-      await SendNotification("MeetingExpired", userIds);
+      await SendNotification("MeetingExpired", usersId);
     }
 
-    private async Task SendNotification(string action, IEnumerable<int> userIds, object data)
+    private async Task SendNotification(string action, IEnumerable<int> usersId, object data)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync(action, data);
+      await _hubContext.Clients.Users(PrepareUsers(usersId)).SendAsync(action, data);
     }
 
-    private async Task SendNotification(string action, IEnumerable<int> userIds)
+    private async Task SendNotification(string action, IEnumerable<int> usersId)
     {
-      await _hubContext.Clients.Users(PrepareUsers(userIds)).SendAsync(action);
+      await _hubContext.Clients.Users(PrepareUsers(usersId)).SendAsync(action);
     }
 
-    private static IReadOnlyList<string> PrepareUsers(IEnumerable<int> userIds)
+    private static IReadOnlyList<string> PrepareUsers(IEnumerable<int> usersId)
     {
-      return userIds.Select(x => x.ToString()).ToList().AsReadOnly();
+      return usersId.Select(x => x.ToString()).ToList().AsReadOnly();
     }
   }
 }

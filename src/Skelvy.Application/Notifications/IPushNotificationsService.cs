@@ -6,11 +6,11 @@ namespace Skelvy.Application.Notifications
 {
   public interface IPushNotificationsService
   {
-    Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> userIds);
-    Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> userIds);
-    Task BroadcastUserFoundMeeting(IEnumerable<int> userIds);
-    Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> userIds);
-    Task BroadcastMeetingRequestExpired(IEnumerable<int> userIds);
-    Task BroadcastMeetingExpired(IEnumerable<int> userIds);
+    Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> usersId);
+    Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> usersId);
+    Task BroadcastUserFoundMeeting(IEnumerable<int> usersId);
+    Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> usersId);
+    Task BroadcastMeetingRequestExpired(IEnumerable<int> usersId);
+    Task BroadcastMeetingExpired(IEnumerable<int> usersId);
   }
 }
