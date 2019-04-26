@@ -10,7 +10,7 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190425212638_Initial")]
+    [Migration("20190426130029_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace Skelvy.Persistence.Migrations
                         .HasMaxLength(50);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Drinks");
                 });
@@ -242,11 +245,16 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
-                    b.HasIndex("FacebookId");
+                    b.HasIndex("FacebookId")
+                        .IsUnique()
+                        .HasFilter("[FacebookId] IS NOT NULL");
 
-                    b.HasIndex("GoogleId");
+                    b.HasIndex("GoogleId")
+                        .IsUnique()
+                        .HasFilter("[GoogleId] IS NOT NULL");
 
                     b.HasIndex("IsRemoved");
 

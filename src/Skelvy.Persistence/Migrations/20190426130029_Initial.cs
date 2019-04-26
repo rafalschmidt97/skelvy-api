@@ -256,6 +256,12 @@ namespace Skelvy.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Drinks_Name",
+                table: "Drinks",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MeetingChatMessages_Date",
                 table: "MeetingChatMessages",
                 column: "Date");
@@ -394,17 +400,22 @@ namespace Skelvy.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
                 table: "Users",
-                column: "Email");
+                column: "Email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_FacebookId",
                 table: "Users",
-                column: "FacebookId");
+                column: "FacebookId",
+                unique: true,
+                filter: "[FacebookId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_GoogleId",
                 table: "Users",
-                column: "GoogleId");
+                column: "GoogleId",
+                unique: true,
+                filter: "[GoogleId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_IsRemoved",

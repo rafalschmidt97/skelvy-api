@@ -31,6 +31,9 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Drinks");
                 });
 
@@ -240,11 +243,16 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
-                    b.HasIndex("FacebookId");
+                    b.HasIndex("FacebookId")
+                        .IsUnique()
+                        .HasFilter("[FacebookId] IS NOT NULL");
 
-                    b.HasIndex("GoogleId");
+                    b.HasIndex("GoogleId")
+                        .IsUnique()
+                        .HasFilter("[GoogleId] IS NOT NULL");
 
                     b.HasIndex("IsRemoved");
 
