@@ -12,6 +12,10 @@ namespace Skelvy.Application.Maps.Queries.SearchLocations
       Language = language;
     }
 
+    public SearchLocationsQuery() // required for FromQuery attribute
+    {
+    }
+
     public string Search { get; set; }
     public string Language { get; set; }
   }

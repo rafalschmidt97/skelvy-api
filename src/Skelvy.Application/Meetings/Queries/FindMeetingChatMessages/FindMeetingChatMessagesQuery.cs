@@ -11,6 +11,10 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
       Page = page;
     }
 
+    public FindMeetingChatMessagesQuery() // required for FromQuery attribute
+    {
+    }
+
     public int UserId { get; set; }
     public int Page { get; set; }
   }

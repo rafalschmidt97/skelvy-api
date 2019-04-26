@@ -13,6 +13,10 @@ namespace Skelvy.Application.Maps.Queries.ReverseLocations
       Language = language;
     }
 
+    public ReverseLocationsQuery() // required for FromQuery attribute
+    {
+    }
+
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string Language { get; set; }
