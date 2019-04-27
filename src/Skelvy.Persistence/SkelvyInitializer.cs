@@ -61,12 +61,12 @@ namespace Skelvy.Persistence
           GenderTypes.Male,
           users[0].Id),
         new UserProfile(
-          "User1",
+          "User2",
           DateTimeOffset.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           GenderTypes.Male,
           users[1].Id),
         new UserProfile(
-          "User1",
+          "User3",
           DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           GenderTypes.Male,
           users[2].Id),
