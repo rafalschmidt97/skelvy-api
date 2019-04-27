@@ -8,10 +8,12 @@ namespace Skelvy.Domain.Entities
       UserId = userId;
     }
 
-    public UserRole(int id, string name, int userId)
-      : this(name, userId)
+    public UserRole(int id, string name, int userId, User user)
     {
       Id = id;
+      Name = name;
+      UserId = userId;
+      User = user;
     }
 
     public int Id { get; private set; }

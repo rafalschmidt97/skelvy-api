@@ -43,7 +43,8 @@ namespace Skelvy.Application.Test.Auth.Commands
       var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>())).ReturnsAsync(new AuthDto(AccessToken, RefreshToken));
+        x.Generate(It.IsAny<User>()))
+        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var handler =
         new SignInWithGoogleCommandHandler(AuthRepository(), _googleService.Object, _tokenService.Object, _notifications.Object);
 
@@ -61,7 +62,8 @@ namespace Skelvy.Application.Test.Auth.Commands
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync((object)PeopleResponse());
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<User>())).ReturnsAsync(new AuthDto(AccessToken, RefreshToken));
+        x.Generate(It.IsAny<User>()))
+        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var handler = new SignInWithGoogleCommandHandler(AuthRepository(false), _googleService.Object, _tokenService.Object, _notifications.Object);
 
       var result = await handler.Handle(request);

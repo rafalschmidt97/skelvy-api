@@ -16,10 +16,26 @@ namespace Skelvy.Domain.Entities
       Photos = new List<UserProfilePhoto>();
     }
 
-    public UserProfile(int id, string name, DateTimeOffset birthday, string gender, int userId)
-      : this(name, birthday, gender, userId)
+    public UserProfile(
+      int id,
+      string name,
+      DateTimeOffset birthday,
+      string gender,
+      string description,
+      DateTimeOffset? modifiedAt,
+      int userId,
+      IList<UserProfilePhoto> photos,
+      User user)
     {
       Id = id;
+      Name = name;
+      Birthday = birthday;
+      Gender = gender;
+      Description = description;
+      ModifiedAt = modifiedAt;
+      UserId = userId;
+      Photos = photos;
+      User = user;
     }
 
     public int Id { get; private set; }

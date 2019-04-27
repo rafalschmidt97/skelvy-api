@@ -8,10 +8,12 @@ namespace Skelvy.Domain.Entities
       ProfileId = profileId;
     }
 
-    public UserProfilePhoto(int id, string url, int profileId)
-      : this(url, profileId)
+    public UserProfilePhoto(int id, string url, int profileId, UserProfile profile)
     {
       Id = id;
+      Url = url;
+      ProfileId = profileId;
+      Profile = profile;
     }
 
     public int Id { get; private set; }

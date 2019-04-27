@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Common.Extensions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Extensions;
 
@@ -19,13 +20,27 @@ namespace Skelvy.Persistence.Repositories
 
     public async Task<Meeting> FindOneWithUsersDetailsAndDrinkByUserId(int userId)
     {
-      return await Context.Meetings
+      var meeting = await Context.Meetings
         .Include(x => x.Users)
         .ThenInclude(y => y.User)
         .ThenInclude(x => x.Profile)
         .ThenInclude(x => x.Photos)
         .Include(x => x.Drink)
         .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == userId && !y.IsRemoved));
+
+      return new Meeting(
+        meeting.Id,
+        meeting.Date,
+        meeting.Latitude,
+        meeting.Longitude,
+        meeting.CreatedAt,
+        meeting.IsRemoved,
+        meeting.RemovedAt,
+        meeting.RemovedReason,
+        meeting.DrinkId,
+        meeting.Users.Where(x => !x.IsRemoved).ToList(),
+        meeting.ChatMessages,
+        meeting.Drink);
     }
 
     public async Task<IList<Meeting>> FindAllAfterDate(DateTimeOffset maxDate)

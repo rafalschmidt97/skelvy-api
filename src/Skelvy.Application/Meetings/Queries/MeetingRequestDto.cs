@@ -10,38 +10,14 @@ namespace Skelvy.Application.Meetings.Queries
 {
   public class MeetingRequestDto : ICustomMapping
   {
-    public MeetingRequestDto(
-      int id,
-      DateTimeOffset minDate,
-      DateTimeOffset maxDate,
-      int minAge,
-      int maxAge,
-      double latitude,
-      double longitude,
-      IList<DrinkDto> drinks)
-    {
-      Id = id;
-      MinDate = minDate;
-      MaxDate = maxDate;
-      MinAge = minAge;
-      MaxAge = maxAge;
-      Latitude = latitude;
-      Longitude = longitude;
-      Drinks = drinks;
-    }
-
-    public MeetingRequestDto()
-    {
-    }
-
-    public int Id { get; }
-    public DateTimeOffset MinDate { get; }
-    public DateTimeOffset MaxDate { get; }
-    public int MinAge { get; }
-    public int MaxAge { get; }
-    public double Latitude { get; }
-    public double Longitude { get; }
-    public IList<DrinkDto> Drinks { get; }
+    public int Id { get; set; }
+    public DateTimeOffset MinDate { get; set; }
+    public DateTimeOffset MaxDate { get; set; }
+    public int MinAge { get; set; }
+    public int MaxAge { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+    public IList<DrinkDto> Drinks { get; set; }
 
     public void CreateMappings(Profile configuration)
     {

@@ -19,10 +19,32 @@ namespace Skelvy.Domain.Entities
       ChatMessages = new List<MeetingChatMessage>();
     }
 
-    public Meeting(int id, DateTimeOffset date, double latitude, double longitude, int drinkId)
-      : this(date, latitude, longitude, drinkId)
+    public Meeting(
+      int id,
+      DateTimeOffset date,
+      double latitude,
+      double longitude,
+      DateTimeOffset createdAt,
+      bool isRemoved,
+      DateTimeOffset? removedAt,
+      string removedReason,
+      int drinkId,
+      IList<MeetingUser> users,
+      IList<MeetingChatMessage> chatMessages,
+      Drink drink)
     {
       Id = id;
+      Date = date;
+      Latitude = latitude;
+      Longitude = longitude;
+      CreatedAt = createdAt;
+      IsRemoved = isRemoved;
+      RemovedAt = removedAt;
+      RemovedReason = removedReason;
+      DrinkId = drinkId;
+      Users = users;
+      ChatMessages = chatMessages;
+      Drink = drink;
     }
 
     public int Id { get; private set; }

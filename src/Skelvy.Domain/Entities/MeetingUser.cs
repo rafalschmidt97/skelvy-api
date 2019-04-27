@@ -14,10 +14,28 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public MeetingUser(int id, int meetingId, int userId, int meetingRequestId)
-      : this(meetingId, userId, meetingRequestId)
+    public MeetingUser(
+      int id,
+      DateTimeOffset createdAt,
+      bool isRemoved,
+      DateTimeOffset? removedAt,
+      int meetingId,
+      int userId,
+      int meetingRequestId,
+      Meeting meeting,
+      User user,
+      MeetingRequest meetingRequest)
     {
       Id = id;
+      CreatedAt = createdAt;
+      IsRemoved = isRemoved;
+      RemovedAt = removedAt;
+      MeetingId = meetingId;
+      UserId = userId;
+      MeetingRequestId = meetingRequestId;
+      Meeting = meeting;
+      User = user;
+      MeetingRequest = meetingRequest;
     }
 
     public int Id { get; private set; }

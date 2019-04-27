@@ -5,21 +5,6 @@ namespace Skelvy.Application.Maps.Infrastructure.GoogleMaps
   [Serializable]
   public class LocationDto
   {
-    public LocationDto(double latitude, double longitude, string country, string state, string district, string city, string type)
-    {
-      Latitude = latitude;
-      Longitude = longitude;
-      Country = country;
-      State = state;
-      District = district;
-      City = city;
-      Type = type;
-    }
-
-    public LocationDto()
-    {
-    }
-
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string Country { get; set; }

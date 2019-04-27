@@ -17,10 +17,42 @@ namespace Skelvy.Domain.Entities
       MeetingRequests = new List<MeetingRequest>();
     }
 
-    public User(int id, string email, string language)
-      : this(email, language)
+    public User(
+      int id,
+      string email,
+      string language,
+      string facebookId,
+      string googleId,
+      DateTimeOffset createdAt,
+      DateTimeOffset? modifiedAt,
+      bool isRemoved,
+      DateTimeOffset? removedAt,
+      DateTimeOffset? forgottenAt,
+      bool isDisabled,
+      DateTimeOffset? disabledAt,
+      string disabledReason,
+      UserProfile profile,
+      IList<UserRole> roles,
+      IList<MeetingRequest> meetingRequests,
+      IList<MeetingChatMessage> meetingChatMessages)
     {
       Id = id;
+      Email = email;
+      Language = language;
+      FacebookId = facebookId;
+      GoogleId = googleId;
+      CreatedAt = createdAt;
+      ModifiedAt = modifiedAt;
+      IsRemoved = isRemoved;
+      RemovedAt = removedAt;
+      ForgottenAt = forgottenAt;
+      IsDisabled = isDisabled;
+      DisabledAt = disabledAt;
+      DisabledReason = disabledReason;
+      Profile = profile;
+      Roles = roles;
+      MeetingRequests = meetingRequests;
+      MeetingChatMessages = meetingChatMessages;
     }
 
     public int Id { get; private set; }

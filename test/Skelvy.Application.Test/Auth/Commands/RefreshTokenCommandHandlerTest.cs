@@ -24,7 +24,8 @@ namespace Skelvy.Application.Test.Auth.Commands
     {
       var request = new RefreshTokenCommand(RefreshToken);
       _tokenService.Setup(x =>
-        x.Generate(It.IsAny<string>())).ReturnsAsync(new AuthDto(AccessToken, RefreshToken));
+        x.Generate(It.IsAny<string>()))
+        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var handler = new RefreshTokenCommandHandler(_tokenService.Object);
 
       await handler.Handle(request);

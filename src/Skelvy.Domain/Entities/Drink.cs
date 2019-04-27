@@ -8,9 +8,9 @@ namespace Skelvy.Domain.Entities
     }
 
     public Drink(int id, string name)
-      : this(name)
     {
       Id = id;
+      Name = name;
     }
 
     public int Id { get; private set; }

@@ -8,6 +8,14 @@ namespace Skelvy.Domain.Entities
       DrinkId = drinkId;
     }
 
+    public MeetingRequestDrink(int meetingRequestId, int drinkId, MeetingRequest meetingRequest, Drink drink)
+    {
+      MeetingRequestId = meetingRequestId;
+      DrinkId = drinkId;
+      MeetingRequest = meetingRequest;
+      Drink = drink;
+    }
+
     public int MeetingRequestId { get; private set; }
     public int DrinkId { get; private set; }
 

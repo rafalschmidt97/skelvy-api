@@ -31,16 +31,38 @@ namespace Skelvy.Domain.Entities
 
     public MeetingRequest(
       int id,
+      string status,
       DateTimeOffset minDate,
       DateTimeOffset maxDate,
       int minAge,
       int maxAge,
       double latitude,
       double longitude,
-      int userId)
-      : this(minDate, maxDate, minAge, maxAge, latitude, longitude, userId)
+      DateTimeOffset createdAt,
+      DateTimeOffset? modifiedAt,
+      bool isRemoved,
+      DateTimeOffset? removedAt,
+      string removedReason,
+      int userId,
+      IList<MeetingRequestDrink> drinks,
+      User user)
     {
       Id = id;
+      Status = status;
+      MinDate = minDate;
+      MaxDate = maxDate;
+      MinAge = minAge;
+      MaxAge = maxAge;
+      Latitude = latitude;
+      Longitude = longitude;
+      CreatedAt = createdAt;
+      ModifiedAt = modifiedAt;
+      IsRemoved = isRemoved;
+      RemovedAt = removedAt;
+      RemovedReason = removedReason;
+      UserId = userId;
+      Drinks = drinks;
+      User = user;
     }
 
     public int Id { get; private set; }

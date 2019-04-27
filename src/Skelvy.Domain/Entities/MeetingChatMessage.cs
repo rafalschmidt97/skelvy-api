@@ -12,10 +12,15 @@ namespace Skelvy.Domain.Entities
       MeetingId = meetingId;
     }
 
-    public MeetingChatMessage(int id, string message, DateTimeOffset date, int userId, int meetingId)
-      : this(message, date, userId, meetingId)
+    public MeetingChatMessage(int id, string message, DateTimeOffset date, int userId, int meetingId, User user, Meeting meeting)
     {
       Id = id;
+      Message = message;
+      Date = date;
+      UserId = userId;
+      MeetingId = meetingId;
+      User = user;
+      Meeting = meeting;
     }
 
     public int Id { get; private set; }
