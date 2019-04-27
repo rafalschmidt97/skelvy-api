@@ -11,25 +11,15 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       string name,
       DateTimeOffset birthday,
       string gender,
+      string description,
       IList<UpdateUserProfilePhotos> photos)
     {
       UserId = userId;
       Name = name;
       Birthday = birthday;
       Gender = gender;
-      Photos = photos;
-    }
-
-    public UpdateUserProfileCommand(
-      int userId,
-      string name,
-      DateTimeOffset birthday,
-      string gender,
-      string description,
-      IList<UpdateUserProfilePhotos> photos)
-      : this(userId, name, birthday, gender, photos)
-    {
       Description = description;
+      Photos = photos;
     }
 
     public int UserId { get; set; }

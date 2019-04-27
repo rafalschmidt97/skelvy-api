@@ -43,6 +43,7 @@ namespace Skelvy.Application.Test.Users.Commands
         "Example",
         DateTimeOffset.UtcNow.AddYears(-18),
         GenderTypes.Female,
+        null,
         new List<UpdateUserProfilePhotos>
         {
           new UpdateUserProfilePhotos("Url"),
