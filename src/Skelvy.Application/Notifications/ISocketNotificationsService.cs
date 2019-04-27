@@ -12,5 +12,7 @@ namespace Skelvy.Application.Notifications
     Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> usersId);
     Task BroadcastMeetingRequestExpired(IEnumerable<int> usersId);
     Task BroadcastMeetingExpired(IEnumerable<int> usersId);
+    Task BroadcastUserRemoved(IEnumerable<int> usersId);
+    Task BroadcastUserDisabled(IEnumerable<int> usersId);
   }
 }

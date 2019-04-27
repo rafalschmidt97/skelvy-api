@@ -47,6 +47,16 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       await SendNotification("MeetingExpired", usersId);
     }
 
+    public async Task BroadcastUserRemoved(IEnumerable<int> usersId)
+    {
+      await SendNotification("UserRemoved", usersId);
+    }
+
+    public async Task BroadcastUserDisabled(IEnumerable<int> usersId)
+    {
+      await SendNotification("UserDisabled", usersId);
+    }
+
     private async Task SendNotification(string action, IEnumerable<int> usersId, object data)
     {
       await _hubContext.Clients.Users(PrepareUsers(usersId)).SendAsync(action, data);
@@ -57,9 +67,19 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       await _hubContext.Clients.Users(PrepareUsers(usersId)).SendAsync(action);
     }
 
+    private async Task SendNotification(string action, int userId)
+    {
+      await _hubContext.Clients.User(PrepareUser(userId)).SendAsync(action);
+    }
+
     private static IReadOnlyList<string> PrepareUsers(IEnumerable<int> usersId)
     {
-      return usersId.Select(x => x.ToString()).ToList().AsReadOnly();
+      return usersId.Select(PrepareUser).ToList().AsReadOnly();
+    }
+
+    private static string PrepareUser(int userId)
+    {
+      return userId.ToString();
     }
   }
 }
