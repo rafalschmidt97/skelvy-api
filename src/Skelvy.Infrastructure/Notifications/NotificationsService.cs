@@ -79,11 +79,19 @@ namespace Skelvy.Infrastructure.Notifications
 
     public async Task BroadcastUserRemoved(User user)
     {
+      await BroadcastActionToOnline(
+        new List<int> { user.Id },
+        async (online) => await _socketService.BroadcastUserRemoved(online));
+
       await _emailService.BroadcastUserRemoved(user);
     }
 
     public async Task BroadcastUserDisabled(User user, string reason)
     {
+      await BroadcastActionToOnline(
+        new List<int> { user.Id },
+        async (online) => await _socketService.BroadcastUserDisabled(online));
+
       await _emailService.BroadcastUserDisabled(user, reason);
     }
 
@@ -103,6 +111,34 @@ namespace Skelvy.Infrastructure.Notifications
       {
         socketAction(connections.Online);
       }
+
+      if (connections.Offline.Count > 0)
+      {
+        pushAction(connections.Offline);
+      }
+
+      return Task.CompletedTask;
+    }
+
+    private static Task BroadcastActionToOnline(
+      IEnumerable<int> connected,
+      Action<IList<int>> socketAction)
+    {
+      var connections = GetConnections(connected);
+
+      if (connections.Online.Count > 0)
+      {
+        socketAction(connections.Online);
+      }
+
+      return Task.CompletedTask;
+    }
+
+    private static Task BroadcastActionToOffline(
+      IEnumerable<int> connected,
+      Action<IList<int>> pushAction)
+    {
+      var connections = GetConnections(connected);
 
       if (connections.Offline.Count > 0)
       {
