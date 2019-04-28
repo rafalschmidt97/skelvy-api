@@ -1,6 +1,7 @@
 using System;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Exceptions;
 using Xunit;
 
 namespace Skelvy.Domain.Test.Entities
@@ -27,6 +28,15 @@ namespace Skelvy.Domain.Test.Entities
       Assert.Equal("Example2", entity.Name);
       Assert.Equal("Description", entity.Description);
       Assert.NotNull(entity.ModifiedAt);
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionWithUpdatingNullProperty()
+    {
+      var entity = new UserProfile("Example", DateTimeOffset.UtcNow.AddYears(-18), GenderTypes.Male, 1);
+
+      Assert.Throws<DomainException>(() =>
+          entity.Update(null, DateTimeOffset.UtcNow.AddYears(-19), null, null));
     }
   }
 }

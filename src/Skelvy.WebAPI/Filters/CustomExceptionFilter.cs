@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Pipes;
 using Skelvy.Common.Exceptions;
+using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.WebAPI.Filters
 {
@@ -33,6 +34,11 @@ namespace Skelvy.WebAPI.Filters
       {
         status = customException.Status;
         message = customException.Message;
+      }
+      else if (context.Exception is DomainException domainException)
+      {
+        status = HttpStatusCode.Conflict;
+        message = domainException.Message;
       }
       else
       {

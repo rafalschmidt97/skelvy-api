@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Skelvy.Domain.Entities.Base;
 using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
@@ -88,28 +89,56 @@ namespace Skelvy.Domain.Entities
 
     public void MarkAsSearching()
     {
-      Status = MeetingRequestStatusTypes.Searching;
-      ModifiedAt = DateTimeOffset.UtcNow;
+      if (!IsSearching)
+      {
+        Status = MeetingRequestStatusTypes.Searching;
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already marked as searching.");
+      }
     }
 
     public void MarkAsFound()
     {
-      Status = MeetingRequestStatusTypes.Found;
-      ModifiedAt = DateTimeOffset.UtcNow;
+      if (!IsFound)
+      {
+        Status = MeetingRequestStatusTypes.Found;
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already marked as found.");
+      }
     }
 
     public void Abort()
     {
-      IsRemoved = true;
-      RemovedAt = DateTimeOffset.UtcNow;
-      RemovedReason = MeetingRequestRemovedReasonTypes.Aborted;
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        RemovedAt = DateTimeOffset.UtcNow;
+        RemovedReason = MeetingRequestRemovedReasonTypes.Aborted;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already aborted.");
+      }
     }
 
     public void Expire()
     {
-      IsRemoved = true;
-      RemovedAt = DateTimeOffset.UtcNow;
-      RemovedReason = MeetingRequestRemovedReasonTypes.Expired;
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        RemovedAt = DateTimeOffset.UtcNow;
+        RemovedReason = MeetingRequestRemovedReasonTypes.Expired;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already expired.");
+      }
     }
   }
 }

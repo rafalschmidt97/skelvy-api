@@ -1,6 +1,7 @@
 using System;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Exceptions;
 using Xunit;
 
 namespace Skelvy.Domain.Test.Entities
@@ -19,6 +20,16 @@ namespace Skelvy.Domain.Test.Entities
     }
 
     [Fact]
+    public void ShouldThrowExceptionWithAborted()
+    {
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1);
+      entity.Abort();
+
+      Assert.Throws<DomainException>(() =>
+        entity.Abort());
+    }
+
+    [Fact]
     public void ShouldBeExpired()
     {
       var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1);
@@ -27,6 +38,16 @@ namespace Skelvy.Domain.Test.Entities
       Assert.True(entity.IsRemoved);
       Assert.NotNull(entity.RemovedAt);
       Assert.Equal(entity.RemovedReason, MeetingRemovedReasonTypes.Expired);
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionWithExpired()
+    {
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1);
+      entity.Expire();
+
+      Assert.Throws<DomainException>(() =>
+        entity.Expire());
     }
   }
 }

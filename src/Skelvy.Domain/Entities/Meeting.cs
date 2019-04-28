@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Skelvy.Domain.Entities.Base;
 using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
@@ -63,16 +64,30 @@ namespace Skelvy.Domain.Entities
 
     public void Abort()
     {
-      IsRemoved = true;
-      RemovedAt = DateTimeOffset.UtcNow;
-      RemovedReason = MeetingRemovedReasonTypes.Aborted;
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        RemovedAt = DateTimeOffset.UtcNow;
+        RemovedReason = MeetingRemovedReasonTypes.Aborted;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(Meeting)}(Id = {Id}) is already aborted.");
+      }
     }
 
     public void Expire()
     {
-      IsRemoved = true;
-      RemovedAt = DateTimeOffset.UtcNow;
-      RemovedReason = MeetingRemovedReasonTypes.Expired;
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        RemovedAt = DateTimeOffset.UtcNow;
+        RemovedReason = MeetingRemovedReasonTypes.Expired;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(Meeting)}(Id = {Id}) is already expired.");
+      }
     }
   }
 }

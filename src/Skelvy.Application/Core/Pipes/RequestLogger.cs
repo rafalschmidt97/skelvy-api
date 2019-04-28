@@ -6,6 +6,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Skelvy.Common.Exceptions;
+using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Application.Core.Pipes
 {
@@ -49,6 +50,11 @@ namespace Skelvy.Application.Core.Pipes
         _logger.LogError("Request {Status}: {Message}", exception.Status, exception.Message);
         responseException = exception;
       }
+      catch (DomainException exception)
+      {
+        _logger.LogError("Domain Exception: {Message}", exception.Message);
+        responseException = exception;
+      }
       catch (Exception exception)
       {
         _logger.LogCritical(exception, "Unexpected Server Exception:");
@@ -57,7 +63,7 @@ namespace Skelvy.Application.Core.Pipes
 
       _timer.Stop();
 
-      if (_timer.ElapsedMilliseconds > 300)
+      if (_timer.ElapsedMilliseconds > 1000)
       {
         _logger.LogWarning(
           "Request Performance Issue: {@Request} ({ElapsedMilliseconds} milliseconds)",

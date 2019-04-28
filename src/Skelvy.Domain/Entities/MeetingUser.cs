@@ -1,5 +1,6 @@
 using System;
 using Skelvy.Domain.Entities.Base;
+using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
@@ -52,8 +53,15 @@ namespace Skelvy.Domain.Entities
 
     public void Leave()
     {
-      IsRemoved = true;
-      RemovedAt = DateTimeOffset.UtcNow;
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        RemovedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(MeetingUser)}(Id = {Id}) is already left.");
+      }
     }
   }
 }
