@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Persistence.Extensions;
 
 namespace Skelvy.Persistence
@@ -15,7 +14,7 @@ namespace Skelvy.Persistence
   public static class SkelvyContextExtensions
   {
     public static async Task<List<T>> SqlQuery<T>(
-      this ISkelvyContext context,
+      this SkelvyContext context,
       string query,
       object parameters,
       Func<DbDataReader, T> mapper)
@@ -66,7 +65,7 @@ namespace Skelvy.Persistence
     }
 
     public static async Task<List<T>> SqlQuery<T>(
-      this ISkelvyContext context,
+      this SkelvyContext context,
       string query,
       object parameters)
     {
@@ -74,7 +73,7 @@ namespace Skelvy.Persistence
     }
 
     public static async Task<List<T>> SqlQuery<T>(
-      this ISkelvyContext context,
+      this SkelvyContext context,
       string query,
       Func<DbDataReader, T> mapper)
     {
@@ -82,13 +81,13 @@ namespace Skelvy.Persistence
     }
 
     public static async Task<List<T>> SqlQuery<T>(
-      this ISkelvyContext context,
+      this SkelvyContext context,
       string query)
     {
       return await SqlQuery<T>(context, query, null, null);
     }
 
-    public static async Task<int> SqlCommand(this ISkelvyContext context, string command)
+    public static async Task<int> SqlCommand(this SkelvyContext context, string command)
     {
       return await context.Database.ExecuteSqlCommandAsync(command);
     }

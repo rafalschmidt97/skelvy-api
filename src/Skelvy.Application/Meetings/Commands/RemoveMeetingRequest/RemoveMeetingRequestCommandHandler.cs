@@ -44,7 +44,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 
       meetingRequest.Abort();
 
-      await _requestsRepository.Context.SaveChangesAsync();
+      await _requestsRepository.Update(meetingRequest);
       return Unit.Value;
     }
   }

@@ -9,5 +9,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   {
     Task<IList<MeetingChatMessage>> FindPageByMeetingId(int meetingId, int page = 1, int pageSize = 20);
     Task<IList<MeetingChatMessage>> FindAllByUsersId(IEnumerable<int> usersId);
+    Task Add(MeetingChatMessage message);
+    void RemoveRangeAsTransaction(IList<MeetingChatMessage> messages);
   }
 }

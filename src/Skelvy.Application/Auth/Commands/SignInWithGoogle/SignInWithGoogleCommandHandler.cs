@@ -6,6 +6,7 @@ using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
+using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
@@ -14,18 +15,24 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 {
   public class SignInWithGoogleCommandHandler : QueryHandler<SignInWithGoogleCommand, AuthDto>
   {
-    private readonly IAuthRepository _repository;
+    private readonly IAuthRepository _authRepository;
+    private readonly IUserProfilesRepository _profilesRepository;
+    private readonly IUserProfilePhotosRepository _profilePhotosRepository;
     private readonly IGoogleService _googleService;
     private readonly ITokenService _tokenService;
     private readonly INotificationsService _notifications;
 
     public SignInWithGoogleCommandHandler(
-      IAuthRepository repository,
+      IAuthRepository authRepository,
+      IUserProfilesRepository profilesRepository,
+      IUserProfilePhotosRepository profilePhotosRepository,
       IGoogleService googleService,
       ITokenService tokenService,
       INotificationsService notifications)
     {
-      _repository = repository;
+      _authRepository = authRepository;
+      _profilesRepository = profilesRepository;
+      _profilePhotosRepository = profilePhotosRepository;
       _googleService = googleService;
       _tokenService = tokenService;
       _notifications = notifications;
@@ -35,7 +42,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     {
       var verified = await _googleService.Verify(request.AuthToken);
 
-      var user = await _repository.FindOneWithRolesByGoogleId(verified.UserId);
+      var user = await _authRepository.FindOneWithRolesByGoogleId(verified.UserId);
 
       if (user == null)
       {
@@ -45,7 +52,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           "fields=birthday,name/givenName,emails/value,gender,image/url");
 
         var email = (string)details.emails[0].value;
-        var userByEmail = await _repository.FindOneWithRolesByEmail(email);
+        var userByEmail = await _authRepository.FindOneWithRolesByEmail(email);
 
         var isDataChanged = false;
 
@@ -53,7 +60,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         {
           user = new User((string)details.emails[0].value, request.Language);
           user.RegisterGoogle(verified.UserId);
-          _repository.Context.Users.Add(user);
+          _authRepository.AddAsTransaction(user);
 
           var birthday = details.birthday != null
             ? DateTimeOffset.ParseExact(
@@ -68,23 +75,25 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
             user.Id);
 
-          _repository.Context.UserProfiles.Add(profile);
+          _profilesRepository.AddAsTransaction(profile);
 
           if (details.image != null)
           {
             var photo = new UserProfilePhoto((string)details.image.url, profile.Id);
-            _repository.Context.UserProfilePhotos.Add(photo);
+            _profilePhotosRepository.AddAsTransaction(photo);
           }
+
+          await _authRepository.Commit();
         }
         else
         {
           ValidateUser(userByEmail);
           userByEmail.RegisterGoogle(verified.UserId);
+          await _authRepository.Update(userByEmail);
+
           user = userByEmail;
           isDataChanged = true;
         }
-
-        await _repository.Context.SaveChangesAsync();
 
         if (!isDataChanged)
         {

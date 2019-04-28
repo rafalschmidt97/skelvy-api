@@ -45,34 +45,34 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       var today = DateTimeOffset.UtcNow;
 
       var usersToRemove = await _usersRepository.FindAllRemovedAfterForgottenAt(today);
-      _usersRepository.Context.Users.RemoveRange(usersToRemove);
+      _usersRepository.RemoveRangeAsTransaction(usersToRemove);
 
       var usersId = usersToRemove.Select(x => x.Id).ToList();
 
       var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
-      _rolesRepository.Context.UserRoles.RemoveRange(userRolesToRemove);
+      _rolesRepository.RemoveRangeAsTransaction(userRolesToRemove);
 
       var userProfilesToRemove = await _profilesRepository.FindAllByUsersId(usersId);
-      _profilesRepository.Context.UserProfiles.RemoveRange(userProfilesToRemove);
+      _profilesRepository.RemoveRangeAsTransaction(userProfilesToRemove);
 
       var userProfilesId = userProfilesToRemove.Select(y => y.Id).ToList();
       var userProfilePhotosToRemove = await _profilePhotosRepository.FindAllWithRemovedByProfilesId(userProfilesId);
-      _profilePhotosRepository.Context.UserProfilePhotos.RemoveRange(userProfilePhotosToRemove);
+      _profilePhotosRepository.RemoveRangeAsTransaction(userProfilePhotosToRemove);
 
       var meetingRequestsToRemove = await _requestsRepository.FindAllWithRemovedByUsersId(usersId);
-      _requestsRepository.Context.MeetingRequests.RemoveRange(meetingRequestsToRemove);
+      _requestsRepository.RemoveRangeAsTransaction(meetingRequestsToRemove);
 
       var meetingRequestsId = meetingRequestsToRemove.Select(y => y.Id);
       var meetingRequestDrinksToRemove = await _requestDrinksRepository.FindAllByRequestsId(meetingRequestsId);
-      _requestDrinksRepository.Context.MeetingRequestDrinks.RemoveRange(meetingRequestDrinksToRemove);
+      _requestDrinksRepository.RemoveRangeAsTransaction(meetingRequestDrinksToRemove);
 
       var meetingUsersToRemove = await _meetingUsersRepository.FindAllWithRemovedByUsersId(usersId);
-      _meetingUsersRepository.Context.MeetingUsers.RemoveRange(meetingUsersToRemove);
+      _meetingUsersRepository.RemoveRangeAsTransaction(meetingUsersToRemove);
 
       var messagesToRemove = await _messagesRepository.FindAllByUsersId(usersId);
-      _messagesRepository.Context.MeetingChatMessages.RemoveRange(messagesToRemove);
+      _messagesRepository.RemoveRangeAsTransaction(messagesToRemove);
 
-      await _usersRepository.Context.SaveChangesAsync();
+      await _usersRepository.Commit();
 
       return Unit.Value;
     }

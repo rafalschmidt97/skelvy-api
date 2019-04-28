@@ -12,11 +12,16 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
   public class AddMeetingChatMessageCommandHandler : CommandHandler<AddMeetingChatMessageCommand>
   {
     private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IMeetingChatMessagesRepository _meetingChatMessagesRepository;
     private readonly INotificationsService _notifications;
 
-    public AddMeetingChatMessageCommandHandler(IMeetingUsersRepository meetingUsersRepository, INotificationsService notifications)
+    public AddMeetingChatMessageCommandHandler(
+      IMeetingUsersRepository meetingUsersRepository,
+      IMeetingChatMessagesRepository meetingChatMessagesRepository,
+      INotificationsService notifications)
     {
       _meetingUsersRepository = meetingUsersRepository;
+      _meetingChatMessagesRepository = meetingChatMessagesRepository;
       _notifications = notifications;
     }
 
@@ -30,9 +35,8 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
       }
 
       var message = new MeetingChatMessage(request.Message, request.Date, meetingUser.UserId, meetingUser.MeetingId);
-      _meetingUsersRepository.Context.MeetingChatMessages.Add(message);
+      await _meetingChatMessagesRepository.Add(message);
 
-      await _meetingUsersRepository.Context.SaveChangesAsync();
       await BroadcastMessage(message);
       return Unit.Value;
     }

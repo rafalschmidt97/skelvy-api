@@ -6,7 +6,6 @@ using Moq;
 using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Auth.Infrastructure.Facebook;
-using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
@@ -45,8 +44,14 @@ namespace Skelvy.Application.Test.Auth.Commands
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>()))
         .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
-      var handler =
-        new SignInWithFacebookCommandHandler(AuthRepository(), _facebookService.Object, _tokenService.Object, _notifications.Object);
+      var dbContext = InitializedDbContext();
+      var handler = new SignInWithFacebookCommandHandler(
+          new AuthRepository(dbContext),
+          new UserProfilesRepository(dbContext),
+          new UserProfilePhotosRepository(dbContext),
+          _facebookService.Object,
+          _tokenService.Object,
+          _notifications.Object);
 
       var result = await handler.Handle(request);
 
@@ -64,7 +69,14 @@ namespace Skelvy.Application.Test.Auth.Commands
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>()))
         .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
-      var handler = new SignInWithFacebookCommandHandler(AuthRepository(false), _facebookService.Object, _tokenService.Object, _notifications.Object);
+      var dbContext = DbContext();
+      var handler = new SignInWithFacebookCommandHandler(
+        new AuthRepository(dbContext),
+        new UserProfilesRepository(dbContext),
+        new UserProfilePhotosRepository(dbContext),
+        _facebookService.Object,
+        _tokenService.Object,
+        _notifications.Object);
 
       var result = await handler.Handle(request);
 
@@ -76,8 +88,14 @@ namespace Skelvy.Application.Test.Auth.Commands
     {
       var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
-      var handler =
-        new SignInWithFacebookCommandHandler(AuthRepository(), _facebookService.Object, _tokenService.Object, _notifications.Object);
+      var dbContext = InitializedDbContext();
+      var handler = new SignInWithFacebookCommandHandler(
+        new AuthRepository(dbContext),
+        new UserProfilesRepository(dbContext),
+        new UserProfilePhotosRepository(dbContext),
+        _facebookService.Object,
+        _tokenService.Object,
+        _notifications.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request));
@@ -88,8 +106,14 @@ namespace Skelvy.Application.Test.Auth.Commands
     {
       var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
-      var handler =
-        new SignInWithFacebookCommandHandler(AuthRepositoryWithRemovedUser(), _facebookService.Object, _tokenService.Object, _notifications.Object);
+      var dbContext = ContextWithRemovedUser();
+      var handler = new SignInWithFacebookCommandHandler(
+        new AuthRepository(dbContext),
+        new UserProfilesRepository(dbContext),
+        new UserProfilePhotosRepository(dbContext),
+        _facebookService.Object,
+        _tokenService.Object,
+        _notifications.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request));
@@ -100,14 +124,20 @@ namespace Skelvy.Application.Test.Auth.Commands
     {
       var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
-      var handler =
-        new SignInWithFacebookCommandHandler(AuthRepositoryWithDisabledUser(), _facebookService.Object, _tokenService.Object, _notifications.Object);
+      var dbContext = ContextWithDisabledUser();
+      var handler = new SignInWithFacebookCommandHandler(
+        new AuthRepository(dbContext),
+        new UserProfilesRepository(dbContext),
+        new UserProfilePhotosRepository(dbContext),
+        _facebookService.Object,
+        _tokenService.Object,
+        _notifications.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
         handler.Handle(request));
     }
 
-    private IAuthRepository AuthRepositoryWithRemovedUser()
+    private SkelvyContext ContextWithRemovedUser()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
@@ -116,14 +146,15 @@ namespace Skelvy.Application.Test.Auth.Commands
       if (user != null)
       {
         user.Remove(DateTimeOffset.UtcNow);
+        context.Users.Update(user);
       }
 
       context.SaveChanges();
 
-      return new AuthRepository(context);
+      return context;
     }
 
-    private IAuthRepository AuthRepositoryWithDisabledUser()
+    private SkelvyContext ContextWithDisabledUser()
     {
       var context = DbContext();
       SkelvyInitializer.Initialize(context);
@@ -132,11 +163,12 @@ namespace Skelvy.Application.Test.Auth.Commands
       if (user != null)
       {
         user.Disable("Test");
+        context.Users.Update(user);
       }
 
       context.SaveChanges();
 
-      return new AuthRepository(context);
+      return context;
     }
 
     private static dynamic GraphResponse()

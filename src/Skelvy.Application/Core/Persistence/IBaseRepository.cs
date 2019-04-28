@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 namespace Skelvy.Application.Core.Persistence
 {
   public interface IBaseRepository
   {
-    ISkelvyContext Context { get; }
+    Task Commit();
   }
 }

@@ -1,14 +1,13 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Auth.Infrastructure.Repositories;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Repositories
 {
   public class AuthRepository : BaseRepository, IAuthRepository
   {
-    public AuthRepository(ISkelvyContext context)
+    public AuthRepository(SkelvyContext context)
       : base(context)
     {
     }
@@ -39,6 +38,17 @@ namespace Skelvy.Persistence.Repositories
       return await Context.Users
         .Include(x => x.Roles)
         .FirstOrDefaultAsync(x => x.Email == email);
+    }
+
+    public void AddAsTransaction(User user)
+    {
+      Context.Users.Add(user);
+    }
+
+    public async Task Update(User user)
+    {
+      Context.Users.Update(user);
+      await Commit();
     }
   }
 }

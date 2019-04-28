@@ -37,7 +37,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
 
       if (isDataChanged)
       {
-        await _meetingRequestsRepository.Context.SaveChangesAsync();
+        await _meetingRequestsRepository.UpdateRange(requestsToRemove);
         await BroadcastMeetingRequestExpired(requestsToRemove);
       }
 

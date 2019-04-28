@@ -15,15 +15,18 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
   {
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly INotificationsService _notifications;
 
     public RemoveExpiredMeetingsCommandHandler(
       IMeetingsRepository meetingsRepository,
       IMeetingUsersRepository meetingUsersRepository,
+      IMeetingRequestsRepository meetingRequestsRepository,
       INotificationsService notifications)
     {
       _meetingsRepository = meetingsRepository;
       _meetingUsersRepository = meetingUsersRepository;
+      _meetingRequestsRepository = meetingRequestsRepository;
       _notifications = notifications;
     }
 
@@ -40,14 +43,17 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
         var meetingUsers = await _meetingUsersRepository.FindAllWithMeetingRequestByMeetingsId(meetingsId);
 
         meetingsToRemove.ForEach(x => x.Expire());
-        meetingUsers.Select(x => x.MeetingRequest).ForEach(x => x.Expire());
+        var meetingUsersRequest = meetingUsers.Select(x => x.MeetingRequest).ToList();
+        meetingUsersRequest.ForEach(x => x.Expire());
+        _meetingRequestsRepository.UpdateRangeAsTransaction(meetingUsersRequest);
 
         isDataChanged = true;
       }
 
       if (isDataChanged)
       {
-        await _meetingsRepository.Context.SaveChangesAsync();
+        _meetingsRepository.UpdateRangeAsTransaction(meetingsToRemove);
+        await _meetingsRepository.Commit();
         await BroadcastMeetingExpired(meetingsToRemove);
       }
 

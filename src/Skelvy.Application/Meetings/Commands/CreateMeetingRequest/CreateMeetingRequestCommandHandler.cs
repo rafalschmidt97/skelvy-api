@@ -19,6 +19,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     private readonly IDrinksRepository _drinksRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
+    private readonly IMeetingRequestDrinksRepository _meetingRequestDrinksRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly INotificationsService _notifications;
 
@@ -27,6 +28,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       IDrinksRepository drinksRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
+      IMeetingRequestDrinksRepository meetingRequestDrinksRepository,
       IMeetingUsersRepository meetingUsersRepository,
       INotificationsService notifications)
     {
@@ -34,6 +36,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       _drinksRepository = drinksRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
+      _meetingRequestDrinksRepository = meetingRequestDrinksRepository;
       _meetingUsersRepository = meetingUsersRepository;
       _notifications = notifications;
     }
@@ -102,22 +105,23 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         request.Longitude,
         request.UserId);
 
-      _meetingRequestsRepository.Context.MeetingRequests.Add(meetingRequest);
+      _meetingRequestsRepository.AddAsTransaction(meetingRequest);
 
       var meetingRequestDrinks = PrepareDrinks(request.Drinks, meetingRequest);
-      _meetingRequestsRepository.Context.MeetingRequestDrinks.AddRange(meetingRequestDrinks);
+      _meetingRequestDrinksRepository.AddRangeAsTransaction(meetingRequestDrinks);
 
-      await _meetingRequestsRepository.Context.SaveChangesAsync();
+      await _meetingRequestsRepository.Commit();
       return meetingRequest;
     }
 
     private async Task AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
     {
       var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
-      _meetingUsersRepository.Context.MeetingUsers.Add(meetingUser);
+      _meetingUsersRepository.AddAsTransaction(meetingUser);
       newRequest.MarkAsFound();
+      _meetingRequestsRepository.UpdateAsTransaction(newRequest);
 
-      await _meetingUsersRepository.Context.SaveChangesAsync();
+      await _meetingUsersRepository.Commit();
       await BroadcastUserJoinedMeeting(meetingUser);
     }
 
@@ -139,7 +143,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         request1.Longitude,
         request1.FindCommonDrinkId(request2));
 
-      _meetingsRepository.Context.Meetings.Add(meeting);
+      _meetingsRepository.AddAsTransaction(meeting);
 
       var meetingUsers = new[]
       {
@@ -147,12 +151,14 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         new MeetingUser(meeting.Id, request2.UserId, request2.Id),
       };
 
-      _meetingUsersRepository.Context.MeetingUsers.AddRange(meetingUsers);
+      _meetingUsersRepository.AddRangeAsTransaction(meetingUsers);
 
       request1.MarkAsFound();
       request2.MarkAsFound();
+      _meetingRequestsRepository.UpdateAsTransaction(request1);
+      _meetingRequestsRepository.UpdateAsTransaction(request2);
 
-      await _meetingsRepository.Context.SaveChangesAsync();
+      await _meetingsRepository.Commit();
       await BroadcastUserFoundMeeting(request1, request2);
     }
 

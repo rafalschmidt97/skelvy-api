@@ -8,5 +8,6 @@ namespace Skelvy.Application.Auth.Infrastructure.Repositories
   public interface IAuthRolesRepository : IBaseRepository
   {
     Task<IList<UserRole>> FindAllByUsersId(IEnumerable<int> usersId);
+    void RemoveRangeAsTransaction(IList<UserRole> roles);
   }
 }

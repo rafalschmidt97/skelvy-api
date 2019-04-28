@@ -13,11 +13,19 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
   public class MatchMeetingRequestsCommandHandler : CommandHandler<MatchMeetingRequestsCommand>
   {
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
+    private readonly IMeetingsRepository _meetingsRepository;
+    private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly INotificationsService _notifications;
 
-    public MatchMeetingRequestsCommandHandler(IMeetingRequestsRepository meetingRequestsRepository, INotificationsService notifications)
+    public MatchMeetingRequestsCommandHandler(
+      IMeetingRequestsRepository meetingRequestsRepository,
+      IMeetingsRepository meetingsRepository,
+      IMeetingUsersRepository meetingUsersRepository,
+      INotificationsService notifications)
     {
       _meetingRequestsRepository = meetingRequestsRepository;
+      _meetingsRepository = meetingsRepository;
+      _meetingUsersRepository = meetingUsersRepository;
       _notifications = notifications;
     }
 
@@ -43,7 +51,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
       if (isDataChanged)
       {
-        await _meetingRequestsRepository.Context.SaveChangesAsync();
+        await _meetingRequestsRepository.Commit();
         await BroadcastUserFoundMeeting(updatedRequests);
       }
 
@@ -78,7 +86,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         request1.Longitude,
         request1.FindCommonDrinkId(request2));
 
-      _meetingRequestsRepository.Context.Meetings.Add(meeting);
+      _meetingsRepository.AddAsTransaction(meeting);
 
       var meetingUsers = new[]
       {
@@ -86,10 +94,13 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         new MeetingUser(meeting.Id, request2.UserId, request2.Id),
       };
 
-      _meetingRequestsRepository.Context.MeetingUsers.AddRange(meetingUsers);
+      _meetingUsersRepository.AddRangeAsTransaction(meetingUsers);
 
       request1.MarkAsFound();
       request2.MarkAsFound();
+
+      _meetingRequestsRepository.UpdateAsTransaction(request1);
+      _meetingRequestsRepository.UpdateAsTransaction(request2);
     }
 
     private async Task BroadcastUserFoundMeeting(IEnumerable<MeetingRequest> updatedRequests)

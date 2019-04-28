@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 
@@ -10,7 +9,7 @@ namespace Skelvy.Persistence.Repositories
 {
   public class MeetingUsersRepository : BaseRepository, IMeetingUsersRepository
   {
-    public MeetingUsersRepository(ISkelvyContext context)
+    public MeetingUsersRepository(SkelvyContext context)
       : base(context)
     {
     }
@@ -62,6 +61,26 @@ namespace Skelvy.Persistence.Repositories
     {
       return await Context.MeetingUsers
         .AnyAsync(x => x.UserId == userId && !x.IsRemoved);
+    }
+
+    public void UpdateAsTransaction(MeetingUser meetingUser)
+    {
+      Context.MeetingUsers.Update(meetingUser);
+    }
+
+    public void AddRangeAsTransaction(IList<MeetingUser> meetingUsers)
+    {
+      Context.MeetingUsers.AddRange(meetingUsers);
+    }
+
+    public void RemoveRangeAsTransaction(IList<MeetingUser> meetingUsers)
+    {
+      Context.MeetingUsers.RemoveRange(meetingUsers);
+    }
+
+    public void AddAsTransaction(MeetingUser meetingUser)
+    {
+      Context.MeetingUsers.Add(meetingUser);
     }
   }
 }

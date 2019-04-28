@@ -25,6 +25,8 @@ namespace Skelvy.Application.Test.Users.Commands
       var handler = new RemoveUserCommandHandler(
         new UsersRepository(dbContext),
         new MeetingUsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
         _notifications.Object);
 
       await handler.Handle(request);
@@ -38,6 +40,8 @@ namespace Skelvy.Application.Test.Users.Commands
       var handler = new RemoveUserCommandHandler(
         new UsersRepository(dbContext),
         new MeetingUsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
         _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

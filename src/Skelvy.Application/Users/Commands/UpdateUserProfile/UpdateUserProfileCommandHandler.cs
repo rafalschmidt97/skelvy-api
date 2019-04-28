@@ -30,9 +30,11 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       }
 
       profile.Update(request.Name, request.Birthday, request.Gender, request.Description);
+      _profilesRepository.UpdateAsTransaction(profile);
+
       await UpdatePhotos(profile, request.Photos);
 
-      await _profilesRepository.Context.SaveChangesAsync();
+      await _profilesRepository.Commit();
       return Unit.Value;
     }
 
@@ -40,11 +42,11 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
     {
       // Remove old photos
       var oldPhotos = await _profilePhotosRepository.FindAllByProfileId(profile.Id);
-      _profilePhotosRepository.Context.UserProfilePhotos.RemoveRange(oldPhotos);
+      _profilePhotosRepository.RemoveRangeAsTransaction(oldPhotos);
 
       // Add new photos
       var newPhotos = PreparePhotos(photos, profile);
-      _profilePhotosRepository.Context.UserProfilePhotos.AddRange(newPhotos);
+      _profilePhotosRepository.AddRangeAsTransaction(newPhotos);
     }
 
     private static IEnumerable<UserProfilePhoto> PreparePhotos(

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Meetings.Commands.MatchMeetingRequests;
 using Skelvy.Application.Notifications;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
@@ -19,7 +20,12 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldNotThrowException()
     {
       var request = new MatchMeetingRequestsCommand();
-      var handler = new MatchMeetingRequestsCommandHandler(MeetingRequestsRepository(), _notifications.Object);
+      var dbContext = InitializedDbContext();
+      var handler = new MatchMeetingRequestsCommandHandler(
+        new MeetingRequestsRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingUsersRepository(dbContext),
+        _notifications.Object);
 
       await handler.Handle(request);
     }

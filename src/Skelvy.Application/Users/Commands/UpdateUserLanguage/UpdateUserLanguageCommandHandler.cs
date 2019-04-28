@@ -27,7 +27,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
 
       user.UpdateLanguage(request.Language);
 
-      await _usersRepository.Context.SaveChangesAsync();
+      await _usersRepository.Update(user);
       return Unit.Value;
     }
   }

@@ -15,15 +15,21 @@ namespace Skelvy.Application.Users.Commands.DisableUser
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IMeetingsRepository _meetingsRepository;
+    private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly INotificationsService _notifications;
 
     public DisableUserCommandHandler(
       IUsersRepository usersRepository,
       IMeetingUsersRepository meetingUsersRepository,
+      IMeetingsRepository meetingsRepository,
+      IMeetingRequestsRepository meetingRequestsRepository,
       INotificationsService notifications)
     {
       _usersRepository = usersRepository;
       _meetingUsersRepository = meetingUsersRepository;
+      _meetingsRepository = meetingsRepository;
+      _meetingRequestsRepository = meetingRequestsRepository;
       _notifications = notifications;
     }
 
@@ -44,7 +50,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
       await LeaveMeetings(user);
       user.Disable(request.Reason);
 
-      await _usersRepository.Context.SaveChangesAsync();
+      await _usersRepository.Update(user);
       await _notifications.BroadcastUserDisabled(user, request.Reason);
 
       return Unit.Value;
@@ -63,6 +69,9 @@ namespace Skelvy.Application.Users.Commands.DisableUser
         userDetails.Leave();
         userDetails.MeetingRequest.Abort();
 
+        _meetingUsersRepository.UpdateAsTransaction(userDetails);
+        _meetingRequestsRepository.UpdateAsTransaction(userDetails.MeetingRequest);
+
         if (meetingUsers.Count == 2)
         {
           var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
@@ -71,11 +80,12 @@ namespace Skelvy.Application.Users.Commands.DisableUser
           anotherUserDetails.MeetingRequest.MarkAsSearching();
           meetingUser.Meeting.Abort();
 
-          await _meetingUsersRepository.Context.SaveChangesAsync();
-          await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
+          _meetingUsersRepository.UpdateAsTransaction(anotherUserDetails);
+          _meetingRequestsRepository.UpdateAsTransaction(anotherUserDetails.MeetingRequest);
+          _meetingsRepository.UpdateAsTransaction(meetingUser.Meeting);
         }
 
-        await _meetingUsersRepository.Context.SaveChangesAsync();
+        await _meetingUsersRepository.Commit();
         await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
       }
     }
