@@ -28,10 +28,8 @@ namespace Skelvy.Domain.Entities
       DateTimeOffset createdAt,
       DateTimeOffset? modifiedAt,
       bool isRemoved,
-      DateTimeOffset? removedAt,
       DateTimeOffset? forgottenAt,
       bool isDisabled,
-      DateTimeOffset? disabledAt,
       string disabledReason,
       UserProfile profile,
       IList<UserRole> roles,
@@ -46,10 +44,8 @@ namespace Skelvy.Domain.Entities
       CreatedAt = createdAt;
       ModifiedAt = modifiedAt;
       IsRemoved = isRemoved;
-      RemovedAt = removedAt;
       ForgottenAt = forgottenAt;
       IsDisabled = isDisabled;
-      DisabledAt = disabledAt;
       DisabledReason = disabledReason;
       Profile = profile;
       Roles = roles;
@@ -65,10 +61,8 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedAt { get; private set; }
     public DateTimeOffset? ForgottenAt { get; private set; }
     public bool IsDisabled { get; private set; }
-    public DateTimeOffset? DisabledAt { get; private set; }
     public string DisabledReason { get; private set; }
 
     public UserProfile Profile { get; private set; }
@@ -81,6 +75,7 @@ namespace Skelvy.Domain.Entities
       if (FacebookId == null)
       {
         FacebookId = facebookId;
+        ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
@@ -93,6 +88,7 @@ namespace Skelvy.Domain.Entities
       if (GoogleId == null)
       {
         GoogleId = googleId;
+        ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
@@ -118,8 +114,8 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedAt = DateTimeOffset.UtcNow;
         ForgottenAt = forgottenAt;
+        ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
@@ -132,8 +128,8 @@ namespace Skelvy.Domain.Entities
       if (!IsDisabled)
       {
         IsDisabled = true;
-        DisabledAt = DateTimeOffset.UtcNow;
         DisabledReason = reason;
+        ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {

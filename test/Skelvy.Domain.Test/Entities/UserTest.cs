@@ -74,7 +74,7 @@ namespace Skelvy.Domain.Test.Entities
       entity.Remove(DateTimeOffset.UtcNow);
 
       Assert.True(entity.IsRemoved);
-      Assert.NotNull(entity.RemovedAt);
+      Assert.NotNull(entity.ModifiedAt);
       Assert.NotNull(entity.ForgottenAt);
     }
 
@@ -95,7 +95,7 @@ namespace Skelvy.Domain.Test.Entities
       entity.Disable("Test");
 
       Assert.True(entity.IsDisabled);
-      Assert.NotNull(entity.DisabledAt);
+      Assert.NotNull(entity.ModifiedAt);
       Assert.NotNull(entity.DisabledReason);
     }
 

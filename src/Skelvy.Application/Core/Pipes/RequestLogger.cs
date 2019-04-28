@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Exceptions;
@@ -54,6 +55,12 @@ namespace Skelvy.Application.Core.Pipes
       {
         _logger.LogError("Domain Exception: {Message}", exception.Message);
         responseException = exception;
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        _logger.LogError("Request Concurrency Exception: {@Request}", request);
+        responseException =
+          new ConflictException("Data have been modified since entities were loaded.");
       }
       catch (Exception exception)
       {

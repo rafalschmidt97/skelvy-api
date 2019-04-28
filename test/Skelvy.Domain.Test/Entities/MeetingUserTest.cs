@@ -13,7 +13,7 @@ namespace Skelvy.Domain.Test.Entities
       entity.Leave();
 
       Assert.True(entity.IsRemoved);
-      Assert.NotNull(entity.RemovedAt);
+      Assert.NotNull(entity.ModifiedAt);
     }
 
     [Fact]

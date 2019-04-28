@@ -42,7 +42,6 @@ namespace Skelvy.Domain.Entities
       DateTimeOffset createdAt,
       DateTimeOffset? modifiedAt,
       bool isRemoved,
-      DateTimeOffset? removedAt,
       string removedReason,
       int userId,
       IList<MeetingRequestDrink> drinks,
@@ -59,7 +58,6 @@ namespace Skelvy.Domain.Entities
       CreatedAt = createdAt;
       ModifiedAt = modifiedAt;
       IsRemoved = isRemoved;
-      RemovedAt = removedAt;
       RemovedReason = removedReason;
       UserId = userId;
       Drinks = drinks;
@@ -77,7 +75,6 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedAt { get; private set; }
     public string RemovedReason { get; private set; }
     public int UserId { get; private set; }
 
@@ -118,8 +115,8 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedAt = DateTimeOffset.UtcNow;
         RemovedReason = MeetingRequestRemovedReasonTypes.Aborted;
+        ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
@@ -132,8 +129,8 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedAt = DateTimeOffset.UtcNow;
         RemovedReason = MeetingRequestRemovedReasonTypes.Expired;
+        ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {

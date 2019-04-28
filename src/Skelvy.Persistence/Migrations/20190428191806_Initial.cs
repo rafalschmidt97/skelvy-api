@@ -35,10 +35,8 @@ namespace Skelvy.Persistence.Migrations
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedAt = table.Column<DateTimeOffset>(nullable: true),
                     ForgottenAt = table.Column<DateTimeOffset>(nullable: true),
                     IsDisabled = table.Column<bool>(nullable: false),
-                    DisabledAt = table.Column<DateTimeOffset>(nullable: true),
                     DisabledReason = table.Column<string>(maxLength: 1024, nullable: true)
                 },
                 constraints: table =>
@@ -56,8 +54,8 @@ namespace Skelvy.Persistence.Migrations
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedAt = table.Column<DateTimeOffset>(nullable: true),
                     RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                     DrinkId = table.Column<int>(nullable: false)
                 },
@@ -88,7 +86,6 @@ namespace Skelvy.Persistence.Migrations
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedAt = table.Column<DateTimeOffset>(nullable: true),
                     RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
@@ -206,8 +203,8 @@ namespace Skelvy.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedAt = table.Column<DateTimeOffset>(nullable: true),
                     MeetingId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     MeetingRequestId = table.Column<int>(nullable: false)

@@ -6,7 +6,7 @@ using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
-  public class Meeting : ICreatableEntity, IRemovableEntity
+  public class Meeting : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
     public Meeting(DateTimeOffset date, double latitude, double longitude, int drinkId)
     {
@@ -26,8 +26,8 @@ namespace Skelvy.Domain.Entities
       double latitude,
       double longitude,
       DateTimeOffset createdAt,
+      DateTimeOffset? modifiedAt,
       bool isRemoved,
-      DateTimeOffset? removedAt,
       string removedReason,
       int drinkId,
       IList<MeetingUser> users,
@@ -39,8 +39,8 @@ namespace Skelvy.Domain.Entities
       Latitude = latitude;
       Longitude = longitude;
       CreatedAt = createdAt;
+      ModifiedAt = modifiedAt;
       IsRemoved = isRemoved;
-      RemovedAt = removedAt;
       RemovedReason = removedReason;
       DrinkId = drinkId;
       Users = users;
@@ -53,8 +53,8 @@ namespace Skelvy.Domain.Entities
     public double Latitude { get; private set; }
     public double Longitude { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedAt { get; private set; }
     public string RemovedReason { get; private set; }
     public int DrinkId { get; private set; }
 
@@ -67,8 +67,8 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedAt = DateTimeOffset.UtcNow;
         RemovedReason = MeetingRemovedReasonTypes.Aborted;
+        ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
@@ -81,8 +81,8 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedAt = DateTimeOffset.UtcNow;
         RemovedReason = MeetingRemovedReasonTypes.Expired;
+        ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
