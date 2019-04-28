@@ -53,9 +53,19 @@ namespace Skelvy.Domain.Entities
 
     public void Update(string name, DateTimeOffset birthday, string gender, string description)
     {
-      Name = name != null ? name.Trim() : throw new DomainException($"'Name' must not be null for entity {nameof(UserProfile)}(Id = {Id}).");
-      Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : throw new DomainException($"'Birthday' must show the age of majority for entity {nameof(UserProfile)}(Id = {Id}).");
-      Gender = gender == GenderTypes.Male || gender == GenderTypes.Female || gender == GenderTypes.Other ? gender : throw new DomainException($"'Gender' must be {GenderTypes.Male} / {GenderTypes.Female} / {GenderTypes.Other} for entity {nameof(UserProfile)}(Id = {Id}).");
+      Name = name != null
+        ? name.Trim()
+        : throw new DomainException($"'Name' must not be null for entity {nameof(UserProfile)}(Id = {Id}).");
+
+      Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18)
+        ? birthday
+        : throw new DomainException(
+          $"'Birthday' must show the age of majority for entity {nameof(UserProfile)}(Id = {Id}).");
+
+      Gender = gender == GenderTypes.Male || gender == GenderTypes.Female || gender == GenderTypes.Other
+        ? gender
+        : throw new DomainException(
+          $"'Gender' must be {GenderTypes.Male} / {GenderTypes.Female} / {GenderTypes.Other} for entity {nameof(UserProfile)}(Id = {Id}).");
 
       if (description != null)
       {

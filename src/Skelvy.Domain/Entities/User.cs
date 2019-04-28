@@ -74,7 +74,9 @@ namespace Skelvy.Domain.Entities
     {
       if (FacebookId == null)
       {
-        FacebookId = facebookId;
+        FacebookId = facebookId ??
+                     throw new DomainException($"'FacebookId' must not be null for entity {nameof(User)}(Id = {Id}).");
+
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
@@ -87,7 +89,9 @@ namespace Skelvy.Domain.Entities
     {
       if (GoogleId == null)
       {
-        GoogleId = googleId;
+        GoogleId = googleId ?? throw new DomainException(
+                     $"'GoogleId' must not be null for entity {nameof(User)}(Id = {Id}).");
+
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
@@ -100,7 +104,11 @@ namespace Skelvy.Domain.Entities
     {
       if (language != Language)
       {
-        Language = language == LanguageTypes.EN || language == LanguageTypes.PL ? language : throw new DomainException($"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN} for entity {nameof(UserProfile)}(Id = {Id}).");
+        Language = language == LanguageTypes.EN || language == LanguageTypes.PL
+          ? language
+          : throw new DomainException(
+            $"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN} for entity {nameof(UserProfile)}(Id = {Id}).");
+
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
@@ -128,7 +136,10 @@ namespace Skelvy.Domain.Entities
       if (!IsDisabled)
       {
         IsDisabled = true;
-        DisabledReason = reason;
+        DisabledReason =
+          reason ?? throw new DomainException(
+            $"'DisabledReason' must not be null for entity {nameof(User)}(Id = {Id}).");
+
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
