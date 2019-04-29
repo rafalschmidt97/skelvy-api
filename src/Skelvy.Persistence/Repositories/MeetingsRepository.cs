@@ -26,19 +26,24 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Drink)
         .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == userId && !y.IsRemoved));
 
-      return new Meeting(
-        meeting.Id,
-        meeting.Date,
-        meeting.Latitude,
-        meeting.Longitude,
-        meeting.CreatedAt,
-        meeting.ModifiedAt,
-        meeting.IsRemoved,
-        meeting.RemovedReason,
-        meeting.DrinkId,
-        meeting.Users.Where(x => !x.IsRemoved).ToList(),
-        meeting.ChatMessages,
-        meeting.Drink);
+      if (meeting != null)
+      {
+        return new Meeting(
+          meeting.Id,
+          meeting.Date,
+          meeting.Latitude,
+          meeting.Longitude,
+          meeting.CreatedAt,
+          meeting.ModifiedAt,
+          meeting.IsRemoved,
+          meeting.RemovedReason,
+          meeting.DrinkId,
+          meeting.Users.Where(x => !x.IsRemoved).ToList(),
+          meeting.ChatMessages,
+          meeting.Drink);
+      }
+
+      return default(Meeting);
     }
 
     public async Task<IList<Meeting>> FindAllAfterDate(DateTimeOffset maxDate)
