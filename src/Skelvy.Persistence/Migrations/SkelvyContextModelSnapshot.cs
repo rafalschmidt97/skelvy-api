@@ -55,7 +55,8 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<double>("Longitude");
 
-                    b.Property<DateTimeOffset?>("RemovedAt");
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .IsConcurrencyToken();
 
                     b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
@@ -124,9 +125,8 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<DateTimeOffset>("MinDate");
 
-                    b.Property<DateTimeOffset?>("ModifiedAt");
-
-                    b.Property<DateTimeOffset?>("RemovedAt");
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .IsConcurrencyToken();
 
                     b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
@@ -187,7 +187,8 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<int>("MeetingRequestId");
 
-                    b.Property<DateTimeOffset?>("RemovedAt");
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .IsConcurrencyToken();
 
                     b.Property<int>("UserId");
 
@@ -212,8 +213,6 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt");
 
-                    b.Property<DateTimeOffset?>("DisabledAt");
-
                     b.Property<string>("DisabledReason")
                         .HasMaxLength(1024);
 
@@ -237,9 +236,8 @@ namespace Skelvy.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(15);
 
-                    b.Property<DateTimeOffset?>("ModifiedAt");
-
-                    b.Property<DateTimeOffset?>("RemovedAt");
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .IsConcurrencyToken();
 
                     b.HasKey("Id");
 
@@ -274,7 +272,8 @@ namespace Skelvy.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(15);
 
-                    b.Property<DateTimeOffset?>("ModifiedAt");
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .IsConcurrencyToken();
 
                     b.Property<string>("Name")
                         .IsRequired()

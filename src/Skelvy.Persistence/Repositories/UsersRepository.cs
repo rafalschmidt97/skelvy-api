@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 
@@ -11,7 +10,7 @@ namespace Skelvy.Persistence.Repositories
 {
   public class UsersRepository : BaseRepository, IUsersRepository
   {
-    public UsersRepository(ISkelvyContext context)
+    public UsersRepository(SkelvyContext context)
       : base(context)
     {
     }
@@ -41,6 +40,18 @@ namespace Skelvy.Persistence.Repositories
       return await Context.Users
         .Where(x => x.IsRemoved && x.ForgottenAt < maxDate)
         .ToListAsync();
+    }
+
+    public async Task Update(User user)
+    {
+      Context.Users.Update(user);
+      await SaveChanges();
+    }
+
+    public async Task RemoveRange(IList<User> users)
+    {
+      Context.Users.RemoveRange(users);
+      await SaveChanges();
     }
   }
 }

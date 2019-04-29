@@ -1,7 +1,9 @@
+using Microsoft.EntityFrameworkCore.Storage;
+
 namespace Skelvy.Application.Core.Persistence
 {
   public interface IBaseRepository
   {
-    ISkelvyContext Context { get; }
+    IDbContextTransaction BeginTransaction();
   }
 }

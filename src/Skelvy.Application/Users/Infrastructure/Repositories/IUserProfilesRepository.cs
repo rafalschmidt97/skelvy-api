@@ -9,5 +9,8 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
   {
     Task<UserProfile> FindOneByUserId(int userId);
     Task<IList<UserProfile>> FindAllByUsersId(IEnumerable<int> usersId);
+    Task Add(UserProfile profile);
+    Task Update(UserProfile profile);
+    Task RemoveRange(IList<UserProfile> profiles);
   }
 }

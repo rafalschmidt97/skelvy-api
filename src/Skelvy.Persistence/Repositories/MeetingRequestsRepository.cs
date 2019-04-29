@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
@@ -13,7 +12,7 @@ namespace Skelvy.Persistence.Repositories
 {
   public class MeetingRequestsRepository : BaseRepository, IMeetingRequestsRepository
   {
-    public MeetingRequestsRepository(ISkelvyContext context)
+    public MeetingRequestsRepository(SkelvyContext context)
       : base(context)
     {
     }
@@ -79,6 +78,30 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
 
       return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
+    }
+
+    public async Task Add(MeetingRequest request)
+    {
+      await Context.MeetingRequests.AddAsync(request);
+      await SaveChanges();
+    }
+
+    public async Task Update(MeetingRequest request)
+    {
+      Context.MeetingRequests.Update(request);
+      await SaveChanges();
+    }
+
+    public async Task UpdateRange(IList<MeetingRequest> requests)
+    {
+      Context.MeetingRequests.UpdateRange(requests);
+      await SaveChanges();
+    }
+
+    public async Task RemoveRange(IList<MeetingRequest> requests)
+    {
+      Context.MeetingRequests.RemoveRange(requests);
+      await SaveChanges();
     }
 
     private static bool AreRequestsMatch(MeetingRequest request1, MeetingRequest request2, User requestUser)

@@ -3,6 +3,7 @@ using Moq;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
+using Skelvy.Persistence.Repositories;
 using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
@@ -20,7 +21,12 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldNotThrowException()
     {
       var request = new LeaveMeetingCommand(2);
-      var handler = new LeaveMeetingCommandHandler(MeetingUsersRepository(), _notifications.Object);
+      var dbContext = InitializedDbContext();
+      var handler = new LeaveMeetingCommandHandler(
+        new MeetingUsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        _notifications.Object);
 
       await handler.Handle(request);
     }
@@ -29,7 +35,12 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldThrowException()
     {
       var request = new LeaveMeetingCommand(2);
-      var handler = new LeaveMeetingCommandHandler(MeetingUsersRepository(false), _notifications.Object);
+      var dbContext = DbContext();
+      var handler = new LeaveMeetingCommandHandler(
+        new MeetingUsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

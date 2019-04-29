@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
-using Skelvy.Common.Extensions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Extensions;
 
@@ -13,7 +11,7 @@ namespace Skelvy.Persistence.Repositories
 {
   public class MeetingsRepository : BaseRepository, IMeetingsRepository
   {
-    public MeetingsRepository(ISkelvyContext context)
+    public MeetingsRepository(SkelvyContext context)
       : base(context)
     {
     }
@@ -34,8 +32,8 @@ namespace Skelvy.Persistence.Repositories
         meeting.Latitude,
         meeting.Longitude,
         meeting.CreatedAt,
+        meeting.ModifiedAt,
         meeting.IsRemoved,
-        meeting.RemovedAt,
         meeting.RemovedReason,
         meeting.DrinkId,
         meeting.Users.Where(x => !x.IsRemoved).ToList(),
@@ -64,6 +62,24 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
 
       return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
+    }
+
+    public async Task Add(Meeting meeting)
+    {
+      await Context.Meetings.AddAsync(meeting);
+      await SaveChanges();
+    }
+
+    public async Task Update(Meeting meeting)
+    {
+      Context.Meetings.Update(meeting);
+      await SaveChanges();
+    }
+
+    public async Task UpdateRange(IList<Meeting> meetings)
+    {
+      Context.Meetings.UpdateRange(meetings);
+      await SaveChanges();
     }
 
     private static bool IsMeetingMatchRequest(Meeting meeting, MeetingRequest request, User requestUser)

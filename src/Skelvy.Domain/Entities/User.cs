@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Skelvy.Domain.Entities.Base;
+using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
@@ -26,10 +28,8 @@ namespace Skelvy.Domain.Entities
       DateTimeOffset createdAt,
       DateTimeOffset? modifiedAt,
       bool isRemoved,
-      DateTimeOffset? removedAt,
       DateTimeOffset? forgottenAt,
       bool isDisabled,
-      DateTimeOffset? disabledAt,
       string disabledReason,
       UserProfile profile,
       IList<UserRole> roles,
@@ -44,10 +44,8 @@ namespace Skelvy.Domain.Entities
       CreatedAt = createdAt;
       ModifiedAt = modifiedAt;
       IsRemoved = isRemoved;
-      RemovedAt = removedAt;
       ForgottenAt = forgottenAt;
       IsDisabled = isDisabled;
-      DisabledAt = disabledAt;
       DisabledReason = disabledReason;
       Profile = profile;
       Roles = roles;
@@ -63,10 +61,8 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedAt { get; private set; }
     public DateTimeOffset? ForgottenAt { get; private set; }
     public bool IsDisabled { get; private set; }
-    public DateTimeOffset? DisabledAt { get; private set; }
     public string DisabledReason { get; private set; }
 
     public UserProfile Profile { get; private set; }
@@ -76,32 +72,80 @@ namespace Skelvy.Domain.Entities
 
     public void RegisterFacebook(string facebookId)
     {
-      FacebookId = facebookId;
+      if (FacebookId == null)
+      {
+        FacebookId = facebookId ??
+                     throw new DomainException($"'FacebookId' must not be null for entity {nameof(User)}(Id = {Id}).");
+
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) has already connected facebook account.");
+      }
     }
 
     public void RegisterGoogle(string googleId)
     {
-      GoogleId = googleId;
+      if (GoogleId == null)
+      {
+        GoogleId = googleId ?? throw new DomainException(
+                     $"'GoogleId' must not be null for entity {nameof(User)}(Id = {Id}).");
+
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) has already connected google account.");
+      }
     }
 
     public void UpdateLanguage(string language)
     {
-      Language = language;
-      ModifiedAt = DateTimeOffset.UtcNow;
+      if (language != Language)
+      {
+        Language = language == LanguageTypes.EN || language == LanguageTypes.PL
+          ? language
+          : throw new DomainException(
+            $"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN} for entity {nameof(UserProfile)}(Id = {Id}).");
+
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) has set current language.");
+      }
     }
 
     public void Remove(DateTimeOffset forgottenAt)
     {
-      IsRemoved = true;
-      RemovedAt = DateTimeOffset.UtcNow;
-      ForgottenAt = forgottenAt;
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        ForgottenAt = forgottenAt;
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) is already removed.");
+      }
     }
 
     public void Disable(string reason)
     {
-      IsDisabled = true;
-      DisabledAt = DateTimeOffset.UtcNow;
-      DisabledReason = reason;
+      if (!IsDisabled)
+      {
+        IsDisabled = true;
+        DisabledReason =
+          reason ?? throw new DomainException(
+            $"'DisabledReason' must not be null for entity {nameof(User)}(Id = {Id}).");
+
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) is already disabled.");
+      }
     }
   }
 }

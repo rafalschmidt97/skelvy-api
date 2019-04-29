@@ -1,14 +1,14 @@
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence
 {
-  public class SkelvyContext : DbContext, ISkelvyContext
+  public sealed class SkelvyContext : DbContext
   {
     public SkelvyContext(DbContextOptions options)
       : base(options)
     {
+      ChangeTracker.AutoDetectChangesEnabled = false;
     }
 
     public DbSet<User> Users { get; private set; }

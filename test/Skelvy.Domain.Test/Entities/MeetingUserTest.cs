@@ -1,4 +1,5 @@
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Exceptions;
 using Xunit;
 
 namespace Skelvy.Domain.Test.Entities
@@ -12,7 +13,17 @@ namespace Skelvy.Domain.Test.Entities
       entity.Leave();
 
       Assert.True(entity.IsRemoved);
-      Assert.NotNull(entity.RemovedAt);
+      Assert.NotNull(entity.ModifiedAt);
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionWithLeft()
+    {
+      var entity = new MeetingUser(1, 1, 1);
+      entity.Leave();
+
+      Assert.Throws<DomainException>(() =>
+        entity.Leave());
     }
   }
 }

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 
@@ -10,7 +9,7 @@ namespace Skelvy.Persistence.Repositories
 {
   public class MeetingChatMessagesRepository : BaseRepository, IMeetingChatMessagesRepository
   {
-    public MeetingChatMessagesRepository(ISkelvyContext context)
+    public MeetingChatMessagesRepository(SkelvyContext context)
       : base(context)
     {
     }
@@ -33,6 +32,18 @@ namespace Skelvy.Persistence.Repositories
       return await Context.MeetingChatMessages
         .Where(x => usersId.Any(y => y == x.UserId))
         .ToListAsync();
+    }
+
+    public async Task Add(MeetingChatMessage message)
+    {
+      await Context.MeetingChatMessages.AddAsync(message);
+      await SaveChanges();
+    }
+
+    public async Task RemoveRange(IList<MeetingChatMessage> messages)
+    {
+      Context.MeetingChatMessages.RemoveRange(messages);
+      await SaveChanges();
     }
   }
 }

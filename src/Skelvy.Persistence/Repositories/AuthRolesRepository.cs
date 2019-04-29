@@ -3,14 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Auth.Infrastructure.Repositories;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Repositories
 {
   public class AuthRolesRepository : BaseRepository, IAuthRolesRepository
   {
-    public AuthRolesRepository(ISkelvyContext context)
+    public AuthRolesRepository(SkelvyContext context)
       : base(context)
     {
     }
@@ -20,6 +19,12 @@ namespace Skelvy.Persistence.Repositories
       return await Context.UserRoles
         .Where(x => usersId.Any(y => y == x.UserId))
         .ToListAsync();
+    }
+
+    public async Task RemoveRange(IList<UserRole> roles)
+    {
+      Context.UserRoles.RemoveRange(roles);
+      await SaveChanges();
     }
   }
 }

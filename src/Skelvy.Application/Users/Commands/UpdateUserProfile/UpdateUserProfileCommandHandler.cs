@@ -29,10 +29,14 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
         throw new NotFoundException(nameof(UserProfile), request.UserId);
       }
 
-      profile.Update(request.Name, request.Birthday, request.Gender, request.Description);
-      await UpdatePhotos(profile, request.Photos);
+      using (var transaction = _profilesRepository.BeginTransaction())
+      {
+        profile.Update(request.Name, request.Birthday, request.Gender, request.Description);
+        await _profilesRepository.Update(profile);
+        await UpdatePhotos(profile, request.Photos);
+        transaction.Commit();
+      }
 
-      await _profilesRepository.Context.SaveChangesAsync();
       return Unit.Value;
     }
 
@@ -40,11 +44,11 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
     {
       // Remove old photos
       var oldPhotos = await _profilePhotosRepository.FindAllByProfileId(profile.Id);
-      _profilePhotosRepository.Context.UserProfilePhotos.RemoveRange(oldPhotos);
+      await _profilePhotosRepository.RemoveRange(oldPhotos);
 
       // Add new photos
       var newPhotos = PreparePhotos(photos, profile);
-      _profilePhotosRepository.Context.UserProfilePhotos.AddRange(newPhotos);
+      await _profilePhotosRepository.AddRange(newPhotos);
     }
 
     private static IEnumerable<UserProfilePhoto> PreparePhotos(

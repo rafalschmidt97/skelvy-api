@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 
@@ -10,7 +9,7 @@ namespace Skelvy.Persistence.Repositories
 {
   public class UserProfilePhotosRepository : BaseRepository, IUserProfilePhotosRepository
   {
-    public UserProfilePhotosRepository(ISkelvyContext context)
+    public UserProfilePhotosRepository(SkelvyContext context)
       : base(context)
     {
     }
@@ -27,6 +26,24 @@ namespace Skelvy.Persistence.Repositories
       return await Context.UserProfilePhotos
         .Where(x => profilesId.Any(y => y == x.ProfileId))
         .ToListAsync();
+    }
+
+    public async Task Add(UserProfilePhoto photo)
+    {
+      await Context.UserProfilePhotos.AddAsync(photo);
+      await SaveChanges();
+    }
+
+    public async Task AddRange(IEnumerable<UserProfilePhoto> photos)
+    {
+      await Context.UserProfilePhotos.AddRangeAsync(photos);
+      await SaveChanges();
+    }
+
+    public async Task RemoveRange(IList<UserProfilePhoto> photos)
+    {
+      Context.UserProfilePhotos.RemoveRange(photos);
+      await SaveChanges();
     }
   }
 }

@@ -10,5 +10,7 @@ namespace Skelvy.Application.Auth.Infrastructure.Repositories
     Task<User> FindOneWithRolesByFacebookId(string facebookId);
     Task<User> FindOneWithRolesByGoogleId(string googleId);
     Task<User> FindOneWithRolesByEmail(string email);
+    Task Add(User user);
+    Task Update(User user);
   }
 }

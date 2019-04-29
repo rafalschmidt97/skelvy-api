@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
 
@@ -9,7 +8,7 @@ namespace Skelvy.Persistence
 {
   public static class SkelvyInitializer
   {
-    public static void Initialize(ISkelvyContext context)
+    public static void Initialize(SkelvyContext context)
     {
       SeedUsers(context);
       SeedProfiles(context);
@@ -19,7 +18,7 @@ namespace Skelvy.Persistence
       SeedMeetingsChatMessages(context);
     }
 
-    public static void SeedUsers(ISkelvyContext context)
+    public static void SeedUsers(SkelvyContext context)
     {
       if (context.Users.Any())
       {
@@ -44,7 +43,7 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedProfiles(ISkelvyContext context)
+    public static void SeedProfiles(SkelvyContext context)
     {
       if (context.UserProfiles.Any())
       {
@@ -86,7 +85,7 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedDrinks(ISkelvyContext context)
+    public static void SeedDrinks(SkelvyContext context)
     {
       if (context.Drinks.Any())
       {
@@ -108,7 +107,7 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedMeetingRequests(ISkelvyContext context)
+    public static void SeedMeetingRequests(SkelvyContext context)
     {
       if (context.MeetingRequests.Any())
       {
@@ -135,7 +134,7 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedMeetings(ISkelvyContext context)
+    public static void SeedMeetings(SkelvyContext context)
     {
       if (context.Meetings.Any())
       {
@@ -183,7 +182,7 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedMeetingsChatMessages(ISkelvyContext context)
+    public static void SeedMeetingsChatMessages(SkelvyContext context)
     {
       if (context.MeetingChatMessages.Any())
       {

@@ -1,9 +1,10 @@
 using System;
 using Skelvy.Domain.Entities.Base;
+using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
-  public class MeetingUser : ICreatableEntity, IRemovableEntity
+  public class MeetingUser : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
     public MeetingUser(int meetingId, int userId, int meetingRequestId)
     {
@@ -17,8 +18,8 @@ namespace Skelvy.Domain.Entities
     public MeetingUser(
       int id,
       DateTimeOffset createdAt,
+      DateTimeOffset? modifiedAt,
       bool isRemoved,
-      DateTimeOffset? removedAt,
       int meetingId,
       int userId,
       int meetingRequestId,
@@ -28,8 +29,8 @@ namespace Skelvy.Domain.Entities
     {
       Id = id;
       CreatedAt = createdAt;
+      ModifiedAt = modifiedAt;
       IsRemoved = isRemoved;
-      RemovedAt = removedAt;
       MeetingId = meetingId;
       UserId = userId;
       MeetingRequestId = meetingRequestId;
@@ -40,8 +41,8 @@ namespace Skelvy.Domain.Entities
 
     public int Id { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
-    public DateTimeOffset? RemovedAt { get; private set; }
     public int MeetingId { get; private set; }
     public int UserId { get; private set; }
     public int MeetingRequestId { get; private set; }
@@ -52,8 +53,15 @@ namespace Skelvy.Domain.Entities
 
     public void Leave()
     {
-      IsRemoved = true;
-      RemovedAt = DateTimeOffset.UtcNow;
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(MeetingUser)}(Id = {Id}) is already left.");
+      }
     }
   }
 }

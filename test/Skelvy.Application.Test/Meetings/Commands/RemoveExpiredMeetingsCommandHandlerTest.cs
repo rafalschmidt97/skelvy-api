@@ -24,6 +24,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new RemoveExpiredMeetingsCommandHandler(
         new MeetingsRepository(dbContext),
         new MeetingUsersRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
         _notifications.Object);
 
       await handler.Handle(request);

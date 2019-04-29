@@ -16,6 +16,7 @@ namespace Skelvy.Persistence.Configurations
       builder.HasIndex(e => e.Longitude);
 
       builder.Property(e => e.RemovedReason).HasMaxLength(15);
+      builder.Property(e => e.ModifiedAt).IsConcurrencyToken();
     }
   }
 }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Skelvy.Application.Core.Persistence;
 using Skelvy.Persistence;
 using Skelvy.WebAPI.Extensions;
 
@@ -19,10 +18,9 @@ namespace Skelvy.WebAPI
         var hosting = scope.ServiceProvider.GetService<IHostingEnvironment>();
         if (hosting.IsDevelopment())
         {
-          var context = scope.ServiceProvider.GetService<ISkelvyContext>();
-          var concreteContext = (SkelvyContext)context;
-          concreteContext.Database.Migrate();
-          concreteContext.Database.EnsureCreated();
+          var context = scope.ServiceProvider.GetService<SkelvyContext>();
+          context.Database.Migrate();
+          context.Database.EnsureCreated();
           SkelvyInitializer.Initialize(context);
         }
       }

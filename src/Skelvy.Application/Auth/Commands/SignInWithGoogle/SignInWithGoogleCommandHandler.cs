@@ -6,6 +6,7 @@ using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
+using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
@@ -14,18 +15,24 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 {
   public class SignInWithGoogleCommandHandler : QueryHandler<SignInWithGoogleCommand, AuthDto>
   {
-    private readonly IAuthRepository _repository;
+    private readonly IAuthRepository _authRepository;
+    private readonly IUserProfilesRepository _profilesRepository;
+    private readonly IUserProfilePhotosRepository _profilePhotosRepository;
     private readonly IGoogleService _googleService;
     private readonly ITokenService _tokenService;
     private readonly INotificationsService _notifications;
 
     public SignInWithGoogleCommandHandler(
-      IAuthRepository repository,
+      IAuthRepository authRepository,
+      IUserProfilesRepository profilesRepository,
+      IUserProfilePhotosRepository profilePhotosRepository,
       IGoogleService googleService,
       ITokenService tokenService,
       INotificationsService notifications)
     {
-      _repository = repository;
+      _authRepository = authRepository;
+      _profilesRepository = profilesRepository;
+      _profilePhotosRepository = profilePhotosRepository;
       _googleService = googleService;
       _tokenService = tokenService;
       _notifications = notifications;
@@ -35,7 +42,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     {
       var verified = await _googleService.Verify(request.AuthToken);
 
-      var user = await _repository.FindOneWithRolesByGoogleId(verified.UserId);
+      var user = await _authRepository.FindOneWithRolesByGoogleId(verified.UserId);
 
       if (user == null)
       {
@@ -45,46 +52,51 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           "fields=birthday,name/givenName,emails/value,gender,image/url");
 
         var email = (string)details.emails[0].value;
-        var userByEmail = await _repository.FindOneWithRolesByEmail(email);
+        var userByEmail = await _authRepository.FindOneWithRolesByEmail(email);
 
         var isDataChanged = false;
 
         if (userByEmail == null)
         {
-          user = new User((string)details.emails[0].value, request.Language);
-          user.RegisterGoogle(verified.UserId);
-          _repository.Context.Users.Add(user);
-
-          var birthday = details.birthday != null
-            ? DateTimeOffset.ParseExact(
-              (string)details.birthday,
-              "yyyy-MM-dd",
-              CultureInfo.CurrentCulture).ToUniversalTime()
-            : DateTimeOffset.UtcNow;
-
-          var profile = new UserProfile(
-            (string)details.name.givenName,
-            birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-            details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-            user.Id);
-
-          _repository.Context.UserProfiles.Add(profile);
-
-          if (details.image != null)
+          using (var transaction = _authRepository.BeginTransaction())
           {
-            var photo = new UserProfilePhoto((string)details.image.url, profile.Id);
-            _repository.Context.UserProfilePhotos.Add(photo);
+            user = new User((string)details.emails[0].value, request.Language);
+            user.RegisterGoogle(verified.UserId);
+            await _authRepository.Add(user);
+
+            var birthday = details.birthday != null
+              ? DateTimeOffset.ParseExact(
+                (string)details.birthday,
+                "yyyy-MM-dd",
+                CultureInfo.CurrentCulture).ToUniversalTime()
+              : DateTimeOffset.UtcNow;
+
+            var profile = new UserProfile(
+              (string)details.name.givenName,
+              birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
+              details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+              user.Id);
+
+            await _profilesRepository.Add(profile);
+
+            if (details.image != null)
+            {
+              var photo = new UserProfilePhoto((string)details.image.url, profile.Id);
+              await _profilePhotosRepository.Add(photo);
+            }
+
+            transaction.Commit();
           }
         }
         else
         {
           ValidateUser(userByEmail);
           userByEmail.RegisterGoogle(verified.UserId);
+          await _authRepository.Update(userByEmail);
+
           user = userByEmail;
           isDataChanged = true;
         }
-
-        await _repository.Context.SaveChangesAsync();
 
         if (!isDataChanged)
         {
