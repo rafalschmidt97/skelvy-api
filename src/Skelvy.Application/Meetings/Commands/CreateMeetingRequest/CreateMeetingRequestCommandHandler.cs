@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Drinks.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
@@ -23,6 +26,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     private readonly IMeetingRequestDrinksRepository _meetingRequestDrinksRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly INotificationsService _notifications;
+    private readonly ILogger<CreateMeetingRequestCommandHandler> _logger;
 
     public CreateMeetingRequestCommandHandler(
       IUsersRepository usersRepository,
@@ -31,7 +35,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingRequestDrinksRepository meetingRequestDrinksRepository,
       IMeetingUsersRepository meetingUsersRepository,
-      INotificationsService notifications)
+      INotificationsService notifications,
+      ILogger<CreateMeetingRequestCommandHandler> logger)
     {
       _usersRepository = usersRepository;
       _drinksRepository = drinksRepository;
@@ -40,6 +45,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       _meetingRequestDrinksRepository = meetingRequestDrinksRepository;
       _meetingUsersRepository = meetingUsersRepository;
       _notifications = notifications;
+      _logger = logger;
     }
 
     public override async Task<Unit> Handle(CreateMeetingRequestCommand request)
@@ -121,13 +127,22 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     {
       using (var transaction = _meetingUsersRepository.BeginTransaction())
       {
-        var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
-        await _meetingUsersRepository.Add(meetingUser);
-        newRequest.MarkAsFound();
-        await _meetingRequestsRepository.Update(newRequest);
+        try
+        {
+          var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
+          await _meetingUsersRepository.Add(meetingUser);
+          newRequest.MarkAsFound();
+          await _meetingRequestsRepository.Update(newRequest);
 
-        transaction.Commit();
-        await BroadcastUserJoinedMeeting(meetingUser);
+          transaction.Commit();
+          await BroadcastUserJoinedMeeting(meetingUser);
+        }
+        catch (Exception exception)
+        {
+          _logger.LogError(
+            $"{nameof(CreateMeetingRequestCommand)} Exception while AddUserToMeeting for " +
+            $"Meeting(Id={meeting.Id}) Request(Id={newRequest.Id}): {exception.Message}");
+        }
       }
     }
 
@@ -145,29 +160,47 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     {
       using (var transaction = _meetingsRepository.BeginTransaction())
       {
-        var meeting = new Meeting(
-          request1.FindCommonDate(request2),
-          request1.Latitude,
-          request1.Longitude,
-          request1.FindCommonDrinkId(request2));
-
-        await _meetingsRepository.Add(meeting);
-
-        var meetingUsers = new[]
+        try
         {
-          new MeetingUser(meeting.Id, request1.UserId, request1.Id),
-          new MeetingUser(meeting.Id, request2.UserId, request2.Id),
-        };
+          var meeting = new Meeting(
+            request1.FindCommonDate(request2),
+            request1.Latitude,
+            request1.Longitude,
+            request1.FindCommonDrinkId(request2));
 
-        await _meetingUsersRepository.AddRange(meetingUsers);
+          await _meetingsRepository.Add(meeting);
 
-        request1.MarkAsFound();
-        request2.MarkAsFound();
-        await _meetingRequestsRepository.Update(request1);
-        await _meetingRequestsRepository.Update(request2);
+          var meetingUsers = new[]
+          {
+            new MeetingUser(meeting.Id, request1.UserId, request1.Id),
+            new MeetingUser(meeting.Id, request2.UserId, request2.Id),
+          };
 
-        transaction.Commit();
-        await BroadcastUserFoundMeeting(request1, request2);
+          await _meetingUsersRepository.AddRange(meetingUsers);
+
+          request1.MarkAsFound();
+          request2.MarkAsFound();
+          await _meetingRequestsRepository.Update(request1);
+          await _meetingRequestsRepository.Update(request2);
+
+          transaction.Commit();
+          await BroadcastUserFoundMeeting(request1, request2);
+        }
+        catch (Exception exception)
+        {
+          if (exception is DbUpdateConcurrencyException)
+          {
+            _logger.LogError(
+              $"{nameof(CreateMeetingRequestCommand)} Concurrency Exception for while " +
+              $"CreateNewMeeting Requests(Id={request1.Id}, Id={request2.Id})");
+          }
+          else
+          {
+            _logger.LogError(
+              $"{nameof(CreateMeetingRequestCommand)} Exception for while CreateNewMeeting " +
+              $"Requests({request1.Id}, {request2.Id}): {exception.Message}");
+          }
+        }
       }
     }
 

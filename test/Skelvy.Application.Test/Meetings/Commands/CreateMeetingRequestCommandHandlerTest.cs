@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
 using Skelvy.Application.Notifications;
@@ -14,10 +15,12 @@ namespace Skelvy.Application.Test.Meetings.Commands
   public class CreateMeetingRequestCommandHandlerTest : RequestTestBase
   {
     private readonly Mock<INotificationsService> _notifications;
+    private readonly Mock<ILogger<CreateMeetingRequestCommandHandler>> _logger;
 
     public CreateMeetingRequestCommandHandlerTest()
     {
       _notifications = new Mock<INotificationsService>();
+      _logger = new Mock<ILogger<CreateMeetingRequestCommandHandler>>();
     }
 
     [Fact]
@@ -34,7 +37,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinksRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        _logger.Object);
 
       await handler.Handle(request);
     }
@@ -51,7 +55,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinksRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        _logger.Object);
 
       await handler.Handle(request);
     }
@@ -69,7 +74,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinksRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        _logger.Object);
 
       await handler.Handle(request);
     }
@@ -87,7 +93,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinksRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        _logger.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -106,7 +113,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinksRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        _logger.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -124,7 +132,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinksRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        _logger.Object);
 
       await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));
@@ -143,7 +152,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinksRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        _logger.Object);
 
       await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));

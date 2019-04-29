@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Skelvy.Application.Meetings.Commands.MatchMeetingRequests;
 using Skelvy.Application.Notifications;
@@ -10,10 +11,12 @@ namespace Skelvy.Application.Test.Meetings.Commands
   public class MatchMeetingRequestsCommandHandlerTest : DatabaseRequestTestBase
   {
     private readonly Mock<INotificationsService> _notifications;
+    private readonly Mock<ILogger<MatchMeetingRequestsCommandHandler>> _logger;
 
     public MatchMeetingRequestsCommandHandlerTest()
     {
       _notifications = new Mock<INotificationsService>();
+      _logger = new Mock<ILogger<MatchMeetingRequestsCommandHandler>>();
     }
 
     [Fact]
@@ -25,7 +28,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        _logger.Object);
 
       await handler.Handle(request);
     }
