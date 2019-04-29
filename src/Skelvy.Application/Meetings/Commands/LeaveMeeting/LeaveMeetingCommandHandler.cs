@@ -71,9 +71,8 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
         }
 
         transaction.Commit();
+        await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
       }
-
-      await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
 
       return Unit.Value;
     }
