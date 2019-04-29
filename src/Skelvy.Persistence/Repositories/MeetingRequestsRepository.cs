@@ -72,9 +72,9 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.Drink)
         .Where(x => x.Id != request.Id &&
                     x.Status == MeetingRequestStatusTypes.Searching &&
-                    !x.IsRemoved &&
                     x.MinDate <= request.MaxDate &&
-                    x.MaxDate >= request.MinDate)
+                    x.MaxDate >= request.MinDate &&
+                    !x.IsRemoved)
         .ToListAsync();
 
       return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));

@@ -58,7 +58,10 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.MeetingRequest)
         .ThenInclude(x => x.Drinks)
         .ThenInclude(x => x.Drink)
-        .Where(x => x.Date >= request.MinDate && x.Date <= request.MaxDate && !x.IsRemoved)
+        .Where(x => x.Date >= request.MinDate &&
+                    x.Date <= request.MaxDate &&
+                    x.Users.Count(y => !y.IsRemoved) < 4 &&
+                    !x.IsRemoved)
         .ToListAsync();
 
       return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
@@ -86,9 +89,7 @@ namespace Skelvy.Persistence.Repositories
     {
       return meeting.Users.Where(x => !x.IsRemoved).All(x => x.User.Profile.IsWithinMeetingRequestAgeRange(request)) &&
              meeting.Users.Where(x => !x.IsRemoved).All(x => requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
-             meeting.Users.Count(x => !x.IsRemoved) < 4 &&
-             meeting.GetDistance(request) <= 5 &&
-             request.Drinks.Any(x => x.DrinkId == meeting.DrinkId);
+             meeting.GetDistance(request) <= 5;
     }
   }
 }
