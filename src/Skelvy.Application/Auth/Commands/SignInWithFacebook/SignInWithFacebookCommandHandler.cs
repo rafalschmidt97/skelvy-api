@@ -57,30 +57,33 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
         if (userByEmail == null)
         {
-          user = new User((string)details.email, request.Language);
-          user.RegisterFacebook(verified.UserId);
-          _authRepository.AddAsTransaction(user);
-
-          var birthday = DateTimeOffset.ParseExact(
-            (string)details.birthday,
-            "MM/dd/yyyy",
-            CultureInfo.CurrentCulture).ToUniversalTime();
-
-          var profile = new UserProfile(
-            (string)details.first_name,
-            birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-            details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-            user.Id);
-
-          _profilesRepository.AddAsTransaction(profile);
-
-          if (details.picture != null)
+          using (var transaction = _authRepository.BeginTransaction())
           {
-            var photo = new UserProfilePhoto((string)details.picture.data.url, profile.Id);
-            _profilePhotosRepository.AddAsTransaction(photo);
-          }
+            user = new User((string)details.email, request.Language);
+            user.RegisterFacebook(verified.UserId);
+            await _authRepository.Add(user);
 
-          await _authRepository.Commit();
+            var birthday = DateTimeOffset.ParseExact(
+              (string)details.birthday,
+              "MM/dd/yyyy",
+              CultureInfo.CurrentCulture).ToUniversalTime();
+
+            var profile = new UserProfile(
+              (string)details.first_name,
+              birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
+              details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+              user.Id);
+
+            await _profilesRepository.Add(profile);
+
+            if (details.picture != null)
+            {
+              var photo = new UserProfilePhoto((string)details.picture.data.url, profile.Id);
+              await _profilePhotosRepository.Add(photo);
+            }
+
+            transaction.Commit();
+          }
         }
         else
         {

@@ -63,24 +63,28 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.UserId == userId && !x.IsRemoved);
     }
 
-    public void UpdateAsTransaction(MeetingUser meetingUser)
+    public async Task Add(MeetingUser meetingUser)
+    {
+      await Context.MeetingUsers.AddAsync(meetingUser);
+      await SaveChanges();
+    }
+
+    public async Task AddRange(IList<MeetingUser> meetingUsers)
+    {
+      await Context.MeetingUsers.AddRangeAsync(meetingUsers);
+      await SaveChanges();
+    }
+
+    public async Task Update(MeetingUser meetingUser)
     {
       Context.MeetingUsers.Update(meetingUser);
+      await SaveChanges();
     }
 
-    public void AddRangeAsTransaction(IList<MeetingUser> meetingUsers)
-    {
-      Context.MeetingUsers.AddRange(meetingUsers);
-    }
-
-    public void RemoveRangeAsTransaction(IList<MeetingUser> meetingUsers)
+    public async Task RemoveRange(IList<MeetingUser> meetingUsers)
     {
       Context.MeetingUsers.RemoveRange(meetingUsers);
-    }
-
-    public void AddAsTransaction(MeetingUser meetingUser)
-    {
-      Context.MeetingUsers.Add(meetingUser);
+      await SaveChanges();
     }
   }
 }

@@ -8,6 +8,7 @@ using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
+using Skelvy.Common.Extensions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Extensions;
 
@@ -96,33 +97,38 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task<MeetingRequest> CreateNewMeetingRequest(CreateMeetingRequestCommand request)
     {
-      var meetingRequest = new MeetingRequest(
-        request.MinDate,
-        request.MaxDate,
-        request.MinAge,
-        request.MaxAge,
-        request.Latitude,
-        request.Longitude,
-        request.UserId);
+      using (var transaction = _meetingRequestsRepository.BeginTransaction())
+      {
+        var meetingRequest = new MeetingRequest(
+          request.MinDate,
+          request.MaxDate,
+          request.MinAge,
+          request.MaxAge,
+          request.Latitude,
+          request.Longitude,
+          request.UserId);
 
-      _meetingRequestsRepository.AddAsTransaction(meetingRequest);
+        await _meetingRequestsRepository.Add(meetingRequest);
+        PrepareDrinks(request.Drinks, meetingRequest).ForEach(x => meetingRequest.Drinks.Add(x));
+        await _meetingRequestDrinksRepository.AddRange(meetingRequest.Drinks);
+        transaction.Commit();
 
-      var meetingRequestDrinks = PrepareDrinks(request.Drinks, meetingRequest);
-      _meetingRequestDrinksRepository.AddRangeAsTransaction(meetingRequestDrinks);
-
-      await _meetingRequestsRepository.Commit();
-      return meetingRequest;
+        return meetingRequest;
+      }
     }
 
     private async Task AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
     {
-      var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
-      _meetingUsersRepository.AddAsTransaction(meetingUser);
-      newRequest.MarkAsFound();
-      _meetingRequestsRepository.UpdateAsTransaction(newRequest);
+      using (var transaction = _meetingUsersRepository.BeginTransaction())
+      {
+        var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
+        await _meetingUsersRepository.Add(meetingUser);
+        newRequest.MarkAsFound();
+        await _meetingRequestsRepository.Update(newRequest);
 
-      await _meetingUsersRepository.Commit();
-      await BroadcastUserJoinedMeeting(meetingUser);
+        transaction.Commit();
+        await BroadcastUserJoinedMeeting(meetingUser);
+      }
     }
 
     private async Task MatchExistingMeetingRequests(MeetingRequest newRequest, User user)
@@ -137,29 +143,32 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
     {
-      var meeting = new Meeting(
-        request1.FindCommonDate(request2),
-        request1.Latitude,
-        request1.Longitude,
-        request1.FindCommonDrinkId(request2));
-
-      _meetingsRepository.AddAsTransaction(meeting);
-
-      var meetingUsers = new[]
+      using (var transaction = _meetingsRepository.BeginTransaction())
       {
-        new MeetingUser(meeting.Id, request1.UserId, request1.Id),
-        new MeetingUser(meeting.Id, request2.UserId, request2.Id),
-      };
+        var meeting = new Meeting(
+          request1.FindCommonDate(request2),
+          request1.Latitude,
+          request1.Longitude,
+          request1.FindCommonDrinkId(request2));
 
-      _meetingUsersRepository.AddRangeAsTransaction(meetingUsers);
+        await _meetingsRepository.Add(meeting);
 
-      request1.MarkAsFound();
-      request2.MarkAsFound();
-      _meetingRequestsRepository.UpdateAsTransaction(request1);
-      _meetingRequestsRepository.UpdateAsTransaction(request2);
+        var meetingUsers = new[]
+        {
+          new MeetingUser(meeting.Id, request1.UserId, request1.Id),
+          new MeetingUser(meeting.Id, request2.UserId, request2.Id),
+        };
 
-      await _meetingsRepository.Commit();
-      await BroadcastUserFoundMeeting(request1, request2);
+        await _meetingUsersRepository.AddRange(meetingUsers);
+
+        request1.MarkAsFound();
+        request2.MarkAsFound();
+        await _meetingRequestsRepository.Update(request1);
+        await _meetingRequestsRepository.Update(request2);
+
+        transaction.Commit();
+        await BroadcastUserFoundMeeting(request1, request2);
+      }
     }
 
     private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)

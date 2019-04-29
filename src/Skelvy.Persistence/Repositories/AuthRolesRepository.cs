@@ -21,9 +21,10 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public void RemoveRangeAsTransaction(IList<UserRole> roles)
+    public async Task RemoveRange(IList<UserRole> roles)
     {
       Context.UserRoles.RemoveRange(roles);
+      await SaveChanges();
     }
   }
 }

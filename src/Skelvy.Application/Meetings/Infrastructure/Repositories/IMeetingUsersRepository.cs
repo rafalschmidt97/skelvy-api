@@ -14,9 +14,9 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<IList<MeetingUser>> FindAllWithMeetingRequestByMeetingsId(IEnumerable<int> meetingsId);
     Task<IList<MeetingUser>> FindAllWithRemovedByUsersId(IEnumerable<int> usersId);
     Task<bool> ExistsOneByUserId(int userId);
-    void UpdateAsTransaction(MeetingUser meetingUser);
-    void AddRangeAsTransaction(IList<MeetingUser> meetingUsers);
-    void RemoveRangeAsTransaction(IList<MeetingUser> meetingUsers);
-    void AddAsTransaction(MeetingUser meetingUser);
+    Task Add(MeetingUser meetingUser);
+    Task AddRange(IList<MeetingUser> meetingUsers);
+    Task Update(MeetingUser meetingUser);
+    Task RemoveRange(IList<MeetingUser> meetingUsers);
   }
 }

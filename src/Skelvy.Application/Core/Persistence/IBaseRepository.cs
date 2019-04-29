@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Skelvy.Application.Core.Persistence
 {
   public interface IBaseRepository
   {
-    Task Commit();
+    IDbContextTransaction BeginTransaction();
   }
 }

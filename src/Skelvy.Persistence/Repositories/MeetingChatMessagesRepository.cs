@@ -36,13 +36,14 @@ namespace Skelvy.Persistence.Repositories
 
     public async Task Add(MeetingChatMessage message)
     {
-      Context.MeetingChatMessages.Add(message);
-      await Commit();
+      await Context.MeetingChatMessages.AddAsync(message);
+      await SaveChanges();
     }
 
-    public void RemoveRangeAsTransaction(IList<MeetingChatMessage> messages)
+    public async Task RemoveRange(IList<MeetingChatMessage> messages)
     {
       Context.MeetingChatMessages.RemoveRange(messages);
+      await SaveChanges();
     }
   }
 }

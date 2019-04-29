@@ -40,15 +40,16 @@ namespace Skelvy.Persistence.Repositories
         .FirstOrDefaultAsync(x => x.Email == email);
     }
 
-    public void AddAsTransaction(User user)
+    public async Task Add(User user)
     {
-      Context.Users.Add(user);
+      await Context.Users.AddAsync(user);
+      await SaveChanges();
     }
 
     public async Task Update(User user)
     {
       Context.Users.Update(user);
-      await Commit();
+      await SaveChanges();
     }
   }
 }

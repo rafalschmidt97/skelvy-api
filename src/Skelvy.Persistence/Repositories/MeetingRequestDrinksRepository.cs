@@ -21,14 +21,16 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public void RemoveRangeAsTransaction(IList<MeetingRequestDrink> drinks)
+    public async Task AddRange(IEnumerable<MeetingRequestDrink> drinks)
     {
-      Context.MeetingRequestDrinks.RemoveRange(drinks);
+      await Context.MeetingRequestDrinks.AddRangeAsync(drinks);
+      await SaveChanges();
     }
 
-    public void AddRangeAsTransaction(IEnumerable<MeetingRequestDrink> drinks)
+    public async Task RemoveRange(IList<MeetingRequestDrink> drinks)
     {
-      Context.MeetingRequestDrinks.AddRange(drinks);
+      Context.MeetingRequestDrinks.RemoveRange(drinks);
+      await SaveChanges();
     }
   }
 }

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 using Skelvy.Application.Core.Persistence;
 
 namespace Skelvy.Persistence.Repositories
@@ -8,7 +9,12 @@ namespace Skelvy.Persistence.Repositories
     protected BaseRepository(SkelvyContext context) => Context = context;
     protected SkelvyContext Context { get; }
 
-    public async Task Commit()
+    public IDbContextTransaction BeginTransaction()
+    {
+      return Context.Database.BeginTransaction();
+    }
+
+    protected async Task SaveChanges()
     {
       await Context.SaveChangesAsync();
     }

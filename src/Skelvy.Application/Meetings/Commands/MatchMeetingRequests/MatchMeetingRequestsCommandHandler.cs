@@ -33,26 +33,14 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
     {
       var requests = await _meetingRequestsRepository.FindAllSearchingWithUsersDetailsAndDrinks();
 
-      var isDataChanged = false;
-      var updatedRequests = new List<MeetingRequest>();
-
       foreach (var meetingRequest in requests)
       {
         var existingRequest = requests.FirstOrDefault(x => AreRequestsMatch(x, meetingRequest));
 
         if (existingRequest != null)
         {
-          CreateNewMeeting(meetingRequest, existingRequest);
-          updatedRequests.Add(meetingRequest);
-          updatedRequests.Add(existingRequest);
-          isDataChanged = true;
+          await CreateNewMeeting(meetingRequest, existingRequest);
         }
-      }
-
-      if (isDataChanged)
-      {
-        await _meetingRequestsRepository.Commit();
-        await BroadcastUserFoundMeeting(updatedRequests);
       }
 
       return Unit.Value;
@@ -76,36 +64,39 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       return age >= minAge && (maxAge >= 55 || age <= maxAge);
     }
 
-    private void CreateNewMeeting(
-      MeetingRequest request1,
-      MeetingRequest request2)
+    private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2) // Same logic as CreateMeetingRequest
     {
-      var meeting = new Meeting(
-        request1.FindCommonDate(request2),
-        request1.Latitude,
-        request1.Longitude,
-        request1.FindCommonDrinkId(request2));
-
-      _meetingsRepository.AddAsTransaction(meeting);
-
-      var meetingUsers = new[]
+      using (var transaction = _meetingRequestsRepository.BeginTransaction())
       {
-        new MeetingUser(meeting.Id, request1.UserId, request1.Id),
-        new MeetingUser(meeting.Id, request2.UserId, request2.Id),
-      };
+        var meeting = new Meeting(
+          request1.FindCommonDate(request2),
+          request1.Latitude,
+          request1.Longitude,
+          request1.FindCommonDrinkId(request2));
 
-      _meetingUsersRepository.AddRangeAsTransaction(meetingUsers);
+        await _meetingsRepository.Add(meeting);
 
-      request1.MarkAsFound();
-      request2.MarkAsFound();
+        var meetingUsers = new[]
+        {
+          new MeetingUser(meeting.Id, request1.UserId, request1.Id),
+          new MeetingUser(meeting.Id, request2.UserId, request2.Id),
+        };
 
-      _meetingRequestsRepository.UpdateAsTransaction(request1);
-      _meetingRequestsRepository.UpdateAsTransaction(request2);
+        await _meetingUsersRepository.AddRange(meetingUsers);
+
+        request1.MarkAsFound();
+        request2.MarkAsFound();
+        await _meetingRequestsRepository.Update(request1);
+        await _meetingRequestsRepository.Update(request2);
+
+        transaction.Commit();
+        await BroadcastUserFoundMeeting(request1, request2);
+      }
     }
 
-    private async Task BroadcastUserFoundMeeting(IEnumerable<MeetingRequest> updatedRequests)
+    private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)
     {
-      var usersId = updatedRequests.Select(x => x.User.Id).ToList();
+      var usersId = new List<int> { request1.UserId, request2.UserId };
       await _notifications.BroadcastUserFoundMeeting(usersId);
     }
   }

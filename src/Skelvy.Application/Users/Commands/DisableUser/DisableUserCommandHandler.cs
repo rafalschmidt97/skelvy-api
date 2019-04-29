@@ -66,27 +66,30 @@ namespace Skelvy.Application.Users.Commands.DisableUser
 
         var userDetails = meetingUsers.First(x => x.UserId == meetingUser.UserId);
 
-        userDetails.Leave();
-        userDetails.MeetingRequest.Abort();
-
-        _meetingUsersRepository.UpdateAsTransaction(userDetails);
-        _meetingRequestsRepository.UpdateAsTransaction(userDetails.MeetingRequest);
-
-        if (meetingUsers.Count == 2)
+        using (var transaction = _usersRepository.BeginTransaction())
         {
-          var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
+          userDetails.Leave();
+          userDetails.MeetingRequest.Abort();
 
-          anotherUserDetails.Leave();
-          anotherUserDetails.MeetingRequest.MarkAsSearching();
-          meetingUser.Meeting.Abort();
+          await _meetingUsersRepository.Update(userDetails);
+          await _meetingRequestsRepository.Update(userDetails.MeetingRequest);
 
-          _meetingUsersRepository.UpdateAsTransaction(anotherUserDetails);
-          _meetingRequestsRepository.UpdateAsTransaction(anotherUserDetails.MeetingRequest);
-          _meetingsRepository.UpdateAsTransaction(meetingUser.Meeting);
+          if (meetingUsers.Count == 2)
+          {
+            var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
+
+            anotherUserDetails.Leave();
+            anotherUserDetails.MeetingRequest.MarkAsSearching();
+            meetingUser.Meeting.Abort();
+
+            await _meetingUsersRepository.Update(anotherUserDetails);
+            await _meetingRequestsRepository.Update(anotherUserDetails.MeetingRequest);
+            await _meetingsRepository.Update(meetingUser.Meeting);
+          }
+
+          transaction.Commit();
+          await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
         }
-
-        await _meetingUsersRepository.Commit();
-        await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
       }
     }
 

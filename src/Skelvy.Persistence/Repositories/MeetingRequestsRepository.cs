@@ -80,36 +80,28 @@ namespace Skelvy.Persistence.Repositories
       return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
     }
 
-    public void UpdateAsTransaction(MeetingRequest request)
+    public async Task Add(MeetingRequest request)
     {
-      Context.MeetingRequests.Update(request);
-    }
-
-    public async Task UpdateRange(IList<MeetingRequest> requests)
-    {
-      Context.MeetingRequests.UpdateRange(requests);
-      await Commit();
-    }
-
-    public void UpdateRangeAsTransaction(List<MeetingRequest> requests)
-    {
-      Context.MeetingRequests.UpdateRange(requests);
+      await Context.MeetingRequests.AddAsync(request);
+      await SaveChanges();
     }
 
     public async Task Update(MeetingRequest request)
     {
       Context.MeetingRequests.Update(request);
-      await Commit();
+      await SaveChanges();
     }
 
-    public void RemoveRangeAsTransaction(IList<MeetingRequest> requests)
+    public async Task UpdateRange(IList<MeetingRequest> requests)
+    {
+      Context.MeetingRequests.UpdateRange(requests);
+      await SaveChanges();
+    }
+
+    public async Task RemoveRange(IList<MeetingRequest> requests)
     {
       Context.MeetingRequests.RemoveRange(requests);
-    }
-
-    public void AddAsTransaction(MeetingRequest request)
-    {
-      Context.MeetingRequests.Add(request);
+      await SaveChanges();
     }
 
     private static bool AreRequestsMatch(MeetingRequest request1, MeetingRequest request2, User requestUser)

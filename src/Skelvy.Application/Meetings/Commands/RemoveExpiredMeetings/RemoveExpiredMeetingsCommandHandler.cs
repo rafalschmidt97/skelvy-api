@@ -35,26 +35,29 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
       var today = DateTimeOffset.UtcNow;
       var meetingsToRemove = await _meetingsRepository.FindAllAfterDate(today);
 
-      var isDataChanged = false;
-
-      if (meetingsToRemove.Count != 0)
+      using (var transaction = _meetingRequestsRepository.BeginTransaction())
       {
-        var meetingsId = meetingsToRemove.Select(x => x.Id);
-        var meetingUsers = await _meetingUsersRepository.FindAllWithMeetingRequestByMeetingsId(meetingsId);
+        var isDataChanged = false;
 
-        meetingsToRemove.ForEach(x => x.Expire());
-        var meetingUsersRequest = meetingUsers.Select(x => x.MeetingRequest).ToList();
-        meetingUsersRequest.ForEach(x => x.Expire());
-        _meetingRequestsRepository.UpdateRangeAsTransaction(meetingUsersRequest);
+        if (meetingsToRemove.Count != 0)
+        {
+          var meetingsId = meetingsToRemove.Select(x => x.Id);
+          var meetingUsers = await _meetingUsersRepository.FindAllWithMeetingRequestByMeetingsId(meetingsId);
 
-        isDataChanged = true;
-      }
+          meetingsToRemove.ForEach(x => x.Expire());
+          var meetingUsersRequest = meetingUsers.Select(x => x.MeetingRequest).ToList();
+          meetingUsersRequest.ForEach(x => x.Expire());
+          await _meetingRequestsRepository.UpdateRange(meetingUsersRequest);
 
-      if (isDataChanged)
-      {
-        _meetingsRepository.UpdateRangeAsTransaction(meetingsToRemove);
-        await _meetingsRepository.Commit();
-        await BroadcastMeetingExpired(meetingsToRemove);
+          isDataChanged = true;
+        }
+
+        if (isDataChanged)
+        {
+          await _meetingsRepository.UpdateRange(meetingsToRemove);
+          transaction.Commit();
+          await BroadcastMeetingExpired(meetingsToRemove);
+        }
       }
 
       return Unit.Value;

@@ -9,8 +9,8 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
   {
     Task<IList<UserProfilePhoto>> FindAllByProfileId(int profileId);
     Task<IList<UserProfilePhoto>> FindAllWithRemovedByProfilesId(IEnumerable<int> profilesId);
-    void RemoveRangeAsTransaction(IList<UserProfilePhoto> oldPhotos);
-    void AddRangeAsTransaction(IEnumerable<UserProfilePhoto> newPhotos);
-    void AddAsTransaction(UserProfilePhoto photo);
+    Task Add(UserProfilePhoto photo);
+    Task AddRange(IEnumerable<UserProfilePhoto> newPhotos);
+    Task RemoveRange(IList<UserProfilePhoto> oldPhotos);
   }
 }

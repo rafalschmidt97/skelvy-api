@@ -13,6 +13,6 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
     Task<User> FindOneWithDetails(int id);
     Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset maxDate);
     Task Update(User user);
-    void RemoveRangeAsTransaction(IList<User> users);
+    Task RemoveRange(IList<User> users);
   }
 }

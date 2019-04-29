@@ -45,12 +45,13 @@ namespace Skelvy.Persistence.Repositories
     public async Task Update(User user)
     {
       Context.Users.Update(user);
-      await Commit();
+      await SaveChanges();
     }
 
-    public void RemoveRangeAsTransaction(IList<User> users)
+    public async Task RemoveRange(IList<User> users)
     {
       Context.Users.RemoveRange(users);
+      await SaveChanges();
     }
   }
 }

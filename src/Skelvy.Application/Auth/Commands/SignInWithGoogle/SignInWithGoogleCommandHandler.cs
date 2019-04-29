@@ -58,32 +58,35 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
         if (userByEmail == null)
         {
-          user = new User((string)details.emails[0].value, request.Language);
-          user.RegisterGoogle(verified.UserId);
-          _authRepository.AddAsTransaction(user);
-
-          var birthday = details.birthday != null
-            ? DateTimeOffset.ParseExact(
-              (string)details.birthday,
-              "yyyy-MM-dd",
-              CultureInfo.CurrentCulture).ToUniversalTime()
-            : DateTimeOffset.UtcNow;
-
-          var profile = new UserProfile(
-            (string)details.name.givenName,
-            birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-            details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-            user.Id);
-
-          _profilesRepository.AddAsTransaction(profile);
-
-          if (details.image != null)
+          using (var transaction = _authRepository.BeginTransaction())
           {
-            var photo = new UserProfilePhoto((string)details.image.url, profile.Id);
-            _profilePhotosRepository.AddAsTransaction(photo);
-          }
+            user = new User((string)details.emails[0].value, request.Language);
+            user.RegisterGoogle(verified.UserId);
+            await _authRepository.Add(user);
 
-          await _authRepository.Commit();
+            var birthday = details.birthday != null
+              ? DateTimeOffset.ParseExact(
+                (string)details.birthday,
+                "yyyy-MM-dd",
+                CultureInfo.CurrentCulture).ToUniversalTime()
+              : DateTimeOffset.UtcNow;
+
+            var profile = new UserProfile(
+              (string)details.name.givenName,
+              birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
+              details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+              user.Id);
+
+            await _profilesRepository.Add(profile);
+
+            if (details.image != null)
+            {
+              var photo = new UserProfilePhoto((string)details.image.url, profile.Id);
+              await _profilePhotosRepository.Add(photo);
+            }
+
+            transaction.Commit();
+          }
         }
         else
         {

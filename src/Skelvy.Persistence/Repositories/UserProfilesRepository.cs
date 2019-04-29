@@ -27,19 +27,22 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public void UpdateAsTransaction(UserProfile profile)
+    public async Task Add(UserProfile profile)
+    {
+      await Context.UserProfiles.AddAsync(profile);
+      await SaveChanges();
+    }
+
+    public async Task Update(UserProfile profile)
     {
       Context.UserProfiles.Update(profile);
+      await SaveChanges();
     }
 
-    public void AddAsTransaction(UserProfile profile)
-    {
-      Context.UserProfiles.Add(profile);
-    }
-
-    public void RemoveRangeAsTransaction(IList<UserProfile> profiles)
+    public async Task RemoveRange(IList<UserProfile> profiles)
     {
       Context.UserProfiles.RemoveRange(profiles);
+      await SaveChanges();
     }
   }
 }

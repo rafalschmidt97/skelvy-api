@@ -28,19 +28,22 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public void RemoveRangeAsTransaction(IList<UserProfilePhoto> photos)
+    public async Task Add(UserProfilePhoto photo)
+    {
+      await Context.UserProfilePhotos.AddAsync(photo);
+      await SaveChanges();
+    }
+
+    public async Task AddRange(IEnumerable<UserProfilePhoto> photos)
+    {
+      await Context.UserProfilePhotos.AddRangeAsync(photos);
+      await SaveChanges();
+    }
+
+    public async Task RemoveRange(IList<UserProfilePhoto> photos)
     {
       Context.UserProfilePhotos.RemoveRange(photos);
-    }
-
-    public void AddRangeAsTransaction(IEnumerable<UserProfilePhoto> photos)
-    {
-      Context.UserProfilePhotos.AddRange(photos);
-    }
-
-    public void AddAsTransaction(UserProfilePhoto photo)
-    {
-      Context.UserProfilePhotos.Add(photo);
+      await SaveChanges();
     }
   }
 }

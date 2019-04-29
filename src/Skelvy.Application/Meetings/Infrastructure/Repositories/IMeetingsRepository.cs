@@ -11,8 +11,8 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<Meeting> FindOneWithUsersDetailsAndDrinkByUserId(int userId);
     Task<IList<Meeting>> FindAllAfterDate(DateTimeOffset maxDate);
     Task<Meeting> FindOneMatchingUserRequest(User user, MeetingRequest request);
-    void UpdateAsTransaction(Meeting meeting);
-    void AddAsTransaction(Meeting meeting);
-    void UpdateRangeAsTransaction(IList<Meeting> meetings);
+    Task Add(Meeting meeting);
+    Task Update(Meeting meeting);
+    Task UpdateRange(IList<Meeting> meetings);
   }
 }
