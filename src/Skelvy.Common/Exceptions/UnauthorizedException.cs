@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public UnauthorizedException()
-      : base(HttpStatusCode.Unauthorized)
+      : base(nameof(HttpStatusCode.Unauthorized))
     {
     }
   }

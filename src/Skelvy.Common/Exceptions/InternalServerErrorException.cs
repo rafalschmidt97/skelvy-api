@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public InternalServerErrorException()
-      : base(HttpStatusCode.InternalServerError)
+      : base(nameof(HttpStatusCode.InternalServerError))
     {
     }
   }

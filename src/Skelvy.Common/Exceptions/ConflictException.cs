@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public ConflictException()
-      : base(HttpStatusCode.Conflict)
+      : base(nameof(HttpStatusCode.Conflict))
     {
     }
   }

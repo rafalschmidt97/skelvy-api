@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public GoneException()
-      : base(HttpStatusCode.Gone)
+      : base(nameof(HttpStatusCode.Gone))
     {
     }
   }

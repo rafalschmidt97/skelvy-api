@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public ForbiddenException()
-      : base(HttpStatusCode.Forbidden)
+      : base(nameof(HttpStatusCode.Forbidden))
     {
     }
   }

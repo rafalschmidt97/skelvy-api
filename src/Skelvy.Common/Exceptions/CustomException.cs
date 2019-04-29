@@ -11,12 +11,6 @@ namespace Skelvy.Common.Exceptions
       Status = status;
     }
 
-    public CustomException(HttpStatusCode status)
-      : base(nameof(status))
-    {
-      Status = status;
-    }
-
     public CustomException(string message)
       : base(message)
     {

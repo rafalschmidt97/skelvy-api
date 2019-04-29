@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public BadRequestException()
-      : base(HttpStatusCode.BadRequest)
+      : base(nameof(HttpStatusCode.BadRequest))
     {
     }
   }

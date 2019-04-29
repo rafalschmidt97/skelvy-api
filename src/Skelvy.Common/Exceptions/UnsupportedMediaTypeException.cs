@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public UnsupportedMediaTypeException()
-      : base(HttpStatusCode.UnsupportedMediaType)
+      : base(nameof(HttpStatusCode.UnsupportedMediaType))
     {
     }
   }

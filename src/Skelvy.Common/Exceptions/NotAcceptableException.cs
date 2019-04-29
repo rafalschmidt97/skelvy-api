@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public NotAcceptableException()
-      : base(HttpStatusCode.NotAcceptable)
+      : base(nameof(HttpStatusCode.NotAcceptable))
     {
     }
   }

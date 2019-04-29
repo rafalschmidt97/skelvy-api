@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public RequestTimeoutException()
-      : base(HttpStatusCode.RequestTimeout)
+      : base(nameof(HttpStatusCode.RequestTimeout))
     {
     }
   }

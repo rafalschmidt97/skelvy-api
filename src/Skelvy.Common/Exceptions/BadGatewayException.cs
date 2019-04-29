@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public BadGatewayException()
-      : base(HttpStatusCode.BadGateway)
+      : base(nameof(HttpStatusCode.BadGateway))
     {
     }
   }

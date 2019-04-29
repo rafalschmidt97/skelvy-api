@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public ServiceUnavailableException()
-      : base(HttpStatusCode.ServiceUnavailable)
+      : base(nameof(HttpStatusCode.ServiceUnavailable))
     {
     }
   }

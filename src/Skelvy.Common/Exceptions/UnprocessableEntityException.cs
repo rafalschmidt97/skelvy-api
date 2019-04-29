@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public UnprocessableEntityException()
-      : base(HttpStatusCode.UnprocessableEntity)
+      : base(nameof(HttpStatusCode.UnprocessableEntity))
     {
     }
   }

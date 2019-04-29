@@ -10,7 +10,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public GatewayTimeoutException()
-      : base(HttpStatusCode.Unauthorized)
+      : base(nameof(HttpStatusCode.Unauthorized))
     {
     }
   }

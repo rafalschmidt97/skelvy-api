@@ -15,7 +15,7 @@ namespace Skelvy.Common.Exceptions
     }
 
     public NotFoundException()
-      : base(HttpStatusCode.NotFound)
+      : base(nameof(HttpStatusCode.NotFound))
     {
     }
   }
