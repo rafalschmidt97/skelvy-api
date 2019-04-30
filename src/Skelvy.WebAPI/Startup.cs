@@ -21,6 +21,7 @@ namespace Skelvy.WebAPI
       services.AddCacheDatabase(_configuration);
       services.AddCustomSwagger();
       services.AddMediatr();
+      services.AddMapper();
       services.AddValidators();
       services.AddServices();
       services.AddSchedulers();
