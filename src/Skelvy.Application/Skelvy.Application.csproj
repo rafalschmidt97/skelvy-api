@@ -7,10 +7,10 @@
 
   <ItemGroup>
     <PackageReference Include="Destructurama.Attributed" Version="2.0.0" />
-    <PackageReference Include="FluentValidation" Version="8.1.2" />
+    <PackageReference Include="FluentValidation" Version="8.3.0" />
     <PackageReference Include="MediatR" Version="6.0.0" />
     <PackageReference Include="AutoMapper" Version="8.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />
   </ItemGroup>
 
   <ItemGroup>
