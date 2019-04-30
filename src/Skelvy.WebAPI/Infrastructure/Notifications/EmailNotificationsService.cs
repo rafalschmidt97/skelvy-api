@@ -8,6 +8,7 @@ using FluentEmail.Smtp;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.WebAPI.Infrastructure.Notifications
 {
@@ -24,13 +25,23 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     public async Task BroadcastUserCreated(User user)
     {
-      var message = new EmailMessage(user.Email, "Account has been created", "Created");
+      var message = new EmailMessage(
+        user.Email,
+        user.Language,
+        new EmailMessageSubject("Your account has been created", "Twoje konto zostało utworzone"),
+        "Created");
+
       await SendEmail(message);
     }
 
     public async Task BroadcastUserRemoved(User user)
     {
-      var message = new EmailMessage(user.Email, "Account has been deleted", "Removed");
+      var message = new EmailMessage(
+        user.Email,
+        user.Language,
+        new EmailMessageSubject("Your account has been deleted", "Twoje konto zostało usunięte"),
+        "Removed");
+
       await SendEmail(message);
     }
 
@@ -39,7 +50,13 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       dynamic model = new ExpandoObject();
       model.Reason = reason;
 
-      var message = new EmailMessage(user.Email, "Account has been disabled", "Disabled", model);
+      var message = new EmailMessage(
+        user.Email,
+        user.Language,
+        new EmailMessageSubject("Your account has been disabled", "Twoje konto zostało zablokowane"),
+        "Disabled",
+        model);
+
       await SendEmail(message);
     }
 
@@ -51,7 +68,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         From = new MailAddress(_configuration["Email:Username"], _configuration["Email:Name"]),
         To = { message.To },
-        Subject = message.Subject,
+        Subject = GeSubject(message),
         Body = body,
         IsBodyHtml = true,
       };
@@ -71,12 +88,21 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     {
       string template;
 
-      using (var reader = new StreamReader(File.OpenRead($"Views/{message.TemplateName}.cshtml")))
+      var path = message.Language != null ?
+        $"Views/{message.Language}/{message.TemplateName}.cshtml" :
+        $"Views/en/{message.TemplateName}.cshtml";
+
+      using (var reader = new StreamReader(File.OpenRead(path)))
       {
         template = await reader.ReadToEndAsync();
       }
 
       return await _templateRenderer.ParseAsync(template, message.Model);
+    }
+
+    private static string GeSubject(EmailMessage message)
+    {
+      return message.Language == LanguageTypes.PL ? message.Subject.PL : message.Subject.EN;
     }
   }
 }
