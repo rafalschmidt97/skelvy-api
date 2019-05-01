@@ -15,7 +15,7 @@ namespace Skelvy.Application.Uploads.Commands.UploadPhoto
 
     public override async Task<string> Handle(UploadPhotoCommand request)
     {
-      return await _uploadService.Upload(request.Data, request.Name, request.ServerPath);
+      return await _uploadService.Upload(request.Data, request.Name);
     }
   }
 }

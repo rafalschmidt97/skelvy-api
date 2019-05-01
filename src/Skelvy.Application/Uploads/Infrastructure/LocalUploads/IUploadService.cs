@@ -5,6 +5,6 @@ namespace Skelvy.Application.Uploads.Infrastructure.LocalUploads
 {
   public interface IUploadService
   {
-    Task<string> Upload(Stream fileData, string fileName, string serverPath);
+    Task<string> Upload(Stream fileData, string fileName);
   }
 }

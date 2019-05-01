@@ -31,7 +31,7 @@ namespace Skelvy.Application.Test.Uploads.Commands
     {
       var request = new UploadPhotoCommand("photo.jppg", Stream.Null, "localhost");
       _uploadService
-        .Setup(x => x.Upload(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>()))
+        .Setup(x => x.Upload(It.IsAny<Stream>(), It.IsAny<string>()))
         .Throws<BadRequestException>();
       var handler = new UploadPhotoCommandHandler(_uploadService.Object);
 
