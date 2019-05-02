@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Core.Cache;
@@ -20,8 +21,9 @@ namespace Skelvy.Application.Maps.Queries.SearchLocations
 
     public override async Task<IList<LocationDto>> Handle(SearchLocationsQuery request)
     {
+      var search = request.Search.Trim().ToLower(CultureInfo.CurrentCulture);
       return await _cache.GetOrSetData(
-        $"maps:search#{request.Search}#{request.Language}",
+        $"maps:search#{search}#{request.Language}",
         TimeSpan.FromDays(14),
         async () => await _mapsService.Search(request.Search, request.Language));
     }
