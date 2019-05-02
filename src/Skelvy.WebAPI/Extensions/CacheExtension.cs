@@ -9,7 +9,7 @@ namespace Skelvy.WebAPI.Extensions
     {
       services.AddDistributedRedisCache(options =>
       {
-        options.Configuration = configuration.GetConnectionString("Redis");
+        options.Configuration = configuration["SKELVY_REDIS_CONNECTION"];
       });
     }
   }

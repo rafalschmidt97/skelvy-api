@@ -36,9 +36,9 @@ namespace Skelvy.Infrastructure.Uploads
 
       var name = Guid.NewGuid() + Path.GetExtension(fileName);
 
-      var account = CloudStorageAccount.Parse(_configuration.GetConnectionString("Storage"));
+      var account = CloudStorageAccount.Parse(_configuration["SKELVY_STORAGE_CONNECTION"]);
       var client = account.CreateCloudBlobClient();
-      var container = client.GetContainerReference(_configuration["Storage:PhotosContainer"]);
+      var container = client.GetContainerReference(_configuration["SKELVY_STORAGE_PHOTOS_CONTAINER"]);
       await container.CreateIfNotExistsAsync();
       var blob = container.GetBlockBlobReference(name);
       await blob.UploadFromStreamAsync(fileData);

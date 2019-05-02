@@ -66,18 +66,18 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
       var email = new MailMessage()
       {
-        From = new MailAddress(_configuration["Email:Username"], _configuration["Email:Name"]),
+        From = new MailAddress(_configuration["SKELVY_EMAIL_USERNAME"], _configuration["SKELVY_EMAIL_NAME"]),
         To = { message.To },
         Subject = GeSubject(message),
         Body = body,
         IsBodyHtml = true,
       };
 
-      using (var smtp = new SmtpClient(_configuration["Email:Host"], int.Parse(_configuration["Email:Port"]))
+      using (var smtp = new SmtpClient(_configuration["SKELVY_EMAIL_HOST"], int.Parse(_configuration["SKELVY_EMAIL_PORT"]))
       {
         EnableSsl = true,
         DeliveryMethod = SmtpDeliveryMethod.Network,
-        Credentials = new NetworkCredential(_configuration["Email:Username"], _configuration["Email:Password"]),
+        Credentials = new NetworkCredential(_configuration["SKELVY_EMAIL_USERNAME"], _configuration["SKELVY_EMAIL_PASSWORD"]),
       })
       {
         await smtp.SendMailExAsync(email);

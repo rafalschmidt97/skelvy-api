@@ -22,8 +22,8 @@ namespace Skelvy.WebAPI.Extensions
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = configuration["Jwt:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+            ValidIssuer = configuration["SKELVY_JWT_ISSUER"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SKELVY_JWT_KEY"])),
             ClockSkew = TimeSpan.FromMinutes(1),
           };
 

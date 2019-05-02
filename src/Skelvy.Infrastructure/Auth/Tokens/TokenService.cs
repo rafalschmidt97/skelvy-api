@@ -92,11 +92,11 @@ namespace Skelvy.Infrastructure.Auth.Tokens
 
     private string GenerateAccessToken(DateTime expires, List<Claim> claims = null)
     {
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SKELVY_JWT_KEY"]));
       var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
       var rawAccessToken = new JwtSecurityToken(
-        _configuration["Jwt:Issuer"],
+        _configuration["SKELVY_JWT_ISSUER"],
         null,
         claims?.ToArray(),
         expires: expires,

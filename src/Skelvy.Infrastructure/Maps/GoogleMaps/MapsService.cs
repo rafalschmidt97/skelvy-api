@@ -13,7 +13,7 @@ namespace Skelvy.Infrastructure.Maps.GoogleMaps
 
     public MapsService(IConfiguration configuration)
     {
-      _geocoder = new GoogleGeocoder { ApiKey = configuration["Google:KeyWeb"] };
+      _geocoder = new GoogleGeocoder { ApiKey = configuration["SKELVY_GOOGLE_KEY_WEB"] };
     }
 
     public async Task<IList<LocationDto>> Search(string search, string language)

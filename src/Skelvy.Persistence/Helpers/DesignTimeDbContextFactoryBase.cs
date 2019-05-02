@@ -10,7 +10,7 @@ namespace Skelvy.Persistence.Helpers
     IDesignTimeDbContextFactory<TContext>
     where TContext : DbContext
   {
-    private const string ConnectionStringName = "Database";
+    private const string ConnectionStringName = "SKELVY_SQL_CONNECTION";
     private const string AspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
 
     public TContext CreateDbContext(string[] args)
@@ -34,7 +34,7 @@ namespace Skelvy.Persistence.Helpers
         .AddEnvironmentVariables()
         .Build();
 
-      var connectionString = configuration.GetConnectionString(ConnectionStringName);
+      var connectionString = configuration[ConnectionStringName];
 
       return Create(connectionString);
     }

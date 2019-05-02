@@ -17,8 +17,8 @@ namespace Skelvy.Infrastructure.Auth.Google
     public GoogleService(IConfiguration configuration)
       : base("https://www.googleapis.com/")
     {
-      _idIos = configuration["Google:IdIos"];
-      _idAndroid = configuration["Google:IdAndroid"];
+      _idIos = configuration["SKELVY_GOOGLE_ID_IOS"];
+      _idAndroid = configuration["SKELVY_GOOGLE_ID_ANDROID"];
     }
 
     public async Task<T> GetBody<T>(string path, string accessToken, string args)

@@ -17,8 +17,8 @@ namespace Skelvy.Infrastructure.Auth.Facebook
     public FacebookService(IConfiguration configuration)
       : base("https://graph.facebook.com/")
     {
-      _clientId = configuration["Facebook:Id"];
-      _clientSecret = configuration["Facebook:Secret"];
+      _clientId = configuration["SKELVY_FACEBOOK_ID"];
+      _clientSecret = configuration["SKELVY_FACEBOOK_SECRET"];
     }
 
     public async Task<T> GetBody<T>(string path, string accessToken, string args)

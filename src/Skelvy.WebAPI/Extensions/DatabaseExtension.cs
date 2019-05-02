@@ -10,7 +10,7 @@ namespace Skelvy.WebAPI.Extensions
     public static void AddSqlDatabase(this IServiceCollection services, IConfiguration configuration)
     {
       services.AddDbContext<SkelvyContext, SkelvyContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("Database")));
+        options.UseSqlServer(configuration["SKELVY_SQL_CONNECTION"]));
     }
   }
 }
