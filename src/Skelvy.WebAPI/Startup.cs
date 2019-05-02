@@ -20,6 +20,7 @@ namespace Skelvy.WebAPI
       services.AddSqlDatabase(_configuration);
       services.AddCacheDatabase(_configuration);
       services.AddCustomSwagger();
+      services.AddHealthChecks();
       services.AddMediatr();
       services.AddMapper();
       services.AddValidators();
@@ -39,6 +40,7 @@ namespace Skelvy.WebAPI
         app.UseCustomSwagger();
       }
 
+      app.UseHealthChecks("/");
       app.UseSchedulers();
       app.UseCustomCors();
       app.UseAuth();
