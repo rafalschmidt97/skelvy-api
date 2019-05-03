@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Skelvy.WebAPI.Controllers
 {
   [ApiController]
-  [Route("api/[controller]")]
+  [Route("[controller]")]
   public abstract class BaseController : ControllerBase
   {
     private IMediator _mediator;

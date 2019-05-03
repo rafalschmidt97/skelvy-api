@@ -15,7 +15,7 @@ namespace Skelvy.WebAPI.Extensions
     {
       app.UseSignalR(options =>
       {
-        options.MapHub<UsersHub>("/api/users");
+        options.MapHub<UsersHub>("/users");
       });
     }
   }
