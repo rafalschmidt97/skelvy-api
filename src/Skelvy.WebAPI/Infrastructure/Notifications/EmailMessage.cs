@@ -22,7 +22,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     }
 
     public EmailMessage(string to, string language, EmailMessageSubject subject, string templateName, object model)
-      : this(to, subject, templateName, language)
+      : this(to, language, subject, templateName)
     {
       Model = model;
     }
