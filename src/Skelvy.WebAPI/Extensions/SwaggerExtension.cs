@@ -16,7 +16,7 @@ namespace Skelvy.WebAPI.Extensions
         configuration.SwaggerDoc("v1", new Info
         {
           Title = "Skelvy API",
-          Description = "Mobile app for meetings over beer or coffee 🚀",
+          Description = "Mobile app for meetings over your favorite drinks 🚀",
         });
 
         configuration.AddSecurityDefinition("Token", new ApiKeyScheme
