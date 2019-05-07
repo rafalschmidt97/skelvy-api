@@ -9,7 +9,10 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
     public UpdateUserProfileCommandValidator()
     {
       RuleFor(x => x.UserId).NotEmpty();
-      RuleFor(x => x.Name).NotEmpty().MaximumLength(50);
+      RuleFor(x => x.Name).NotEmpty().MinimumLength(3).MaximumLength(50)
+        .Matches(@"^[\p{L} ]+$")
+        .WithMessage("'Name' contains forbidden characters.");
+
       RuleFor(x => x.Description).MaximumLength(500);
 
       RuleFor(x => x.Birthday).NotEmpty()
