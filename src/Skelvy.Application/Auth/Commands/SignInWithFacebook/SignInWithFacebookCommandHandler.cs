@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using Skelvy.Application.Auth.Infrastructure.Facebook;
-using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
@@ -15,7 +14,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 {
   public class SignInWithFacebookCommandHandler : QueryHandler<SignInWithFacebookCommand, AuthDto>
   {
-    private readonly IAuthRepository _authRepository;
+    private readonly IUsersRepository _usersRepository;
     private readonly IUserProfilesRepository _profilesRepository;
     private readonly IUserProfilePhotosRepository _profilePhotosRepository;
     private readonly IFacebookService _facebookService;
@@ -23,14 +22,14 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     private readonly INotificationsService _notifications;
 
     public SignInWithFacebookCommandHandler(
-      IAuthRepository authRepository,
+      IUsersRepository usersRepository,
       IUserProfilesRepository profilesRepository,
       IUserProfilePhotosRepository profilePhotosRepository,
       IFacebookService facebookService,
       ITokenService tokenService,
       INotificationsService notifications)
     {
-      _authRepository = authRepository;
+      _usersRepository = usersRepository;
       _profilesRepository = profilesRepository;
       _profilePhotosRepository = profilePhotosRepository;
       _facebookService = facebookService;
@@ -42,7 +41,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     {
       var verified = await _facebookService.Verify(request.AuthToken);
 
-      var user = await _authRepository.FindOneWithRolesByFacebookId(verified.UserId);
+      var user = await _usersRepository.FindOneWithRolesByFacebookId(verified.UserId);
 
       if (user == null)
       {
@@ -52,16 +51,16 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}");
 
         var email = (string)details.email;
-        var userByEmail = await _authRepository.FindOneWithRolesByEmail(email);
+        var userByEmail = await _usersRepository.FindOneWithRolesByEmail(email);
         var isDataChanged = false;
 
         if (userByEmail == null)
         {
-          using (var transaction = _authRepository.BeginTransaction())
+          using (var transaction = _usersRepository.BeginTransaction())
           {
             user = new User((string)details.email, request.Language);
             user.RegisterFacebook(verified.UserId);
-            await _authRepository.Add(user);
+            await _usersRepository.Add(user);
 
             var birthday = DateTimeOffset.ParseExact(
               (string)details.birthday,
@@ -89,7 +88,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         {
           ValidateUser(userByEmail);
           userByEmail.RegisterFacebook(verified.UserId);
-          await _authRepository.Update(userByEmail);
+          await _usersRepository.Update(userByEmail);
 
           user = userByEmail;
           isDataChanged = true;

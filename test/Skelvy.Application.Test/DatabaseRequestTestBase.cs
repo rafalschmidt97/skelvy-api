@@ -11,13 +11,6 @@ namespace Skelvy.Application.Test
         new UsersRepository(DbContext());
     }
 
-    protected static AuthRepository AuthRepository(bool initialized = true)
-    {
-      return initialized ?
-        new AuthRepository(InitializedDbContext()) :
-        new AuthRepository(DbContext());
-    }
-
     protected static DrinksRepository DrinksRepository(bool initialized = true)
     {
       return initialized ?

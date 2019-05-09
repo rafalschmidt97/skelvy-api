@@ -10,9 +10,9 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Skelvy.Application.Auth.Commands;
-using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Cache;
+using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 
@@ -21,14 +21,14 @@ namespace Skelvy.Infrastructure.Auth.Tokens
   public class TokenService : ITokenService
   {
     private readonly IConfiguration _configuration;
-    private readonly IAuthRepository _authRepository;
+    private readonly IUsersRepository _usersRepository;
     private readonly ICacheService _cache;
     private readonly IMapper _mapper;
 
-    public TokenService(IConfiguration configuration, IAuthRepository authRepository, ICacheService cache, IMapper mapper)
+    public TokenService(IConfiguration configuration, IUsersRepository usersRepository, ICacheService cache, IMapper mapper)
     {
       _configuration = configuration;
-      _authRepository = authRepository;
+      _usersRepository = usersRepository;
       _cache = cache;
       _mapper = mapper;
     }
@@ -84,7 +84,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
         throw new UnauthorizedException("Refresh Token has expired");
       }
 
-      var user = await _authRepository.FindOneWithRoles(tokenUser.Id);
+      var user = await _usersRepository.FindOneWithRoles(tokenUser.Id);
       ValidateUser(user);
       await _cache.RefreshData(key);
       return user;

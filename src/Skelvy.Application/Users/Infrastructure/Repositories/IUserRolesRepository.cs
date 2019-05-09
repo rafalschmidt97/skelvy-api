@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Auth.Infrastructure.Repositories
+namespace Skelvy.Application.Users.Infrastructure.Repositories
 {
-  public interface IAuthRolesRepository : IBaseRepository
+  public interface IUserRolesRepository : IBaseRepository
   {
     Task<IList<UserRole>> FindAllByUsersId(IEnumerable<int> usersId);
     Task RemoveRange(IList<UserRole> roles);

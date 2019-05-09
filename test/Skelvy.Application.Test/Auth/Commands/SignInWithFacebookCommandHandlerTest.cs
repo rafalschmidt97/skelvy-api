@@ -46,7 +46,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var dbContext = InitializedDbContext();
       var handler = new SignInWithFacebookCommandHandler(
-          new AuthRepository(dbContext),
+          new UsersRepository(dbContext),
           new UserProfilesRepository(dbContext),
           new UserProfilePhotosRepository(dbContext),
           _facebookService.Object,
@@ -71,7 +71,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var dbContext = DbContext();
       var handler = new SignInWithFacebookCommandHandler(
-        new AuthRepository(dbContext),
+        new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
         new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,
@@ -90,7 +90,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var dbContext = InitializedDbContext();
       var handler = new SignInWithFacebookCommandHandler(
-        new AuthRepository(dbContext),
+        new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
         new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,
@@ -108,7 +108,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       var dbContext = ContextWithRemovedUser();
       var handler = new SignInWithFacebookCommandHandler(
-        new AuthRepository(dbContext),
+        new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
         new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,
@@ -126,7 +126,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       var dbContext = ContextWithDisabledUser();
       var handler = new SignInWithFacebookCommandHandler(
-        new AuthRepository(dbContext),
+        new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
         new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,

@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
@@ -12,7 +11,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
   public class RemoveUsersCommandHandler : CommandHandler<RemoveUsersCommand>
   {
     private readonly IUsersRepository _usersRepository;
-    private readonly IAuthRolesRepository _rolesRepository;
+    private readonly IUserRolesRepository _rolesRepository;
     private readonly IUserProfilesRepository _profilesRepository;
     private readonly IUserProfilePhotosRepository _profilePhotosRepository;
     private readonly IMeetingRequestsRepository _requestsRepository;
@@ -22,7 +21,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
 
     public RemoveUsersCommandHandler(
       IUsersRepository usersRepository,
-      IAuthRolesRepository rolesRepository,
+      IUserRolesRepository rolesRepository,
       IUserProfilesRepository profilesRepository,
       IUserProfilePhotosRepository profilePhotosRepository,
       IMeetingRequestsRepository requestsRepository,
