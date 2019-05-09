@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Uploads.Commands.UploadPhoto;
-using Skelvy.Application.Uploads.Infrastructure.LocalUploads;
+using Skelvy.Application.Uploads.Infrastructure.Uploads;
 using Skelvy.Common.Exceptions;
 using Xunit;
 
@@ -20,7 +20,7 @@ namespace Skelvy.Application.Test.Uploads.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new UploadPhotoCommand("photo.jpg", Stream.Null, "localhost");
+      var request = new UploadPhotoCommand("photo.jpg", Stream.Null);
       var handler = new UploadPhotoCommandHandler(_uploadService.Object);
 
       await handler.Handle(request);
@@ -29,7 +29,7 @@ namespace Skelvy.Application.Test.Uploads.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new UploadPhotoCommand("photo.jppg", Stream.Null, "localhost");
+      var request = new UploadPhotoCommand("photo.jppg", Stream.Null);
       _uploadService
         .Setup(x => x.Upload(It.IsAny<Stream>(), It.IsAny<string>()))
         .Throws<BadRequestException>();

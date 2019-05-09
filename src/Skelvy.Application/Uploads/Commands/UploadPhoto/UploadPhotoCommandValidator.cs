@@ -7,7 +7,6 @@ namespace Skelvy.Application.Uploads.Commands.UploadPhoto
     public UploadPhotoCommandValidator()
     {
       RuleFor(x => x.Name).NotEmpty();
-      RuleFor(x => x.ServerPath).NotEmpty();
     }
   }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
-using Skelvy.Application.Uploads.Infrastructure.LocalUploads;
+using Skelvy.Application.Uploads.Infrastructure.Uploads;
 using Skelvy.Common.Exceptions;
 
 namespace Skelvy.Infrastructure.Uploads
