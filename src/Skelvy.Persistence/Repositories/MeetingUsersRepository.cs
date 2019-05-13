@@ -17,36 +17,40 @@ namespace Skelvy.Persistence.Repositories
     public async Task<MeetingUser> FindOneByUserId(int userId)
     {
       return await Context.MeetingUsers
-        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved);
+        .Include(x => x.Meeting)
+        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved && !x.Meeting.IsRemoved);
     }
 
     public async Task<MeetingUser> FindOneWithMeetingByUserId(int userId)
     {
       return await Context.MeetingUsers
         .Include(x => x.Meeting)
-        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved);
+        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved && !x.Meeting.IsRemoved);
     }
 
     public async Task<IList<MeetingUser>> FindAllByMeetingId(int meetingId)
     {
       return await Context.MeetingUsers
-        .Where(x => x.MeetingId == meetingId && !x.IsRemoved)
+        .Include(x => x.Meeting)
+        .Where(x => x.MeetingId == meetingId && !x.IsRemoved && !x.Meeting.IsRemoved)
         .ToListAsync();
     }
 
     public async Task<IList<MeetingUser>> FindAllWithMeetingRequestByMeetingId(int meetingId)
     {
       return await Context.MeetingUsers
+        .Include(x => x.Meeting)
         .Include(x => x.MeetingRequest)
-        .Where(x => x.MeetingId == meetingId && !x.IsRemoved)
+        .Where(x => x.MeetingId == meetingId && !x.IsRemoved && !x.Meeting.IsRemoved)
         .ToListAsync();
     }
 
     public async Task<IList<MeetingUser>> FindAllWithMeetingRequestByMeetingsId(IEnumerable<int> meetingsId)
     {
       return await Context.MeetingUsers
+        .Include(x => x.Meeting)
         .Include(x => x.MeetingRequest)
-        .Where(x => meetingsId.Any(y => y == x.MeetingId) && !x.IsRemoved)
+        .Where(x => meetingsId.Any(y => y == x.MeetingId) && !x.IsRemoved && !x.Meeting.IsRemoved)
         .ToListAsync();
     }
 
@@ -59,8 +63,11 @@ namespace Skelvy.Persistence.Repositories
 
     public async Task<bool> ExistsOneByUserId(int userId)
     {
-      return await Context.MeetingUsers
-        .AnyAsync(x => x.UserId == userId && !x.IsRemoved);
+      var meetingUser = await Context.MeetingUsers
+        .Include(x => x.Meeting)
+        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved && !x.Meeting.IsRemoved);
+
+      return meetingUser != null;
     }
 
     public async Task Add(MeetingUser meetingUser)
