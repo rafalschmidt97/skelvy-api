@@ -77,10 +77,10 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
         try
         {
           var meeting = new Meeting(
-            request1.FindCommonDate(request2),
+            request1.FindRequiredCommonDate(request2),
             request1.Latitude,
             request1.Longitude,
-            request1.FindCommonDrinkId(request2));
+            request1.FindRequiredCommonDrinkId(request2));
 
           await _meetingsRepository.Add(meeting);
           var meetingUsers = new[]
