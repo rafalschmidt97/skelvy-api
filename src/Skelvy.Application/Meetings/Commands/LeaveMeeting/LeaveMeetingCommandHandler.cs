@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
@@ -80,7 +81,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
     private async Task BroadcastUserLeftMeeting(MeetingUser meetingUser, IEnumerable<MeetingUser> meetingUsers)
     {
       var meetingUsersId = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUsersId);
+      await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingAction(), meetingUsersId);
     }
   }
 }

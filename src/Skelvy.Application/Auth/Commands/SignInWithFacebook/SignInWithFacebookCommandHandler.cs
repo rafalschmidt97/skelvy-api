@@ -5,6 +5,7 @@ using Skelvy.Application.Auth.Infrastructure.Facebook;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
+using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -96,7 +97,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
         if (!isDataChanged)
         {
-          await _notifications.BroadcastUserCreated(user);
+          await _notifications.BroadcastUserCreated(new UserCreatedAction(user.Id, user.Email, user.Language));
         }
       }
       else

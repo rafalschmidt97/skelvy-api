@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Extensions;
@@ -68,7 +69,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
       foreach (var meeting in meetingsToRemove)
       {
         var usersId = meeting.Users.Select(x => x.UserId).ToList();
-        await _notifications.BroadcastMeetingExpired(usersId);
+        await _notifications.BroadcastMeetingExpired(new MeetingExpiredAction(), usersId);
       }
     }
   }

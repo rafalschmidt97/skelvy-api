@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
+using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -47,7 +49,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
       user.Remove(DateTimeOffset.UtcNow.AddMonths(3));
 
       await _usersRepository.Update(user);
-      await _notifications.BroadcastUserRemoved(user);
+      await _notifications.BroadcastUserRemoved(new UserRemovedAction(user.Id, user.Email, user.Language));
 
       return Unit.Value;
     }
@@ -92,7 +94,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
     private async Task BroadcastUserLeftMeeting(MeetingUser meetingUser, IEnumerable<MeetingUser> meetingUsers)
     {
       var meetingUsersId = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUsersId);
+      await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingAction(), meetingUsersId);
     }
   }
 }

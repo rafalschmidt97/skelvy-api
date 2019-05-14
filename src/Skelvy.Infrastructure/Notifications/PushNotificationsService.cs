@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Skelvy.Application.Notifications;
-using Skelvy.Domain.Entities;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Notifications.Infrastructure;
 
 namespace Skelvy.Infrastructure.Notifications
 {
@@ -15,15 +15,15 @@ namespace Skelvy.Infrastructure.Notifications
         .TryAddWithoutValidation("Authorization", "key=" + configuration["SKELVY_GOOGLE_KEY_WEB"]);
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> usersId)
+    public async Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action, IEnumerable<int> usersId)
     {
       await SendNotification(usersId, new PushNotificationContent
       {
-        Body = message.Message,
+        Body = action.Message,
       });
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> usersId)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId)
     {
       await SendNotification(usersId, new PushNotificationContent
       {
@@ -31,7 +31,7 @@ namespace Skelvy.Infrastructure.Notifications
       });
     }
 
-    public async Task BroadcastUserFoundMeeting(IEnumerable<int> usersId)
+    public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId)
     {
       await SendNotification(usersId, new PushNotificationContent
       {
@@ -39,7 +39,7 @@ namespace Skelvy.Infrastructure.Notifications
       });
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> usersId)
+    public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId)
     {
       await SendNotification(usersId, new PushNotificationContent
       {
@@ -47,7 +47,7 @@ namespace Skelvy.Infrastructure.Notifications
       });
     }
 
-    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> usersId)
+    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId)
     {
       await SendNotification(usersId, new PushNotificationContent
       {
@@ -55,7 +55,7 @@ namespace Skelvy.Infrastructure.Notifications
       });
     }
 
-    public async Task BroadcastMeetingExpired(IEnumerable<int> usersId)
+    public async Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId)
     {
       await SendNotification(usersId, new PushNotificationContent
       {

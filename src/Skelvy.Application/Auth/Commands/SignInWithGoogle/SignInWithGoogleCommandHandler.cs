@@ -5,6 +5,7 @@ using Skelvy.Application.Auth.Infrastructure.Google;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Notifications;
+using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -99,7 +100,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
         if (!isDataChanged)
         {
-          await _notifications.BroadcastUserCreated(user);
+          await _notifications.BroadcastUserCreated(new UserCreatedAction(user.Id, user.Email, user.Language));
         }
       }
       else

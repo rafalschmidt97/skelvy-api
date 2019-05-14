@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
@@ -120,7 +121,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
     private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)
     {
       var usersId = new List<int> { request1.UserId, request2.UserId };
-      await _notifications.BroadcastUserFoundMeeting(usersId);
+      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(), usersId);
     }
   }
 }

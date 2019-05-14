@@ -3,8 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
+using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -51,7 +53,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
       user.Disable(request.Reason);
 
       await _usersRepository.Update(user);
-      await _notifications.BroadcastUserDisabled(user, request.Reason);
+      await _notifications.BroadcastUserDisabled(new UserDisabledAction(user.Id, request.Reason, user.Email, user.Language));
 
       return Unit.Value;
     }
@@ -96,7 +98,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
     private async Task BroadcastUserLeftMeeting(MeetingUser meetingUser, IEnumerable<MeetingUser> meetingUsers)
     {
       var meetingUsersId = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserLeftMeeting(meetingUser, meetingUsersId);
+      await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingAction(), meetingUsersId);
     }
   }
 }

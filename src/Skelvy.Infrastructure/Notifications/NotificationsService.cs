@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Notifications;
-using Skelvy.Domain.Entities;
+using Skelvy.Application.Notifications.Infrastructure;
+using Skelvy.Application.Users.Infrastructure.Notifications;
 
 namespace Skelvy.Infrastructure.Notifications
 {
@@ -24,75 +26,75 @@ namespace Skelvy.Infrastructure.Notifications
       _emailService = emailService;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IList<int> usersId)
+    public async Task BroadcastUserSentMessage(UserSentMessageAction action, IEnumerable<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
         usersId,
-        async (online) => await _socketService.BroadcastUserSentMeetingChatMessage(message, online),
-        async (offline) => await _pushService.BroadcastUserSentMeetingChatMessage(message, offline));
+        async (online) => await _socketService.BroadcastUserSentMeetingChatMessage(action, online),
+        async (offline) => await _pushService.BroadcastUserSentMeetingChatMessage(action, offline));
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IList<int> usersId)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
         usersId,
-        async (online) => await _socketService.BroadcastUserJoinedMeeting(user, online),
-        async (offline) => await _pushService.BroadcastUserJoinedMeeting(user, offline));
+        async (online) => await _socketService.BroadcastUserJoinedMeeting(action, online),
+        async (offline) => await _pushService.BroadcastUserJoinedMeeting(action, offline));
     }
 
-    public async Task BroadcastUserFoundMeeting(IList<int> usersId)
+    public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
         usersId,
-        async (online) => await _socketService.BroadcastUserFoundMeeting(online),
-        async (offline) => await _pushService.BroadcastUserFoundMeeting(offline));
+        async (online) => await _socketService.BroadcastUserFoundMeeting(action, online),
+        async (offline) => await _pushService.BroadcastUserFoundMeeting(action, offline));
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, IList<int> usersId)
+    public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
         usersId,
-        async (online) => await _socketService.BroadcastUserLeftMeeting(user, online),
-        async (offline) => await _pushService.BroadcastUserLeftMeeting(user, offline));
+        async (online) => await _socketService.BroadcastUserLeftMeeting(action, online),
+        async (offline) => await _pushService.BroadcastUserLeftMeeting(action, offline));
     }
 
-    public async Task BroadcastMeetingRequestExpired(IList<int> usersId)
+    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
         usersId,
-        async (online) => await _socketService.BroadcastMeetingRequestExpired(online),
-        async (offline) => await _pushService.BroadcastMeetingRequestExpired(offline));
+        async (online) => await _socketService.BroadcastMeetingRequestExpired(action, online),
+        async (offline) => await _pushService.BroadcastMeetingRequestExpired(action, offline));
     }
 
-    public async Task BroadcastMeetingExpired(IList<int> usersId)
+    public async Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId)
     {
       await BroadcastActionDependingOnConnection(
         usersId,
-        async (online) => await _socketService.BroadcastMeetingExpired(online),
-        async (offline) => await _pushService.BroadcastMeetingExpired(offline));
+        async (online) => await _socketService.BroadcastMeetingExpired(action, online),
+        async (offline) => await _pushService.BroadcastMeetingExpired(action, offline));
     }
 
-    public async Task BroadcastUserCreated(User user)
+    public async Task BroadcastUserCreated(UserCreatedAction action)
     {
-      await _emailService.BroadcastUserCreated(user);
+      await _emailService.BroadcastUserCreated(action);
     }
 
-    public async Task BroadcastUserRemoved(User user)
+    public async Task BroadcastUserRemoved(UserRemovedAction action)
     {
       await BroadcastActionToOnline(
-        new List<int> { user.Id },
-        async (online) => await _socketService.BroadcastUserRemoved(online));
+        new List<int> { action.UserId },
+        async (online) => await _socketService.BroadcastUserRemoved(action, online));
 
-      await _emailService.BroadcastUserRemoved(user);
+      await _emailService.BroadcastUserRemoved(action);
     }
 
-    public async Task BroadcastUserDisabled(User user, string reason)
+    public async Task BroadcastUserDisabled(UserDisabledAction action)
     {
       await BroadcastActionToOnline(
-        new List<int> { user.Id },
-        async (online) => await _socketService.BroadcastUserDisabled(online));
+        new List<int> { action.UserId },
+        async (online) => await _socketService.BroadcastUserDisabled(action, online));
 
-      await _emailService.BroadcastUserDisabled(user, reason);
+      await _emailService.BroadcastUserDisabled(action);
     }
 
     public static bool IsConnected(int userId)

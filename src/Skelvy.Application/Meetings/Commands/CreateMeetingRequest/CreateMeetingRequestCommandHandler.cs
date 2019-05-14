@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Drinks.Infrastructure.Repositories;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
@@ -207,7 +208,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)
     {
       var usersId = new List<int> { request1.UserId, request2.UserId };
-      await _notifications.BroadcastUserFoundMeeting(usersId);
+      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(), usersId);
     }
 
     private async Task BroadcastUserJoinedMeeting(MeetingUser meetingUser)
@@ -215,7 +216,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(meetingUser.MeetingId);
 
       var meetingUsersId = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserJoinedMeeting(meetingUser, meetingUsersId);
+      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(), meetingUsersId);
     }
 
     private static IEnumerable<MeetingRequestDrink> PrepareDrinks(

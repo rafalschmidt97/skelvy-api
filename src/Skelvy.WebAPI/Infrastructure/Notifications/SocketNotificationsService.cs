@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Skelvy.Application.Notifications;
-using Skelvy.Domain.Entities;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Notifications.Infrastructure;
+using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.WebAPI.Hubs;
 
 namespace Skelvy.WebAPI.Infrastructure.Notifications
@@ -17,42 +19,48 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _hubContext = hubContext;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(MeetingChatMessage message, IEnumerable<int> usersId)
+    public async Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action, IEnumerable<int> usersId)
     {
-      await SendNotification("UserSentMeetingChatMessage", usersId, message);
+      await SendNotification("UserSentMeetingChatMessage", usersId, new MeetingChatMessageDto
+      {
+        Message = action.Message,
+        Date = action.Date,
+        UserId = action.UserId,
+        MeetingId = action.MeetingId,
+      });
     }
 
-    public async Task BroadcastUserJoinedMeeting(MeetingUser user, IEnumerable<int> usersId)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId)
     {
       await SendNotification("UserJoinedMeeting", usersId);
     }
 
-    public async Task BroadcastUserFoundMeeting(IEnumerable<int> usersId)
+    public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId)
     {
       await SendNotification("UserFoundMeeting", usersId);
     }
 
-    public async Task BroadcastUserLeftMeeting(MeetingUser user, IEnumerable<int> usersId)
+    public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId)
     {
       await SendNotification("UserLeftMeeting", usersId);
     }
 
-    public async Task BroadcastMeetingRequestExpired(IEnumerable<int> usersId)
+    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId)
     {
       await SendNotification("MeetingRequestExpired", usersId);
     }
 
-    public async Task BroadcastMeetingExpired(IEnumerable<int> usersId)
+    public async Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId)
     {
       await SendNotification("MeetingExpired", usersId);
     }
 
-    public async Task BroadcastUserRemoved(IEnumerable<int> usersId)
+    public async Task BroadcastUserRemoved(UserRemovedAction action, IEnumerable<int> usersId)
     {
       await SendNotification("UserRemoved", usersId);
     }
 
-    public async Task BroadcastUserDisabled(IEnumerable<int> usersId)
+    public async Task BroadcastUserDisabled(UserDisabledAction action, IEnumerable<int> usersId)
     {
       await SendNotification("UserDisabled", usersId);
     }

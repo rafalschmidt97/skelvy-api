@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
@@ -45,7 +46,9 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
     {
       var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(message.MeetingId);
       var meetingUsersId = meetingUsers.Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserSentMeetingChatMessage(message, meetingUsersId);
+      await _notifications.BroadcastUserSentMessage(
+        new UserSentMessageAction(message.Id, message.Message, message.Date, message.UserId, message.MeetingId),
+        meetingUsersId);
     }
   }
 }

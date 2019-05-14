@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Smtp;
 using Microsoft.Extensions.Configuration;
-using Skelvy.Application.Notifications;
-using Skelvy.Domain.Entities;
+using Skelvy.Application.Notifications.Infrastructure;
+using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.WebAPI.Infrastructure.Notifications
@@ -23,36 +23,36 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _templateRenderer = templateRenderer;
     }
 
-    public async Task BroadcastUserCreated(User user)
+    public async Task BroadcastUserCreated(UserCreatedAction action)
     {
       var message = new EmailMessage(
-        user.Email,
-        user.Language,
+        action.Email,
+        action.Language,
         new EmailMessageSubject("Your account has been created", "Twoje konto zostało utworzone"),
         "Created");
 
       await SendEmail(message);
     }
 
-    public async Task BroadcastUserRemoved(User user)
+    public async Task BroadcastUserRemoved(UserRemovedAction action)
     {
       var message = new EmailMessage(
-        user.Email,
-        user.Language,
+        action.Email,
+        action.Language,
         new EmailMessageSubject("Your account has been deleted", "Twoje konto zostało usunięte"),
         "Removed");
 
       await SendEmail(message);
     }
 
-    public async Task BroadcastUserDisabled(User user, string reason)
+    public async Task BroadcastUserDisabled(UserDisabledAction action)
     {
       dynamic model = new ExpandoObject();
-      model.Reason = reason;
+      model.Reason = action.Reason;
 
       var message = new EmailMessage(
-        user.Email,
-        user.Language,
+        action.Email,
+        action.Language,
         new EmailMessageSubject("Your account has been disabled", "Twoje konto zostało zablokowane"),
         "Disabled",
         model);
