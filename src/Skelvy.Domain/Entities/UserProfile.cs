@@ -48,7 +48,7 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset? ModifiedAt { get; private set; }
     public int UserId { get; private set; }
 
-    public IList<UserProfilePhoto> Photos { get; private set; }
+    public IList<UserProfilePhoto> Photos { get; set; }
     public User User { get; private set; }
 
     public void Update(string name, DateTimeOffset birthday, string gender, string description)

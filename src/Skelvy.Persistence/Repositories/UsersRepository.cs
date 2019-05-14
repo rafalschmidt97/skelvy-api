@@ -29,10 +29,21 @@ namespace Skelvy.Persistence.Repositories
 
     public async Task<User> FindOneWithDetails(int id)
     {
-      return await Context.Users
+      var user = await Context.Users
         .Include(x => x.Profile)
-        .ThenInclude(x => x.Photos)
         .FirstOrDefaultAsync(x => x.Id == id && !x.IsRemoved);
+
+      if (user != null)
+      {
+        var userPhotos = await Context.UserProfilePhotos
+          .Where(x => x.ProfileId == user.Profile.Id)
+          .OrderBy(x => x.Order)
+          .ToListAsync();
+
+        user.Profile.Photos = userPhotos;
+      }
+
+      return user;
     }
 
     public async Task<User> FindOneWithRoles(int userId)

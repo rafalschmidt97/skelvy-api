@@ -81,7 +81,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
             if (details.image != null)
             {
-              var photo = new UserProfilePhoto((string)details.image.url, profile.Id);
+              var photo = new UserProfilePhoto((string)details.image.url, 1, profile.Id);
               await _profilePhotosRepository.Add(photo);
             }
 

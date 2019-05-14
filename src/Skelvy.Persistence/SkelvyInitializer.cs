@@ -76,9 +76,9 @@ namespace Skelvy.Persistence
 
       var photos = new[]
       {
-        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=1", profiles[0].Id),
-        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=2", profiles[1].Id),
-        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=3", profiles[2].Id),
+        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=1", 1, profiles[0].Id),
+        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=2", 1, profiles[1].Id),
+        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=3", 1, profiles[2].Id),
       };
 
       context.UserProfilePhotos.AddRange(photos);

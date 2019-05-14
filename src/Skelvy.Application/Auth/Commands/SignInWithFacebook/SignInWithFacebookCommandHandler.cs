@@ -78,7 +78,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
             if (details.picture != null)
             {
-              var photo = new UserProfilePhoto((string)details.picture.data.url, profile.Id);
+              var photo = new UserProfilePhoto((string)details.picture.data.url, 1, profile.Id);
               await _profilePhotosRepository.Add(photo);
             }
 

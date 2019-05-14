@@ -58,7 +58,7 @@ namespace Skelvy.Domain.Entities
     public string RemovedReason { get; private set; }
     public int DrinkId { get; private set; }
 
-    public IList<MeetingUser> Users { get; private set; }
+    public IList<MeetingUser> Users { get; set; }
     public IList<MeetingChatMessage> ChatMessages { get; private set; }
     public Drink Drink { get; private set; }
 

@@ -21,29 +21,28 @@ namespace Skelvy.Persistence.Repositories
       var meeting = await Context.Meetings
         .Include(x => x.Users)
         .ThenInclude(y => y.User)
-        .ThenInclude(x => x.Profile)
-        .ThenInclude(x => x.Photos)
+        .ThenInclude(y => y.Profile)
         .Include(x => x.Drink)
         .FirstOrDefaultAsync(x => x.Users.Any(y => y.UserId == userId && !y.IsRemoved) && !x.IsRemoved);
 
       if (meeting != null)
       {
-        return new Meeting(
-          meeting.Id,
-          meeting.Date,
-          meeting.Latitude,
-          meeting.Longitude,
-          meeting.CreatedAt,
-          meeting.ModifiedAt,
-          meeting.IsRemoved,
-          meeting.RemovedReason,
-          meeting.DrinkId,
-          meeting.Users.Where(x => !x.IsRemoved).ToList(),
-          meeting.ChatMessages,
-          meeting.Drink);
+        var users = meeting.Users.Where(x => !x.IsRemoved).ToList();
+
+        foreach (var user in users)
+        {
+          var userPhotos = await Context.UserProfilePhotos
+            .Where(x => x.ProfileId == user.User.Profile.Id)
+            .OrderBy(x => x.Order)
+            .ToListAsync();
+
+          user.User.Profile.Photos = userPhotos;
+        }
+
+        meeting.Users = users;
       }
 
-      return default(Meeting);
+      return meeting;
     }
 
     public async Task<IList<Meeting>> FindAllAfterDate(DateTimeOffset maxDate)
