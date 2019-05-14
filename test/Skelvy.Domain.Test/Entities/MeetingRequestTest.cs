@@ -71,6 +71,16 @@ namespace Skelvy.Domain.Test.Entities
     }
 
     [Fact]
+    public void ShouldThrowExceptionWithMarkedAsFoundWhenRemoved()
+    {
+      var entity = new MeetingRequest(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1), 18, 25, 1, 1, 1);
+      entity.Expire();
+
+      Assert.Throws<DomainException>(() =>
+        entity.MarkAsFound());
+    }
+
+    [Fact]
     public void ShouldBeMarkedAsSearching()
     {
       var entity = new MeetingRequest(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1), 18, 25, 1, 1, 1);
@@ -83,6 +93,17 @@ namespace Skelvy.Domain.Test.Entities
     public void ShouldThrowExceptionWithMarkedAsSearching()
     {
       var entity = new MeetingRequest(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1), 18, 25, 1, 1, 1);
+
+      Assert.Throws<DomainException>(() =>
+        entity.MarkAsSearching());
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionWithMarkedAsSearchingWhenRemoved()
+    {
+      var entity = new MeetingRequest(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1), 18, 25, 1, 1, 1);
+      entity.MarkAsFound();
+      entity.Expire();
 
       Assert.Throws<DomainException>(() =>
         entity.MarkAsSearching());

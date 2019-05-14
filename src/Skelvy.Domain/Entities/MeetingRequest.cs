@@ -86,27 +86,41 @@ namespace Skelvy.Domain.Entities
 
     public void MarkAsSearching()
     {
-      if (!IsSearching)
+      if (!IsRemoved)
       {
-        Status = MeetingRequestStatusTypes.Searching;
-        ModifiedAt = DateTimeOffset.UtcNow;
+        if (!IsSearching)
+        {
+          Status = MeetingRequestStatusTypes.Searching;
+          ModifiedAt = DateTimeOffset.UtcNow;
+        }
+        else
+        {
+          throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already marked as searching.");
+        }
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already marked as searching.");
+        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already removed.");
       }
     }
 
     public void MarkAsFound()
     {
-      if (!IsFound)
+      if (!IsRemoved)
       {
-        Status = MeetingRequestStatusTypes.Found;
-        ModifiedAt = DateTimeOffset.UtcNow;
+        if (!IsFound)
+        {
+          Status = MeetingRequestStatusTypes.Found;
+          ModifiedAt = DateTimeOffset.UtcNow;
+        }
+        else
+        {
+          throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already marked as found.");
+        }
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already marked as found.");
+        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already removed.");
       }
     }
 
