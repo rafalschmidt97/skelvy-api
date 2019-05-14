@@ -25,6 +25,14 @@ namespace Skelvy.WebAPI.Extensions
           options.ModelMetadataDetailsProviders.Clear();
           options.ModelValidatorProviders.Clear();
         });
+
+      services.AddApiVersioning(o =>
+      {
+        o.DefaultApiVersion = new ApiVersion(1, 0);
+        o.AssumeDefaultVersionWhenUnspecified = true;
+      });
+
+      services.AddVersionedApiExplorer();
     }
 
     public static void UseCustomMvc(this IApplicationBuilder app)

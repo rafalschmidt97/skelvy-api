@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.WebAPI.Extensions;
@@ -33,11 +34,11 @@ namespace Skelvy.WebAPI
       services.AddCustomMvc();
     }
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
     {
       if (env.IsDevelopment())
       {
-        app.UseCustomSwagger();
+        app.UseCustomSwagger(provider);
       }
 
       app.UseHealthChecks("/");
