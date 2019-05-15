@@ -46,32 +46,30 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       using (var transaction = _usersRepository.BeginTransaction())
       {
         var usersToRemove = await _usersRepository.FindAllRemovedAfterForgottenAt(today);
-        await _usersRepository.RemoveRange(usersToRemove);
-
         var usersId = usersToRemove.Select(x => x.Id).ToList();
 
-        var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
-        await _rolesRepository.RemoveRange(userRolesToRemove);
-
-        var userProfilesToRemove = await _profilesRepository.FindAllByUsersId(usersId);
-        await _profilesRepository.RemoveRange(userProfilesToRemove);
-
-        var userProfilesId = userProfilesToRemove.Select(y => y.Id).ToList();
-        var userProfilePhotosToRemove = await _profilePhotosRepository.FindAllWithRemovedByProfilesId(userProfilesId);
-        await _profilePhotosRepository.RemoveRange(userProfilePhotosToRemove);
-
-        var meetingRequestsToRemove = await _requestsRepository.FindAllWithRemovedByUsersId(usersId);
-        await _requestsRepository.RemoveRange(meetingRequestsToRemove);
-
-        var meetingRequestsId = meetingRequestsToRemove.Select(y => y.Id);
-        var meetingRequestDrinksToRemove = await _requestDrinksRepository.FindAllByRequestsId(meetingRequestsId);
-        await _requestDrinksRepository.RemoveRange(meetingRequestDrinksToRemove);
+        var messagesToRemove = await _messagesRepository.FindAllByUsersId(usersId);
+        await _messagesRepository.RemoveRange(messagesToRemove);
 
         var meetingUsersToRemove = await _meetingUsersRepository.FindAllWithRemovedByUsersId(usersId);
         await _meetingUsersRepository.RemoveRange(meetingUsersToRemove);
 
-        var messagesToRemove = await _messagesRepository.FindAllByUsersId(usersId);
-        await _messagesRepository.RemoveRange(messagesToRemove);
+        var meetingRequestsToRemove = await _requestsRepository.FindAllWithRemovedByUsersId(usersId);
+        var meetingRequestsId = meetingRequestsToRemove.Select(y => y.Id);
+        var meetingRequestDrinksToRemove = await _requestDrinksRepository.FindAllByRequestsId(meetingRequestsId);
+        await _requestDrinksRepository.RemoveRange(meetingRequestDrinksToRemove);
+        await _requestsRepository.RemoveRange(meetingRequestsToRemove);
+
+        var userProfilesToRemove = await _profilesRepository.FindAllByUsersId(usersId);
+        var userProfilesId = userProfilesToRemove.Select(y => y.Id).ToList();
+        var userProfilePhotosToRemove = await _profilePhotosRepository.FindAllWithRemovedByProfilesId(userProfilesId);
+        await _profilePhotosRepository.RemoveRange(userProfilePhotosToRemove);
+        await _profilesRepository.RemoveRange(userProfilesToRemove);
+
+        var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
+        await _rolesRepository.RemoveRange(userRolesToRemove);
+
+        await _usersRepository.RemoveRange(usersToRemove);
 
         transaction.Commit();
       }
