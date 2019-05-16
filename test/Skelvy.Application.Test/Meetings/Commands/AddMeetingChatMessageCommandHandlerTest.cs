@@ -26,6 +26,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
+        new UsersRepository(dbContext),
         _notifications.Object);
 
       await handler.Handle(request);
@@ -39,6 +40,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
+        new UsersRepository(dbContext),
         _notifications.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

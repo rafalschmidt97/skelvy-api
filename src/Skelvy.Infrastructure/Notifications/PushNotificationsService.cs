@@ -19,6 +19,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await SendNotification(usersId, new PushNotificationContent
       {
+        Title = action.UserName,
         Body = action.Message,
       });
     }
@@ -27,6 +28,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await SendNotification(usersId, new PushNotificationContent
       {
+        TitleLocKey = "MEETING",
         BodyLocKey = "USER_JOINED_MEETING",
       });
     }
@@ -35,6 +37,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await SendNotification(usersId, new PushNotificationContent
       {
+        TitleLocKey = "MEETING",
         BodyLocKey = "USER_FOUND_MEETING",
       });
     }
@@ -43,6 +46,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await SendNotification(usersId, new PushNotificationContent
       {
+        TitleLocKey = "MEETING",
         BodyLocKey = "USER_LEFT_MEETING",
       });
     }
@@ -51,6 +55,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await SendNotification(usersId, new PushNotificationContent
       {
+        TitleLocKey = "MEETING_REQUEST",
         BodyLocKey = "MEETING_REQUEST_EXPIRED",
       });
     }
@@ -59,6 +64,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await SendNotification(usersId, new PushNotificationContent
       {
+        TitleLocKey = "MEETING",
         BodyLocKey = "MEETING_EXPIRED",
       });
     }
