@@ -18,6 +18,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     private readonly IMeetingRequestDrinksRepository _requestDrinksRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly IMeetingChatMessagesRepository _messagesRepository;
+    private readonly IBlockedUsersRepository _blockedUsersRepository;
 
     public RemoveUsersCommandHandler(
       IUsersRepository usersRepository,
@@ -27,7 +28,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       IMeetingRequestsRepository requestsRepository,
       IMeetingRequestDrinksRepository requestDrinksRepository,
       IMeetingUsersRepository meetingUsersRepository,
-      IMeetingChatMessagesRepository messagesRepository)
+      IMeetingChatMessagesRepository messagesRepository,
+      IBlockedUsersRepository blockedUsersRepository)
     {
       _usersRepository = usersRepository;
       _rolesRepository = rolesRepository;
@@ -37,6 +39,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       _requestDrinksRepository = requestDrinksRepository;
       _meetingUsersRepository = meetingUsersRepository;
       _messagesRepository = messagesRepository;
+      _blockedUsersRepository = blockedUsersRepository;
     }
 
     public override async Task<Unit> Handle(RemoveUsersCommand request)
@@ -65,6 +68,9 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
         var userProfilePhotosToRemove = await _profilePhotosRepository.FindAllWithRemovedByProfilesId(userProfilesId);
         await _profilePhotosRepository.RemoveRange(userProfilePhotosToRemove);
         await _profilesRepository.RemoveRange(userProfilesToRemove);
+
+        var blockedUsersToRemove = await _blockedUsersRepository.FindAllWithRemovedByUsersId(usersId);
+        await _blockedUsersRepository.RemoveRange(blockedUsersToRemove);
 
         var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
         await _rolesRepository.RemoveRange(userRolesToRemove);
