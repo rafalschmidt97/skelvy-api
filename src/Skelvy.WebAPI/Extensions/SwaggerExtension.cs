@@ -39,14 +39,7 @@ namespace Skelvy.WebAPI.Extensions
 
     public static void UseCustomSwagger(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
     {
-      app.UseSwagger(options =>
-      {
-        options.PreSerializeFilters.Add((document, request) =>
-        {
-          document.Paths =
-            document.Paths.ToDictionary(path => path.Key.ToLowerInvariant(), p => p.Value);
-        });
-      });
+      app.UseSwagger();
       app.UseSwaggerUI(options =>
       {
         foreach (var description in provider.ApiVersionDescriptions)
