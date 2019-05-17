@@ -20,7 +20,8 @@ namespace Skelvy.Application.Test.Users.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinksRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        new MeetingChatMessagesRepository(dbContext));
+        new MeetingChatMessagesRepository(dbContext),
+        new BlockedUsersRepository(dbContext));
 
       await handler.Handle(request);
     }

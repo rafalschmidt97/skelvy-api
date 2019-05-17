@@ -12,6 +12,7 @@ namespace Skelvy.Persistence
     {
       SeedUsers(context);
       SeedProfiles(context);
+      SeedBlockedUsers(context);
       SeedDrinks(context);
       SeedMeetingRequests(context);
       SeedMeetings(context);
@@ -82,6 +83,22 @@ namespace Skelvy.Persistence
       };
 
       context.UserProfilePhotos.AddRange(photos);
+      context.SaveChanges();
+    }
+
+    public static void SeedBlockedUsers(SkelvyContext context)
+    {
+      if (context.BlockedUsers.Any())
+      {
+        return;
+      }
+
+      var users = new[]
+      {
+        new BlockedUser(2, 1),
+      };
+
+      context.BlockedUsers.AddRange(users);
       context.SaveChanges();
     }
 
