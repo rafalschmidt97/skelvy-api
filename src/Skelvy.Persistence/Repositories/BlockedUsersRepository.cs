@@ -18,12 +18,12 @@ namespace Skelvy.Persistence.Repositories
     {
       var skip = (page - 1) * pageSize;
       var users = await Context.BlockedUsers
-        .OrderBy(x => x.Id)
-        .Skip(skip)
-        .Take(pageSize)
         .Include(x => x.BlockUser)
         .ThenInclude(x => x.Profile)
         .Where(x => x.UserId == userId && !x.IsRemoved)
+        .OrderBy(x => x.Id)
+        .Skip(skip)
+        .Take(pageSize)
         .ToListAsync();
 
       foreach (var user in users)

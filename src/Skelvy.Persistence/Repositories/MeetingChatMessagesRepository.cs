@@ -18,10 +18,10 @@ namespace Skelvy.Persistence.Repositories
     {
       var skip = (page - 1) * pageSize;
       var messages = await Context.MeetingChatMessages
+        .Where(x => x.MeetingId == meetingId)
         .OrderByDescending(p => p.Date)
         .Skip(skip)
         .Take(pageSize)
-        .Where(x => x.MeetingId == meetingId)
         .ToListAsync();
 
       return messages.OrderBy(x => x.Date).ToList();
