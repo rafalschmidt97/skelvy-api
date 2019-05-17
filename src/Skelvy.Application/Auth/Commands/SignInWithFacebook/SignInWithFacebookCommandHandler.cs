@@ -63,10 +63,12 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             user.RegisterFacebook(verified.UserId);
             await _usersRepository.Add(user);
 
-            var birthday = DateTimeOffset.ParseExact(
-              (string)details.birthday,
-              "MM/dd/yyyy",
-              CultureInfo.CurrentCulture).ToUniversalTime();
+            var birthday = details.birthday != null
+              ? DateTimeOffset.ParseExact(
+                (string)details.birthday,
+                "MM/dd/yyyy",
+                CultureInfo.CurrentCulture).ToUniversalTime()
+              : DateTimeOffset.UtcNow;
 
             var profile = new UserProfile(
               (string)details.first_name,
