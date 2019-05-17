@@ -42,8 +42,6 @@ namespace Skelvy.Persistence.Repositories
     public async Task<IList<BlockedUser>> FindAllWithRemovedByUsersId(List<int> usersId)
     {
       return await Context.BlockedUsers
-        .Include(x => x.BlockUser)
-        .ThenInclude(x => x.Profile)
         .Where(x => usersId.Any(y => y == x.UserId))
         .ToListAsync();
     }
@@ -52,6 +50,12 @@ namespace Skelvy.Persistence.Repositories
     {
       return await Context.BlockedUsers
         .AnyAsync(x => x.UserId == userId && x.BlockUserId == blockUserId && !x.IsRemoved);
+    }
+
+    public async Task<BlockedUser> FindOneByUserId(int userId, int blockUserId)
+    {
+      return await Context.BlockedUsers
+        .FirstOrDefaultAsync(x => x.UserId == userId && x.BlockUserId == blockUserId && !x.IsRemoved);
     }
 
     public async Task Add(BlockedUser blockedUser)

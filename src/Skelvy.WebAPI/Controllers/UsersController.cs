@@ -5,6 +5,7 @@ using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
 using Skelvy.Application.Users.Commands.AddBlockedUser;
 using Skelvy.Application.Users.Commands.DisableUser;
+using Skelvy.Application.Users.Commands.RemoveBlockedUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
@@ -121,7 +122,7 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPost("{id}/blocked")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task AddSelfBlocked(int id, AddBlockedUserCommand request)
+    public async Task AddBlocked(int id, AddBlockedUserCommand request)
     {
       request.UserId = id;
       await Mediator.Send(request);
@@ -132,6 +133,19 @@ namespace Skelvy.WebAPI.Controllers
     {
       request.UserId = UserId;
       await Mediator.Send(request);
+    }
+
+    [HttpDelete("{id}/blocked/{blockedId}")]
+    [AuthorizeRole(RoleTypes.Admin)]
+    public async Task RemoveBlocked(int id, int blockedId)
+    {
+      await Mediator.Send(new RemoveBlockedUserCommand(id, blockedId));
+    }
+
+    [HttpDelete("self/blocked/{blockedId}")]
+    public async Task RemoveSelfBlocked(int blockedId)
+    {
+      await Mediator.Send(new RemoveBlockedUserCommand(UserId, blockedId));
     }
   }
 }
