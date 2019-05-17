@@ -48,6 +48,12 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
+    public async Task<bool> ExistsOneByUserId(int userId, int blockUserId)
+    {
+      return await Context.BlockedUsers
+        .AnyAsync(x => x.UserId == userId && x.BlockUserId == blockUserId && !x.IsRemoved);
+    }
+
     public async Task Add(BlockedUser blockedUser)
     {
       await Context.BlockedUsers.AddAsync(blockedUser);

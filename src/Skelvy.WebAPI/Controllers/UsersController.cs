@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
+using Skelvy.Application.Users.Commands.AddBlockedUser;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
@@ -112,11 +113,25 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpGet("self/blocked")]
-    [AuthorizeRole(RoleTypes.Admin)]
     public async Task<IList<UserDto>> FindAllSelfBlocked([FromQuery] FindBlockedUsersQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
+    }
+
+    [HttpPost("{id}/blocked")]
+    [AuthorizeRole(RoleTypes.Admin)]
+    public async Task AddSelfBlocked(int id, AddBlockedUserCommand request)
+    {
+      request.UserId = id;
+      await Mediator.Send(request);
+    }
+
+    [HttpPost("self/blocked")]
+    public async Task AddSelfBlocked(AddBlockedUserCommand request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
     }
   }
 }
