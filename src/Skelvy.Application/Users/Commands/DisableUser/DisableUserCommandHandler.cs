@@ -80,7 +80,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
           {
             var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
 
-            anotherUserDetails.Leave();
+            anotherUserDetails.Abort();
             anotherUserDetails.MeetingRequest.MarkAsSearching();
             meetingUser.Meeting.Abort();
 

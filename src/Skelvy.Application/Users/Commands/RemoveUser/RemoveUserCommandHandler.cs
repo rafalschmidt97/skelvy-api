@@ -76,7 +76,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
           {
             var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
 
-            anotherUserDetails.Leave();
+            anotherUserDetails.Abort();
             anotherUserDetails.MeetingRequest.MarkAsSearching();
             meetingUser.Meeting.Abort();
 

@@ -62,7 +62,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
         {
           var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
 
-          anotherUserDetails.Leave();
+          anotherUserDetails.Abort();
           anotherUserDetails.MeetingRequest.MarkAsSearching();
           meetingUser.Meeting.Abort();
 
