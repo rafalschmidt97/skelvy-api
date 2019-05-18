@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Skelvy.Application.Auth.Infrastructure.Facebook;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
@@ -21,6 +23,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     private readonly IFacebookService _facebookService;
     private readonly ITokenService _tokenService;
     private readonly INotificationsService _notifications;
+    private readonly ILogger<SignInWithFacebookCommandHandler> _logger;
 
     public SignInWithFacebookCommandHandler(
       IUsersRepository usersRepository,
@@ -28,7 +31,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       IUserProfilePhotosRepository profilePhotosRepository,
       IFacebookService facebookService,
       ITokenService tokenService,
-      INotificationsService notifications)
+      INotificationsService notifications,
+      ILogger<SignInWithFacebookCommandHandler> logger)
     {
       _usersRepository = usersRepository;
       _profilesRepository = profilesRepository;
@@ -36,6 +40,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       _facebookService = facebookService;
       _tokenService = tokenService;
       _notifications = notifications;
+      _logger = logger;
     }
 
     public override async Task<AuthDto> Handle(SignInWithFacebookCommand request)
@@ -61,6 +66,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           {
             user = new User((string)details.email, request.Language);
             user.RegisterFacebook(verified.UserId);
+            _logger.LogInformation("Adding User from: {details} = {@User}", (string)JsonConvert.SerializeObject(details), user);
             await _usersRepository.Add(user);
 
             var birthday = details.birthday != null

@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Skelvy.Application.Auth.Infrastructure.Google;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
@@ -21,6 +23,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     private readonly IGoogleService _googleService;
     private readonly ITokenService _tokenService;
     private readonly INotificationsService _notifications;
+    private readonly ILogger<SignInWithGoogleCommandHandler> _logger;
 
     public SignInWithGoogleCommandHandler(
       IUsersRepository usersRepository,
@@ -28,7 +31,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
       IUserProfilePhotosRepository profilePhotosRepository,
       IGoogleService googleService,
       ITokenService tokenService,
-      INotificationsService notifications)
+      INotificationsService notifications,
+      ILogger<SignInWithGoogleCommandHandler> logger)
     {
       _usersRepository = usersRepository;
       _profilesRepository = profilesRepository;
@@ -36,6 +40,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
       _googleService = googleService;
       _tokenService = tokenService;
       _notifications = notifications;
+      _logger = logger;
     }
 
     public override async Task<AuthDto> Handle(SignInWithGoogleCommand request)
@@ -62,6 +67,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           {
             user = new User((string)details.emails[0].value, request.Language);
             user.RegisterGoogle(verified.UserId);
+            _logger.LogInformation("Adding User from: {details} = {@User}", (string)JsonConvert.SerializeObject(details), user);
             await _usersRepository.Add(user);
 
             var birthday = details.birthday != null
