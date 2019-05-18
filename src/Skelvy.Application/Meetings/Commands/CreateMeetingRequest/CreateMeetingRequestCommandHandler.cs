@@ -62,7 +62,12 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       }
       else
       {
-        await MatchExistingMeetingRequests(newRequest, user);
+        var existingRequest = await _meetingRequestsRepository.FindOneMatchingUserRequest(user, newRequest);
+
+        if (existingRequest != null)
+        {
+          await CreateNewMeeting(newRequest, existingRequest);
+        }
       }
 
       return Unit.Value;
@@ -144,16 +149,6 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
             $"{nameof(CreateMeetingRequestCommand)} Exception while AddUserToMeeting for " +
             $"Meeting(Id={meeting.Id}) Request(Id={newRequest.Id}): {exception.Message}");
         }
-      }
-    }
-
-    private async Task MatchExistingMeetingRequests(MeetingRequest newRequest, User user)
-    {
-      var existingRequest = await _meetingRequestsRepository.FindOneMatchingUserRequest(user, newRequest);
-
-      if (existingRequest != null)
-      {
-        await CreateNewMeeting(newRequest, existingRequest);
       }
     }
 

@@ -78,6 +78,19 @@ namespace Skelvy.Persistence.Repositories
                     x.MaxDate >= request.MinDate)
         .ToListAsync();
 
+      if (requests.Count > 0)
+      {
+        var blockedUsers = await Context.BlockedUsers
+          .Where(x => x.UserId == user.Id && !x.IsRemoved)
+          .ToListAsync();
+
+        if (blockedUsers.Count > 0)
+        {
+          var filteredRequests = requests.Where(x => blockedUsers.All(y => y.BlockUserId != x.UserId)).ToList();
+          return filteredRequests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
+        }
+      }
+
       return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
     }
 

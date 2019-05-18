@@ -68,6 +68,31 @@ namespace Skelvy.Persistence.Repositories
                     x.Users.Count(y => !y.IsRemoved) < 4)
         .ToListAsync();
 
+      if (meetings.Count > 0)
+      {
+        var blockedUsers = await Context.BlockedUsers
+          .Where(x => x.UserId == user.Id && !x.IsRemoved)
+          .ToListAsync();
+
+        if (blockedUsers.Count > 0)
+        {
+          var filteredMeetings = new List<Meeting>();
+
+          meetings.ForEach(meeting =>
+          {
+            var liveUsers = meeting.Users.Where(x => !x.IsRemoved).ToList();
+            var filteredLiveUsers = liveUsers.Where(x => blockedUsers.All(y => y.BlockUserId != x.UserId)).ToList();
+
+            if (filteredLiveUsers.Count == liveUsers.Count)
+            {
+              filteredMeetings.Add(meeting);
+            }
+          });
+
+          return filteredMeetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
+        }
+      }
+
       return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
     }
 
