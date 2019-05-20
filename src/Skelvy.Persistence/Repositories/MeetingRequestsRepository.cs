@@ -123,7 +123,7 @@ namespace Skelvy.Persistence.Repositories
       return request1.User.Profile.IsWithinMeetingRequestAgeRange(request2) &&
              requestUser.Profile.IsWithinMeetingRequestAgeRange(request1) &&
              request1.GetDistance(request2) <= 5 &&
-             request2.Drinks.Any(x => request1.Drinks.Any(y => y.Drink.Id == x.DrinkId));
+             request2.Drinks.Any(x => request1.Drinks.Any(y => y.DrinkId == x.DrinkId));
     }
   }
 }
