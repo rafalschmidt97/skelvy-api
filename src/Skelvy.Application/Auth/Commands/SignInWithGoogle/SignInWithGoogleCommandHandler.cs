@@ -63,9 +63,14 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
         if (userByEmail == null)
         {
+          if (email.Length > 50)
+          {
+            throw new UnauthorizedException($"Entity {nameof(User)}(GoogleId = {verified.UserId}, Email = {email}) has too long email");
+          }
+
           using (var transaction = _usersRepository.BeginTransaction())
           {
-            user = new User((string)details.emails[0].value, request.Language);
+            user = new User(email, request.Language);
             user.RegisterGoogle(verified.UserId);
             _logger.LogInformation("Adding User from: {details} = {@User}", (string)JsonConvert.SerializeObject(details), user);
             await _usersRepository.Add(user);

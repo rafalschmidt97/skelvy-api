@@ -108,6 +108,33 @@ namespace Skelvy.Application.Test.Auth.Commands
     }
 
     [Fact]
+    public async Task ShouldThrowExceptionWithTooLongEmail()
+    {
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
+      var peopleResponse = PeopleResponse();
+      peopleResponse.emails[0].value = "123456789123456789123456789123456789123456789@gmail.com"; // 55 signs
+      _googleService
+        .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        .ReturnsAsync((object)peopleResponse);
+      _tokenService.Setup(x =>
+          x.Generate(It.IsAny<User>()))
+        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
+      var dbContext = DbContext();
+      var handler = new SignInWithGoogleCommandHandler(
+        new UsersRepository(dbContext),
+        new UserProfilesRepository(dbContext),
+        new UserProfilePhotosRepository(dbContext),
+        _googleService.Object,
+        _tokenService.Object,
+        _notifications.Object,
+        _logger.Object);
+
+      await Assert.ThrowsAsync<UnauthorizedException>(() =>
+        handler.Handle(request));
+    }
+
+    [Fact]
     public async Task ShouldThrowExceptionWithRemovedUser()
     {
       var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);

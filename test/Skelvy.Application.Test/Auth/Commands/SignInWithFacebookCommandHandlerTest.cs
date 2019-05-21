@@ -108,6 +108,33 @@ namespace Skelvy.Application.Test.Auth.Commands
     }
 
     [Fact]
+    public async Task ShouldThrowExceptionWithTooLongEmail()
+    {
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
+      _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
+      var graphObject = GraphResponse();
+      graphObject.email = "123456789123456789123456789123456789123456789@gmail.com"; // 55 signs
+      _facebookService
+        .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        .ReturnsAsync((object)graphObject);
+      _tokenService.Setup(x =>
+          x.Generate(It.IsAny<User>()))
+        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
+      var dbContext = DbContext();
+      var handler = new SignInWithFacebookCommandHandler(
+        new UsersRepository(dbContext),
+        new UserProfilesRepository(dbContext),
+        new UserProfilePhotosRepository(dbContext),
+        _facebookService.Object,
+        _tokenService.Object,
+        _notifications.Object,
+        _logger.Object);
+
+      await Assert.ThrowsAsync<UnauthorizedException>(() =>
+        handler.Handle(request));
+    }
+
+    [Fact]
     public async Task ShouldThrowExceptionWithRemovedUser()
     {
       var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
