@@ -74,26 +74,48 @@ namespace Skelvy.Persistence.Repositories
           .Where(x => x.UserId == user.Id && !x.IsRemoved)
           .ToListAsync();
 
+        var filteredMeetings = new List<Meeting>();
+
         if (blockedUsers.Count > 0)
         {
-          var filteredMeetings = new List<Meeting>();
-
-          meetings.ForEach(meeting =>
+          foreach (var meeting in meetings)
           {
-            var liveUsers = meeting.Users.Where(x => !x.IsRemoved).ToList();
-            var filteredLiveUsers = liveUsers.Where(x => blockedUsers.All(y => y.BlockUserId != x.UserId)).ToList();
+            var usersId = meeting.Users.Where(x => !x.IsRemoved).Select(x => x.UserId).ToList();
+            var filteredUsersId = usersId.Where(x => blockedUsers.All(y => y.BlockUserId != x)).ToList();
 
-            if (filteredLiveUsers.Count == liveUsers.Count)
+            if (filteredUsersId.Count == usersId.Count)
             {
-              filteredMeetings.Add(meeting);
+              var blockedUserInMeetingUsers = await Context.BlockedUsers
+                .Where(x => usersId.Any(y => y == x.UserId) && x.BlockUserId == user.Id && !x.IsRemoved)
+                .ToListAsync();
+
+              if (blockedUserInMeetingUsers.Count == 0)
+              {
+                filteredMeetings.Add(meeting);
+              }
             }
-          });
+          }
 
           return filteredMeetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
         }
+
+        foreach (var meeting in meetings)
+        {
+          var usersId = meeting.Users.Where(x => !x.IsRemoved).Select(x => x.UserId).ToList();
+          var blockedUserInMeetingUsers = await Context.BlockedUsers
+            .Where(x => usersId.Any(y => y == x.UserId) && x.BlockUserId == user.Id && !x.IsRemoved)
+            .ToListAsync();
+
+          if (blockedUserInMeetingUsers.Count == 0)
+          {
+            filteredMeetings.Add(meeting);
+          }
+        }
+
+        return filteredMeetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
       }
 
-      return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
+      return default(Meeting);
     }
 
     public async Task Add(Meeting meeting)
