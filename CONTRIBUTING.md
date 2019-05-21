@@ -134,27 +134,36 @@ $ dotnet restore
 3. In order to prepare your environment run `prepare.sh` shell script:
 
 ```bash
+# docker-compose up
 $ sh scripts/prepare.sh // TODO: script is not ready yet
 ```
 
 ### Commonly used NPM scripts
 
 ```bash
-# build project
-$ dotnet build
+# add secret for local development
+$ dotnet user-secrets set "FACEBOOK_CLIENT_ID" "x" --project src/Skelvy.WebAPI
 
-# run tests
-$ dotnet test
+# add migration
+$ ASPNETCORE_ENVIRONMENT=Development dotnet ef migrations add Initial --project src/Skelvy.Persistence --verbose
+
+# update database 
+$ ASPNETCORE_ENVIRONMENT=Development dotnet ef database update --project src/Skelvy.Persistence --verbose
+
+# publish new verion
+$ docker rmi skelvy/skelvy-api && docker build -t skelvy/skelvy-api . && docker push skelvy/skelvy-api
 
 # run integration tests
 # docker is required(!)
 $ sh scripts/run-integration.sh // IN PROGRESS
+```
 
-# add migration
-$ dotnet ef migrations add MIGRATION_NAME --project src/Skelvy.Persistence
+### Generating new ssl with Let's Encrypt
 
-# migrate database
-$ dotnet ef database update --project src/Skelvy.Persistence
+```bash
+$ sudo certbot certonly --manual --preferred-challenges=dns --email contact.skelvy@gmail.com --server https://acme-v02.api.letsencrypt.org/directory --agree-tos --domain "skelvy.com" --domain "api.skelvy.com" --domain "www.skelvy.com" --domain "www.api.skelvy.com" --work-dir ~/Downloads
+
+$ sudo openssl pkcs12 -inkey privkey.pem -in fullchain.pem -export -out cert.pfx
 ```
 
 ## <a name="rules"></a> Coding Rules
