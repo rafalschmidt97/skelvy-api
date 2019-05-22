@@ -42,7 +42,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
       foreach (var meetingRequest in requests)
       {
-        var existingRequest = requests.FirstOrDefault(x => AreRequestsMatch(x, meetingRequest));
+        var existingRequest = await _meetingRequestsRepository.FindOneMatchingUserRequest(meetingRequest.User, meetingRequest);
 
         if (existingRequest != null)
         {
@@ -51,24 +51,6 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       }
 
       return Unit.Value;
-    }
-
-    private static bool AreRequestsMatch(
-      MeetingRequest request1,
-      MeetingRequest request2)
-    {
-      return request1.Id != request2.Id &&
-             request1.MinDate <= request2.MaxDate &&
-             request1.MaxDate >= request2.MinDate &&
-             IsUserAgeWithinMeetingRequestAgeRange(request1.User.Profile.GetAge(), request2.MinAge, request2.MaxAge) &&
-             IsUserAgeWithinMeetingRequestAgeRange(request2.User.Profile.GetAge(), request1.MinAge, request1.MaxAge) &&
-             request1.GetDistance(request2) <= 5 &&
-             request2.Drinks.Any(x => request1.Drinks.Any(y => y.Drink.Id == x.DrinkId));
-    }
-
-    private static bool IsUserAgeWithinMeetingRequestAgeRange(int age, int minAge, int maxAge)
-    {
-      return age >= minAge && (maxAge >= 55 || age <= maxAge);
     }
 
     private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2) // Same logic as CreateMeetingRequest
