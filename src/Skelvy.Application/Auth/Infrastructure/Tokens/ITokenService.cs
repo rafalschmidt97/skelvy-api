@@ -6,8 +6,8 @@ namespace Skelvy.Application.Auth.Infrastructure.Tokens
 {
   public interface ITokenService
   {
-    Task<AuthDto> Generate(User user);
-    Task<AuthDto> Generate(string refreshToken);
+    Task<TokenDto> Generate(User user);
+    Task<TokenDto> Generate(string refreshToken);
     Task Invalidate(string refreshToken);
   }
 }

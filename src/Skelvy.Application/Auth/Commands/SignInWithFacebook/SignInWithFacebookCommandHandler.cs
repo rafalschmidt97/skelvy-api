@@ -46,7 +46,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     public override async Task<AuthDto> Handle(SignInWithFacebookCommand request)
     {
       var verified = await _facebookService.Verify(request.AuthToken);
-
+      var accountCreated = false;
       var user = await _usersRepository.FindOneWithRolesByFacebookId(verified.UserId);
 
       if (user == null)
@@ -97,6 +97,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
             transaction.Commit();
           }
+
+          accountCreated = true;
         }
         else
         {
@@ -118,7 +120,14 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         ValidateUser(user);
       }
 
-      return await _tokenService.Generate(user);
+      var token = await _tokenService.Generate(user);
+
+      return new AuthDto
+      {
+        AccountCreated = accountCreated,
+        AccessToken = token.AccessToken,
+        RefreshToken = token.RefreshToken,
+      };
     }
 
     private static void ValidateUser(User user)

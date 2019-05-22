@@ -46,7 +46,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>()))
-        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
+        .ReturnsAsync(new TokenDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var dbContext = InitializedDbContext();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
@@ -59,7 +59,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<AuthDto>(result);
+      Assert.IsType<TokenDto>(result);
     }
 
     [Fact]
@@ -72,7 +72,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .ReturnsAsync((object)PeopleResponse());
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>()))
-        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
+        .ReturnsAsync(new TokenDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var dbContext = DbContext();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
@@ -85,7 +85,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<AuthDto>(result);
+      Assert.IsType<TokenDto>(result);
     }
 
     [Fact]
@@ -119,7 +119,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .ReturnsAsync((object)peopleResponse);
       _tokenService.Setup(x =>
           x.Generate(It.IsAny<User>()))
-        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
+        .ReturnsAsync(new TokenDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var dbContext = DbContext();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),

@@ -4,7 +4,7 @@ using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Auth.Commands.RefreshToken
 {
-  public class RefreshTokenCommandHandler : QueryHandler<RefreshTokenCommand, AuthDto>
+  public class RefreshTokenCommandHandler : QueryHandler<RefreshTokenCommand, TokenDto>
   {
     private readonly ITokenService _tokenService;
 
@@ -13,7 +13,7 @@ namespace Skelvy.Application.Auth.Commands.RefreshToken
       _tokenService = tokenService;
     }
 
-    public override async Task<AuthDto> Handle(RefreshTokenCommand request)
+    public override async Task<TokenDto> Handle(RefreshTokenCommand request)
     {
       return await _tokenService.Generate(request.RefreshToken);
     }

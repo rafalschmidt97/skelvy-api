@@ -33,20 +33,20 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       _mapper = mapper;
     }
 
-    public async Task<AuthDto> Generate(User user)
+    public async Task<TokenDto> Generate(User user)
     {
       var refreshToken = await GetRefreshToken(user);
       var accessToken = GetAccessToken(user);
 
-      return new AuthDto { AccessToken = accessToken, RefreshToken = refreshToken };
+      return new TokenDto { AccessToken = accessToken, RefreshToken = refreshToken };
     }
 
-    public async Task<AuthDto> Generate(string refreshToken)
+    public async Task<TokenDto> Generate(string refreshToken)
     {
       var user = await UpdateRefreshToken(refreshToken);
       var accessToken = GetAccessToken(user);
 
-      return new AuthDto { AccessToken = accessToken, RefreshToken = refreshToken };
+      return new TokenDto { AccessToken = accessToken, RefreshToken = refreshToken };
     }
 
     public async Task Invalidate(string refreshToken)

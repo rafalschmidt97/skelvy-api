@@ -46,7 +46,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>()))
-        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
+        .ReturnsAsync(new TokenDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var dbContext = InitializedDbContext();
       var handler = new SignInWithFacebookCommandHandler(
           new UsersRepository(dbContext),
@@ -60,6 +60,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var result = await handler.Handle(request);
 
       Assert.IsType<AuthDto>(result);
+      Assert.False(result.AccountCreated);
     }
 
     [Fact]
@@ -72,7 +73,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .ReturnsAsync((object)GraphResponse());
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>()))
-        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
+        .ReturnsAsync(new TokenDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var dbContext = DbContext();
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
@@ -86,6 +87,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var result = await handler.Handle(request);
 
       Assert.IsType<AuthDto>(result);
+      Assert.True(result.AccountCreated);
     }
 
     [Fact]
@@ -119,7 +121,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         .ReturnsAsync((object)graphObject);
       _tokenService.Setup(x =>
           x.Generate(It.IsAny<User>()))
-        .ReturnsAsync(new AuthDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
+        .ReturnsAsync(new TokenDto { AccessToken = AccessToken, RefreshToken = RefreshToken });
       var dbContext = DbContext();
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),

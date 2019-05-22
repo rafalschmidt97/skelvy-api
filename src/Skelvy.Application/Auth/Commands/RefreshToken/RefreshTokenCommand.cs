@@ -3,7 +3,7 @@ using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Auth.Commands.RefreshToken
 {
-  public class RefreshTokenCommand : IQuery<AuthDto>
+  public class RefreshTokenCommand : IQuery<TokenDto>
   {
     public RefreshTokenCommand(string refreshToken)
     {

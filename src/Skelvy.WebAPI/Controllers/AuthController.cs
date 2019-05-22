@@ -33,7 +33,7 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPost("refresh")]
     [AllowAnonymous]
-    public async Task<AuthDto> Refresh(RefreshTokenCommand request)
+    public async Task<TokenDto> Refresh(RefreshTokenCommand request)
     {
       return await Mediator.Send(request);
     }

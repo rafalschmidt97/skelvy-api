@@ -46,7 +46,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     public override async Task<AuthDto> Handle(SignInWithGoogleCommand request)
     {
       var verified = await _googleService.Verify(request.AuthToken);
-
+      var accountCreated = false;
       var user = await _usersRepository.FindOneWithRolesByGoogleId(verified.UserId);
 
       if (user == null)
@@ -98,6 +98,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
             transaction.Commit();
           }
+
+          accountCreated = true;
         }
         else
         {
@@ -119,7 +121,14 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         ValidateUser(user);
       }
 
-      return await _tokenService.Generate(user);
+      var token = await _tokenService.Generate(user);
+
+      return new AuthDto
+      {
+        AccountCreated = accountCreated,
+        AccessToken = token.AccessToken,
+        RefreshToken = token.RefreshToken,
+      };
     }
 
     private static void ValidateUser(User user)
