@@ -59,7 +59,8 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<TokenDto>(result);
+      Assert.IsType<AuthDto>(result);
+      Assert.False(result.AccountCreated);
     }
 
     [Fact]
@@ -85,7 +86,8 @@ namespace Skelvy.Application.Test.Auth.Commands
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<TokenDto>(result);
+      Assert.IsType<AuthDto>(result);
+      Assert.True(result.AccountCreated);
     }
 
     [Fact]
