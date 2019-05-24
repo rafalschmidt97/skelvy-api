@@ -17,69 +17,105 @@ namespace Skelvy.Infrastructure.Notifications
 
     public async Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action, IEnumerable<int> usersId)
     {
-      await SendNotification(usersId, new PushNotificationContent
-      {
-        Title = action.UserName,
-        Body = action.Message,
-      });
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          Title = action.UserName,
+          Body = action.Message,
+        },
+        new
+        {
+          RedirectTo = "chat",
+        });
     }
 
     public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId)
     {
-      await SendNotification(usersId, new PushNotificationContent
-      {
-        TitleLocKey = "MEETING",
-        BodyLocKey = "USER_JOINED_MEETING",
-      });
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_JOINED_MEETING",
+        },
+        new
+        {
+          RedirectTo = "meeting",
+        });
     }
 
     public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId)
     {
-      await SendNotification(usersId, new PushNotificationContent
-      {
-        TitleLocKey = "MEETING",
-        BodyLocKey = "USER_FOUND_MEETING",
-      });
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_FOUND_MEETING",
+        },
+        new
+        {
+          RedirectTo = "meeting",
+        });
     }
 
     public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId)
     {
-      await SendNotification(usersId, new PushNotificationContent
-      {
-        TitleLocKey = "MEETING",
-        BodyLocKey = "USER_LEFT_MEETING",
-      });
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_LEFT_MEETING",
+        },
+        new
+        {
+          RedirectTo = "meeting",
+        });
     }
 
     public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId)
     {
-      await SendNotification(usersId, new PushNotificationContent
-      {
-        TitleLocKey = "MEETING_REQUEST",
-        BodyLocKey = "MEETING_REQUEST_EXPIRED",
-      });
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING_REQUEST",
+          BodyLocKey = "MEETING_REQUEST_EXPIRED",
+        },
+        new
+        {
+          RedirectTo = "meeting",
+        });
     }
 
     public async Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId)
     {
-      await SendNotification(usersId, new PushNotificationContent
-      {
-        TitleLocKey = "MEETING",
-        BodyLocKey = "MEETING_EXPIRED",
-      });
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "MEETING_EXPIRED",
+        },
+        new
+        {
+          RedirectTo = "meeting",
+        });
     }
 
-    private async Task SendNotification(IEnumerable<int> usersId, PushNotificationContent notification)
+    private async Task SendNotification(IEnumerable<int> usersId, PushNotificationContent notification, object data = null)
     {
       foreach (var userId in usersId)
       {
-        await SendNotification(userId, notification);
+        await SendNotification(userId, notification, data);
       }
     }
 
-    private async Task SendNotification(int userId, PushNotificationContent notification)
+    private async Task SendNotification(int userId, PushNotificationContent notification, object data = null)
     {
-      var message = new PushNotificationMessage($"/topics/user-{userId}", notification);
+      var message = new PushNotificationMessage($"/topics/user-{userId}", notification, data);
       await HttpClient.PostAsync("send", PrepareData(message));
     }
   }
