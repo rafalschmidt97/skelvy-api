@@ -9,7 +9,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   public interface IMeetingsRepository : IBaseRepository
   {
     Task<Meeting> FindOneWithUsersDetailsAndDrinkByUserId(int userId);
-    Task<IList<Meeting>> FindAllAfterDate(DateTimeOffset maxDate);
+    Task<IList<Meeting>> FindAllAfterOrEqualDate(DateTimeOffset maxDate);
     Task<Meeting> FindOneMatchingUserRequest(User user, MeetingRequest request);
     Task Add(Meeting meeting);
     Task Update(Meeting meeting);

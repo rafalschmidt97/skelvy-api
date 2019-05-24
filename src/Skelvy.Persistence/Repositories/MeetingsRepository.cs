@@ -45,10 +45,10 @@ namespace Skelvy.Persistence.Repositories
       return meeting;
     }
 
-    public async Task<IList<Meeting>> FindAllAfterDate(DateTimeOffset maxDate)
+    public async Task<IList<Meeting>> FindAllAfterOrEqualDate(DateTimeOffset maxDate)
     {
       return await Context.Meetings
-        .Where(x => !x.IsRemoved && x.Date < maxDate)
+        .Where(x => !x.IsRemoved && x.Date <= maxDate)
         .ToListAsync();
     }
 

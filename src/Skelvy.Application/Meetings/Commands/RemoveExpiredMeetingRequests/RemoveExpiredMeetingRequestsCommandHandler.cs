@@ -25,8 +25,8 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
 
     public override async Task<Unit> Handle(RemoveExpiredMeetingRequestsCommand request)
     {
-      var today = DateTimeOffset.UtcNow;
-      var requestsToRemove = await _meetingRequestsRepository.FindAllSearchingAfterMaxDate(today);
+      var yesterday = DateTimeOffset.UtcNow.AddDays(-1);
+      var requestsToRemove = await _meetingRequestsRepository.FindAllSearchingAfterOrEqualMaxDate(yesterday);
 
       var isDataChanged = false;
 

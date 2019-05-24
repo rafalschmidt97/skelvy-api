@@ -33,8 +33,8 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
 
     public override async Task<Unit> Handle(RemoveExpiredMeetingsCommand request)
     {
-      var today = DateTimeOffset.UtcNow;
-      var meetingsToRemove = await _meetingsRepository.FindAllAfterDate(today);
+      var yesterday = DateTimeOffset.UtcNow.AddDays(-1);
+      var meetingsToRemove = await _meetingsRepository.FindAllAfterOrEqualDate(yesterday);
 
       using (var transaction = _meetingRequestsRepository.BeginTransaction())
       {
