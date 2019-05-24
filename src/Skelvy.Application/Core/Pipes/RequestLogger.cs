@@ -70,7 +70,7 @@ namespace Skelvy.Application.Core.Pipes
 
       _timer.Stop();
 
-      if (_timer.ElapsedMilliseconds > 1000)
+      if (_timer.ElapsedMilliseconds > 2000)
       {
         _logger.LogWarning(
           "Request Performance Issue: {@Request} ({ElapsedMilliseconds} milliseconds)",
