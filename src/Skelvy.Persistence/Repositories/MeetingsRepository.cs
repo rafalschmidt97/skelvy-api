@@ -140,7 +140,7 @@ namespace Skelvy.Persistence.Repositories
     {
       return meeting.Users.Where(x => !x.IsRemoved).All(x => x.User.Profile.IsWithinMeetingRequestAgeRange(request)) &&
              meeting.Users.Where(x => !x.IsRemoved).All(x => requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
-             meeting.GetDistance(request) <= 5 &&
+             meeting.GetDistance(request) <= 10 &&
              request.Drinks.Any(x => x.DrinkId == meeting.DrinkId);
     }
   }
