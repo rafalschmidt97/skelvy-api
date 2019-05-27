@@ -57,62 +57,47 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}");
 
         var email = (string)details.email;
-        var userByEmail = await _usersRepository.FindOneWithRolesByEmail(email);
-        var isDataChanged = false;
 
-        if (userByEmail == null)
+        if (email == null)
         {
-          if (email.Length > 50)
-          {
-            throw new UnauthorizedException($"Entity {nameof(User)}(FacebookId = {verified.UserId}, Email = {email}) has too long email");
-          }
-
-          using (var transaction = _usersRepository.BeginTransaction())
-          {
-            user = new User(email, request.Language);
-            user.RegisterFacebook(verified.UserId);
-            _logger.LogInformation("Adding User from: {details} = {@User}", (string)JsonConvert.SerializeObject(details), user);
-            await _usersRepository.Add(user);
-
-            var birthday = details.birthday != null
-              ? DateTimeOffset.ParseExact(
-                (string)details.birthday,
-                "MM/dd/yyyy",
-                CultureInfo.CurrentCulture).ToUniversalTime()
-              : DateTimeOffset.UtcNow;
-
-            var profile = new UserProfile(
-              (string)details.first_name,
-              birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-              details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
-              user.Id);
-
-            await _profilesRepository.Add(profile);
-
-            if (details.picture != null)
-            {
-              var photo = new UserProfilePhoto((string)details.picture.data.url, 1, profile.Id);
-              await _profilePhotosRepository.Add(photo);
-            }
-
-            transaction.Commit();
-          }
+          user = new User("", request.Language);
+          user.RegisterFacebook(verified.UserId);
+          await CreateUserWithProfile(user, details);
 
           accountCreated = true;
         }
         else
         {
-          ValidateUser(userByEmail);
-          userByEmail.RegisterFacebook(verified.UserId);
-          await _usersRepository.Update(userByEmail);
+          var userByEmail = await _usersRepository.FindOneWithRolesByEmail(email);
+          var accountChanged = false;
 
-          user = userByEmail;
-          isDataChanged = true;
-        }
+          if (userByEmail == null)
+          {
+            if (email.Length > 50)
+            {
+              throw new UnauthorizedException($"Entity {nameof(User)}(FacebookId = {verified.UserId}, Email = {email}) has too long email");
+            }
 
-        if (!isDataChanged)
-        {
-          await _notifications.BroadcastUserCreated(new UserCreatedAction(user.Id, user.Email, user.Language));
+            user = new User(email, request.Language);
+            user.RegisterFacebook(verified.UserId);
+            await CreateUserWithProfile(user, details);
+
+            accountCreated = true;
+          }
+          else
+          {
+            ValidateUser(userByEmail);
+            userByEmail.RegisterFacebook(verified.UserId);
+            await _usersRepository.Update(userByEmail);
+
+            user = userByEmail;
+            accountChanged = true;
+          }
+
+          if (!accountChanged)
+          {
+            await _notifications.BroadcastUserCreated(new UserCreatedAction(user.Id, user.Email, user.Language));
+          }
         }
       }
       else
@@ -128,6 +113,42 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         AccessToken = token.AccessToken,
         RefreshToken = token.RefreshToken,
       };
+    }
+
+    private async Task CreateUserWithProfile(User user, dynamic details)
+    {
+      using (var transaction = _usersRepository.BeginTransaction())
+      {
+        _logger.LogInformation(
+          "Adding User from: {details} = {@User}",
+          (string)JsonConvert.SerializeObject(details),
+          user);
+
+        await _usersRepository.Add(user);
+
+        var birthday = details.birthday != null
+          ? DateTimeOffset.ParseExact(
+            (string)details.birthday,
+            "MM/dd/yyyy",
+            CultureInfo.CurrentCulture).ToUniversalTime()
+          : DateTimeOffset.UtcNow;
+
+        var profile = new UserProfile(
+          (string)details.first_name,
+          birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
+          details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+          user.Id);
+
+        await _profilesRepository.Add(profile);
+
+        if (details.picture != null)
+        {
+          var photo = new UserProfilePhoto((string)details.picture.data.url, 1, profile.Id);
+          await _profilePhotosRepository.Add(photo);
+        }
+
+        transaction.Commit();
+      }
     }
 
     private static void ValidateUser(User user)
