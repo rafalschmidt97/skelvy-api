@@ -60,8 +60,12 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       {
         new Claim(ClaimTypes.Sid, user.Id.ToString()),
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Email, user.Email),
       };
+
+      if (user.Email != null)
+      {
+        claims.Add(new Claim(ClaimTypes.Email, user.Email));
+      }
 
       claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
       return GenerateAccessToken(DateTimeOffset.UtcNow.AddMinutes(5).UtcDateTime, claims);
