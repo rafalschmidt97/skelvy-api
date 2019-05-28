@@ -60,7 +60,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
         if (email == null)
         {
-          user = new User("", request.Language);
+          user = new User(request.Language);
           user.RegisterGoogle(verified.UserId);
           await CreateUserWithProfile(user, details);
 
@@ -94,7 +94,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             accountChanged = true;
           }
 
-          if (!accountChanged)
+          if (!accountChanged && user.Email != null)
           {
             await _notifications.BroadcastUserCreated(new UserCreatedAction(user.Id, user.Email, user.Language));
           }

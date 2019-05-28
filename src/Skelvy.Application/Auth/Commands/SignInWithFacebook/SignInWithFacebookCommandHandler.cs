@@ -60,7 +60,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
         if (email == null)
         {
-          user = new User("", request.Language);
+          user = new User(request.Language);
           user.RegisterFacebook(verified.UserId);
           await CreateUserWithProfile(user, details);
 
@@ -94,7 +94,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             accountChanged = true;
           }
 
-          if (!accountChanged)
+          if (!accountChanged && user.Email != null)
           {
             await _notifications.BroadcastUserCreated(new UserCreatedAction(user.Id, user.Email, user.Language));
           }

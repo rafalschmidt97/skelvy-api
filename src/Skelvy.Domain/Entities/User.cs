@@ -19,6 +19,16 @@ namespace Skelvy.Domain.Entities
       MeetingRequests = new List<MeetingRequest>();
     }
 
+    public User(string language)
+    {
+      Language = language;
+
+      CreatedAt = DateTimeOffset.UtcNow;
+      Roles = new List<UserRole>();
+      MeetingChatMessages = new List<MeetingChatMessage>();
+      MeetingRequests = new List<MeetingRequest>();
+    }
+
     public User(
       int id,
       string email,
