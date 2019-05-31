@@ -16,7 +16,7 @@ namespace Skelvy.Application.Meetings.Queries
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public IList<UserDto> Users { get; set; }
-    public DrinkDto Drink { get; set; }
+    public DrinkTypeDto DrinkType { get; set; }
 
     public void CreateMappings(Profile configuration)
     {

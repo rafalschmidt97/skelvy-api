@@ -4,14 +4,14 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Configurations
 {
-  public class MeetingRequestDrinkConfiguration : IEntityTypeConfiguration<MeetingRequestDrink>
+  public class MeetingRequestDrinkConfiguration : IEntityTypeConfiguration<MeetingRequestDrinkType>
   {
-    public void Configure(EntityTypeBuilder<MeetingRequestDrink> builder)
+    public void Configure(EntityTypeBuilder<MeetingRequestDrinkType> builder)
     {
-      builder.HasKey(x => new { x.MeetingRequestId, x.DrinkId });
+      builder.HasKey(x => new { x.MeetingRequestId, x.DrinkTypeId });
 
-      builder.HasOne(x => x.MeetingRequest).WithMany(x => x.Drinks).OnDelete(DeleteBehavior.Restrict);
-      builder.HasOne(x => x.Drink).WithMany().OnDelete(DeleteBehavior.Restrict);
+      builder.HasOne(x => x.MeetingRequest).WithMany(x => x.DrinkTypes).OnDelete(DeleteBehavior.Restrict);
+      builder.HasOne(x => x.DrinkType).WithMany().OnDelete(DeleteBehavior.Restrict);
     }
   }
 }

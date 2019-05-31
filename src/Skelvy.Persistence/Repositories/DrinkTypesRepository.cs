@@ -7,16 +7,16 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Repositories
 {
-  public class DrinksRepository : BaseRepository, IDrinksRepository
+  public class DrinkTypesRepository : BaseRepository, IDrinkTypesRepository
   {
-    public DrinksRepository(SkelvyContext context)
+    public DrinkTypesRepository(SkelvyContext context)
       : base(context)
     {
     }
 
-    public async Task<IList<Drink>> FindAll()
+    public async Task<IList<DrinkType>> FindAll()
     {
-      return await Context.Drinks.OrderBy(x => x.Name).ToListAsync();
+      return await Context.DrinkTypes.OrderBy(x => x.Id).ToListAsync();
     }
   }
 }

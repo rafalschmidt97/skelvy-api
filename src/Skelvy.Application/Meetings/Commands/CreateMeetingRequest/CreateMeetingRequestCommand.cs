@@ -14,7 +14,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       int maxAge,
       double latitude,
       double longitude,
-      IList<CreateMeetingRequestDrink> drinks)
+      IList<CreateMeetingRequestDrinkType> drinkTypes)
     {
       UserId = userId;
       MinDate = minDate;
@@ -23,7 +23,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       MaxAge = maxAge;
       Latitude = latitude;
       Longitude = longitude;
-      Drinks = drinks;
+      DrinkTypes = drinkTypes;
     }
 
     public int UserId { get; set; }
@@ -33,12 +33,12 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     public int MaxAge { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public IList<CreateMeetingRequestDrink> Drinks { get; set; }
+    public IList<CreateMeetingRequestDrinkType> DrinkTypes { get; set; }
   }
 
-  public class CreateMeetingRequestDrink
+  public class CreateMeetingRequestDrinkType
   {
-    public CreateMeetingRequestDrink(int id)
+    public CreateMeetingRequestDrinkType(int id)
     {
       Id = id;
     }

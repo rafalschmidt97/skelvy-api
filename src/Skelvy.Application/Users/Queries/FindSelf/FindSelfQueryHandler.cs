@@ -42,7 +42,7 @@ namespace Skelvy.Application.Users.Queries.FindSelf
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var meetingRequest = await _meetingRequestsRepository.FindOneWithDrinksByUserId(request.UserId);
+      var meetingRequest = await _meetingRequestsRepository.FindOneWithDrinkTypesByUserId(request.UserId);
 
       if (meetingRequest != null)
       {

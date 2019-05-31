@@ -17,14 +17,14 @@ namespace Skelvy.Application.Meetings.Queries
     public int MaxAge { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public IList<DrinkDto> Drinks { get; set; }
+    public IList<DrinkTypeDto> DrinkTypes { get; set; }
 
     public void CreateMappings(Profile configuration)
     {
       configuration.CreateMap<MeetingRequest, MeetingRequestDto>()
         .ForMember(
-          destination => destination.Drinks,
-          options => options.MapFrom(x => x.Drinks.Select(y => y.Drink)));
+          destination => destination.DrinkTypes,
+          options => options.MapFrom(x => x.DrinkTypes.Select(y => y.DrinkType)));
     }
   }
 }
