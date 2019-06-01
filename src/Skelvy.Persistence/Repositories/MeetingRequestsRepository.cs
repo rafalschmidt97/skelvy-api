@@ -25,11 +25,11 @@ namespace Skelvy.Persistence.Repositories
                                   x.Status == MeetingRequestStatusTypes.Searching);
     }
 
-    public async Task<MeetingRequest> FindOneWithDrinksByUserId(int userId)
+    public async Task<MeetingRequest> FindOneWithDrinkTypesByUserId(int userId)
     {
       return await Context.MeetingRequests
-        .Include(x => x.Drinks)
-        .ThenInclude(x => x.Drink)
+        .Include(x => x.DrinkTypes)
+        .ThenInclude(x => x.DrinkType)
         .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved);
     }
 
@@ -47,13 +47,13 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndDrinks()
+    public async Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndDrinkTypes()
     {
       return await Context.MeetingRequests
         .Include(x => x.User)
         .ThenInclude(x => x.Profile)
-        .Include(x => x.Drinks)
-        .ThenInclude(x => x.Drink)
+        .Include(x => x.DrinkTypes)
+        .ThenInclude(x => x.DrinkType)
         .Where(x => !x.IsRemoved && x.Status == MeetingRequestStatusTypes.Searching)
         .ToListAsync();
     }
@@ -69,8 +69,8 @@ namespace Skelvy.Persistence.Repositories
       var requests = await Context.MeetingRequests
         .Include(x => x.User)
         .ThenInclude(x => x.Profile)
-        .Include(x => x.Drinks)
-        .ThenInclude(x => x.Drink)
+        .Include(x => x.DrinkTypes)
+        .ThenInclude(x => x.DrinkType)
         .Where(x => !x.IsRemoved &&
                     x.Id != request.Id &&
                     x.Status == MeetingRequestStatusTypes.Searching &&
@@ -123,7 +123,7 @@ namespace Skelvy.Persistence.Repositories
       return request1.User.Profile.IsWithinMeetingRequestAgeRange(request2) &&
              requestUser.Profile.IsWithinMeetingRequestAgeRange(request1) &&
              request1.GetDistance(request2) <= 10 &&
-             request2.Drinks.Any(x => request1.Drinks.Any(y => y.DrinkId == x.DrinkId));
+             request2.DrinkTypes.Any(x => request1.DrinkTypes.Any(y => y.DrinkTypeId == x.DrinkTypeId));
     }
   }
 }

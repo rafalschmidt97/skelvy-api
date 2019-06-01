@@ -21,29 +21,29 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
   public class CreateMeetingRequestCommandHandler : CommandHandler<CreateMeetingRequestCommand>
   {
     private readonly IUsersRepository _usersRepository;
-    private readonly IDrinksRepository _drinksRepository;
+    private readonly IDrinkTypesRepository _drinkTypesRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
-    private readonly IMeetingRequestDrinksRepository _meetingRequestDrinksRepository;
+    private readonly IMeetingRequestDrinkTypesRepository _meetingRequestDrinkTypesRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly INotificationsService _notifications;
     private readonly ILogger<CreateMeetingRequestCommandHandler> _logger;
 
     public CreateMeetingRequestCommandHandler(
       IUsersRepository usersRepository,
-      IDrinksRepository drinksRepository,
+      IDrinkTypesRepository drinkTypesRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
-      IMeetingRequestDrinksRepository meetingRequestDrinksRepository,
+      IMeetingRequestDrinkTypesRepository meetingRequestDrinkTypesRepository,
       IMeetingUsersRepository meetingUsersRepository,
       INotificationsService notifications,
       ILogger<CreateMeetingRequestCommandHandler> logger)
     {
       _usersRepository = usersRepository;
-      _drinksRepository = drinksRepository;
+      _drinkTypesRepository = drinkTypesRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
-      _meetingRequestDrinksRepository = meetingRequestDrinksRepository;
+      _meetingRequestDrinkTypesRepository = meetingRequestDrinkTypesRepository;
       _meetingUsersRepository = meetingUsersRepository;
       _notifications = notifications;
       _logger = logger;
@@ -82,12 +82,12 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var drinks = await _drinksRepository.FindAll();
-      var filteredDrinks = drinks.Where(x => request.Drinks.Any(y => y.Id == x.Id)).ToList();
+      var drinkTypes = await _drinkTypesRepository.FindAll();
+      var filteredDrinkTypes = drinkTypes.Where(x => request.DrinkTypes.Any(y => y.Id == x.Id)).ToList();
 
-      if (filteredDrinks.Count != request.Drinks.Count)
+      if (filteredDrinkTypes.Count != request.DrinkTypes.Count)
       {
-        throw new NotFoundException(nameof(Drink), request.Drinks);
+        throw new NotFoundException(nameof(DrinkType), request.DrinkTypes);
       }
 
       var requestExists = await _meetingRequestsRepository.ExistsOneByUserId(request.UserId);
@@ -121,8 +121,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
           request.UserId);
 
         await _meetingRequestsRepository.Add(meetingRequest);
-        PrepareDrinks(request.Drinks, meetingRequest).ForEach(x => meetingRequest.Drinks.Add(x));
-        await _meetingRequestDrinksRepository.AddRange(meetingRequest.Drinks);
+        PrepareDrinkTypes(request.DrinkTypes, meetingRequest).ForEach(x => meetingRequest.DrinkTypes.Add(x));
+        await _meetingRequestDrinkTypesRepository.AddRange(meetingRequest.DrinkTypes);
         transaction.Commit();
 
         return meetingRequest;
@@ -162,7 +162,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
             request1.FindRequiredCommonDate(request2),
             request1.Latitude,
             request1.Longitude,
-            request1.FindRequiredCommonDrinkId(request2));
+            request1.FindRequiredCommonDrinkTypeId(request2));
 
           await _meetingsRepository.Add(meeting);
 
@@ -214,11 +214,11 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(), meetingUsersId);
     }
 
-    private static IEnumerable<MeetingRequestDrink> PrepareDrinks(
-      IEnumerable<CreateMeetingRequestDrink> requestDrinks,
+    private static IEnumerable<MeetingRequestDrinkType> PrepareDrinkTypes(
+      IEnumerable<CreateMeetingRequestDrinkType> requestDrinkTypes,
       MeetingRequest request)
     {
-      return requestDrinks.Select(requestDrink => new MeetingRequestDrink(request.Id, requestDrink.Id));
+      return requestDrinkTypes.Select(requestDrink => new MeetingRequestDrinkType(request.Id, requestDrink.Id));
     }
   }
 }

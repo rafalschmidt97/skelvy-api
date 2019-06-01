@@ -8,12 +8,12 @@ namespace Skelvy.Domain.Entities
 {
   public class Meeting : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public Meeting(DateTimeOffset date, double latitude, double longitude, int drinkId)
+    public Meeting(DateTimeOffset date, double latitude, double longitude, int drinkTypeId)
     {
       Date = date;
       Latitude = latitude;
       Longitude = longitude;
-      DrinkId = drinkId;
+      DrinkTypeId = drinkTypeId;
 
       CreatedAt = DateTimeOffset.UtcNow;
       Users = new List<MeetingUser>();
@@ -29,10 +29,10 @@ namespace Skelvy.Domain.Entities
       DateTimeOffset? modifiedAt,
       bool isRemoved,
       string removedReason,
-      int drinkId,
+      int drinkTypeId,
       IList<MeetingUser> users,
       IList<MeetingChatMessage> chatMessages,
-      Drink drink)
+      DrinkType drinkType)
     {
       Id = id;
       Date = date;
@@ -42,10 +42,10 @@ namespace Skelvy.Domain.Entities
       ModifiedAt = modifiedAt;
       IsRemoved = isRemoved;
       RemovedReason = removedReason;
-      DrinkId = drinkId;
+      DrinkTypeId = drinkTypeId;
       Users = users;
       ChatMessages = chatMessages;
-      Drink = drink;
+      DrinkType = drinkType;
     }
 
     public int Id { get; private set; }
@@ -56,11 +56,11 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
     public string RemovedReason { get; private set; }
-    public int DrinkId { get; private set; }
+    public int DrinkTypeId { get; private set; }
 
     public IList<MeetingUser> Users { get; set; }
     public IList<MeetingChatMessage> ChatMessages { get; private set; }
-    public Drink Drink { get; private set; }
+    public DrinkType DrinkType { get; private set; }
 
     public void Abort()
     {

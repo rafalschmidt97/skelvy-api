@@ -13,7 +13,7 @@ namespace Skelvy.Persistence
       SeedUsers(context);
       SeedProfiles(context);
       SeedBlockedUsers(context);
-      SeedDrinks(context);
+      SeedDrinkTypes(context);
       SeedMeetingRequests(context);
       SeedMeetings(context);
       SeedMeetingsChatMessages(context);
@@ -102,25 +102,20 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedDrinks(SkelvyContext context)
+    public static void SeedDrinkTypes(SkelvyContext context)
     {
-      if (context.Drinks.Any())
+      if (context.DrinkTypes.Any())
       {
         return;
       }
 
-      var drinks = new[]
+      var drinkTypes = new[]
       {
-        new Drink("tea"),
-        new Drink("chocolate"),
-        new Drink("coffee"),
-        new Drink("beer"),
-        new Drink("wine"),
-        new Drink("vodka"),
-        new Drink("whiskey"),
+        new DrinkType("soft drinks"),
+        new DrinkType("alcoholic drinks"),
       };
 
-      context.Drinks.AddRange(drinks);
+      context.DrinkTypes.AddRange(drinkTypes);
       context.SaveChanges();
     }
 
@@ -132,7 +127,7 @@ namespace Skelvy.Persistence
       }
 
       var users = context.Users.ToList();
-      var drinks = context.Drinks.ToList();
+      var drinkTypes = context.DrinkTypes.ToList();
 
       var requests = new[]
       {
@@ -142,12 +137,12 @@ namespace Skelvy.Persistence
       context.MeetingRequests.AddRange(requests);
       context.SaveChanges();
 
-      var requestsDrinks = new[]
+      var requestsDrinkTypes = new[]
       {
-        new MeetingRequestDrink(requests[0].Id, drinks[0].Id),
+        new MeetingRequestDrinkType(requests[0].Id, drinkTypes[0].Id),
       };
 
-      context.MeetingRequestDrinks.AddRange(requestsDrinks);
+      context.MeetingRequestDrinkTypes.AddRange(requestsDrinkTypes);
       context.SaveChanges();
     }
 
@@ -159,7 +154,7 @@ namespace Skelvy.Persistence
       }
 
       var users = context.Users.ToList();
-      var drinks = context.Drinks.ToList();
+      var drinkTypes = context.DrinkTypes.ToList();
 
       var requests = new[]
       {
@@ -173,17 +168,17 @@ namespace Skelvy.Persistence
       context.MeetingRequests.AddRange(requests);
       context.SaveChanges();
 
-      var requestsDrinks = new[]
+      var requestsDrinkTypes = new[]
       {
-        new MeetingRequestDrink(requests[0].Id, drinks[0].Id),
-        new MeetingRequestDrink(requests[1].Id, drinks[0].Id),
+        new MeetingRequestDrinkType(requests[0].Id, drinkTypes[0].Id),
+        new MeetingRequestDrinkType(requests[1].Id, drinkTypes[0].Id),
       };
 
-      context.MeetingRequestDrinks.AddRange(requestsDrinks);
+      context.MeetingRequestDrinkTypes.AddRange(requestsDrinkTypes);
 
       var meetings = new[]
       {
-        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, drinks[0].Id),
+        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, drinkTypes[0].Id),
       };
 
       context.Meetings.AddRange(meetings);

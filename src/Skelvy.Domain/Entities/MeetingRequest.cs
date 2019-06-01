@@ -27,7 +27,7 @@ namespace Skelvy.Domain.Entities
       UserId = userId;
 
       CreatedAt = DateTimeOffset.UtcNow;
-      Drinks = new List<MeetingRequestDrink>();
+      DrinkTypes = new List<MeetingRequestDrinkType>();
     }
 
     public MeetingRequest(
@@ -44,7 +44,7 @@ namespace Skelvy.Domain.Entities
       bool isRemoved,
       string removedReason,
       int userId,
-      IList<MeetingRequestDrink> drinks,
+      IList<MeetingRequestDrinkType> drinkTypes,
       User user)
     {
       Id = id;
@@ -60,7 +60,7 @@ namespace Skelvy.Domain.Entities
       IsRemoved = isRemoved;
       RemovedReason = removedReason;
       UserId = userId;
-      Drinks = drinks;
+      DrinkTypes = drinkTypes;
       User = user;
     }
 
@@ -78,7 +78,7 @@ namespace Skelvy.Domain.Entities
     public string RemovedReason { get; private set; }
     public int UserId { get; private set; }
 
-    public IList<MeetingRequestDrink> Drinks { get; private set; }
+    public IList<MeetingRequestDrinkType> DrinkTypes { get; private set; }
     public User User { get; private set; }
 
     public bool IsSearching => Status == MeetingRequestStatusTypes.Searching;

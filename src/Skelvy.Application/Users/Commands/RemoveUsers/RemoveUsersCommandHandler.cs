@@ -15,7 +15,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     private readonly IUserProfilesRepository _profilesRepository;
     private readonly IUserProfilePhotosRepository _profilePhotosRepository;
     private readonly IMeetingRequestsRepository _requestsRepository;
-    private readonly IMeetingRequestDrinksRepository _requestDrinksRepository;
+    private readonly IMeetingRequestDrinkTypesRepository _requestDrinkTypesRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly IMeetingChatMessagesRepository _messagesRepository;
     private readonly IBlockedUsersRepository _blockedUsersRepository;
@@ -26,7 +26,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       IUserProfilesRepository profilesRepository,
       IUserProfilePhotosRepository profilePhotosRepository,
       IMeetingRequestsRepository requestsRepository,
-      IMeetingRequestDrinksRepository requestDrinksRepository,
+      IMeetingRequestDrinkTypesRepository requestDrinkTypesRepository,
       IMeetingUsersRepository meetingUsersRepository,
       IMeetingChatMessagesRepository messagesRepository,
       IBlockedUsersRepository blockedUsersRepository)
@@ -36,7 +36,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       _profilesRepository = profilesRepository;
       _profilePhotosRepository = profilePhotosRepository;
       _requestsRepository = requestsRepository;
-      _requestDrinksRepository = requestDrinksRepository;
+      _requestDrinkTypesRepository = requestDrinkTypesRepository;
       _meetingUsersRepository = meetingUsersRepository;
       _messagesRepository = messagesRepository;
       _blockedUsersRepository = blockedUsersRepository;
@@ -59,8 +59,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
 
         var meetingRequestsToRemove = await _requestsRepository.FindAllWithRemovedByUsersId(usersId);
         var meetingRequestsId = meetingRequestsToRemove.Select(y => y.Id);
-        var meetingRequestDrinksToRemove = await _requestDrinksRepository.FindAllByRequestsId(meetingRequestsId);
-        await _requestDrinksRepository.RemoveRange(meetingRequestDrinksToRemove);
+        var meetingRequestDrinkTypesToRemove = await _requestDrinkTypesRepository.FindAllByRequestsId(meetingRequestsId);
+        await _requestDrinkTypesRepository.RemoveRange(meetingRequestDrinkTypesToRemove);
         await _requestsRepository.RemoveRange(meetingRequestsToRemove);
 
         var userProfilesToRemove = await _profilesRepository.FindAllByUsersId(usersId);

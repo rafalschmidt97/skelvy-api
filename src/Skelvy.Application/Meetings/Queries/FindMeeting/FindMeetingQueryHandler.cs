@@ -30,7 +30,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
 
     public override async Task<MeetingModel> Handle(FindMeetingQuery request)
     {
-      var meetingRequest = await _requestsRepository.FindOneWithDrinksByUserId(request.UserId);
+      var meetingRequest = await _requestsRepository.FindOneWithDrinkTypesByUserId(request.UserId);
 
       if (meetingRequest == null)
       {

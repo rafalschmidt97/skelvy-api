@@ -31,12 +31,12 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       RuleFor(x => x.Latitude).NotEmpty();
       RuleFor(x => x.Longitude).NotEmpty();
 
-      RuleFor(x => x.Drinks).NotEmpty();
-      RuleForEach(x => x.Drinks).SetValidator(new CreateMeetingRequestPhotosValidator());
+      RuleFor(x => x.DrinkTypes).NotEmpty();
+      RuleForEach(x => x.DrinkTypes).SetValidator(new CreateMeetingRequestPhotosValidator());
     }
   }
 
-  public class CreateMeetingRequestPhotosValidator : AbstractValidator<CreateMeetingRequestDrink>
+  public class CreateMeetingRequestPhotosValidator : AbstractValidator<CreateMeetingRequestDrinkType>
   {
     public CreateMeetingRequestPhotosValidator()
     {

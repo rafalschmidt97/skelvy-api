@@ -81,78 +81,78 @@ namespace Skelvy.Domain.Test.Extensions
     }
 
     [Fact]
-    public void ShouldReturnCommonDrinksId()
+    public void ShouldReturnCommonDrinkTypesId()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.Drinks.Add(new MeetingRequestDrink(1, 1));
-      request1.Drinks.Add(new MeetingRequestDrink(1, 2));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.Drinks.Add(new MeetingRequestDrink(2, 2));
-      request2.Drinks.Add(new MeetingRequestDrink(2, 3));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 2));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
 
-      var drinksId = request1.FindCommonDrinksId(request2).ToList();
+      var drinkTypesId = request1.FindCommonDrinkTypesId(request2).ToList();
 
-      Assert.Single(drinksId);
-      Assert.Equal(2, drinksId[0]);
+      Assert.Single(drinkTypesId);
+      Assert.Equal(2, drinkTypesId[0]);
     }
 
     [Fact]
-    public void ShouldReturnEmptyCommonDrinksId()
+    public void ShouldReturnEmptyCommonDrinkTypesId()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.Drinks.Add(new MeetingRequestDrink(1, 1));
-      request1.Drinks.Add(new MeetingRequestDrink(1, 2));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.Drinks.Add(new MeetingRequestDrink(2, 3));
-      request2.Drinks.Add(new MeetingRequestDrink(2, 4));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 4));
 
-      var drinksId = request1.FindCommonDrinksId(request2).ToList();
+      var drinkTypesId = request1.FindCommonDrinkTypesId(request2).ToList();
 
-      Assert.Empty(drinksId);
+      Assert.Empty(drinkTypesId);
     }
 
     [Fact]
-    public void ShouldReturnCommonDrinkId()
+    public void ShouldReturnCommonDrinkTypeId()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.Drinks.Add(new MeetingRequestDrink(1, 1));
-      request1.Drinks.Add(new MeetingRequestDrink(1, 2));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.Drinks.Add(new MeetingRequestDrink(2, 2));
-      request2.Drinks.Add(new MeetingRequestDrink(2, 3));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 2));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
 
-      var drinkId = request1.FindCommonDrinkId(request2);
+      var drinkTypeId = request1.FindCommonDrinkTypeId(request2);
 
-      Assert.Equal(2, drinkId);
+      Assert.Equal(2, drinkTypeId);
     }
 
     [Fact]
-    public void ShouldReturnDefaultCommonDrinkId()
+    public void ShouldReturnDefaultCommonDrinkTypeId()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.Drinks.Add(new MeetingRequestDrink(1, 1));
-      request1.Drinks.Add(new MeetingRequestDrink(1, 2));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.Drinks.Add(new MeetingRequestDrink(2, 3));
-      request2.Drinks.Add(new MeetingRequestDrink(2, 4));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 4));
 
-      var drinkId = request1.FindCommonDrinkId(request2);
+      var drinkTypeId = request1.FindCommonDrinkTypeId(request2);
 
-      Assert.Equal(default(int), drinkId);
+      Assert.Equal(default(int), drinkTypeId);
     }
 
     [Fact]
-    public void ShouldCommonDrinkThrowException()
+    public void ShouldCommonDrinkTypeThrowException()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.Drinks.Add(new MeetingRequestDrink(1, 1));
-      request1.Drinks.Add(new MeetingRequestDrink(1, 2));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
+      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.Drinks.Add(new MeetingRequestDrink(2, 3));
-      request2.Drinks.Add(new MeetingRequestDrink(2, 4));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
+      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 4));
 
       Assert.Throws<DomainException>(() =>
-        request1.FindRequiredCommonDrinkId(request2));
+        request1.FindRequiredCommonDrinkTypeId(request2));
     }
   }
 }

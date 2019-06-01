@@ -1,13 +1,13 @@
 namespace Skelvy.Domain.Entities
 {
-  public class Drink
+  public class DrinkType
   {
-    public Drink(string name)
+    public DrinkType(string name)
     {
       Name = name;
     }
 
-    public Drink(int id, string name)
+    public DrinkType(int id, string name)
     {
       Id = id;
       Name = name;

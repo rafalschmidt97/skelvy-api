@@ -37,7 +37,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
     public override async Task<Unit> Handle(MatchMeetingRequestsCommand request)
     {
-      var requests = await _meetingRequestsRepository.FindAllSearchingWithUsersDetailsAndDrinks();
+      var requests = await _meetingRequestsRepository.FindAllSearchingWithUsersDetailsAndDrinkTypes();
 
       foreach (var meetingRequest in requests)
       {
@@ -62,7 +62,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
             request1.FindRequiredCommonDate(request2),
             request1.Latitude,
             request1.Longitude,
-            request1.FindRequiredCommonDrinkId(request2));
+            request1.FindRequiredCommonDrinkTypeId(request2));
 
           await _meetingsRepository.Add(meeting);
           var meetingUsers = new[]

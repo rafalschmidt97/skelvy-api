@@ -5,8 +5,8 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Drinks.Infrastructure.Repositories
 {
-  public interface IDrinksRepository : IBaseRepository
+  public interface IDrinkTypesRepository : IBaseRepository
   {
-    Task<IList<Drink>> FindAll();
+    Task<IList<DrinkType>> FindAll();
   }
 }
