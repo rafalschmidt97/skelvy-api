@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
@@ -51,6 +52,21 @@ namespace Skelvy.WebAPI.Controllers
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
+    }
+
+    [HttpPost("{id}/chat")]
+    [AuthorizeRole(RoleTypes.Admin)]
+    public async Task AddChatMessage(int id, AddMeetingChatMessageCommand request)
+    {
+      request.UserId = id;
+      await Mediator.Send(request);
+    }
+
+    [HttpPost("self/chat")]
+    public async Task AddSelfChatMessage(AddMeetingChatMessageCommand request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
     }
   }
 }
