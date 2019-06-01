@@ -3,9 +3,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.60.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.4" />
