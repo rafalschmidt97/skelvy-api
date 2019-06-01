@@ -118,6 +118,25 @@ namespace Skelvy.Persistence.Repositories
       return default(Meeting);
     }
 
+    public async Task<IList<Meeting>> FindAllCloseToPreferences(int userId, double latitude, double longitude)
+    {
+      var user = await Context.Users
+        .Include(x => x.Profile)
+        .FirstOrDefaultAsync(x => x.Id == userId && !x.IsRemoved);
+
+      var meetings = await Context.Meetings
+        .Include(x => x.Users)
+        .ThenInclude(x => x.User)
+        .ThenInclude(x => x.Profile)
+        .Include(x => x.Users)
+        .ThenInclude(x => x.MeetingRequest)
+        .Where(x => !x.IsRemoved &&
+                    x.Users.Count(y => !y.IsRemoved) < 4)
+        .ToListAsync();
+
+      return meetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+    }
+
     public async Task Add(Meeting meeting)
     {
       await Context.Meetings.AddAsync(meeting);
@@ -142,6 +161,12 @@ namespace Skelvy.Persistence.Repositories
              meeting.Users.Where(x => !x.IsRemoved).All(x => requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
              meeting.GetDistance(request) <= 10 &&
              request.DrinkTypes.Any(x => x.DrinkTypeId == meeting.DrinkTypeId);
+    }
+
+    private static bool IsMeetingClose(Meeting meeting, User user, double latitude, double longitude)
+    {
+      return meeting.Users.Where(x => !x.IsRemoved).All(x => user.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
+             meeting.GetDistance(latitude, longitude) <= 10;
     }
   }
 }

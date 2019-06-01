@@ -15,6 +15,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndDrinkTypes();
     Task<bool> ExistsOneByUserId(int userId);
     Task<MeetingRequest> FindOneMatchingUserRequest(User user, MeetingRequest request);
+    Task<IList<MeetingRequest>> FindAllCloseToPreferences(int userId, double latitude, double longitude);
     Task Add(MeetingRequest request);
     Task Update(MeetingRequest request);
     Task UpdateRange(IList<MeetingRequest> requests);
