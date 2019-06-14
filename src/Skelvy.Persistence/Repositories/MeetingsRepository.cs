@@ -16,6 +16,12 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
+    public async Task<bool> ExistsOne(int id)
+    {
+      return await Context.Meetings
+        .AnyAsync(x => x.Id == id && !x.IsRemoved);
+    }
+
     public async Task<Meeting> FindOneWithUsersDetailsAndDrinkByUserId(int userId)
     {
       var meeting = await Context.Meetings
@@ -118,7 +124,7 @@ namespace Skelvy.Persistence.Repositories
       return default(Meeting);
     }
 
-    public async Task<IList<Meeting>> FindAllCloseToPreferences(int userId, double latitude, double longitude)
+    public async Task<IList<Meeting>> FindAllCloseToPreferencesWithUsersDetails(int userId, double latitude, double longitude)
     {
       var user = await Context.Users
         .Include(x => x.Profile)
@@ -135,6 +141,21 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
 
       return meetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+    }
+
+    public async Task<Meeting> FindOneForUserWithUsersDetails(int meetingId, int userId)
+    {
+      return await Context.Meetings
+        .Include(x => x.Users)
+        .ThenInclude(x => x.User)
+        .ThenInclude(x => x.Profile)
+        .Include(x => x.Users)
+        .ThenInclude(x => x.MeetingRequest)
+        .ThenInclude(x => x.DrinkTypes)
+        .ThenInclude(x => x.DrinkType)
+        .FirstOrDefaultAsync(x => x.Id == meetingId &&
+                                  !x.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
+                                  !x.IsRemoved);
     }
 
     public async Task Add(Meeting meeting)

@@ -33,7 +33,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
       await ValidateData(request);
 
       var requests = await _requestsRepository.FindAllCloseToPreferences(request.UserId, request.Latitude, request.Longitude);
-      var meetings = await _meetingsRepository.FindAllCloseToPreferences(request.UserId, request.Latitude, request.Longitude);
+      var meetings = await _meetingsRepository.FindAllCloseToPreferencesWithUsersDetails(request.UserId, request.Latitude, request.Longitude);
 
       return new MeetingSuggestionsModel(
         _mapper.Map<IList<MeetingRequestDto>>(requests),

@@ -8,10 +8,12 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
 {
   public interface IMeetingsRepository : IBaseRepository
   {
+    Task<bool> ExistsOne(int id);
     Task<Meeting> FindOneWithUsersDetailsAndDrinkByUserId(int userId);
     Task<IList<Meeting>> FindAllAfterOrEqualDate(DateTimeOffset maxDate);
     Task<Meeting> FindOneMatchingUserRequest(User user, MeetingRequest request);
-    Task<IList<Meeting>> FindAllCloseToPreferences(int userId, double latitude, double longitude);
+    Task<IList<Meeting>> FindAllCloseToPreferencesWithUsersDetails(int userId, double latitude, double longitude);
+    Task<Meeting> FindOneForUserWithUsersDetails(int meetingId, int userId);
     Task Add(Meeting meeting);
     Task Update(Meeting meeting);
     Task UpdateRange(IList<Meeting> meetings);

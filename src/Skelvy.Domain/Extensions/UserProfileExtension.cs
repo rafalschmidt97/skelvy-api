@@ -1,4 +1,4 @@
-using System;
+using Skelvy.Common.Extensions;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Domain.Extensions
@@ -7,13 +7,7 @@ namespace Skelvy.Domain.Extensions
   {
     public static int GetAge(this UserProfile profile)
     {
-      var age = DateTimeOffset.UtcNow.Year - profile.Birthday.Year;
-      if (DateTimeOffset.UtcNow.DayOfYear < profile.Birthday.DayOfYear)
-      {
-        age = age - 1;
-      }
-
-      return age;
+      return profile.Birthday.GetAge();
     }
 
     public static bool IsWithinMeetingRequestAgeRange(this UserProfile profile, MeetingRequest request)
