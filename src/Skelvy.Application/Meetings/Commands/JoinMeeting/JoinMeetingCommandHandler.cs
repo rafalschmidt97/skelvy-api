@@ -118,24 +118,20 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       var minBirthday = meeting.Users.Select(x => x.User.Profile.Birthday).Min();
       var maxBirthday = meeting.Users.Select(x => x.User.Profile.Birthday).Max();
 
-      using (var transaction = _meetingRequestsRepository.BeginTransaction())
-      {
-        var meetingRequest = new MeetingRequest(
-          meeting.Date.AddDays(-1),
-          meeting.Date.AddDays(1),
-          minBirthday.GetAge(),
-          maxBirthday.GetAge(),
-          meeting.Latitude,
-          meeting.Longitude,
-          user.Id);
+      var meetingRequest = new MeetingRequest(
+        meeting.Date.AddDays(-1),
+        meeting.Date.AddDays(1),
+        minBirthday.GetAge(),
+        maxBirthday.GetAge(),
+        meeting.Latitude,
+        meeting.Longitude,
+        user.Id);
 
-        await _meetingRequestsRepository.Add(meetingRequest);
-        meetingRequest.DrinkTypes.Add(new MeetingRequestDrinkType(meetingRequest.Id, meeting.DrinkTypeId));
-        await _meetingRequestDrinkTypesRepository.AddRange(meetingRequest.DrinkTypes);
-        transaction.Commit();
+      await _meetingRequestsRepository.Add(meetingRequest);
+      meetingRequest.DrinkTypes.Add(new MeetingRequestDrinkType(meetingRequest.Id, meeting.DrinkTypeId));
+      await _meetingRequestDrinkTypesRepository.AddRange(meetingRequest.DrinkTypes);
 
-        return meetingRequest;
-      }
+      return meetingRequest;
     }
 
     private async Task<MeetingUser> AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
