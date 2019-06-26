@@ -58,6 +58,12 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
+    public async Task<bool> ExistsOne(int requestId)
+    {
+      return await Context.MeetingRequests
+        .AnyAsync(x => x.Id == requestId && !x.IsRemoved);
+    }
+
     public async Task<bool> ExistsOneByUserId(int userId)
     {
       return await Context.MeetingRequests
@@ -108,6 +114,18 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
 
       return requests.Where(x => AreMeetingRequestClose(x, user, latitude, longitude)).ToList();
+    }
+
+    public async Task<MeetingRequest> FindOneForUserWithUserDetails(int meetingRequestId, int userId)
+    {
+      return await Context.MeetingRequests
+        .Include(x => x.User)
+        .ThenInclude(x => x.Profile)
+        .Include(x => x.DrinkTypes)
+        .ThenInclude(x => x.DrinkType)
+        .FirstOrDefaultAsync(x => x.Id == meetingRequestId &&
+                                  !x.IsRemoved &&
+                                  x.Status == MeetingRequestStatusTypes.Searching);
     }
 
     public async Task Add(MeetingRequest request)
