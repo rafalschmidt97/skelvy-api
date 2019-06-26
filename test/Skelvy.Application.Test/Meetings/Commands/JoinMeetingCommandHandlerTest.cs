@@ -119,13 +119,6 @@ namespace Skelvy.Application.Test.Meetings.Commands
       return context;
     }
 
-    private static SkelvyContext TestDbContextWithRequests()
-    {
-      var context = TestDbContext();
-      SkelvyInitializer.SeedMeetingRequests(context);
-      return context;
-    }
-
     private static SkelvyContext TestDbContextWithMeetings()
     {
       var context = TestDbContext();
