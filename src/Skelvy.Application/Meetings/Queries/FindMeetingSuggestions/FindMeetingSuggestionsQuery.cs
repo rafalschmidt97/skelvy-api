@@ -11,6 +11,10 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
       Longitude = longitude;
     }
 
+    public FindMeetingSuggestionsQuery() // required for FromQuery attribute
+    {
+    }
+
     public int UserId { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }

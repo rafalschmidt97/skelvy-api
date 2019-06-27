@@ -154,14 +154,14 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpGet("{id}/meeting-suggestions")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task<MeetingSuggestionsModel> FindMeetingSuggestions(int id, FindMeetingSuggestionsQuery request)
+    public async Task<MeetingSuggestionsModel> FindMeetingSuggestions(int id, [FromQuery] FindMeetingSuggestionsQuery request)
     {
       request.UserId = id;
       return await Mediator.Send(request);
     }
 
     [HttpGet("self/meeting-suggestions")]
-    public async Task<MeetingSuggestionsModel> FindSelfMeetingSuggestions(FindMeetingSuggestionsQuery request)
+    public async Task<MeetingSuggestionsModel> FindSelfMeetingSuggestions([FromQuery] FindMeetingSuggestionsQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
