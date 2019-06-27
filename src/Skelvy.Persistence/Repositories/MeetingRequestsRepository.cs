@@ -109,6 +109,8 @@ namespace Skelvy.Persistence.Repositories
       var requests = await Context.MeetingRequests
         .Include(x => x.User)
         .ThenInclude(x => x.Profile)
+        .Include(x => x.DrinkTypes)
+        .ThenInclude(x => x.DrinkType)
         .Where(x => !x.IsRemoved &&
                     x.Status == MeetingRequestStatusTypes.Searching)
         .ToListAsync();

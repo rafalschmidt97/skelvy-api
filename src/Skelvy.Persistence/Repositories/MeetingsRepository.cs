@@ -136,6 +136,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.Profile)
         .Include(x => x.Users)
         .ThenInclude(x => x.MeetingRequest)
+        .Include(x => x.DrinkType)
         .Where(x => !x.IsRemoved &&
                     x.Users.Count(y => !y.IsRemoved) < 4)
         .ToListAsync();
