@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Skelvy.Application.Meetings.Commands.ConnectMeetingRequest;
 using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
+using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
+using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
 using Skelvy.Application.Users.Commands.AddBlockedUser;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveBlockedUser;
@@ -146,6 +150,47 @@ namespace Skelvy.WebAPI.Controllers
     public async Task RemoveSelfBlocked(int blockedId)
     {
       await Mediator.Send(new RemoveBlockedUserCommand(UserId, blockedId));
+    }
+
+    [HttpGet("{id}/meeting-suggestions")]
+    [AuthorizeRole(RoleTypes.Admin)]
+    public async Task<MeetingSuggestionsModel> FindMeetingSuggestions(int id, [FromQuery] FindMeetingSuggestionsQuery request)
+    {
+      request.UserId = id;
+      return await Mediator.Send(request);
+    }
+
+    [HttpGet("self/meeting-suggestions")]
+    public async Task<MeetingSuggestionsModel> FindSelfMeetingSuggestions([FromQuery] FindMeetingSuggestionsQuery request)
+    {
+      request.UserId = UserId;
+      return await Mediator.Send(request);
+    }
+
+    [HttpPost("{id}/join-meeting/{meetingId}")]
+    [AuthorizeRole(RoleTypes.Admin)]
+    public async Task JoinMeeting(int id, int meetingId)
+    {
+      await Mediator.Send(new JoinMeetingCommand(id, meetingId));
+    }
+
+    [HttpPost("self/join-meeting/{meetingId}")]
+    public async Task JoinSelfMeeting(int meetingId)
+    {
+      await Mediator.Send(new JoinMeetingCommand(UserId, meetingId));
+    }
+
+    [HttpPost("{id}/connect-request/{requestId}")]
+    [AuthorizeRole(RoleTypes.Admin)]
+    public async Task ConnectMeetingRequest(int id, int requestId)
+    {
+      await Mediator.Send(new ConnectMeetingRequestCommand(id, requestId));
+    }
+
+    [HttpPost("self/connect-request/{requestId}")]
+    public async Task ConnectSelfMeetingRequest(int requestId)
+    {
+      await Mediator.Send(new ConnectMeetingRequestCommand(UserId, requestId));
     }
   }
 }

@@ -31,6 +31,7 @@ namespace Skelvy.Persistence
         new User("user1@gmail.com", LanguageTypes.EN),
         new User("user2@gmail.com", LanguageTypes.EN),
         new User("user3@gmail.com", LanguageTypes.EN),
+        new User("user4@gmail.com", LanguageTypes.EN),
       };
 
       users[0].RegisterFacebook("facebook1");
@@ -39,6 +40,8 @@ namespace Skelvy.Persistence
       users[1].RegisterGoogle("google2");
       users[2].RegisterFacebook("facebook3");
       users[2].RegisterGoogle("google3");
+      users[3].RegisterFacebook("facebook4");
+      users[3].RegisterGoogle("google4");
 
       context.Users.AddRange(users);
       context.SaveChanges();
@@ -70,6 +73,11 @@ namespace Skelvy.Persistence
           DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           GenderTypes.Male,
           users[2].Id),
+        new UserProfile(
+          "User4",
+          DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
+          GenderTypes.Male,
+          users[3].Id),
       };
 
       context.UserProfiles.AddRange(profiles);
@@ -80,6 +88,7 @@ namespace Skelvy.Persistence
         new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=1", 1, profiles[0].Id),
         new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=2", 1, profiles[1].Id),
         new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=3", 1, profiles[2].Id),
+        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=3", 1, profiles[3].Id),
       };
 
       context.UserProfilePhotos.AddRange(photos);

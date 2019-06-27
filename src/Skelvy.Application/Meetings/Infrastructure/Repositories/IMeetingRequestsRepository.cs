@@ -13,8 +13,11 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<IList<MeetingRequest>> FindAllWithRemovedByUsersId(IEnumerable<int> usersId);
     Task<IList<MeetingRequest>> FindAllSearchingAfterOrEqualMaxDate(DateTimeOffset maxDate);
     Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndDrinkTypes();
+    Task<bool> ExistsOne(int requestId);
     Task<bool> ExistsOneByUserId(int userId);
     Task<MeetingRequest> FindOneMatchingUserRequest(User user, MeetingRequest request);
+    Task<IList<MeetingRequest>> FindAllCloseToPreferences(int userId, double latitude, double longitude);
+    Task<MeetingRequest> FindOneForUserWithUserDetails(int meetingRequestId, int userId);
     Task Add(MeetingRequest request);
     Task Update(MeetingRequest request);
     Task UpdateRange(IList<MeetingRequest> requests);

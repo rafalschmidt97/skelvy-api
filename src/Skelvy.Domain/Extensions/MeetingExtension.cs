@@ -15,6 +15,16 @@ namespace Skelvy.Domain.Extensions
       return GetDistance(request1.Latitude, request1.Longitude, request2.Latitude, request2.Longitude);
     }
 
+    public static double GetDistance(this Meeting meeting, double latitude, double longitude)
+    {
+      return GetDistance(meeting.Latitude, meeting.Longitude, latitude, longitude);
+    }
+
+    public static double GetDistance(this MeetingRequest request, double latitude, double longitude)
+    {
+      return GetDistance(request.Latitude, request.Longitude, latitude, longitude);
+    }
+
     public static double GetDistance(this MeetingRequest request, Meeting meeting)
     {
       return GetDistance(request.Latitude, request.Longitude, meeting.Latitude, meeting.Longitude);

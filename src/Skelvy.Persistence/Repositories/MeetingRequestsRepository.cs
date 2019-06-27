@@ -58,6 +58,12 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
+    public async Task<bool> ExistsOne(int requestId)
+    {
+      return await Context.MeetingRequests
+        .AnyAsync(x => x.Id == requestId && !x.IsRemoved);
+    }
+
     public async Task<bool> ExistsOneByUserId(int userId)
     {
       return await Context.MeetingRequests
@@ -94,6 +100,36 @@ namespace Skelvy.Persistence.Repositories
       return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
     }
 
+    public async Task<IList<MeetingRequest>> FindAllCloseToPreferences(int userId, double latitude, double longitude)
+    {
+      var user = await Context.Users
+        .Include(x => x.Profile)
+        .FirstOrDefaultAsync(x => x.Id == userId && !x.IsRemoved);
+
+      var requests = await Context.MeetingRequests
+        .Include(x => x.User)
+        .ThenInclude(x => x.Profile)
+        .Include(x => x.DrinkTypes)
+        .ThenInclude(x => x.DrinkType)
+        .Where(x => !x.IsRemoved &&
+                    x.Status == MeetingRequestStatusTypes.Searching)
+        .ToListAsync();
+
+      return requests.Where(x => AreMeetingRequestClose(x, user, latitude, longitude)).ToList();
+    }
+
+    public async Task<MeetingRequest> FindOneForUserWithUserDetails(int meetingRequestId, int userId)
+    {
+      return await Context.MeetingRequests
+        .Include(x => x.User)
+        .ThenInclude(x => x.Profile)
+        .Include(x => x.DrinkTypes)
+        .ThenInclude(x => x.DrinkType)
+        .FirstOrDefaultAsync(x => x.Id == meetingRequestId &&
+                                  !x.IsRemoved &&
+                                  x.Status == MeetingRequestStatusTypes.Searching);
+    }
+
     public async Task Add(MeetingRequest request)
     {
       await Context.MeetingRequests.AddAsync(request);
@@ -124,6 +160,12 @@ namespace Skelvy.Persistence.Repositories
              requestUser.Profile.IsWithinMeetingRequestAgeRange(request1) &&
              request1.GetDistance(request2) <= 10 &&
              request2.DrinkTypes.Any(x => request1.DrinkTypes.Any(y => y.DrinkTypeId == x.DrinkTypeId));
+    }
+
+    private static bool AreMeetingRequestClose(MeetingRequest request, User user, double latitude, double longitude)
+    {
+      return user.Profile.IsWithinMeetingRequestAgeRange(request) &&
+             request.GetDistance(latitude, longitude) <= 10;
     }
   }
 }
