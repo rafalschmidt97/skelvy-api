@@ -7,7 +7,6 @@ namespace Skelvy.Application.Maps.Queries.ReverseLocations
   {
     public ReverseLocationsQueryValidator()
     {
-      RuleFor(x => x.Language).NotEmpty();
       RuleFor(x => x.Longitude).NotEmpty();
 
       RuleFor(x => x.Language).NotEmpty()

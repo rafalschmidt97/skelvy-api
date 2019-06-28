@@ -8,15 +8,17 @@ namespace Skelvy.WebAPI.Controllers
   public class SelfController : BaseController
   {
     [HttpGet("{id}")]
-    public async Task<SelfModel> Find(int id)
+    public async Task<SelfModel> Find(int id, [FromQuery] FindSelfQuery request)
     {
-      return await Mediator.Send(new FindSelfQuery(id));
+      request.UserId = id;
+      return await Mediator.Send(request);
     }
 
     [HttpGet]
-    public async Task<SelfModel> FindSelf()
+    public async Task<SelfModel> FindSelf([FromQuery] FindSelfQuery request)
     {
-      return await Mediator.Send(new FindSelfQuery(UserId));
+      request.UserId = UserId;
+      return await Mediator.Send(request);
     }
   }
 }

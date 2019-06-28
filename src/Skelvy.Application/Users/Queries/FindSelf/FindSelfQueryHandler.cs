@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Queries;
@@ -17,14 +15,14 @@ namespace Skelvy.Application.Users.Queries.FindSelf
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingChatMessagesRepository _chatMessagesRepository;
-    private readonly IMapper _mapper;
+    private readonly IMeetingMapper _mapper;
 
     public FindSelfQueryHandler(
       IUsersRepository usersRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingChatMessagesRepository chatMessagesRepository,
-      IMapper mapper)
+      IMeetingMapper mapper)
     {
       _usersRepository = usersRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
@@ -58,23 +56,13 @@ namespace Skelvy.Application.Users.Queries.FindSelf
 
           var messages = await _chatMessagesRepository.FindPageByMeetingId(meeting.Id);
 
-          return new SelfModel(
-            _mapper.Map<UserDto>(user),
-            new MeetingModel(
-              MeetingRequestStatusTypes.Found,
-              _mapper.Map<MeetingDto>(meeting),
-              _mapper.Map<IList<MeetingChatMessageDto>>(messages),
-              _mapper.Map<MeetingRequestDto>(meetingRequest)));
+          return await _mapper.Map(user, meeting, messages, meetingRequest, request.Language);
         }
 
-        return new SelfModel(
-          _mapper.Map<UserDto>(user),
-          new MeetingModel(
-            MeetingRequestStatusTypes.Searching,
-            _mapper.Map<MeetingRequestDto>(meetingRequest)));
+        return await _mapper.Map(user, meetingRequest, request.Language);
       }
 
-      return new SelfModel(_mapper.Map<UserDto>(user));
+      return _mapper.Map(user);
     }
   }
 }

@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -14,13 +12,13 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
     private readonly IMeetingRequestsRepository _requestsRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingChatMessagesRepository _messagesRepository;
-    private readonly IMapper _mapper;
+    private readonly IMeetingMapper _mapper;
 
     public FindMeetingQueryHandler(
       IMeetingRequestsRepository requestsRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingChatMessagesRepository messagesRepository,
-      IMapper mapper)
+      IMeetingMapper mapper)
     {
       _requestsRepository = requestsRepository;
       _meetingsRepository = meetingsRepository;
@@ -49,16 +47,10 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
 
         var messages = await _messagesRepository.FindPageByMeetingId(meeting.Id);
 
-        return new MeetingModel(
-          MeetingRequestStatusTypes.Found,
-          _mapper.Map<MeetingDto>(meeting),
-          _mapper.Map<IList<MeetingChatMessageDto>>(messages),
-          _mapper.Map<MeetingRequestDto>(meetingRequest));
+        return await _mapper.Map(meeting, messages, meetingRequest, request.Language);
       }
 
-      return new MeetingModel(
-        MeetingRequestStatusTypes.Searching,
-        _mapper.Map<MeetingRequestDto>(meetingRequest));
+      return await _mapper.Map(meetingRequest, request.Language);
     }
   }
 }

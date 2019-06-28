@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
@@ -14,13 +12,13 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
     private readonly IUsersRepository _usersRepository;
     private readonly IMeetingRequestsRepository _requestsRepository;
     private readonly IMeetingsRepository _meetingsRepository;
-    private readonly IMapper _mapper;
+    private readonly IMeetingMapper _mapper;
 
     public FindMeetingSuggestionsQueryHandler(
       IUsersRepository usersRepository,
       IMeetingRequestsRepository requestsRepository,
       IMeetingsRepository meetingsRepository,
-      IMapper mapper)
+      IMeetingMapper mapper)
     {
       _usersRepository = usersRepository;
       _requestsRepository = requestsRepository;
@@ -35,9 +33,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
       var requests = await _requestsRepository.FindAllCloseToPreferences(request.UserId, request.Latitude, request.Longitude);
       var meetings = await _meetingsRepository.FindAllCloseToPreferencesWithUsersDetails(request.UserId, request.Latitude, request.Longitude);
 
-      return new MeetingSuggestionsModel(
-        _mapper.Map<IList<MeetingRequestDto>>(requests),
-        _mapper.Map<IList<MeetingDto>>(meetings));
+      return await _mapper.Map(requests, meetings, request.Language);
     }
 
     private async Task ValidateData(FindMeetingSuggestionsQuery request)

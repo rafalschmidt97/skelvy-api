@@ -17,6 +17,7 @@ namespace Skelvy.Application.Meetings.Queries
     public int MaxAge { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public string City { get; set; }
     public IList<DrinkTypeDto> DrinkTypes { get; set; }
 
     public void CreateMappings(Profile configuration)

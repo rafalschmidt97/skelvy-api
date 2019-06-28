@@ -1,13 +1,17 @@
 using FluentValidation;
-using Skelvy.Application.Users.Queries.FindUser;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Application.Users.Queries.FindSelf
 {
-  public class FindSelfQueryValidator : AbstractValidator<FindUserQuery>
+  public class FindSelfQueryValidator : AbstractValidator<FindSelfQuery>
   {
     public FindSelfQueryValidator()
     {
-      RuleFor(x => x.Id).NotEmpty();
+      RuleFor(x => x.UserId).NotEmpty();
+
+      RuleFor(x => x.Language).NotEmpty()
+        .Must(x => x == LanguageTypes.EN || x == LanguageTypes.PL)
+        .WithMessage($"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
     }
   }
 }
