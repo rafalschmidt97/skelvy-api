@@ -95,9 +95,11 @@ namespace Skelvy.Persistence.Repositories
           var filteredRequests = requests.Where(x => blockedUsers.All(y => y.BlockUserId != x.UserId)).ToList();
           return filteredRequests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
         }
+
+        return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
       }
 
-      return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
+      return default(MeetingRequest);
     }
 
     public async Task<IList<MeetingRequest>> FindAllCloseToPreferences(int userId, double latitude, double longitude)
@@ -115,7 +117,22 @@ namespace Skelvy.Persistence.Repositories
                     x.Status == MeetingRequestStatusTypes.Searching)
         .ToListAsync();
 
-      return requests.Where(x => AreMeetingRequestClose(x, user, latitude, longitude)).ToList();
+      if (requests.Count > 0)
+      {
+        var blockedUsers = await Context.BlockedUsers
+          .Where(x => x.UserId == user.Id && !x.IsRemoved)
+          .ToListAsync();
+
+        if (blockedUsers.Count > 0)
+        {
+          var filteredRequests = requests.Where(x => blockedUsers.All(y => y.BlockUserId != x.UserId)).ToList();
+          return filteredRequests.Where(x => AreMeetingRequestClose(x, user, latitude, longitude)).ToList();
+        }
+
+        return requests.Where(x => AreMeetingRequestClose(x, user, latitude, longitude)).ToList();
+      }
+
+      return new List<MeetingRequest>();
     }
 
     public async Task<MeetingRequest> FindOneForUserWithUserDetails(int meetingRequestId, int userId)

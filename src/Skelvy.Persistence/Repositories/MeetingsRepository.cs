@@ -141,7 +141,54 @@ namespace Skelvy.Persistence.Repositories
                     x.Users.Count(y => !y.IsRemoved) < 4)
         .ToListAsync();
 
-      return meetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+      if (meetings.Count > 0)
+      {
+        var blockedUsers = await Context.BlockedUsers
+          .Where(x => x.UserId == user.Id && !x.IsRemoved)
+          .ToListAsync();
+
+        var filteredMeetings = new List<Meeting>();
+
+        if (blockedUsers.Count > 0)
+        {
+          foreach (var meeting in meetings)
+          {
+            var usersId = meeting.Users.Where(x => !x.IsRemoved).Select(x => x.UserId).ToList();
+            var filteredUsersId = usersId.Where(x => blockedUsers.All(y => y.BlockUserId != x)).ToList();
+
+            if (filteredUsersId.Count == usersId.Count)
+            {
+              var blockedUserInMeetingUsers = await Context.BlockedUsers
+                .Where(x => usersId.Any(y => y == x.UserId) && x.BlockUserId == user.Id && !x.IsRemoved)
+                .ToListAsync();
+
+              if (blockedUserInMeetingUsers.Count == 0)
+              {
+                filteredMeetings.Add(meeting);
+              }
+            }
+          }
+
+          return filteredMeetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+        }
+
+        foreach (var meeting in meetings)
+        {
+          var usersId = meeting.Users.Where(x => !x.IsRemoved).Select(x => x.UserId).ToList();
+          var blockedUserInMeetingUsers = await Context.BlockedUsers
+            .Where(x => usersId.Any(y => y == x.UserId) && x.BlockUserId == user.Id && !x.IsRemoved)
+            .ToListAsync();
+
+          if (blockedUserInMeetingUsers.Count == 0)
+          {
+            filteredMeetings.Add(meeting);
+          }
+        }
+
+        return filteredMeetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+      }
+
+      return new List<Meeting>();
     }
 
     public async Task<Meeting> FindOneForUserWithUsersDetails(int meetingId, int userId)
