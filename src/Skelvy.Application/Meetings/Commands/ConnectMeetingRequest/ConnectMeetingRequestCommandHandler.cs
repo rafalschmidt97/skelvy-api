@@ -77,7 +77,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
         throw new NotFoundException(nameof(MeetingRequest), request.MeetingRequestId);
       }
 
-      var userRequestExists = await _meetingRequestsRepository.ExistsOneByUserId(request.UserId);
+      var userRequestExists = await _meetingRequestsRepository.ExistsOneFoundByUserId(request.UserId);
 
       if (userRequestExists)
       {
@@ -100,6 +100,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       {
         try
         {
+          await AbortSearchingRequest(user);
           var request = await CreateNewMeetingRequest(user, connectingMeetingRequest);
           await CreateNewMeeting(request, connectingMeetingRequest);
           transaction.Commit();
@@ -111,6 +112,17 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
             $"{nameof(ConnectMeetingRequestCommand)} Exception while CreateNewMeetingRequest/CreateNewMeeting for " +
             $"User(Id={user.Id}): {exception.Message}");
         }
+      }
+    }
+
+    private async Task AbortSearchingRequest(User user)
+    {
+      var request = await _meetingRequestsRepository.FindOneSearchingByUserId(user.Id);
+
+      if (request != null)
+      {
+        request.Abort();
+        await _meetingRequestsRepository.Update(request);
       }
     }
 

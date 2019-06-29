@@ -76,7 +76,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
         throw new NotFoundException(nameof(Meeting), request.MeetingId);
       }
 
-      var requestExists = await _meetingRequestsRepository.ExistsOneByUserId(request.UserId);
+      var requestExists = await _meetingRequestsRepository.ExistsOneFoundByUserId(request.UserId);
 
       if (requestExists)
       {
@@ -99,6 +99,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       {
         try
         {
+          await AbortSearchingRequest(user);
           var request = await CreateNewMeetingRequest(user, meeting);
           var meetingUser = await AddUserToMeeting(request, meeting);
           transaction.Commit();
@@ -113,6 +114,17 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       }
     }
 
+    private async Task AbortSearchingRequest(User user)
+    {
+      var request = await _meetingRequestsRepository.FindOneSearchingByUserId(user.Id);
+
+      if (request != null)
+      {
+        request.Abort();
+        await _meetingRequestsRepository.Update(request);
+      }
+    }
+
     private async Task<MeetingRequest> CreateNewMeetingRequest(User user, Meeting meeting)
     {
       var minBirthday = meeting.Users.Select(x => x.User.Profile.Birthday).Min();
@@ -121,8 +133,8 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       var meetingRequest = new MeetingRequest(
         meeting.Date.AddDays(-1),
         meeting.Date.AddDays(1),
-        minBirthday.GetAge(),
         maxBirthday.GetAge(),
+        minBirthday.GetAge() + 5,
         meeting.Latitude,
         meeting.Longitude,
         user.Id);

@@ -45,12 +45,12 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var requestExists = await _requestsRepository.ExistsOneByUserId(request.UserId);
+      var foundRequestExists = await _requestsRepository.ExistsOneFoundByUserId(request.UserId);
 
-      if (requestExists)
+      if (foundRequestExists)
       {
         throw new ConflictException(
-          $"Entity {nameof(MeetingRequest)}({nameof(request.UserId)}={request.UserId}) already exists.");
+          $"Entity {nameof(MeetingRequest)}(UserId={request.UserId}) is marked as found. Leave meeting first.");
       }
     }
   }
