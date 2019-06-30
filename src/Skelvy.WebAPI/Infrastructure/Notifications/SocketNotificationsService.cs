@@ -32,7 +32,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId)
     {
-      await SendNotification("UserJoinedMeeting", usersId);
+      await SendNotification("UserJoinedMeeting", usersId, action);
     }
 
     public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId)
@@ -42,7 +42,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId)
     {
-      await SendNotification("UserLeftMeeting", usersId);
+      await SendNotification("UserLeftMeeting", usersId, action);
     }
 
     public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId)
@@ -68,6 +68,11 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     private async Task SendNotification(string action, IEnumerable<int> usersId, object data)
     {
       await _hubContext.Clients.Users(PrepareUsers(usersId)).SendAsync(action, data);
+    }
+
+    private async Task SendNotification(string action, int userId, object data)
+    {
+      await _hubContext.Clients.User(PrepareUser(userId)).SendAsync(action, data);
     }
 
     private async Task SendNotification(string action, IEnumerable<int> usersId)

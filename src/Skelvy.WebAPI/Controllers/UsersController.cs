@@ -24,7 +24,6 @@ namespace Skelvy.WebAPI.Controllers
   public class UsersController : BaseController
   {
     [HttpGet("{id}")]
-    [AuthorizeRole(RoleTypes.Admin)]
     public async Task<UserDto> Find(int id)
     {
       return await Mediator.Send(new FindUserQuery(id));

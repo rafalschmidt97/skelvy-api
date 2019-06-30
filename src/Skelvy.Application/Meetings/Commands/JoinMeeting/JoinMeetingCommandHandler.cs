@@ -155,12 +155,11 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       return meetingUser;
     }
 
-    private async Task BroadcastUserJoinedMeeting(MeetingUser meetingUser)
+    private async Task BroadcastUserJoinedMeeting(MeetingUser joiningUser)
     {
-      var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(meetingUser.MeetingId);
-
-      var meetingUsersId = meetingUsers.Where(x => x.UserId != meetingUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(), meetingUsersId);
+      var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(joiningUser.MeetingId);
+      var broadcastUsersId = meetingUsers.Where(x => x.UserId != joiningUser.UserId).Select(x => x.UserId).ToList();
+      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(joiningUser.UserId), broadcastUsersId);
     }
   }
 }
