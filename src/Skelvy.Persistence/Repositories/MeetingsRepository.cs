@@ -169,7 +169,9 @@ namespace Skelvy.Persistence.Repositories
             }
           }
 
-          return filteredMeetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+          var matchingNonBlockedMeetings = filteredMeetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+          matchingNonBlockedMeetings.ForEach(x => x.Users = x.Users.Where(y => !y.IsRemoved).ToList());
+          return matchingNonBlockedMeetings;
         }
 
         foreach (var meeting in meetings)
@@ -185,7 +187,9 @@ namespace Skelvy.Persistence.Repositories
           }
         }
 
-        return filteredMeetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+        var matchingMeetings = filteredMeetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
+        matchingMeetings.ForEach(x => x.Users = x.Users.Where(y => !y.IsRemoved).ToList());
+        return matchingMeetings;
       }
 
       return new List<Meeting>();
