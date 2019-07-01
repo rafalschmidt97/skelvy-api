@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
@@ -12,7 +13,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldReturnMessages()
     {
-      var request = new FindMeetingChatMessagesQuery(2, 1);
+      var request = new FindMeetingChatMessagesQuery(2, DateTimeOffset.UtcNow);
       var dbContext = InitializedDbContext();
       var handler = new FindMeetingChatMessagesQueryHandler(
         new MeetingUsersRepository(dbContext),
@@ -28,7 +29,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new FindMeetingChatMessagesQuery(1, 1);
+      var request = new FindMeetingChatMessagesQuery(1, DateTimeOffset.UtcNow);
       var dbContext = DbContext();
       var handler = new FindMeetingChatMessagesQueryHandler(
         new MeetingUsersRepository(dbContext),

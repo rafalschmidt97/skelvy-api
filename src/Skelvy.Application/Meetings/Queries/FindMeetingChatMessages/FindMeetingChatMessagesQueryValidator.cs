@@ -7,7 +7,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
     public FindMeetingChatMessagesQueryValidator()
     {
       RuleFor(x => x.UserId).NotEmpty();
-      RuleFor(x => x.Page).NotEmpty();
+      RuleFor(x => x.BeforeDate).NotEmpty();
     }
   }
 }

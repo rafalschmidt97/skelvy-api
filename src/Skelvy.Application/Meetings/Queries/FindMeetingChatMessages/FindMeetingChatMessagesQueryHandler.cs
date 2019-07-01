@@ -33,8 +33,8 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
         throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var messages = await _chatMessagesRepository.FindPageByMeetingId(meetingUser.MeetingId, request.Page);
-      return _mapper.Map<IList<MeetingChatMessageDto>>(messages);
+      var messagesBefore = await _chatMessagesRepository.FindPageBeforeByMeetingId(meetingUser.MeetingId, request.BeforeDate);
+      return _mapper.Map<IList<MeetingChatMessageDto>>(messagesBefore);
     }
   }
 }

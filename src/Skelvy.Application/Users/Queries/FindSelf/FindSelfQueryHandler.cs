@@ -54,7 +54,7 @@ namespace Skelvy.Application.Users.Queries.FindSelf
                                         $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusTypes.Found}'");
           }
 
-          var messages = await _chatMessagesRepository.FindPageByMeetingId(meeting.Id);
+          var messages = await _chatMessagesRepository.FindPageLatestByMeetingId(meeting.Id);
 
           return await _mapper.Map(user, meeting, messages, meetingRequest, request.Language);
         }

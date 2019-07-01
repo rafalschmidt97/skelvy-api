@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,13 +15,25 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
-    public async Task<IList<MeetingChatMessage>> FindPageByMeetingId(int meetingId, int page = 1, int pageSize = 20)
+    public async Task<IList<MeetingChatMessage>> FindPageBeforeByMeetingId(
+      int meetingId,
+      DateTimeOffset beforeDate,
+      int pageSize = 20)
     {
-      var skip = (page - 1) * pageSize;
+      var messages = await Context.MeetingChatMessages
+        .Where(x => x.MeetingId == meetingId && x.Date < beforeDate)
+        .OrderByDescending(p => p.Date)
+        .Take(pageSize)
+        .ToListAsync();
+
+      return messages.OrderBy(x => x.Date).ToList();
+    }
+
+    public async Task<IList<MeetingChatMessage>> FindPageLatestByMeetingId(int meetingId, int pageSize = 20)
+    {
       var messages = await Context.MeetingChatMessages
         .Where(x => x.MeetingId == meetingId)
         .OrderByDescending(p => p.Date)
-        .Skip(skip)
         .Take(pageSize)
         .ToListAsync();
 
