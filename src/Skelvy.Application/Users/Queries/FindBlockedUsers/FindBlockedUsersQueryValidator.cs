@@ -1,9 +1,8 @@
 using FluentValidation;
-using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
 
 namespace Skelvy.Application.Users.Queries.FindBlockedUsers
 {
-  public class FindBlockedUsersQueryValidator : AbstractValidator<FindMeetingChatMessagesQuery>
+  public class FindBlockedUsersQueryValidator : AbstractValidator<FindBlockedUsersQuery>
   {
     public FindBlockedUsersQueryValidator()
     {
