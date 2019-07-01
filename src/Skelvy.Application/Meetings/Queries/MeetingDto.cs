@@ -30,6 +30,7 @@ namespace Skelvy.Application.Meetings.Queries
 
   public class MeetingChatMessageDto
   {
+    public int Id { get; set; }
     public string Message { get; set; }
     public DateTimeOffset Date { get; set; }
     public int UserId { get; set; }

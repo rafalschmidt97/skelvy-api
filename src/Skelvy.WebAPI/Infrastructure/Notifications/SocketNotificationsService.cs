@@ -23,6 +23,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     {
       await SendNotification("UserSentMeetingChatMessage", usersId, new MeetingChatMessageDto
       {
+        Id = action.MeetingId,
         Message = action.Message,
         Date = action.Date,
         UserId = action.UserId,
