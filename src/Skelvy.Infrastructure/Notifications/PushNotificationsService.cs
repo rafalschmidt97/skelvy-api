@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Notifications.Infrastructure;
 
 namespace Skelvy.Infrastructure.Notifications
@@ -24,9 +25,18 @@ namespace Skelvy.Infrastructure.Notifications
           Title = action.UserName,
           Body = action.Message,
         },
-        new
+        new PushNotificationData
         {
+          Action = "UserSentMessage",
           RedirectTo = "chat",
+          Data = new MeetingChatMessageDto
+          {
+            Id = action.MeetingId,
+            Message = action.Message,
+            Date = action.Date,
+            UserId = action.UserId,
+            MeetingId = action.MeetingId,
+          },
         });
     }
 
@@ -39,9 +49,11 @@ namespace Skelvy.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_JOINED_MEETING",
         },
-        new
+        new PushNotificationData
         {
+          Action = "UserJoinedMeeting",
           RedirectTo = "meeting",
+          Data = action,
         });
     }
 
@@ -54,8 +66,9 @@ namespace Skelvy.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_FOUND_MEETING",
         },
-        new
+        new PushNotificationData
         {
+          Action = "UserFoundMeeting",
           RedirectTo = "meeting",
         });
     }
@@ -69,9 +82,11 @@ namespace Skelvy.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_LEFT_MEETING",
         },
-        new
+        new PushNotificationData
         {
+          Action = "UserLeftMeeting",
           RedirectTo = "meeting",
+          Data = action,
         });
     }
 
@@ -84,8 +99,9 @@ namespace Skelvy.Infrastructure.Notifications
           TitleLocKey = "MEETING_REQUEST",
           BodyLocKey = "MEETING_REQUEST_EXPIRED",
         },
-        new
+        new PushNotificationData
         {
+          Action = "MeetingRequestExpired",
           RedirectTo = "meeting",
         });
     }
@@ -99,13 +115,14 @@ namespace Skelvy.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "MEETING_EXPIRED",
         },
-        new
+        new PushNotificationData
         {
+          Action = "MeetingExpired",
           RedirectTo = "meeting",
         });
     }
 
-    private async Task SendNotification(IEnumerable<int> usersId, PushNotificationContent notification, object data = null)
+    private async Task SendNotification(IEnumerable<int> usersId, PushNotificationContent notification, PushNotificationData data = null)
     {
       foreach (var userId in usersId)
       {
@@ -113,7 +130,7 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    private async Task SendNotification(int userId, PushNotificationContent notification, object data = null)
+    private async Task SendNotification(int userId, PushNotificationContent notification, PushNotificationData data = null)
     {
       var message = new PushNotificationMessage($"/topics/user-{userId}", notification, data);
       await HttpClient.PostAsync("send", PrepareData(message));
