@@ -152,35 +152,35 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       }
     }
 
-    private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
+    private async Task CreateNewMeeting(MeetingRequest newRequest, MeetingRequest existingRequest)
     {
       using (var transaction = _meetingsRepository.BeginTransaction())
       {
         try
         {
           var meeting = new Meeting(
-            request1.FindRequiredCommonDate(request2),
-            request1.Latitude,
-            request1.Longitude,
-            request1.FindRequiredCommonDrinkTypeId(request2));
+            newRequest.FindRequiredCommonDate(existingRequest),
+            newRequest.Latitude,
+            newRequest.Longitude,
+            newRequest.FindRequiredCommonDrinkTypeId(existingRequest));
 
           await _meetingsRepository.Add(meeting);
 
           var meetingUsers = new[]
           {
-            new MeetingUser(meeting.Id, request1.UserId, request1.Id),
-            new MeetingUser(meeting.Id, request2.UserId, request2.Id),
+            new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id),
+            new MeetingUser(meeting.Id, existingRequest.UserId, existingRequest.Id),
           };
 
           await _meetingUsersRepository.AddRange(meetingUsers);
 
-          request1.MarkAsFound();
-          request2.MarkAsFound();
-          await _meetingRequestsRepository.Update(request1);
-          await _meetingRequestsRepository.Update(request2);
+          newRequest.MarkAsFound();
+          existingRequest.MarkAsFound();
+          await _meetingRequestsRepository.Update(newRequest);
+          await _meetingRequestsRepository.Update(existingRequest);
 
           transaction.Commit();
-          await BroadcastUserFoundMeeting(request1, request2);
+          await BroadcastUserFoundMeeting(existingRequest);
         }
         catch (Exception exception)
         {
@@ -188,21 +188,21 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
           {
             _logger.LogError(
               $"{nameof(CreateMeetingRequestCommand)} Concurrency Exception for while " +
-              $"CreateNewMeeting Requests(Id={request1.Id}, Id={request2.Id})");
+              $"CreateNewMeeting Requests(Id={newRequest.Id}, Id={existingRequest.Id})");
           }
           else
           {
             _logger.LogError(
               $"{nameof(CreateMeetingRequestCommand)} Exception for while CreateNewMeeting " +
-              $"Requests({request1.Id}, {request2.Id}): {exception.Message}");
+              $"Requests({newRequest.Id}, {existingRequest.Id}): {exception.Message}");
           }
         }
       }
     }
 
-    private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)
+    private async Task BroadcastUserFoundMeeting(MeetingRequest existingRequest)
     {
-      var usersId = new List<int> { request1.UserId, request2.UserId };
+      var usersId = new List<int> { existingRequest.UserId };
       await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(), usersId);
     }
 

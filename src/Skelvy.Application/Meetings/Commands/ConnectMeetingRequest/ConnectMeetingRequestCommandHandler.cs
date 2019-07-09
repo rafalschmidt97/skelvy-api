@@ -104,7 +104,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
           var request = await CreateNewMeetingRequest(user, connectingMeetingRequest);
           await CreateNewMeeting(request, connectingMeetingRequest);
           transaction.Commit();
-          await BroadcastUserFoundMeeting(request, connectingMeetingRequest);
+          await BroadcastUserFoundMeeting(connectingMeetingRequest);
         }
         catch (Exception exception)
         {
@@ -173,9 +173,9 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       await _meetingRequestsRepository.Update(request2);
     }
 
-    private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)
+    private async Task BroadcastUserFoundMeeting(MeetingRequest connectingMeetingRequest)
     {
-      var usersId = new List<int> { request1.UserId, request2.UserId };
+      var usersId = new List<int> { connectingMeetingRequest.UserId };
       await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(), usersId);
     }
   }
