@@ -63,7 +63,7 @@ namespace Skelvy.Infrastructure.Meetings
 
     public async Task<MeetingSuggestionsModel> Map(IList<MeetingRequest> requests, IList<Meeting> meetings, string language)
     {
-      var requestsDto = _mapper.Map<IList<MeetingRequestDto>>(requests);
+      var requestsDto = _mapper.Map<IList<MeetingRequestWithUserDto>>(requests);
 
       foreach (var request in requestsDto)
       {

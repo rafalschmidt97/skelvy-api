@@ -27,7 +27,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var dbContext = InitializedDbContext();
       _mapper.Setup(x =>
           x.Map(It.IsAny<IList<MeetingRequest>>(), It.IsAny<IList<Meeting>>(), It.IsAny<string>()))
-        .ReturnsAsync(new MeetingSuggestionsModel(new List<MeetingRequestDto>(), new List<MeetingDto>()));
+        .ReturnsAsync(new MeetingSuggestionsModel(new List<MeetingRequestWithUserDto>(), new List<MeetingDto>()));
 
       var handler = new FindMeetingSuggestionsQueryHandler(
         new UsersRepository(dbContext),

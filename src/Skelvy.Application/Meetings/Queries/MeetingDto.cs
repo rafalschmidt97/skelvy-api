@@ -24,7 +24,10 @@ namespace Skelvy.Application.Meetings.Queries
       configuration.CreateMap<Meeting, MeetingDto>()
         .ForMember(
           destination => destination.Users,
-          options => options.MapFrom(x => x.Users.Select(y => y.User)));
+          options => options.MapFrom(x => x.Users.Select(y => y.User)))
+        .ForMember(
+          destination => destination.City,
+          options => options.Ignore());
     }
   }
 

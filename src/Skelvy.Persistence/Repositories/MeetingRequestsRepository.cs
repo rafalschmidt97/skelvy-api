@@ -108,7 +108,7 @@ namespace Skelvy.Persistence.Repositories
       return default(MeetingRequest);
     }
 
-    public async Task<IList<MeetingRequest>> FindAllCloseToPreferences(int userId, double latitude, double longitude)
+    public async Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetails(int userId, double latitude, double longitude)
     {
       var user = await Context.Users
         .Include(x => x.Profile)
@@ -133,7 +133,27 @@ namespace Skelvy.Persistence.Repositories
         if (blockedUsers.Count > 0)
         {
           var filteredRequests = requests.Where(x => blockedUsers.All(y => y.BlockUserId != x.UserId)).ToList();
+          foreach (var request in filteredRequests)
+          {
+            var userPhotos = await Context.UserProfilePhotos
+                .Where(x => x.ProfileId == request.User.Profile.Id)
+                .OrderBy(x => x.Order)
+                .ToListAsync();
+
+            request.User.Profile.Photos = userPhotos;
+          }
+
           return filteredRequests.Where(x => AreMeetingRequestClose(x, user, latitude, longitude)).ToList();
+        }
+
+        foreach (var request in requests)
+        {
+          var userPhotos = await Context.UserProfilePhotos
+            .Where(x => x.ProfileId == request.User.Profile.Id)
+            .OrderBy(x => x.Order)
+            .ToListAsync();
+
+          request.User.Profile.Photos = userPhotos;
         }
 
         return requests.Where(x => AreMeetingRequestClose(x, user, latitude, longitude)).ToList();

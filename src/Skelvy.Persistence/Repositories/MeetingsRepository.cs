@@ -171,6 +171,19 @@ namespace Skelvy.Persistence.Repositories
 
           var matchingNonBlockedMeetings = filteredMeetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
           matchingNonBlockedMeetings.ForEach(x => x.Users = x.Users.Where(y => !y.IsRemoved).ToList());
+          foreach (var meeting in matchingNonBlockedMeetings)
+          {
+            foreach (var meetingUser in meeting.Users)
+            {
+              var userPhotos = await Context.UserProfilePhotos
+                .Where(x => x.ProfileId == meetingUser.User.Profile.Id)
+                .OrderBy(x => x.Order)
+                .ToListAsync();
+
+              meetingUser.User.Profile.Photos = userPhotos;
+            }
+          }
+
           return matchingNonBlockedMeetings;
         }
 
@@ -189,6 +202,19 @@ namespace Skelvy.Persistence.Repositories
 
         var matchingMeetings = filteredMeetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
         matchingMeetings.ForEach(x => x.Users = x.Users.Where(y => !y.IsRemoved).ToList());
+        foreach (var meeting in matchingMeetings)
+        {
+          foreach (var meetingUser in meeting.Users)
+          {
+            var userPhotos = await Context.UserProfilePhotos
+              .Where(x => x.ProfileId == meetingUser.User.Profile.Id)
+              .OrderBy(x => x.Order)
+              .ToListAsync();
+
+            meetingUser.User.Profile.Photos = userPhotos;
+          }
+        }
+
         return matchingMeetings;
       }
 
