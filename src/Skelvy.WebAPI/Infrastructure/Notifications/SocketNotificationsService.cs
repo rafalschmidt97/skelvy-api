@@ -26,6 +26,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         Id = action.MeetingId,
         Message = action.Message,
         Date = action.Date,
+        AttachmentUrl = action.AttachmentUrl,
         UserId = action.UserId,
         MeetingId = action.MeetingId,
       });
