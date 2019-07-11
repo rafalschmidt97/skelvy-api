@@ -37,6 +37,7 @@ namespace Skelvy.Application.Meetings.Queries
     public string Message { get; set; }
     public DateTimeOffset Date { get; set; }
     public int UserId { get; set; }
+    public string AttachmentUrl { get; set; }
     public int MeetingId { get; set; }
   }
 }

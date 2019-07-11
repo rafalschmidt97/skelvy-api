@@ -39,7 +39,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
         throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var message = new MeetingChatMessage(request.Message, request.Date, meetingUser.UserId, meetingUser.MeetingId);
+      var message = new MeetingChatMessage(request.Message, request.Date, request.AttachmentUrl, meetingUser.UserId, meetingUser.MeetingId);
       await _meetingChatMessagesRepository.Add(message);
 
       var sender = await _usersRepository.FindOneWithDetails(message.UserId);
@@ -53,7 +53,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
       var meetingUsersId = meetingUsers.Where(x => x.UserId != message.UserId).Select(x => x.UserId).ToList();
 
       await _notifications.BroadcastUserSentMessage(
-        new UserSentMessageAction(message.Id, message.Message, message.Date, message.UserId, name, message.MeetingId),
+        new UserSentMessageAction(message.Id, message.Message, message.Date, message.AttachmentUrl, message.UserId, name, message.MeetingId),
         meetingUsersId);
     }
   }

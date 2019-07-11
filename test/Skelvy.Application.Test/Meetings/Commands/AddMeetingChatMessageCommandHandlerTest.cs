@@ -21,7 +21,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", 2);
+      var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", null, 2);
       var dbContext = InitializedDbContext();
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
@@ -35,7 +35,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", 2);
+      var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", null, 2);
       var dbContext = DbContext();
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
