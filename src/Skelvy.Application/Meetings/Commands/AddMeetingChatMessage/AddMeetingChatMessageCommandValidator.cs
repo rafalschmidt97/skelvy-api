@@ -11,7 +11,8 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
         .Must(x => x >= DateTimeOffset.UtcNow.AddHours(-1) && x <= DateTimeOffset.UtcNow.AddHours(1))
         .WithMessage("'Date' must show the present.");
 
-      RuleFor(x => x.Message).NotEmpty().MaximumLength(500);
+      RuleFor(x => x.Message).MaximumLength(500);
+      RuleFor(x => x.AttachmentUrl).MaximumLength(2048);
       RuleFor(x => x.UserId).NotEmpty();
     }
   }

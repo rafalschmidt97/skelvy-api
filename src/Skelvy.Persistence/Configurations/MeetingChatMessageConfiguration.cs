@@ -13,7 +13,7 @@ namespace Skelvy.Persistence.Configurations
 
       builder.HasIndex(e => e.Date);
 
-      builder.Property(e => e.Message).IsRequired().HasMaxLength(500);
+      builder.Property(e => e.Message).HasMaxLength(500);
       builder.Property(e => e.AttachmentUrl).HasMaxLength(2048);
     }
   }
