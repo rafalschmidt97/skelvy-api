@@ -18,26 +18,57 @@ namespace Skelvy.Infrastructure.Notifications
 
     public async Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action, IEnumerable<int> usersId)
     {
-      await SendNotification(
-        usersId,
-        new PushNotificationContent
+      var data = new PushNotificationData
+      {
+        Action = "UserSentMessage",
+        RedirectTo = "chat",
+        Data = new MeetingChatMessageDto
         {
-          Title = action.UserName,
-          Body = action.Message,
+          Id = action.MeetingId,
+          Message = action.Message,
+          Date = action.Date,
+          AttachmentUrl = action.AttachmentUrl,
+          UserId = action.UserId,
+          MeetingId = action.MeetingId,
         },
-        new PushNotificationData
-        {
-          Action = "UserSentMessage",
-          RedirectTo = "chat",
-          Data = new MeetingChatMessageDto
+      };
+
+      if (action.Message != null)
+      {
+        await SendNotification(
+          usersId,
+          new PushNotificationContent
           {
-            Id = action.MeetingId,
-            Message = action.Message,
-            Date = action.Date,
-            UserId = action.UserId,
-            MeetingId = action.MeetingId,
+            Title = action.UserName,
+            Body = action.Message,
           },
-        });
+          data);
+      }
+      else
+      {
+        if (action.AttachmentUrl != null)
+        {
+          await SendNotification(
+            usersId,
+            new PushNotificationContent
+            {
+              Title = action.UserName,
+              BodyLocKey = "USER_SENT_PHOTO",
+            },
+            data);
+        }
+        else
+        {
+          await SendNotification(
+            usersId,
+            new PushNotificationContent
+            {
+              Title = action.UserName,
+              BodyLocKey = "USER_SENT_MESSAGE",
+            },
+            data);
+        }
+      }
     }
 
     public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId)
