@@ -75,7 +75,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     }
 
     [Fact]
-    public async Task ShouldThrowExceptionWithExistingRequest()
+    public async Task ShouldConnectWithExistingRequest()
     {
       var request = new ConnectMeetingRequestCommand(1, 1);
       var dbContext = InitializedDbContext();
@@ -88,8 +88,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         _notifications.Object,
         _logger.Object);
 
-      await Assert.ThrowsAsync<ConflictException>(() =>
-        handler.Handle(request));
+      await handler.Handle(request);
     }
 
     [Fact]
