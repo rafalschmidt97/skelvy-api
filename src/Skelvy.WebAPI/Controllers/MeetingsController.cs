@@ -58,17 +58,17 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPost("{id}/chat")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task AddChatMessage(int id, AddMeetingChatMessageCommand request)
+    public async Task<MeetingChatMessageDto> AddChatMessage(int id, AddMeetingChatMessageCommand request)
     {
       request.UserId = id;
-      await Mediator.Send(request);
+      return await Mediator.Send(request);
     }
 
     [HttpPost("self/chat")]
-    public async Task AddSelfChatMessage(AddMeetingChatMessageCommand request)
+    public async Task<MeetingChatMessageDto> AddSelfChatMessage(AddMeetingChatMessageCommand request)
     {
       request.UserId = UserId;
-      await Mediator.Send(request);
+      return await Mediator.Send(request);
     }
   }
 }

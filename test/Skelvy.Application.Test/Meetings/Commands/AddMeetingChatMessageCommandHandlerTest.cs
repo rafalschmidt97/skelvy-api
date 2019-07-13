@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
+using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence.Repositories;
@@ -21,27 +22,32 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", null, 2);
+      var request = new AddMeetingChatMessageCommand("Hello World", null, 2);
       var dbContext = InitializedDbContext();
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
         new UsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        Mapper());
 
-      await handler.Handle(request);
+      var result = await handler.Handle(request);
+
+      Assert.IsType<MeetingChatMessageDto>(result);
+      Assert.NotEqual(default(DateTimeOffset), result.Date);
     }
 
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new AddMeetingChatMessageCommand(DateTimeOffset.UtcNow, "Hello World", null, 2);
+      var request = new AddMeetingChatMessageCommand("Hello World", null, 2);
       var dbContext = DbContext();
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
         new UsersRepository(dbContext),
-        _notifications.Object);
+        _notifications.Object,
+        Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

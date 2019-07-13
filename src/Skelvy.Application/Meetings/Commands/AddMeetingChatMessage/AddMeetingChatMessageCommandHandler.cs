@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
+using AutoMapper;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -11,26 +13,29 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 {
-  public class AddMeetingChatMessageCommandHandler : CommandHandler<AddMeetingChatMessageCommand>
+  public class AddMeetingChatMessageCommandHandler : CommandHandlerData<AddMeetingChatMessageCommand, MeetingChatMessageDto>
   {
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly IMeetingChatMessagesRepository _meetingChatMessagesRepository;
     private readonly IUsersRepository _usersRepository;
     private readonly INotificationsService _notifications;
+    private readonly IMapper _mapper;
 
     public AddMeetingChatMessageCommandHandler(
       IMeetingUsersRepository meetingUsersRepository,
       IMeetingChatMessagesRepository meetingChatMessagesRepository,
       IUsersRepository usersRepository,
-      INotificationsService notifications)
+      INotificationsService notifications,
+      IMapper mapper)
     {
       _meetingUsersRepository = meetingUsersRepository;
       _meetingChatMessagesRepository = meetingChatMessagesRepository;
       _usersRepository = usersRepository;
       _notifications = notifications;
+      _mapper = mapper;
     }
 
-    public override async Task<Unit> Handle(AddMeetingChatMessageCommand request)
+    public override async Task<MeetingChatMessageDto> Handle(AddMeetingChatMessageCommand request)
     {
       var meetingUser = await _meetingUsersRepository.FindOneByUserId(request.UserId);
 
@@ -39,12 +44,12 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
         throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var message = new MeetingChatMessage(request.Message, request.Date, request.AttachmentUrl, meetingUser.UserId, meetingUser.MeetingId);
+      var message = new MeetingChatMessage(request.Message, DateTimeOffset.UtcNow, request.AttachmentUrl, meetingUser.UserId, meetingUser.MeetingId);
       await _meetingChatMessagesRepository.Add(message);
 
       var sender = await _usersRepository.FindOneWithDetails(message.UserId);
       await BroadcastMessage(message, sender.Profile.Name);
-      return Unit.Value;
+      return _mapper.Map<MeetingChatMessageDto>(message);
     }
 
     private async Task BroadcastMessage(MeetingChatMessage message, string name)
