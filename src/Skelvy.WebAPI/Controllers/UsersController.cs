@@ -15,6 +15,7 @@ using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindBlockedUsers;
+using Skelvy.Application.Users.Queries.FindSelfUser;
 using Skelvy.Application.Users.Queries.FindUser;
 using Skelvy.Domain.Enums.Users;
 using Skelvy.WebAPI.Filters;
@@ -30,9 +31,9 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpGet("self")]
-    public async Task<UserDto> FindSelf()
+    public async Task<SelfUserDto> FindSelf()
     {
-      return await Mediator.Send(new FindUserQuery(UserId));
+      return await Mediator.Send(new FindSelfUserQuery(UserId));
     }
 
     [HttpDelete("{id}")]

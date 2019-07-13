@@ -26,21 +26,21 @@ namespace Skelvy.Infrastructure.Meetings
 
     public async Task<SelfModel> Map(User user, Meeting meeting, IList<MeetingChatMessage> messages, MeetingRequest meetingRequest, string language)
     {
-      var userDto = _mapper.Map<UserDto>(user);
+      var userDto = _mapper.Map<SelfUserDto>(user);
       var meetingModel = await Map(meeting, messages, meetingRequest, language);
       return new SelfModel(userDto, meetingModel);
     }
 
     public async Task<SelfModel> Map(User user, MeetingRequest meetingRequest, string language)
     {
-      var userDto = _mapper.Map<UserDto>(user);
+      var userDto = _mapper.Map<SelfUserDto>(user);
       var meetingModel = await Map(meetingRequest, language);
       return new SelfModel(userDto, meetingModel);
     }
 
     public SelfModel Map(User user)
     {
-      var userDto = _mapper.Map<UserDto>(user);
+      var userDto = _mapper.Map<SelfUserDto>(user);
       return new SelfModel(userDto);
     }
 

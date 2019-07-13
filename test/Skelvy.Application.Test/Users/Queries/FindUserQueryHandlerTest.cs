@@ -17,6 +17,7 @@ namespace Skelvy.Application.Test.Users.Queries
       var result = await handler.Handle(request);
 
       Assert.IsType<UserDto>(result);
+      Assert.NotEqual(default(int), result.Profile.Age);
     }
 
     [Fact]
