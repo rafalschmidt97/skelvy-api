@@ -97,14 +97,6 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         throw new ConflictException(
           $"Entity {nameof(MeetingRequest)}({nameof(request.UserId)}={request.UserId}) already exists.");
       }
-
-      var meetingExists = await _meetingUsersRepository.ExistsOneByUserId(request.UserId);
-
-      if (meetingExists)
-      {
-        throw new ConflictException(
-          $"Entity {nameof(Meeting)}({nameof(request.UserId)}={request.UserId}) already exists.");
-      }
     }
 
     private async Task<MeetingRequest> CreateNewMeetingRequest(CreateMeetingRequestCommand request)
