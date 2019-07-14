@@ -74,7 +74,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
     private async Task<string> GetRefreshToken(User user)
     {
       var refreshToken = GenerateRefreshToken();
-      await _cache.SetData($"auth:refresh#{refreshToken}", TimeSpan.FromDays(15), _mapper.Map<TokenUser>(user));
+      await _cache.SetData($"auth:refresh#{refreshToken}", TimeSpan.FromDays(30), _mapper.Map<TokenUser>(user));
       return refreshToken;
     }
 
