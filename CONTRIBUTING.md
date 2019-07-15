@@ -138,19 +138,19 @@ $ dotnet restore
 $ sh scripts/prepare.sh // TODO: script is not ready yet
 ```
 
-### Commonly used NPM scripts
+### Commonly used scripts
 
 ```bash
 # add secret for local development
 $ dotnet user-secrets set "FACEBOOK_CLIENT_ID" "x" --project src/Skelvy.WebAPI
 
-# add migration
+# add migration (UNIX)
 $ ASPNETCORE_ENVIRONMENT=Development dotnet ef migrations add Initial --project src/Skelvy.Persistence --verbose
 
-# update database 
+# update database (UNIX) 
 $ ASPNETCORE_ENVIRONMENT=Development dotnet ef database update --project src/Skelvy.Persistence --verbose
 
-# publish new verion
+# publish new version
 $ docker rmi skelvy/skelvy-api && docker build -t skelvy/skelvy-api . && docker push skelvy/skelvy-api
 
 # run integration tests
