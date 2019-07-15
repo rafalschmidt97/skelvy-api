@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 namespace Skelvy.Application.Meetings.Infrastructure.Notifications
 {
   public class UserSentMessageAction
   {
-    public UserSentMessageAction(int messageId, string message, DateTimeOffset date, string attachmentUrl, int userId, string userName, int meetingId)
+    public UserSentMessageAction(int messageId, string message, DateTimeOffset date, string attachmentUrl, int userId, string userName, int meetingId, IEnumerable<int> usersId)
     {
       MessageId = messageId;
       Message = message;
@@ -13,6 +14,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Notifications
       UserId = userId;
       UserName = userName;
       MeetingId = meetingId;
+      UsersId = usersId;
     }
 
     public int MessageId { get; private set; }
@@ -22,5 +24,6 @@ namespace Skelvy.Application.Meetings.Infrastructure.Notifications
     public int UserId { get; private set; }
     public string UserName { get; private set; }
     public int MeetingId { get; private set; }
+    public IEnumerable<int> UsersId { get; private set; }
   }
 }

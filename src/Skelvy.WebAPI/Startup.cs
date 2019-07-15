@@ -19,7 +19,7 @@ namespace Skelvy.WebAPI
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddSqlDatabase(_configuration);
-      services.AddCacheDatabase(_configuration);
+      services.AddRedisDatabase(_configuration);
       services.AddCustomSwagger();
       services.AddHealthChecks();
       services.AddMediatr();

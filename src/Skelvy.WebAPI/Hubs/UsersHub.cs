@@ -1,15 +1,25 @@
 using System;
 using System.Threading.Tasks;
 using MediatR;
+using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Notifications;
+using Skelvy.Common.Serializers;
 using Skelvy.Infrastructure.Notifications;
+using StackExchange.Redis;
 
 namespace Skelvy.WebAPI.Hubs
 {
   public class UsersHub : BaseHub
   {
-    public UsersHub(IMediator mediator)
+    private readonly ISubscriber _subscriber;
+    private readonly INotificationsService _notifications;
+
+    public UsersHub(IMediator mediator, IConnectionMultiplexer redis, INotificationsService notifications)
       : base(mediator)
     {
+      _notifications = notifications;
+      _subscriber = redis.GetSubscriber();
+      ListenForEvents();
     }
 
     public override Task OnConnectedAsync()
@@ -28,6 +38,15 @@ namespace Skelvy.WebAPI.Hubs
       }
 
       return base.OnDisconnectedAsync(exception);
+    }
+
+    private void ListenForEvents()
+    {
+      _subscriber.Subscribe("UserSentMessage", (channel, action) =>
+      {
+        var data = ((byte[])action).Deserialize<UserSentMessageAction>();
+        _notifications.BroadcastUserSentMessage(data);
+      });
     }
   }
 }

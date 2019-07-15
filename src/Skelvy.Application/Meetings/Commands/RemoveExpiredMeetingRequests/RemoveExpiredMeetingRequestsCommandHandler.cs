@@ -48,7 +48,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
     private async Task BroadcastMeetingRequestExpired(IEnumerable<MeetingRequest> requestsToRemove)
     {
       var usersId = requestsToRemove.Select(x => x.UserId).ToList();
-      await _notifications.BroadcastMeetingRequestExpired(new MeetingRequestExpiredAction(), usersId);
+      await _notifications.BroadcastMeetingRequestExpired(new MeetingRequestExpiredAction(usersId));
     }
   }
 }
