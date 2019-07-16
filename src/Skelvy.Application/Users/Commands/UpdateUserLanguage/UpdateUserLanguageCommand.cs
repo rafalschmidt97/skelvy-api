@@ -1,4 +1,5 @@
 using Skelvy.Application.Core.Bus;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
 {
@@ -10,7 +11,11 @@ namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
       Language = language;
     }
 
+    public UpdateUserLanguageCommand() // required for FromBody attribute to allow default values
+    {
+    }
+
     public int UserId { get; set; }
-    public string Language { get; set; }
+    public string Language { get; set; } = LanguageTypes.EN;
   }
 }

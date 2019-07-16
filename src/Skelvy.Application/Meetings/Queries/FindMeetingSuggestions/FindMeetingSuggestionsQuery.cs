@@ -1,4 +1,5 @@
 using Skelvy.Application.Core.Bus;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
 {
@@ -19,6 +20,6 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
     public int UserId { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public string Language { get; set; }
+    public string Language { get; set; } = LanguageTypes.EN;
   }
 }

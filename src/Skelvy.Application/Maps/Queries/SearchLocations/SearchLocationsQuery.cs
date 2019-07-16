@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Application.Maps.Queries.SearchLocations
 {
@@ -17,6 +18,6 @@ namespace Skelvy.Application.Maps.Queries.SearchLocations
     }
 
     public string Search { get; set; }
-    public string Language { get; set; }
+    public string Language { get; set; } = LanguageTypes.EN;
   }
 }

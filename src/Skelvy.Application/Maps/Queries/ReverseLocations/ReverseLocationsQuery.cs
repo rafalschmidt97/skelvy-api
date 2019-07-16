@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Application.Maps.Queries.ReverseLocations
 {
@@ -19,6 +20,6 @@ namespace Skelvy.Application.Maps.Queries.ReverseLocations
 
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public string Language { get; set; }
+    public string Language { get; set; } = LanguageTypes.EN;
   }
 }

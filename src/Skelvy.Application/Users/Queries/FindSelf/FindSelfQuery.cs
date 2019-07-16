@@ -1,4 +1,5 @@
 using Skelvy.Application.Core.Bus;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Application.Users.Queries.FindSelf
 {
@@ -15,6 +16,6 @@ namespace Skelvy.Application.Users.Queries.FindSelf
     }
 
     public int UserId { get; set; }
-    public string Language { get; set; }
+    public string Language { get; set; } = LanguageTypes.EN;
   }
 }
