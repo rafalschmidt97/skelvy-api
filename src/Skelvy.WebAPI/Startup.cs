@@ -29,7 +29,7 @@ namespace Skelvy.WebAPI
       services.AddSchedulers();
       services.AddCors();
       services.AddAuth(_configuration);
-      services.AddSocket();
+      services.AddSocket(_configuration);
       services.AddEmail();
       services.AddCustomMvc();
     }

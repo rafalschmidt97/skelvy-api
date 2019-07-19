@@ -8,7 +8,7 @@ namespace Skelvy.WebAPI.Extensions
   {
     public static void AddRedisDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-      services.AddDistributedRedisCache(options =>
+      services.AddStackExchangeRedisCache(options =>
       {
         options.Configuration = configuration["SKELVY_REDIS_CONNECTION"];
       });
