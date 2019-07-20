@@ -1,15 +1,16 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.WebAPI.Hubs;
+using Skelvy.WebAPI.Infrastructure.Notifications;
 
 namespace Skelvy.WebAPI.Extensions
 {
   public static class SocketExtension
   {
-    public static void AddSocket(this IServiceCollection services, IConfiguration configuration)
+    public static void AddSocket(this IServiceCollection services)
     {
-      services.AddSignalR().AddStackExchangeRedis(configuration["SKELVY_REDIS_CONNECTION"]);
+      services.AddSignalR();
+      services.AddSingleton<SignalRBackplane>();
     }
 
     public static void UseSocket(this IApplicationBuilder app)

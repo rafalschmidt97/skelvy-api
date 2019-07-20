@@ -28,49 +28,55 @@ namespace Skelvy.Infrastructure.Notifications
 
     public async Task BroadcastUserSentMessage(UserSentMessageAction action)
     {
-      await BroadcastActionDependingOnConnection(
+      await _socketService.BroadcastUserSentMeetingChatMessage(action);
+
+      await BroadcastActionToOffline(
         action.UsersId,
-        async (online) => await _socketService.BroadcastUserSentMeetingChatMessage(action, online),
         async (offline) => await _pushService.BroadcastUserSentMeetingChatMessage(action, offline));
     }
 
     public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action)
     {
-      await BroadcastActionDependingOnConnection(
+      await _socketService.BroadcastUserJoinedMeeting(action);
+
+      await BroadcastActionToOffline(
         action.UsersId,
-        async (online) => await _socketService.BroadcastUserJoinedMeeting(action, online),
         async (offline) => await _pushService.BroadcastUserJoinedMeeting(action, offline));
     }
 
     public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action)
     {
-      await BroadcastActionDependingOnConnection(
+      await _socketService.BroadcastUserFoundMeeting(action);
+
+      await BroadcastActionToOffline(
         action.UsersId,
-        async (online) => await _socketService.BroadcastUserFoundMeeting(action, online),
         async (offline) => await _pushService.BroadcastUserFoundMeeting(action, offline));
     }
 
     public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action)
     {
-      await BroadcastActionDependingOnConnection(
+      await _socketService.BroadcastUserLeftMeeting(action);
+
+      await BroadcastActionToOffline(
         action.UsersId,
-        async (online) => await _socketService.BroadcastUserLeftMeeting(action, online),
         async (offline) => await _pushService.BroadcastUserLeftMeeting(action, offline));
     }
 
     public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action)
     {
-      await BroadcastActionDependingOnConnection(
+      await _socketService.BroadcastMeetingRequestExpired(action);
+
+      await BroadcastActionToOffline(
         action.UsersId,
-        async (online) => await _socketService.BroadcastMeetingRequestExpired(action, online),
         async (offline) => await _pushService.BroadcastMeetingRequestExpired(action, offline));
     }
 
     public async Task BroadcastMeetingExpired(MeetingExpiredAction action)
     {
-      await BroadcastActionDependingOnConnection(
+      await _socketService.BroadcastMeetingExpired(action);
+
+      await BroadcastActionToOffline(
         action.UsersId,
-        async (online) => await _socketService.BroadcastMeetingExpired(action, online),
         async (offline) => await _pushService.BroadcastMeetingExpired(action, offline));
     }
 
@@ -81,59 +87,19 @@ namespace Skelvy.Infrastructure.Notifications
 
     public async Task BroadcastUserRemoved(UserRemovedAction action)
     {
-      await BroadcastActionToOnline(
-        new List<int> { action.UserId },
-        async (online) => await _socketService.BroadcastUserRemoved(action, online));
-
+      await _socketService.BroadcastUserRemoved(action);
       await _emailService.BroadcastUserRemoved(action);
     }
 
     public async Task BroadcastUserDisabled(UserDisabledAction action)
     {
-      await BroadcastActionToOnline(
-        new List<int> { action.UserId },
-        async (online) => await _socketService.BroadcastUserDisabled(action, online));
-
+      await _socketService.BroadcastUserDisabled(action);
       await _emailService.BroadcastUserDisabled(action);
     }
 
     public static bool IsConnected(int userId)
     {
       return Connections.FirstOrDefault(x => x == userId) != default(int);
-    }
-
-    private static Task BroadcastActionDependingOnConnection(
-      IEnumerable<int> connected,
-      Action<IList<int>> socketAction,
-      Action<IList<int>> pushAction)
-    {
-      var connections = GetConnections(connected);
-
-      if (connections.Online.Count > 0)
-      {
-        socketAction(connections.Online);
-      }
-
-      if (connections.Offline.Count > 0)
-      {
-        pushAction(connections.Offline);
-      }
-
-      return Task.CompletedTask;
-    }
-
-    private static Task BroadcastActionToOnline(
-      IEnumerable<int> connected,
-      Action<IList<int>> socketAction)
-    {
-      var connections = GetConnections(connected);
-
-      if (connections.Online.Count > 0)
-      {
-        socketAction(connections.Online);
-      }
-
-      return Task.CompletedTask;
     }
 
     private static Task BroadcastActionToOffline(

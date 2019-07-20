@@ -1,27 +1,24 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Notifications.Infrastructure;
 using Skelvy.Application.Users.Infrastructure.Notifications;
-using Skelvy.WebAPI.Hubs;
 
 namespace Skelvy.WebAPI.Infrastructure.Notifications
 {
   public class SocketNotificationsService : ISocketNotificationsService
   {
-    private readonly IHubContext<UsersHub> _hubContext;
+    private readonly SignalRBackplane _socket;
 
-    public SocketNotificationsService(IHubContext<UsersHub> hubContext)
+    public SocketNotificationsService(SignalRBackplane socket)
     {
-      _hubContext = hubContext;
+      _socket = socket;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action)
     {
-      await SendNotification("UserSentMeetingChatMessage", usersId, new MeetingChatMessageDto
+      await SendNotification("UserSentMeetingChatMessage", action.UsersId, new MeetingChatMessageDto
       {
         Id = action.MeetingId,
         Message = action.Message,
@@ -32,69 +29,44 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       });
     }
 
-    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action)
     {
-      await SendNotification("UserJoinedMeeting", usersId, action);
+      await SendNotification("UserJoinedMeeting", action.UsersId, new { action.UserId });
     }
 
-    public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action)
     {
-      await SendNotification("UserFoundMeeting", usersId);
+      await SendNotification("UserFoundMeeting", action.UsersId);
     }
 
-    public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action)
     {
-      await SendNotification("UserLeftMeeting", usersId, action);
+      await SendNotification("UserLeftMeeting", action.UsersId, new { action.UserId });
     }
 
-    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId)
+    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action)
     {
-      await SendNotification("MeetingRequestExpired", usersId);
+      await SendNotification("MeetingRequestExpired", action.UsersId);
     }
 
-    public async Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId)
+    public async Task BroadcastMeetingExpired(MeetingExpiredAction action)
     {
-      await SendNotification("MeetingExpired", usersId);
+      await SendNotification("MeetingExpired", action.UsersId);
     }
 
-    public async Task BroadcastUserRemoved(UserRemovedAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserRemoved(UserRemovedAction action)
     {
-      await SendNotification("UserRemoved", usersId);
+      await SendNotification("UserRemoved", new[] { action.UserId });
     }
 
-    public async Task BroadcastUserDisabled(UserDisabledAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserDisabled(UserDisabledAction action)
     {
-      await SendNotification("UserDisabled", usersId);
+      await SendNotification("UserDisabled", new[] { action.UserId });
     }
 
-    private async Task SendNotification(string action, IEnumerable<int> usersId, object data)
+    private async Task SendNotification(string action, IEnumerable<int> usersId, object data = null)
     {
-      await _hubContext.Clients.Users(PrepareUsers(usersId)).SendAsync(action, data);
-    }
-
-    private async Task SendNotification(string action, int userId, object data)
-    {
-      await _hubContext.Clients.User(PrepareUser(userId)).SendAsync(action, data);
-    }
-
-    private async Task SendNotification(string action, IEnumerable<int> usersId)
-    {
-      await _hubContext.Clients.Users(PrepareUsers(usersId)).SendAsync(action);
-    }
-
-    private async Task SendNotification(string action, int userId)
-    {
-      await _hubContext.Clients.User(PrepareUser(userId)).SendAsync(action);
-    }
-
-    private static IReadOnlyList<string> PrepareUsers(IEnumerable<int> usersId)
-    {
-      return usersId.Select(PrepareUser).ToList().AsReadOnly();
-    }
-
-    private static string PrepareUser(int userId)
-    {
-      return userId.ToString();
+      await _socket.PublishMessage(new SocketMessage(usersId, action, data));
     }
   }
 }
