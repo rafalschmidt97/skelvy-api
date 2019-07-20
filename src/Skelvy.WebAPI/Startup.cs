@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.WebAPI.Extensions;
+using Skelvy.WebAPI.Infrastructure.Notifications;
 
 namespace Skelvy.WebAPI
 {
@@ -19,7 +20,7 @@ namespace Skelvy.WebAPI
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddSqlDatabase(_configuration);
-      services.AddCacheDatabase(_configuration);
+      services.AddRedisDatabase(_configuration);
       services.AddCustomSwagger();
       services.AddHealthChecks();
       services.AddMediatr();
@@ -34,7 +35,7 @@ namespace Skelvy.WebAPI
       services.AddCustomMvc();
     }
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider, SignalRBackplane backplane)
     {
       if (env.IsDevelopment())
       {
@@ -47,6 +48,8 @@ namespace Skelvy.WebAPI
       app.UseAuth();
       app.UseSocket();
       app.UseCustomMvc();
+
+      backplane.Start();
     }
   }
 }

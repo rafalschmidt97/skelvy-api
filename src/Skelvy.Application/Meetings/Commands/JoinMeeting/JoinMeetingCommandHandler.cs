@@ -159,7 +159,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
     {
       var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(joiningUser.MeetingId);
       var broadcastUsersId = meetingUsers.Where(x => x.UserId != joiningUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(joiningUser.UserId), broadcastUsersId);
+      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(joiningUser.UserId, broadcastUsersId));
     }
   }
 }

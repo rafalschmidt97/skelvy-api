@@ -5,7 +5,7 @@ namespace Skelvy.Common.Serializers
 {
   public static class BinarySerializerExtension
   {
-    public static byte[] Serialize(this object objectToSerialize)
+    public static byte[] BinarySerialize(this object objectToSerialize)
     {
       if (objectToSerialize == null)
       {
@@ -20,7 +20,7 @@ namespace Skelvy.Common.Serializers
       }
     }
 
-    public static T Deserialize<T>(this byte[] bytesToDeserialize)
+    public static T BinaryDeserialize<T>(this byte[] bytesToDeserialize)
     {
       if (bytesToDeserialize == null)
       {

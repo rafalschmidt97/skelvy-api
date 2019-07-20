@@ -58,8 +58,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
       var meetingUsersId = meetingUsers.Where(x => x.UserId != message.UserId).Select(x => x.UserId).ToList();
 
       await _notifications.BroadcastUserSentMessage(
-        new UserSentMessageAction(message.Id, message.Message, message.Date, message.AttachmentUrl, message.UserId, name, message.MeetingId),
-        meetingUsersId);
+        new UserSentMessageAction(message.Id, message.Message, message.Date, message.AttachmentUrl, message.UserId, name, message.MeetingId, meetingUsersId));
     }
   }
 }

@@ -176,7 +176,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
     private async Task BroadcastUserFoundMeeting(MeetingRequest connectingMeetingRequest)
     {
       var usersId = new List<int> { connectingMeetingRequest.UserId };
-      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(), usersId);
+      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(usersId));
     }
   }
 }

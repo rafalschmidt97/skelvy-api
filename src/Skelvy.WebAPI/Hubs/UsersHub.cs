@@ -1,33 +1,28 @@
 using System;
 using System.Threading.Tasks;
 using MediatR;
-using Skelvy.Infrastructure.Notifications;
+using Skelvy.WebAPI.Infrastructure.Notifications;
 
 namespace Skelvy.WebAPI.Hubs
 {
   public class UsersHub : BaseHub
   {
-    public UsersHub(IMediator mediator)
+    private readonly SignalRBackplane _socket;
+
+    public UsersHub(IMediator mediator, SignalRBackplane socket)
       : base(mediator)
     {
+      _socket = socket;
     }
 
-    public override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
-      NotificationsService.Connections.Add(UserId);
-      return base.OnConnectedAsync();
+      await _socket.ConnectUser(UserId);
     }
 
-    public override Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception exception)
     {
-      var userId = UserId;
-
-      if (NotificationsService.IsConnected(userId))
-      {
-        NotificationsService.Connections.Remove(userId);
-      }
-
-      return base.OnDisconnectedAsync(exception);
+      await _socket.DisconnectUser(UserId);
     }
   }
 }

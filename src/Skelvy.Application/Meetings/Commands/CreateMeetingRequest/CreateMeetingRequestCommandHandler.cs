@@ -195,14 +195,14 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     private async Task BroadcastUserFoundMeeting(MeetingRequest existingRequest)
     {
       var usersId = new List<int> { existingRequest.UserId };
-      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(), usersId);
+      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(usersId));
     }
 
     private async Task BroadcastUserJoinedMeeting(MeetingUser joiningUser)
     {
       var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(joiningUser.MeetingId);
       var broadcastUsersId = meetingUsers.Where(x => x.UserId != joiningUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(joiningUser.UserId), broadcastUsersId);
+      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(joiningUser.UserId, broadcastUsersId));
     }
 
     private static IEnumerable<MeetingRequestDrinkType> PrepareDrinkTypes(

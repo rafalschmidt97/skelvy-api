@@ -102,7 +102,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
     private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)
     {
       var usersId = new List<int> { request1.UserId, request2.UserId };
-      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(), usersId);
+      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(usersId));
     }
   }
 }

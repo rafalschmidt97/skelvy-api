@@ -81,7 +81,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
     private async Task BroadcastUserLeftMeeting(MeetingUser leftUser, IEnumerable<MeetingUser> meetingUsers)
     {
       var broadcastUsersId = meetingUsers.Where(x => x.UserId != leftUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingAction(leftUser.UserId), broadcastUsersId);
+      await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingAction(leftUser.UserId, broadcastUsersId));
     }
   }
 }

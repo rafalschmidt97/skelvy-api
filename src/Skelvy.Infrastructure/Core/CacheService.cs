@@ -18,7 +18,7 @@ namespace Skelvy.Infrastructure.Core
     public async Task<T> GetData<T>(string key)
     {
       var cachedBytes = await _cache.GetAsync(key);
-      return cachedBytes.Deserialize<T>();
+      return cachedBytes.BinaryDeserialize<T>();
     }
 
     public async Task<T> GetOrSetData<T>(string key, TimeSpan expiration, Func<Task<T>> getFunction)
@@ -27,7 +27,7 @@ namespace Skelvy.Infrastructure.Core
 
       if (cachedBytes != null)
       {
-        return cachedBytes.Deserialize<T>();
+        return cachedBytes.BinaryDeserialize<T>();
       }
 
       var data = await getFunction();
@@ -35,7 +35,7 @@ namespace Skelvy.Infrastructure.Core
       if (data != null)
       {
         var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(expiration);
-        await _cache.SetAsync(key, data.Serialize(), options);
+        await _cache.SetAsync(key, data.BinarySerialize(), options);
       }
 
       return data;
@@ -44,7 +44,7 @@ namespace Skelvy.Infrastructure.Core
     public async Task SetData(string key, TimeSpan expiration, object data)
     {
       var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(expiration);
-      await _cache.SetAsync(key, data.Serialize(), options);
+      await _cache.SetAsync(key, data.BinarySerialize(), options);
     }
 
     public async Task RefreshData(string key)
