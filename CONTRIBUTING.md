@@ -141,14 +141,19 @@ $ sh scripts/prepare.sh // TODO: script is not ready yet
 ### Commonly used scripts
 
 ```bash
-# add secret for local development
+# add secret for local development (useful to generate secret file as well)
 $ dotnet user-secrets set "FACEBOOK_CLIENT_ID" "x" --project src/Skelvy.WebAPI
 
-# add migration (UNIX)
-$ ASPNETCORE_ENVIRONMENT=Development dotnet ef migrations add Initial --project src/Skelvy.Persistence --verbose
+# set environment as development (it's neccesary for example to add a migration)
+set ASPNETCORE_ENVIRONMENT=Development // cmd
+$Env:ASPNETCORE_ENVIRONMENT = "Development" // powershell
+export ASPNETCORE_ENVIRONMENT=Development // bash
 
-# update database (UNIX) 
-$ ASPNETCORE_ENVIRONMENT=Development dotnet ef database update --project src/Skelvy.Persistence --verbose
+# add migration
+$ dotnet ef migrations add Initial --project src/Skelvy.Persistence --verbose
+
+# update database
+$ dotnet ef database update --project src/Skelvy.Persistence --verbose
 
 # publish new version
 $ docker rmi skelvy/skelvy-api && docker build -t skelvy/skelvy-api . && docker push skelvy/skelvy-api
