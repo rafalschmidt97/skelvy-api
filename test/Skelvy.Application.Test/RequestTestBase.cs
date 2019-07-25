@@ -8,13 +8,18 @@ namespace Skelvy.Application.Test
 {
   public abstract class RequestTestBase
   {
-    protected static SkelvyContext DbContext(bool sqlLite = true)
+    protected static SkelvyContext DbContext(TestDbContextTypes type = TestDbContextTypes.SqLite)
     {
       var builder = new DbContextOptionsBuilder<SkelvyContext>();
 
-      if (sqlLite)
+      if (type == TestDbContextTypes.SqLite)
       {
         builder.UseSqlite("DataSource=:memory:");
+      }
+      else if (type == TestDbContextTypes.SqlServer)
+      {
+        builder.UseSqlServer(
+          "Server=localhost, 1433; Database=skelvy_integration; MultipleActiveResultSets=true; User Id=sa; Password=zaq1@WSX;");
       }
       else
       {
@@ -23,9 +28,13 @@ namespace Skelvy.Application.Test
 
       var dbContext = new SkelvyContext(builder.Options);
 
-      if (sqlLite)
+      if (type == TestDbContextTypes.SqLite)
       {
         dbContext.Database.OpenConnection();
+      }
+      else if (type == TestDbContextTypes.SqlServer)
+      {
+        dbContext.Database.Migrate();
       }
 
       dbContext.Database.EnsureCreated();
@@ -33,9 +42,9 @@ namespace Skelvy.Application.Test
       return dbContext;
     }
 
-    protected static SkelvyContext InitializedDbContext(bool sqlLite = true)
+    protected static SkelvyContext InitializedDbContext(TestDbContextTypes type = TestDbContextTypes.SqLite)
     {
-      var context = DbContext(sqlLite);
+      var context = DbContext(type);
       SkelvyInitializer.Initialize(context);
       return context;
     }
