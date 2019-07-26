@@ -21,7 +21,9 @@ namespace Skelvy.WebAPI.Extensions
           configuration.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
         }
 
-        configuration.AddSecurityDefinition("Token", new ApiKeyScheme
+        var tokenName = "Access Token";
+
+        configuration.AddSecurityDefinition(tokenName, new ApiKeyScheme
         {
           In = "header",
           Name = "Authorization",
@@ -30,7 +32,7 @@ namespace Skelvy.WebAPI.Extensions
 
         configuration.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
         {
-          { "Token", Array.Empty<string>() },
+          { tokenName, Array.Empty<string>() },
         });
 
         configuration.OperationFilter<SwaggerDefaultValues>();
