@@ -18,8 +18,6 @@ namespace Skelvy.WebAPI.Extensions
           .AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<,>)))
           .AsImplementedInterfaces()
           .WithTransientLifetime());
-
-      services.AddAutoMapper(applicationAssembly);
     }
   }
 }
