@@ -1,6 +1,6 @@
 namespace Skelvy.Application.Test
 {
-  public enum TestDbContextTypes
+  public enum TestDbContextType
   {
     InMemory,
     SqLite,

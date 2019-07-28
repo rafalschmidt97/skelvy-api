@@ -8,15 +8,15 @@ namespace Skelvy.Application.Test
 {
   public abstract class RequestTestBase
   {
-    protected static SkelvyContext DbContext(TestDbContextTypes type = TestDbContextTypes.SqLite)
+    protected static SkelvyContext DbContext(TestDbContextType type = TestDbContextType.SqLite)
     {
       var builder = new DbContextOptionsBuilder<SkelvyContext>();
 
-      if (type == TestDbContextTypes.SqLite)
+      if (type == TestDbContextType.SqLite)
       {
         builder.UseSqlite("DataSource=:memory:");
       }
-      else if (type == TestDbContextTypes.SqlServer)
+      else if (type == TestDbContextType.SqlServer)
       {
         builder.UseSqlServer(
           "Server=localhost, 1433; Database=skelvy_integration; MultipleActiveResultSets=true; User Id=sa; Password=zaq1@WSX;");
@@ -28,11 +28,11 @@ namespace Skelvy.Application.Test
 
       var dbContext = new SkelvyContext(builder.Options);
 
-      if (type == TestDbContextTypes.SqLite)
+      if (type == TestDbContextType.SqLite)
       {
         dbContext.Database.OpenConnection();
       }
-      else if (type == TestDbContextTypes.SqlServer)
+      else if (type == TestDbContextType.SqlServer)
       {
         dbContext.Database.Migrate();
       }
@@ -42,7 +42,7 @@ namespace Skelvy.Application.Test
       return dbContext;
     }
 
-    protected static SkelvyContext InitializedDbContext(TestDbContextTypes type = TestDbContextTypes.SqLite)
+    protected static SkelvyContext InitializedDbContext(TestDbContextType type = TestDbContextType.SqLite)
     {
       var context = DbContext(type);
       SkelvyInitializer.Initialize(context);
