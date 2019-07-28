@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Skelvy.Common.Serializers;
 using Skelvy.Infrastructure.Notifications;
 using Skelvy.WebAPI.Hubs;
@@ -14,12 +15,17 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
   {
     private readonly ISubscriber _subscriber;
     private readonly IHubContext<UsersHub> _hubContext;
+    private readonly ILogger<SignalRBackplane> _logger;
     private bool _initialized;
 
-    public SignalRBackplane(IConnectionMultiplexer redis, IHubContext<UsersHub> hubContext)
+    public SignalRBackplane(
+      IConnectionMultiplexer redis,
+      IHubContext<UsersHub> hubContext,
+      ILogger<SignalRBackplane> logger)
     {
       _subscriber = redis.GetSubscriber();
       _hubContext = hubContext;
+      _logger = logger;
     }
 
     public void Start()
@@ -51,7 +57,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           _initialized = true;
           var connections = ((string)action).JsonDeserialize<HashSet<int>>();
-          Console.WriteLine($"{action}");
           NotificationsService.Connections.UnionWith(connections);
         }
       });
@@ -59,10 +64,25 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _subscriber.Subscribe("Init", (channel, action) =>
       {
         var instanceId = (string)action;
-        _subscriber.Publish($"Init-{instanceId}", NotificationsService.Connections.JsonSerialize());
+
+        if (instanceId != Program.InstanceId && _initialized)
+        {
+          _subscriber.Publish($"Init-{instanceId}", NotificationsService.Connections.JsonSerialize());
+        }
       });
 
       _subscriber.Publish("Init", Program.InstanceId);
+
+      Task.Run(async () =>
+      {
+        await Task.Delay(TimeSpan.FromSeconds(10));
+
+        if (!_initialized)
+        {
+          _initialized = true;
+          _logger.LogWarning("API has not received initialize ping. It assumes that this is the first instance.");
+        }
+      });
     }
 
     private void SubscribeMessages()
