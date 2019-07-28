@@ -10,6 +10,7 @@ namespace Skelvy.Application.Notifications.Infrastructure
     Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId);
     Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId);
     Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId);
+    Task BroadcastMeetingAborted(MeetingAbortedAction action, IEnumerable<int> usersId);
     Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId);
     Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId);
   }

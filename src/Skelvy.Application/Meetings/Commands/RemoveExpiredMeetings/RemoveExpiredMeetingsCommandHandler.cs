@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Meetings.Events.MeetingExpired;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
-using Skelvy.Application.Notifications;
 using Skelvy.Common.Extensions;
-using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
 {
@@ -17,18 +14,18 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
-    private readonly INotificationsService _notifications;
+    private readonly IMediator _mediator;
 
     public RemoveExpiredMeetingsCommandHandler(
       IMeetingsRepository meetingsRepository,
       IMeetingUsersRepository meetingUsersRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
-      INotificationsService notifications)
+      IMediator mediator)
     {
       _meetingsRepository = meetingsRepository;
       _meetingUsersRepository = meetingUsersRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
-      _notifications = notifications;
+      _mediator = mediator;
     }
 
     public override async Task<Unit> Handle(RemoveExpiredMeetingsCommand request)
@@ -57,20 +54,11 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
         {
           await _meetingsRepository.UpdateRange(meetingsToRemove);
           transaction.Commit();
-          await BroadcastMeetingExpired(meetingsToRemove);
+          await _mediator.Publish(new MeetingsExpiredEvent(meetingsToRemove.Select(x => x.Id)));
         }
       }
 
       return Unit.Value;
-    }
-
-    private async Task BroadcastMeetingExpired(IEnumerable<Meeting> meetingsToRemove)
-    {
-      foreach (var meeting in meetingsToRemove)
-      {
-        var usersId = meeting.Users.Select(x => x.UserId).ToList();
-        await _notifications.BroadcastMeetingExpired(new MeetingExpiredAction(usersId));
-      }
     }
   }
 }

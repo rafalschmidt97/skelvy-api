@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Skelvy.Application.Meetings.Commands.MatchMeetingRequests;
-using Skelvy.Application.Notifications;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 
@@ -10,12 +10,12 @@ namespace Skelvy.Application.Test.Meetings.Commands
 {
   public class MatchMeetingRequestsCommandHandlerTest : DatabaseRequestTestBase
   {
-    private readonly Mock<INotificationsService> _notifications;
+    private readonly Mock<IMediator> _mediator;
     private readonly Mock<ILogger<MatchMeetingRequestsCommandHandler>> _logger;
 
     public MatchMeetingRequestsCommandHandlerTest()
     {
-      _notifications = new Mock<INotificationsService>();
+      _mediator = new Mock<IMediator>();
       _logger = new Mock<ILogger<MatchMeetingRequestsCommandHandler>>();
     }
 
@@ -28,7 +28,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingUsersRepository(dbContext),
-        _notifications.Object,
+        _mediator.Object,
         _logger.Object);
 
       await handler.Handle(request);

@@ -2,13 +2,13 @@ using System;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Skelvy.Application.Auth.Commands;
 using Skelvy.Application.Auth.Commands.SignInWithGoogle;
 using Skelvy.Application.Auth.Infrastructure.Google;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
-using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
@@ -27,7 +27,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
     private readonly Mock<IGoogleService> _googleService;
     private readonly Mock<ITokenService> _tokenService;
-    private readonly Mock<INotificationsService> _notifications;
+    private readonly Mock<IMediator> _mediator;
     private readonly Mock<ILogger<SignInWithGoogleCommandHandler>> _logger;
 
     public SignInWithGoogleCommandHandlerTest()
@@ -35,7 +35,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       _access = new AccessVerification("google1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessTypes.Google);
       _googleService = new Mock<IGoogleService>();
       _tokenService = new Mock<ITokenService>();
-      _notifications = new Mock<INotificationsService>();
+      _mediator = new Mock<IMediator>();
       _logger = new Mock<ILogger<SignInWithGoogleCommandHandler>>();
     }
 
@@ -54,7 +54,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
-        _notifications.Object,
+        _mediator.Object,
         _logger.Object);
 
       var result = await handler.Handle(request);
@@ -81,7 +81,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
-        _notifications.Object,
+        _mediator.Object,
         _logger.Object);
 
       var result = await handler.Handle(request);
@@ -102,7 +102,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
-        _notifications.Object,
+        _mediator.Object,
         _logger.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
@@ -129,7 +129,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
-        _notifications.Object,
+        _mediator.Object,
         _logger.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
@@ -148,7 +148,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
-        _notifications.Object,
+        _mediator.Object,
         _logger.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>
@@ -167,7 +167,7 @@ namespace Skelvy.Application.Test.Auth.Commands
         new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
-        _notifications.Object,
+        _mediator.Object,
         _logger.Object);
 
       await Assert.ThrowsAsync<UnauthorizedException>(() =>

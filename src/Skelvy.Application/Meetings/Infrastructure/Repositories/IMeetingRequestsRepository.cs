@@ -8,6 +8,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
 {
   public interface IMeetingRequestsRepository : IBaseRepository
   {
+    Task<MeetingRequest> FindOneWithExpiredById(int id);
     Task<MeetingRequest> FindOneSearchingByUserId(int userId);
     Task<MeetingRequest> FindOneWithDrinkTypesByUserId(int userId);
     Task<IList<MeetingRequest>> FindAllWithRemovedByUsersId(IEnumerable<int> usersId);

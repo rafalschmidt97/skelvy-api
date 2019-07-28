@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using MediatR;
 using Moq;
 using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
 using Skelvy.Application.Meetings.Queries;
-using Skelvy.Application.Notifications;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence.Repositories;
 using Xunit;
@@ -12,11 +12,11 @@ namespace Skelvy.Application.Test.Meetings.Commands
 {
   public class AddMeetingChatMessageCommandHandlerTest : DatabaseRequestTestBase
   {
-    private readonly Mock<INotificationsService> _notifications;
+    private readonly Mock<IMediator> _mediator;
 
     public AddMeetingChatMessageCommandHandlerTest()
     {
-      _notifications = new Mock<INotificationsService>();
+      _mediator = new Mock<IMediator>();
     }
 
     [Fact]
@@ -27,8 +27,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
-        new UsersRepository(dbContext),
-        _notifications.Object,
+        _mediator.Object,
         Mapper());
 
       var result = await handler.Handle(request);
@@ -45,8 +44,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
-        new UsersRepository(dbContext),
-        _notifications.Object,
+        _mediator.Object,
         Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

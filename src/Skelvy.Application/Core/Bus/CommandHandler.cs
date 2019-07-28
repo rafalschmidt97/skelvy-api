@@ -5,7 +5,7 @@ using MediatR;
 namespace Skelvy.Application.Core.Bus
 {
   public abstract class CommandHandler<TRequest> : IRequestHandler<TRequest>
-    where TRequest : IRequest<Unit>
+    where TRequest : ICommand
   {
     public abstract Task<Unit> Handle(TRequest request);
 

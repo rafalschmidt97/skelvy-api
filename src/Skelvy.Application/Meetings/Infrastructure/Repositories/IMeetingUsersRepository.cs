@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Skelvy.Application.Core.Persistence;
@@ -13,6 +14,8 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<IList<MeetingUser>> FindAllWithMeetingRequestByMeetingId(int meetingId);
     Task<IList<MeetingUser>> FindAllWithMeetingRequestByMeetingsId(IEnumerable<int> meetingsId);
     Task<IList<MeetingUser>> FindAllWithRemovedByUsersId(IEnumerable<int> usersId);
+    Task<IList<MeetingUser>> FindAllWithRemovedAfterOrEqualAbortedAtByMeetingId(int meetingId, DateTimeOffset leftAt);
+    Task<IList<MeetingUser>> FindAllWithExpiredByMeetingId(int meetingId);
     Task<bool> ExistsOneByUserId(int userId);
     Task Add(MeetingUser meetingUser);
     Task AddRange(IList<MeetingUser> meetingUsers);

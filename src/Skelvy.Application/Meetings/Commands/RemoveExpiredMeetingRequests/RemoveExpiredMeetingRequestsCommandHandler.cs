@@ -1,26 +1,23 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
-using Skelvy.Application.Notifications;
 using Skelvy.Common.Extensions;
-using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
 {
   public class RemoveExpiredMeetingRequestsCommandHandler : CommandHandler<RemoveExpiredMeetingRequestsCommand>
   {
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
-    private readonly INotificationsService _notifications;
+    private readonly IMediator _mediator;
 
-    public RemoveExpiredMeetingRequestsCommandHandler(IMeetingRequestsRepository meetingRequestsRepository, INotificationsService notifications)
+    public RemoveExpiredMeetingRequestsCommandHandler(IMeetingRequestsRepository meetingRequestsRepository, IMediator mediator)
     {
       _meetingRequestsRepository = meetingRequestsRepository;
-      _notifications = notifications;
+      _mediator = mediator;
     }
 
     public override async Task<Unit> Handle(RemoveExpiredMeetingRequestsCommand request)
@@ -39,16 +36,10 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
       if (isDataChanged)
       {
         await _meetingRequestsRepository.UpdateRange(requestsToRemove);
-        await BroadcastMeetingRequestExpired(requestsToRemove);
+        await _mediator.Publish(new MeetingRequestExpiredAction(requestsToRemove.Select(x => x.Id)));
       }
 
       return Unit.Value;
-    }
-
-    private async Task BroadcastMeetingRequestExpired(IEnumerable<MeetingRequest> requestsToRemove)
-    {
-      var usersId = requestsToRemove.Select(x => x.UserId).ToList();
-      await _notifications.BroadcastMeetingRequestExpired(new MeetingRequestExpiredAction(usersId));
     }
   }
 }

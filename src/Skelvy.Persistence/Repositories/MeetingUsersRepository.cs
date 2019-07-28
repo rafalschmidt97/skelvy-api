@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,6 +59,20 @@ namespace Skelvy.Persistence.Repositories
     {
       return await Context.MeetingUsers
         .Where(x => usersId.Any(y => y == x.UserId))
+        .ToListAsync();
+    }
+
+    public async Task<IList<MeetingUser>> FindAllWithRemovedAfterOrEqualAbortedAtByMeetingId(int meetingId, DateTimeOffset leftAt)
+    {
+      return await Context.MeetingUsers
+        .Where(x => x.MeetingId == meetingId && x.ModifiedAt >= leftAt)
+        .ToListAsync();
+    }
+
+    public async Task<IList<MeetingUser>> FindAllWithExpiredByMeetingId(int meetingId)
+    {
+      return await Context.MeetingUsers
+        .Where(x => x.MeetingId == meetingId && !x.IsRemoved)
         .ToListAsync();
     }
 

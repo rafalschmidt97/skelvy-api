@@ -121,6 +121,23 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastMeetingAborted(MeetingAbortedAction action, IEnumerable<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "MEETING_ABORTED",
+        },
+        new PushNotificationData
+        {
+          Action = "MeetingAborted",
+          RedirectTo = "meeting",
+          Data = action,
+        });
+    }
+
     public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId)
     {
       await SendNotification(

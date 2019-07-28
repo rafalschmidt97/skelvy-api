@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
+using MediatR;
 using Moq;
 using Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings;
-using Skelvy.Application.Notifications;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 
@@ -9,11 +9,11 @@ namespace Skelvy.Application.Test.Meetings.Commands
 {
   public class RemoveExpiredMeetingsCommandHandlerTest : DatabaseRequestTestBase
   {
-    private readonly Mock<INotificationsService> _notifications;
+    private readonly Mock<IMediator> _mediator;
 
     public RemoveExpiredMeetingsCommandHandlerTest()
     {
-      _notifications = new Mock<INotificationsService>();
+      _mediator = new Mock<IMediator>();
     }
 
     [Fact]
@@ -25,7 +25,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingsRepository(dbContext),
         new MeetingUsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        _notifications.Object);
+        _mediator.Object);
 
       await handler.Handle(request);
     }

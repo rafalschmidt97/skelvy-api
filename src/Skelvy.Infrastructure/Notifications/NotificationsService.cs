@@ -62,6 +62,15 @@ namespace Skelvy.Infrastructure.Notifications
         async (offline) => await _pushService.BroadcastUserLeftMeeting(action, offline));
     }
 
+    public async Task BroadcastMeetingAborted(MeetingAbortedAction action)
+    {
+      await _socketService.BroadcastMeetingAborted(action);
+
+      await BroadcastActionToOffline(
+        action.UsersId,
+        async (offline) => await _pushService.BroadcastMeetingAborted(action, offline));
+    }
+
     public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action)
     {
       await _socketService.BroadcastMeetingRequestExpired(action);
