@@ -12,9 +12,14 @@ namespace Skelvy.WebAPI.Controllers
     {
       var files = Request.Form.Files;
 
-      if (files.Count <= 0)
+      if (files.Count == 0)
       {
         throw new BadRequestException("Unsupported media type. File required.");
+      }
+
+      if (files.Count > 1)
+      {
+        throw new BadRequestException("Unsupported media type. More than one file detected.");
       }
 
       var file = files[0];
