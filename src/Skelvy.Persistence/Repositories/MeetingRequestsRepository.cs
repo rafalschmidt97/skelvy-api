@@ -17,6 +17,11 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
+    public async Task<MeetingRequest> FindOneWithExpiredById(int id)
+    {
+      return await Context.MeetingRequests.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
     public async Task<MeetingRequest> FindOneSearchingByUserId(int userId)
     {
       return await Context.MeetingRequests

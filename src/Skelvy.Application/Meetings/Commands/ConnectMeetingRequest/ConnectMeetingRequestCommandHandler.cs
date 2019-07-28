@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Meetings.Events.UserConnectedToMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
-using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Common.Extensions;
@@ -22,7 +20,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingRequestDrinkTypesRepository _meetingRequestDrinkTypesRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
-    private readonly INotificationsService _notifications;
+    private readonly IMediator _mediator;
     private readonly ILogger<ConnectMeetingRequestCommandHandler> _logger;
 
     public ConnectMeetingRequestCommandHandler(
@@ -31,7 +29,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingRequestDrinkTypesRepository meetingRequestDrinkTypesRepository,
       IMeetingUsersRepository meetingUsersRepository,
-      INotificationsService notifications,
+      IMediator mediator,
       ILogger<ConnectMeetingRequestCommandHandler> logger)
     {
       _usersRepository = usersRepository;
@@ -39,7 +37,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       _meetingRequestsRepository = meetingRequestsRepository;
       _meetingRequestDrinkTypesRepository = meetingRequestDrinkTypesRepository;
       _meetingUsersRepository = meetingUsersRepository;
-      _notifications = notifications;
+      _mediator = mediator;
       _logger = logger;
     }
 
@@ -102,9 +100,9 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
         {
           await AbortSearchingRequest(user);
           var request = await CreateNewMeetingRequest(user, connectingMeetingRequest);
-          await CreateNewMeeting(request, connectingMeetingRequest);
+          var meeting = await CreateNewMeeting(request, connectingMeetingRequest);
           transaction.Commit();
-          await BroadcastUserFoundMeeting(connectingMeetingRequest);
+          await _mediator.Publish(new UserConnectedToMeetingEvent(connectingMeetingRequest.UserId, meeting.Id));
         }
         catch (Exception exception)
         {
@@ -149,7 +147,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       return meetingRequest;
     }
 
-    private async Task CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
+    private async Task<Meeting> CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
     {
       var meeting = new Meeting(
         request1.FindRequiredCommonDate(request2),
@@ -171,12 +169,8 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       request2.MarkAsFound();
       await _meetingRequestsRepository.Update(request1);
       await _meetingRequestsRepository.Update(request2);
-    }
 
-    private async Task BroadcastUserFoundMeeting(MeetingRequest connectingMeetingRequest)
-    {
-      var usersId = new List<int> { connectingMeetingRequest.UserId };
-      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(usersId));
+      return meeting;
     }
   }
 }

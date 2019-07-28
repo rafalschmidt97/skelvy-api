@@ -10,6 +10,7 @@ namespace Skelvy.Application.Notifications
     Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action);
     Task BroadcastUserFoundMeeting(UserFoundMeetingAction action);
     Task BroadcastUserLeftMeeting(UserLeftMeetingAction action);
+    Task BroadcastMeetingAborted(MeetingAbortedAction action);
     Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action);
     Task BroadcastMeetingExpired(MeetingExpiredAction action);
     Task BroadcastUserCreated(UserCreatedAction action);

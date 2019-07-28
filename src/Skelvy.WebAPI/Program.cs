@@ -1,9 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Skelvy.Persistence;
 using Skelvy.WebAPI.Extensions;
 
 namespace Skelvy.WebAPI
@@ -22,10 +20,10 @@ namespace Skelvy.WebAPI
         var hosting = scope.ServiceProvider.GetService<IHostingEnvironment>();
         if (hosting.IsDevelopment())
         {
-          var context = scope.ServiceProvider.GetService<SkelvyContext>();
-          context.Database.Migrate();
-          context.Database.EnsureCreated();
-          SkelvyInitializer.Initialize(context);
+// var context = scope.ServiceProvider.GetService<SkelvyContext>();
+//          context.Database.Migrate();
+//          context.Database.EnsureCreated();
+//          SkelvyInitializer.Initialize(context);
         }
       }
 

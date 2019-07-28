@@ -1,13 +1,13 @@
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Skelvy.Application.Auth.Events.UserCreated;
 using Skelvy.Application.Auth.Infrastructure.Facebook;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Notifications;
-using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -22,7 +22,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     private readonly IUserProfilePhotosRepository _profilePhotosRepository;
     private readonly IFacebookService _facebookService;
     private readonly ITokenService _tokenService;
-    private readonly INotificationsService _notifications;
+    private readonly IMediator _mediator;
     private readonly ILogger<SignInWithFacebookCommandHandler> _logger;
 
     public SignInWithFacebookCommandHandler(
@@ -31,7 +31,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       IUserProfilePhotosRepository profilePhotosRepository,
       IFacebookService facebookService,
       ITokenService tokenService,
-      INotificationsService notifications,
+      IMediator mediator,
       ILogger<SignInWithFacebookCommandHandler> logger)
     {
       _usersRepository = usersRepository;
@@ -39,7 +39,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       _profilePhotosRepository = profilePhotosRepository;
       _facebookService = facebookService;
       _tokenService = tokenService;
-      _notifications = notifications;
+      _mediator = mediator;
       _logger = logger;
     }
 
@@ -69,7 +69,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         else
         {
           var userByEmail = await _usersRepository.FindOneWithRolesByEmail(email);
-          var accountChanged = false;
 
           if (userByEmail == null)
           {
@@ -82,6 +81,11 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             user.RegisterFacebook(verified.UserId);
             await CreateUserWithProfile(user, details);
 
+            if (user.Email != null)
+            {
+              await _mediator.Publish(new UserCreatedEvent(user.Id, user.Email, user.Language));
+            }
+
             accountCreated = true;
           }
           else
@@ -91,12 +95,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
             await _usersRepository.Update(userByEmail);
 
             user = userByEmail;
-            accountChanged = true;
-          }
-
-          if (!accountChanged && user.Email != null)
-          {
-            await _notifications.BroadcastUserCreated(new UserCreatedAction(user.Id, user.Email, user.Language));
           }
         }
       }

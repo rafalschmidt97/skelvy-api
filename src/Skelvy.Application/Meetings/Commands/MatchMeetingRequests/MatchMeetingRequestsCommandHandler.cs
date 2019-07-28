@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Meetings.Events.UsersConnectedToMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
-using Skelvy.Application.Notifications;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Extensions;
 
@@ -18,20 +16,20 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingUsersRepository _meetingUsersRepository;
-    private readonly INotificationsService _notifications;
+    private readonly IMediator _mediator;
     private readonly ILogger<MatchMeetingRequestsCommandHandler> _logger;
 
     public MatchMeetingRequestsCommandHandler(
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingUsersRepository meetingUsersRepository,
-      INotificationsService notifications,
+      IMediator mediator,
       ILogger<MatchMeetingRequestsCommandHandler> logger)
     {
       _meetingRequestsRepository = meetingRequestsRepository;
       _meetingsRepository = meetingsRepository;
       _meetingUsersRepository = meetingUsersRepository;
-      _notifications = notifications;
+      _mediator = mediator;
       _logger = logger;
     }
 
@@ -79,7 +77,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
           await _meetingRequestsRepository.Update(request2);
 
           transaction.Commit();
-          await BroadcastUserFoundMeeting(request1, request2);
+          await _mediator.Publish(new UsersConnectedToMeetingEvent(request1.UserId, request2.UserId, meeting.Id));
         }
         catch (Exception exception)
         {
@@ -97,12 +95,6 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
           }
         }
       }
-    }
-
-    private async Task BroadcastUserFoundMeeting(MeetingRequest request1, MeetingRequest request2)
-    {
-      var usersId = new List<int> { request1.UserId, request2.UserId };
-      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(usersId));
     }
   }
 }

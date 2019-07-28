@@ -44,6 +44,11 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       await SendNotification("UserLeftMeeting", action.UsersId, new { action.UserId });
     }
 
+    public async Task BroadcastMeetingAborted(MeetingAbortedAction action)
+    {
+      await SendNotification("MeetingAborted", action.UsersId, new { action.UserId });
+    }
+
     public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action)
     {
       await SendNotification("MeetingRequestExpired", action.UsersId);

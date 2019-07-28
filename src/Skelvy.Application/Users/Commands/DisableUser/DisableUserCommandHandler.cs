@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Meetings.Events.MeetingAborted;
+using Skelvy.Application.Meetings.Events.UserLeftMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
-using Skelvy.Application.Notifications;
-using Skelvy.Application.Users.Infrastructure.Notifications;
+using Skelvy.Application.Users.Events.UserDisabled;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -19,20 +18,20 @@ namespace Skelvy.Application.Users.Commands.DisableUser
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
-    private readonly INotificationsService _notifications;
+    private readonly IMediator _mediator;
 
     public DisableUserCommandHandler(
       IUsersRepository usersRepository,
       IMeetingUsersRepository meetingUsersRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
-      INotificationsService notifications)
+      IMediator mediator)
     {
       _usersRepository = usersRepository;
       _meetingUsersRepository = meetingUsersRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
-      _notifications = notifications;
+      _mediator = mediator;
     }
 
     public override async Task<Unit> Handle(DisableUserCommand request)
@@ -53,8 +52,8 @@ namespace Skelvy.Application.Users.Commands.DisableUser
       user.Disable(request.Reason);
 
       await _usersRepository.Update(user);
-      await _notifications.BroadcastUserDisabled(new UserDisabledAction(user.Id, request.Reason, user.Email, user.Language));
 
+      await _mediator.Publish(new UserDisabledEvent(user.Id, request.Reason, user.Email, user.Language));
       return Unit.Value;
     }
 
@@ -76,6 +75,8 @@ namespace Skelvy.Application.Users.Commands.DisableUser
           await _meetingUsersRepository.Update(userDetails);
           await _meetingRequestsRepository.Update(userDetails.MeetingRequest);
 
+          var meetingAborted = false;
+
           if (meetingUsers.Count == 2)
           {
             var anotherUserDetails = meetingUsers.First(x => x.UserId != meetingUser.UserId);
@@ -87,18 +88,31 @@ namespace Skelvy.Application.Users.Commands.DisableUser
             await _meetingUsersRepository.Update(anotherUserDetails);
             await _meetingRequestsRepository.Update(anotherUserDetails.MeetingRequest);
             await _meetingsRepository.Update(meetingUser.Meeting);
+
+            meetingAborted = true;
           }
 
           transaction.Commit();
-          await BroadcastUserLeftMeeting(meetingUser, meetingUsers);
+
+          if (!meetingAborted)
+          {
+            await _mediator.Publish(new UserLeftMeetingEvent(meetingUser.UserId, meetingUser.MeetingId));
+          }
+          else
+          {
+            if (userDetails.ModifiedAt != null)
+            {
+              await _mediator.Publish(
+                new MeetingAbortedEvent(meetingUser.UserId, meetingUser.MeetingId, userDetails.ModifiedAt.Value));
+            }
+            else
+            {
+              throw new InternalServerErrorException(
+                $"Entity {nameof(MeetingUser)}(UserId = {meetingUser.UserId}) has modified date null after leaving");
+            }
+          }
         }
       }
-    }
-
-    private async Task BroadcastUserLeftMeeting(MeetingUser leftUser, IEnumerable<MeetingUser> meetingUsers)
-    {
-      var broadcastUsersId = meetingUsers.Where(x => x.UserId != leftUser.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingAction(leftUser.UserId, broadcastUsersId));
     }
   }
 }
