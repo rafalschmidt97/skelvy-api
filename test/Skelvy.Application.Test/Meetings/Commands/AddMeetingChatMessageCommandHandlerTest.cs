@@ -27,6 +27,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
+        new AttachmentsRepository(dbContext),
         _mediator.Object,
         Mapper());
 
@@ -44,6 +45,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new AddMeetingChatMessageCommandHandler(
         new MeetingUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
+        new AttachmentsRepository(dbContext),
         _mediator.Object,
         Mapper());
 

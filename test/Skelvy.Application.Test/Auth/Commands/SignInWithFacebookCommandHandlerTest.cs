@@ -51,7 +51,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithFacebookCommandHandler(
           new UsersRepository(dbContext),
           new UserProfilesRepository(dbContext),
-          new UserProfilePhotosRepository(dbContext),
           _facebookService.Object,
           _tokenService.Object,
           _mediator.Object,
@@ -78,7 +77,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -99,7 +97,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -126,7 +123,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -145,7 +141,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -164,7 +159,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -215,9 +209,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       graphResponse.first_name = "Example";
       graphResponse.birthday = "04/22/1997";
       graphResponse.gender = "male";
-      graphResponse.picture = new ExpandoObject();
-      graphResponse.picture.data = new ExpandoObject();
-      graphResponse.picture.data.url = "Url";
       return graphResponse;
     }
   }

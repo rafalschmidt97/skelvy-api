@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Attachments;
 using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Persistence
@@ -83,12 +84,23 @@ namespace Skelvy.Persistence
       context.UserProfiles.AddRange(profiles);
       context.SaveChanges();
 
+      var attachments = new[]
+      {
+        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=1"),
+        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=2"),
+        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=3"),
+        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=4"),
+      };
+
+      context.Attachments.AddRange(attachments);
+      context.SaveChanges();
+
       var photos = new[]
       {
-        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=1", 1, profiles[0].Id),
-        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=2", 1, profiles[1].Id),
-        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=3", 1, profiles[2].Id),
-        new UserProfilePhoto("https://via.placeholder.com/1000/ebebf0/ffffff?text=3", 1, profiles[3].Id),
+        new UserProfilePhoto(attachments[0].Id, 1, profiles[0].Id),
+        new UserProfilePhoto(attachments[1].Id, 1, profiles[1].Id),
+        new UserProfilePhoto(attachments[2].Id, 1, profiles[2].Id),
+        new UserProfilePhoto(attachments[3].Id, 1, profiles[3].Id),
       };
 
       context.UserProfilePhotos.AddRange(photos);

@@ -41,9 +41,17 @@ namespace Skelvy.Application.Users.Queries
     }
   }
 
-  public class UserProfilePhotoDto
+  public class UserProfilePhotoDto : ICustomMapping
   {
     public string Url { get; set; }
+
+    public void CreateMappings(Profile configuration)
+    {
+      configuration.CreateMap<UserProfilePhoto, UserProfilePhotoDto>()
+        .ForMember(
+          destination => destination.Url,
+          options => options.MapFrom(x => x.Attachment.Url));
+    }
   }
 
   public class SelfUserDto

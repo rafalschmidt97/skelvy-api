@@ -7,10 +7,10 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
 {
   public interface IUserProfilePhotosRepository : IBaseRepository
   {
-    Task<IList<UserProfilePhoto>> FindAllByProfileId(int profileId);
+    Task<IList<UserProfilePhoto>> FindAllWithAttachmentByProfileId(int profileId);
     Task<IList<UserProfilePhoto>> FindAllWithRemovedByProfilesId(IEnumerable<int> profilesId);
     Task Add(UserProfilePhoto photo);
-    Task AddRange(IEnumerable<UserProfilePhoto> newPhotos);
+    Task AddRange(IList<UserProfilePhoto> newPhotos);
     Task RemoveRange(IList<UserProfilePhoto> oldPhotos);
   }
 }

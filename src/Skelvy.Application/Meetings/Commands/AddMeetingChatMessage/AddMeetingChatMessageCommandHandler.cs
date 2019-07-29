@@ -6,8 +6,10 @@ using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Events.MessageSent;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Uploads.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Attachments;
 
 namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 {
@@ -15,17 +17,20 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
   {
     private readonly IMeetingUsersRepository _meetingUsersRepository;
     private readonly IMeetingChatMessagesRepository _meetingChatMessagesRepository;
+    private readonly IAttachmentsRepository _attachmentsRepository;
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
 
     public AddMeetingChatMessageCommandHandler(
       IMeetingUsersRepository meetingUsersRepository,
       IMeetingChatMessagesRepository meetingChatMessagesRepository,
+      IAttachmentsRepository attachmentsRepository,
       IMediator mediator,
       IMapper mapper)
     {
       _meetingUsersRepository = meetingUsersRepository;
       _meetingChatMessagesRepository = meetingChatMessagesRepository;
+      _attachmentsRepository = attachmentsRepository;
       _mediator = mediator;
       _mapper = mapper;
     }
@@ -39,11 +44,24 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
         throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var message = new MeetingChatMessage(request.Message, DateTimeOffset.UtcNow, request.AttachmentUrl, meetingUser.UserId, meetingUser.MeetingId);
-      await _meetingChatMessagesRepository.Add(message);
+      using (var transaction = _meetingChatMessagesRepository.BeginTransaction())
+      {
+        Attachment attachment = null;
 
-      await _mediator.Publish(new MessageSentEvent(message.Id, message.Message, message.Date, message.AttachmentUrl, message.UserId, message.MeetingId));
-      return _mapper.Map<MeetingChatMessageDto>(message);
+        if (request.AttachmentUrl != null)
+        {
+          attachment = new Attachment(AttachmentTypes.Image, request.AttachmentUrl);
+          await _attachmentsRepository.Add(attachment);
+        }
+
+        var message = new MeetingChatMessage(request.Message, DateTimeOffset.UtcNow, attachment?.Id, meetingUser.UserId, meetingUser.MeetingId);
+        await _meetingChatMessagesRepository.Add(message);
+
+        transaction.Commit();
+
+        await _mediator.Publish(new MessageSentEvent(message.Id, message.Message, message.Date, attachment?.Url, message.UserId, message.MeetingId));
+        return _mapper.Map<MeetingChatMessageDto>(message);
+      }
     }
   }
 }

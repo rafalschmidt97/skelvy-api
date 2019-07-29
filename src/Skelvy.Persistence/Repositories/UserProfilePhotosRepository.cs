@@ -14,9 +14,10 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
-    public async Task<IList<UserProfilePhoto>> FindAllByProfileId(int profileId)
+    public async Task<IList<UserProfilePhoto>> FindAllWithAttachmentByProfileId(int profileId)
     {
       return await Context.UserProfilePhotos
+        .Include(x => x.Attachment)
         .Where(x => x.ProfileId == profileId)
         .ToListAsync();
     }
@@ -34,7 +35,7 @@ namespace Skelvy.Persistence.Repositories
       await SaveChanges();
     }
 
-    public async Task AddRange(IEnumerable<UserProfilePhoto> photos)
+    public async Task AddRange(IList<UserProfilePhoto> photos)
     {
       await Context.UserProfilePhotos.AddRangeAsync(photos);
       await SaveChanges();

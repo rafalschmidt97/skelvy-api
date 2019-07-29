@@ -19,7 +19,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IUserProfilesRepository _profilesRepository;
-    private readonly IUserProfilePhotosRepository _profilePhotosRepository;
     private readonly IFacebookService _facebookService;
     private readonly ITokenService _tokenService;
     private readonly IMediator _mediator;
@@ -28,7 +27,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     public SignInWithFacebookCommandHandler(
       IUsersRepository usersRepository,
       IUserProfilesRepository profilesRepository,
-      IUserProfilePhotosRepository profilePhotosRepository,
       IFacebookService facebookService,
       ITokenService tokenService,
       IMediator mediator,
@@ -36,7 +34,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
     {
       _usersRepository = usersRepository;
       _profilesRepository = profilesRepository;
-      _profilePhotosRepository = profilePhotosRepository;
       _facebookService = facebookService;
       _tokenService = tokenService;
       _mediator = mediator;
@@ -54,7 +51,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         var details = await _facebookService.GetBody<dynamic>(
           "me",
           request.AuthToken,
-          "fields=birthday,email,first_name,gender,picture.width(512).height(512){url}");
+          "fields=birthday,email,first_name,gender");
 
         var email = (string)details.email;
 
@@ -138,12 +135,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
           user.Id);
 
         await _profilesRepository.Add(profile);
-
-        if (details.picture != null)
-        {
-          var photo = new UserProfilePhoto((string)details.picture.data.url, 1, profile.Id);
-          await _profilePhotosRepository.Add(photo);
-        }
 
         transaction.Commit();
       }

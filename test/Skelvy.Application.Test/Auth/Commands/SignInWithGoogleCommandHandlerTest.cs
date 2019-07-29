@@ -51,7 +51,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -78,7 +77,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -99,7 +97,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -126,7 +123,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -145,7 +141,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -164,7 +159,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -218,8 +212,6 @@ namespace Skelvy.Application.Test.Auth.Commands
       graphResponse.name.givenName = "Example";
       graphResponse.birthday = "1997-04-22";
       graphResponse.gender = "male";
-      graphResponse.image = new ExpandoObject();
-      graphResponse.image.url = "Url";
       return graphResponse;
     }
   }

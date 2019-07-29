@@ -18,7 +18,8 @@ namespace Skelvy.Application.Test.Users.Commands
       var dbContext = InitializedDbContext();
       var handler = new UpdateUserProfileCommandHandler(
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext));
+        new UserProfilePhotosRepository(dbContext),
+        new AttachmentsRepository(dbContext));
 
       await handler.Handle(request);
     }
@@ -30,7 +31,8 @@ namespace Skelvy.Application.Test.Users.Commands
       var dbContext = DbContext();
       var handler = new UpdateUserProfileCommandHandler(
         new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext));
+        new UserProfilePhotosRepository(dbContext),
+        new AttachmentsRepository(dbContext));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
