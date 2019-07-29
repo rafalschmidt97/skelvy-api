@@ -10,30 +10,30 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
 {
   public class FindMeetingChatMessagesQueryHandler : QueryHandler<FindMeetingChatMessagesQuery, IList<MeetingChatMessageDto>>
   {
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingChatMessagesRepository _chatMessagesRepository;
     private readonly IMapper _mapper;
 
     public FindMeetingChatMessagesQueryHandler(
-      IMeetingUsersRepository meetingUsersRepository,
+      IGroupUsersRepository groupUsersRepository,
       IMeetingChatMessagesRepository chatMessagesRepository,
       IMapper mapper)
     {
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupUsersRepository = groupUsersRepository;
       _chatMessagesRepository = chatMessagesRepository;
       _mapper = mapper;
     }
 
     public override async Task<IList<MeetingChatMessageDto>> Handle(FindMeetingChatMessagesQuery request)
     {
-      var meetingUser = await _meetingUsersRepository.FindOneByUserId(request.UserId);
+      var meetingUser = await _groupUsersRepository.FindOneByUserId(request.UserId);
 
       if (meetingUser == null)
       {
-        throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var messagesBefore = await _chatMessagesRepository.FindPageBeforeByMeetingId(meetingUser.MeetingId, request.BeforeDate);
+      var messagesBefore = await _chatMessagesRepository.FindPageBeforeByMeetingId(meetingUser.GroupId, request.BeforeDate);
       return _mapper.Map<IList<MeetingChatMessageDto>>(messagesBefore);
     }
   }

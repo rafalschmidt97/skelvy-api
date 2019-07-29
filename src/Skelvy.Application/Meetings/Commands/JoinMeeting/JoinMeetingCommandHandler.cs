@@ -19,7 +19,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingRequestDrinkTypesRepository _meetingRequestDrinkTypesRepository;
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMediator _mediator;
     private readonly ILogger<JoinMeetingCommandHandler> _logger;
 
@@ -28,7 +28,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingRequestDrinkTypesRepository meetingRequestDrinkTypesRepository,
-      IMeetingUsersRepository meetingUsersRepository,
+      IGroupUsersRepository groupUsersRepository,
       IMediator mediator,
       ILogger<JoinMeetingCommandHandler> logger)
     {
@@ -36,7 +36,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
       _meetingRequestDrinkTypesRepository = meetingRequestDrinkTypesRepository;
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupUsersRepository = groupUsersRepository;
       _mediator = mediator;
       _logger = logger;
     }
@@ -83,7 +83,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
           $"Entity {nameof(MeetingRequest)}({nameof(request.UserId)}={request.UserId}) already exists.");
       }
 
-      var userMeetingExists = await _meetingUsersRepository.ExistsOneByUserId(request.UserId);
+      var userMeetingExists = await _groupUsersRepository.ExistsOneByUserId(request.UserId);
 
       if (userMeetingExists)
       {
@@ -94,7 +94,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
 
     private async Task JoinUserToMeeting(User user, Meeting meeting)
     {
-      using (var transaction = _meetingUsersRepository.BeginTransaction())
+      using (var transaction = _groupUsersRepository.BeginTransaction())
       {
         try
         {
@@ -102,7 +102,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
           var request = await CreateNewMeetingRequest(user, meeting);
           var meetingUser = await AddUserToMeeting(request, meeting);
           transaction.Commit();
-          await _mediator.Publish(new UserJoinedMeetingEvent(meetingUser.UserId, meetingUser.MeetingId));
+          await _mediator.Publish(new UserJoinedMeetingEvent(meetingUser.UserId, meetingUser.GroupId));
         }
         catch (Exception exception)
         {
@@ -126,8 +126,8 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
 
     private async Task<MeetingRequest> CreateNewMeetingRequest(User user, Meeting meeting)
     {
-      var minBirthday = meeting.Users.Select(x => x.User.Profile.Birthday).Min();
-      var maxBirthday = meeting.Users.Select(x => x.User.Profile.Birthday).Max();
+      var minBirthday = meeting.Group.Users.Select(x => x.User.Profile.Birthday).Min();
+      var maxBirthday = meeting.Group.Users.Select(x => x.User.Profile.Birthday).Max();
 
       var meetingRequest = new MeetingRequest(
         meeting.Date.AddDays(-1),
@@ -145,10 +145,10 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       return meetingRequest;
     }
 
-    private async Task<MeetingUser> AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
+    private async Task<GroupUser> AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
     {
-      var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
-      await _meetingUsersRepository.Add(meetingUser);
+      var meetingUser = new GroupUser(meeting.Id, newRequest.UserId, newRequest.Id);
+      await _groupUsersRepository.Add(meetingUser);
       newRequest.MarkAsFound();
       await _meetingRequestsRepository.Update(newRequest);
       return meetingUser;

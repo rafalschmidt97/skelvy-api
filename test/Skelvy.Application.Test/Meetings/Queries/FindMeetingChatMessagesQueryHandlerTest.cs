@@ -16,7 +16,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingChatMessagesQuery(2, DateTimeOffset.UtcNow);
       var dbContext = InitializedDbContext();
       var handler = new FindMeetingChatMessagesQueryHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
         Mapper());
 
@@ -32,7 +32,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingChatMessagesQuery(1, DateTimeOffset.UtcNow);
       var dbContext = DbContext();
       var handler = new FindMeetingChatMessagesQueryHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
         Mapper());
 

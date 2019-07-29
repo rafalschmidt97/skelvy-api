@@ -13,21 +13,21 @@ namespace Skelvy.Application.Meetings.Events.MessageSent
   {
     private readonly INotificationsService _notifications;
     private readonly IUsersRepository _usersRepository;
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
 
     public MessageSentEventHandler(
       INotificationsService notifications,
       IUsersRepository usersRepository,
-      IMeetingUsersRepository meetingUsersRepository)
+      IGroupUsersRepository groupUsersRepository)
     {
       _notifications = notifications;
       _usersRepository = usersRepository;
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupUsersRepository = groupUsersRepository;
     }
 
     public override async Task<Unit> Handle(MessageSentEvent request)
     {
-      var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(request.MeetingId);
+      var meetingUsers = await _groupUsersRepository.FindAllByGroupId(request.MeetingId);
       var broadcastUsersId = meetingUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
 
       var sender = await _usersRepository.FindOneWithDetails(request.UserId);

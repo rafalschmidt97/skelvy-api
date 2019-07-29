@@ -15,20 +15,23 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
   {
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingsRepository _meetingsRepository;
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupsRepository _groupsRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMediator _mediator;
     private readonly ILogger<MatchMeetingRequestsCommandHandler> _logger;
 
     public MatchMeetingRequestsCommandHandler(
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingsRepository meetingsRepository,
-      IMeetingUsersRepository meetingUsersRepository,
+      IGroupsRepository groupsRepository,
+      IGroupUsersRepository groupUsersRepository,
       IMediator mediator,
       ILogger<MatchMeetingRequestsCommandHandler> logger)
     {
       _meetingRequestsRepository = meetingRequestsRepository;
       _meetingsRepository = meetingsRepository;
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupsRepository = groupsRepository;
+      _groupUsersRepository = groupUsersRepository;
       _mediator = mediator;
       _logger = logger;
     }
@@ -56,20 +59,24 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
       {
         try
         {
+          var group = new Group();
+          await _groupsRepository.Add(group);
+
           var meeting = new Meeting(
             request1.FindRequiredCommonDate(request2),
             request1.Latitude,
             request1.Longitude,
+            group.Id,
             request1.FindRequiredCommonDrinkTypeId(request2));
 
           await _meetingsRepository.Add(meeting);
-          var meetingUsers = new[]
+          var groupUsers = new[]
           {
-            new MeetingUser(meeting.Id, request1.UserId, request1.Id),
-            new MeetingUser(meeting.Id, request2.UserId, request2.Id),
+            new GroupUser(group.Id, request1.UserId, request1.Id),
+            new GroupUser(group.Id, request2.UserId, request2.Id),
           };
 
-          await _meetingUsersRepository.AddRange(meetingUsers);
+          await _groupUsersRepository.AddRange(groupUsers);
 
           request1.MarkAsFound();
           request2.MarkAsFound();

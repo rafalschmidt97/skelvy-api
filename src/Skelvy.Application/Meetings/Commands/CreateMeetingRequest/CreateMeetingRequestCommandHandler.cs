@@ -25,7 +25,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingRequestDrinkTypesRepository _meetingRequestDrinkTypesRepository;
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupsRepository _groupsRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMediator _mediator;
     private readonly ILogger<CreateMeetingRequestCommandHandler> _logger;
 
@@ -35,7 +36,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingRequestDrinkTypesRepository meetingRequestDrinkTypesRepository,
-      IMeetingUsersRepository meetingUsersRepository,
+      IGroupsRepository groupsRepository,
+      IGroupUsersRepository groupUsersRepository,
       IMediator mediator,
       ILogger<CreateMeetingRequestCommandHandler> logger)
     {
@@ -44,7 +46,8 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
       _meetingRequestDrinkTypesRepository = meetingRequestDrinkTypesRepository;
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupsRepository = groupsRepository;
+      _groupUsersRepository = groupUsersRepository;
       _mediator = mediator;
       _logger = logger;
     }
@@ -123,17 +126,17 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
 
     private async Task AddUserToMeeting(MeetingRequest newRequest, Meeting meeting)
     {
-      using (var transaction = _meetingUsersRepository.BeginTransaction())
+      using (var transaction = _groupUsersRepository.BeginTransaction())
       {
         try
         {
-          var meetingUser = new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id);
-          await _meetingUsersRepository.Add(meetingUser);
+          var meetingUser = new GroupUser(meeting.Id, newRequest.UserId, newRequest.Id);
+          await _groupUsersRepository.Add(meetingUser);
           newRequest.MarkAsFound();
           await _meetingRequestsRepository.Update(newRequest);
 
           transaction.Commit();
-          await _mediator.Publish(new UserJoinedMeetingEvent(meetingUser.UserId, meetingUser.MeetingId));
+          await _mediator.Publish(new UserJoinedMeetingEvent(meetingUser.UserId, meetingUser.GroupId));
         }
         catch (Exception exception)
         {
@@ -150,21 +153,25 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       {
         try
         {
+          var group = new Group();
+          await _groupsRepository.Add(group);
+
           var meeting = new Meeting(
             newRequest.FindRequiredCommonDate(existingRequest),
             newRequest.Latitude,
             newRequest.Longitude,
+            group.Id,
             newRequest.FindRequiredCommonDrinkTypeId(existingRequest));
 
           await _meetingsRepository.Add(meeting);
 
-          var meetingUsers = new[]
+          var groupUsers = new[]
           {
-            new MeetingUser(meeting.Id, newRequest.UserId, newRequest.Id),
-            new MeetingUser(meeting.Id, existingRequest.UserId, existingRequest.Id),
+            new GroupUser(group.Id, newRequest.UserId, newRequest.Id),
+            new GroupUser(group.Id, existingRequest.UserId, existingRequest.Id),
           };
 
-          await _meetingUsersRepository.AddRange(meetingUsers);
+          await _groupUsersRepository.AddRange(groupUsers);
 
           newRequest.MarkAsFound();
           existingRequest.MarkAsFound();

@@ -10,6 +10,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   {
     Task<bool> ExistsOne(int id);
     Task<Meeting> FindOneWithUsersDetailsAndDrinkByUserId(int userId);
+    Task<Meeting> FindOneWithGroupByGroupId(int groupId);
     Task<IList<Meeting>> FindAllAfterOrEqualDate(DateTimeOffset maxDate);
     Task<Meeting> FindOneMatchingUserRequest(User user, MeetingRequest request);
     Task<IList<Meeting>> FindAllCloseToPreferencesWithUsersDetails(int userId, double latitude, double longitude);

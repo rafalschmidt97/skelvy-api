@@ -9,7 +9,7 @@ namespace Skelvy.Persistence.Configurations
     public void Configure(EntityTypeBuilder<MeetingChatMessage> builder)
     {
       builder.HasOne(x => x.User).WithMany(x => x.MeetingChatMessages).OnDelete(DeleteBehavior.Restrict);
-      builder.HasOne(x => x.Meeting).WithMany(x => x.ChatMessages).OnDelete(DeleteBehavior.Restrict);
+      builder.HasOne(x => x.Group).WithMany(x => x.ChatMessages).OnDelete(DeleteBehavior.Restrict);
       builder.HasOne(x => x.Attachment).WithMany().OnDelete(DeleteBehavior.Restrict);
 
       builder.HasIndex(e => e.Date);

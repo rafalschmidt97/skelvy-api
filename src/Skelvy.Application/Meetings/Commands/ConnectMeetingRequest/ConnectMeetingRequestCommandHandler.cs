@@ -19,7 +19,8 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingRequestDrinkTypesRepository _meetingRequestDrinkTypesRepository;
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupsRepository _groupsRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMediator _mediator;
     private readonly ILogger<ConnectMeetingRequestCommandHandler> _logger;
 
@@ -28,7 +29,8 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingRequestDrinkTypesRepository meetingRequestDrinkTypesRepository,
-      IMeetingUsersRepository meetingUsersRepository,
+      IGroupsRepository groupsRepository,
+      IGroupUsersRepository groupUsersRepository,
       IMediator mediator,
       ILogger<ConnectMeetingRequestCommandHandler> logger)
     {
@@ -36,7 +38,8 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
       _meetingRequestDrinkTypesRepository = meetingRequestDrinkTypesRepository;
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupsRepository = groupsRepository;
+      _groupUsersRepository = groupUsersRepository;
       _mediator = mediator;
       _logger = logger;
     }
@@ -83,7 +86,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
           $"Entity {nameof(MeetingRequest)}({nameof(request.UserId)}={request.UserId}) already exists.");
       }
 
-      var userMeetingExists = await _meetingUsersRepository.ExistsOneByUserId(request.UserId);
+      var userMeetingExists = await _groupUsersRepository.ExistsOneByUserId(request.UserId);
 
       if (userMeetingExists)
       {
@@ -94,7 +97,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
 
     private async Task ConnectUsersToMeeting(User user, MeetingRequest connectingMeetingRequest)
     {
-      using (var transaction = _meetingUsersRepository.BeginTransaction())
+      using (var transaction = _groupUsersRepository.BeginTransaction())
       {
         try
         {
@@ -149,21 +152,25 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
 
     private async Task<Meeting> CreateNewMeeting(MeetingRequest request1, MeetingRequest request2)
     {
+      var group = new Group();
+      await _groupsRepository.Add(group);
+
       var meeting = new Meeting(
         request1.FindRequiredCommonDate(request2),
         request1.Latitude,
         request1.Longitude,
+        group.Id,
         request1.FindRequiredCommonDrinkTypeId(request2));
 
       await _meetingsRepository.Add(meeting);
 
-      var meetingUsers = new[]
+      var groupUsers = new[]
       {
-        new MeetingUser(meeting.Id, request1.UserId, request1.Id),
-        new MeetingUser(meeting.Id, request2.UserId, request2.Id),
+        new GroupUser(group.Id, request1.UserId, request1.Id),
+        new GroupUser(group.Id, request2.UserId, request2.Id),
       };
 
-      await _meetingUsersRepository.AddRange(meetingUsers);
+      await _groupUsersRepository.AddRange(groupUsers);
 
       request1.MarkAsFound();
       request2.MarkAsFound();

@@ -4,25 +4,25 @@ namespace Skelvy.Domain.Entities
 {
   public class MeetingChatMessage
   {
-    public MeetingChatMessage(string message, DateTimeOffset date, int? attachmentId, int userId, int meetingId)
+    public MeetingChatMessage(string message, DateTimeOffset date, int? attachmentId, int userId, int groupId)
     {
       Message = message;
       Date = date;
       AttachmentId = attachmentId;
       UserId = userId;
-      MeetingId = meetingId;
+      GroupId = groupId;
     }
 
-    public MeetingChatMessage(int id, string message, DateTimeOffset date, int? attachmentId, int userId, int meetingId, User user, Meeting meeting, Attachment attachment)
+    public MeetingChatMessage(int id, string message, DateTimeOffset date, int? attachmentId, int userId, int groupId, User user, Group group, Attachment attachment)
     {
       Id = id;
       Message = message;
       Date = date;
       AttachmentId = attachmentId;
       UserId = userId;
-      MeetingId = meetingId;
+      GroupId = groupId;
       User = user;
-      Meeting = meeting;
+      Group = group;
       Attachment = attachment;
     }
 
@@ -31,9 +31,10 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset Date { get; private set; }
     public int? AttachmentId { get; private set; }
     public int UserId { get; private set; }
-    public int MeetingId { get; private set; }
+    public int GroupId { get; private set; }
+
     public User User { get; private set; }
-    public Meeting Meeting { get; private set; }
+    public Group Group { get; private set; }
     public Attachment Attachment { get; private set; }
   }
 }

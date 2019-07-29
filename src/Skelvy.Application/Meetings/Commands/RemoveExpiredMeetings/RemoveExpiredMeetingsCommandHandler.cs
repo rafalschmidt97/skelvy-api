@@ -12,18 +12,18 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
   public class RemoveExpiredMeetingsCommandHandler : CommandHandler<RemoveExpiredMeetingsCommand>
   {
     private readonly IMeetingsRepository _meetingsRepository;
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMediator _mediator;
 
     public RemoveExpiredMeetingsCommandHandler(
       IMeetingsRepository meetingsRepository,
-      IMeetingUsersRepository meetingUsersRepository,
+      IGroupUsersRepository groupUsersRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
       IMediator mediator)
     {
       _meetingsRepository = meetingsRepository;
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupUsersRepository = groupUsersRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
       _mediator = mediator;
     }
@@ -40,7 +40,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
         if (meetingsToRemove.Count != 0)
         {
           var meetingsId = meetingsToRemove.Select(x => x.Id);
-          var meetingUsers = await _meetingUsersRepository.FindAllWithMeetingRequestByMeetingsId(meetingsId);
+          var meetingUsers = await _groupUsersRepository.FindAllWithRequestByGroupsId(meetingsId);
 
           meetingsToRemove.ForEach(x => x.Expire());
           var meetingUsersRequest = meetingUsers.Select(x => x.MeetingRequest).ToList();

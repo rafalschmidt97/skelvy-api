@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = InitializedDbContext();
       var handler = new RemoveExpiredMeetingsCommandHandler(
         new MeetingsRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         _mediator.Object);
 

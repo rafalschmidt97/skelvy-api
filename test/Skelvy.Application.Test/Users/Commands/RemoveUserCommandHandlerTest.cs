@@ -24,7 +24,8 @@ namespace Skelvy.Application.Test.Users.Commands
       var dbContext = InitializedDbContext();
       var handler = new RemoveUserCommandHandler(
         new UsersRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         _mediator.Object);
@@ -39,7 +40,8 @@ namespace Skelvy.Application.Test.Users.Commands
       var dbContext = DbContext();
       var handler = new RemoveUserCommandHandler(
         new UsersRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         _mediator.Object);

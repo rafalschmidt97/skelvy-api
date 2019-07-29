@@ -27,7 +27,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new MatchMeetingRequestsCommandHandler(
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         _mediator.Object,
         _logger.Object);
 

@@ -19,7 +19,8 @@ namespace Skelvy.Persistence
     public DbSet<MeetingRequest> MeetingRequests { get; private set; }
     public DbSet<MeetingRequestDrinkType> MeetingRequestDrinkTypes { get; private set; }
     public DbSet<Meeting> Meetings { get; private set; }
-    public DbSet<MeetingUser> MeetingUsers { get; private set; }
+    public DbSet<Group> Groups { get; private set; }
+    public DbSet<GroupUser> GroupUsers { get; private set; }
     public DbSet<MeetingChatMessage> MeetingChatMessages { get; private set; }
     public DbSet<BlockedUser> BlockedUsers { get; private set; }
     public DbSet<Attachment> Attachments { get; private set; }

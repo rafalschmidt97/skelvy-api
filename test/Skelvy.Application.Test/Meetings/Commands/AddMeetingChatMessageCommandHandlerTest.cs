@@ -25,7 +25,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new AddMeetingChatMessageCommand("Hello World", null, 2);
       var dbContext = InitializedDbContext();
       var handler = new AddMeetingChatMessageCommandHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
         new AttachmentsRepository(dbContext),
         _mediator.Object,
@@ -43,7 +43,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new AddMeetingChatMessageCommand("Hello World", null, 2);
       var dbContext = DbContext();
       var handler = new AddMeetingChatMessageCommandHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
         new AttachmentsRepository(dbContext),
         _mediator.Object,

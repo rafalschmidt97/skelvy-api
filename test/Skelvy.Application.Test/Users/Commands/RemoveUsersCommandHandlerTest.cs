@@ -19,7 +19,7 @@ namespace Skelvy.Application.Test.Users.Commands
         new UserProfilePhotosRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinkTypesRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingChatMessagesRepository(dbContext),
         new BlockedUsersRepository(dbContext),
         new AttachmentsRepository(dbContext));

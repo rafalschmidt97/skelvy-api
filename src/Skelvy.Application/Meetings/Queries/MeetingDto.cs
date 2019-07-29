@@ -16,6 +16,7 @@ namespace Skelvy.Application.Meetings.Queries
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string City { get; set; }
+    public int GroupId { get; set; }
     public IList<UserDto> Users { get; set; }
     public DrinkTypeDto DrinkType { get; set; }
 
@@ -24,7 +25,7 @@ namespace Skelvy.Application.Meetings.Queries
       configuration.CreateMap<Meeting, MeetingDto>()
         .ForMember(
           destination => destination.Users,
-          options => options.MapFrom(x => x.Users.Select(y => y.User)))
+          options => options.MapFrom(x => x.Group.Users.Select(y => y.User)))
         .ForMember(
           destination => destination.City,
           options => options.Ignore());

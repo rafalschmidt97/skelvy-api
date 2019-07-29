@@ -6,48 +6,34 @@ using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
-  public class Meeting : ICreatableEntity, IModifiableEntity, IRemovableEntity
+  public class Group : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public Meeting(DateTimeOffset date, double latitude, double longitude, int groupId, int drinkTypeId)
+    public Group()
     {
-      Date = date;
-      Latitude = latitude;
-      Longitude = longitude;
-      GroupId = groupId;
-      DrinkTypeId = drinkTypeId;
-
       CreatedAt = DateTimeOffset.UtcNow;
+      Users = new List<GroupUser>();
+      ChatMessages = new List<MeetingChatMessage>();
     }
 
-    public Meeting(int id, DateTimeOffset date, double latitude, double longitude, int groupId, int drinkTypeId, DateTimeOffset createdAt, DateTimeOffset? modifiedAt, bool isRemoved, string removedReason, Group group, DrinkType drinkType)
+    public Group(int id, DateTimeOffset createdAt, DateTimeOffset? modifiedAt, bool isRemoved, string removedReason, IList<GroupUser> users, IList<MeetingChatMessage> chatMessages)
     {
       Id = id;
-      Date = date;
-      Latitude = latitude;
-      Longitude = longitude;
-      GroupId = groupId;
-      DrinkTypeId = drinkTypeId;
       CreatedAt = createdAt;
       ModifiedAt = modifiedAt;
       IsRemoved = isRemoved;
       RemovedReason = removedReason;
-      Group = group;
-      DrinkType = drinkType;
+      Users = users;
+      ChatMessages = chatMessages;
     }
 
     public int Id { get; private set; }
-    public DateTimeOffset Date { get; private set; }
-    public double Latitude { get; private set; }
-    public double Longitude { get; private set; }
-    public int GroupId { get; private set; }
-    public int DrinkTypeId { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? ModifiedAt { get; private set; }
     public bool IsRemoved { get; private set; }
     public string RemovedReason { get; private set; }
 
-    public Group Group { get; private set; }
-    public DrinkType DrinkType { get; private set; }
+    public IList<GroupUser> Users { get; set; }
+    public IList<MeetingChatMessage> ChatMessages { get; private set; }
 
     public void Abort()
     {

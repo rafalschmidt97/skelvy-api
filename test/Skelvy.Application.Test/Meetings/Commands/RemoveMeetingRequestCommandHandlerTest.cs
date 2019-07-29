@@ -14,7 +14,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new RemoveMeetingRequestCommand(1);
       var dbContext = InitializedDbContext();
       var handler = new RemoveMeetingRequestCommandHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext));
 
       await handler.Handle(request);
@@ -26,7 +26,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new RemoveMeetingRequestCommand(2);
       var dbContext = InitializedDbContext();
       var handler = new RemoveMeetingRequestCommandHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext));
 
       await Assert.ThrowsAsync<ConflictException>(() =>
@@ -39,7 +39,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new RemoveMeetingRequestCommand(1);
       var dbContext = DbContext();
       var handler = new RemoveMeetingRequestCommandHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

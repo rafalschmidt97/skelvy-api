@@ -11,20 +11,20 @@ namespace Skelvy.Application.Meetings.Events.MeetingAborted
   public class MeetingAbortedEventHandler : EventHandler<MeetingAbortedEvent>
   {
     private readonly INotificationsService _notifications;
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
 
     public MeetingAbortedEventHandler(
       INotificationsService notifications,
-      IMeetingUsersRepository meetingUsersRepository)
+      IGroupUsersRepository groupUsersRepository)
     {
       _notifications = notifications;
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupUsersRepository = groupUsersRepository;
     }
 
     public override async Task<Unit> Handle(MeetingAbortedEvent request)
     {
-      var meetingUsers = await _meetingUsersRepository
-        .FindAllWithRemovedAfterOrEqualAbortedAtByMeetingId(request.MeetingId, request.UserLeftAt);
+      var meetingUsers = await _groupUsersRepository
+        .FindAllWithRemovedAfterOrEqualAbortedAtByGroupId(request.MeetingId, request.UserLeftAt);
 
       var broadcastUsersId = meetingUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
       await _notifications.BroadcastMeetingAborted(new MeetingAbortedAction(request.UserId, broadcastUsersId));

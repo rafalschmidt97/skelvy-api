@@ -11,19 +11,19 @@ namespace Skelvy.Application.Meetings.Events.UserLeftMeeting
   public class UserLeftMeetingEventHandler : EventHandler<UserLeftMeetingEvent>
   {
     private readonly INotificationsService _notifications;
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
 
     public UserLeftMeetingEventHandler(
       INotificationsService notifications,
-      IMeetingUsersRepository meetingUsersRepository)
+      IGroupUsersRepository groupUsersRepository)
     {
       _notifications = notifications;
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupUsersRepository = groupUsersRepository;
     }
 
     public override async Task<Unit> Handle(UserLeftMeetingEvent request)
     {
-      var meetingUsers = await _meetingUsersRepository.FindAllByMeetingId(request.MeetingId);
+      var meetingUsers = await _groupUsersRepository.FindAllByGroupId(request.MeetingId);
       var broadcastUsersId = meetingUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
       await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingAction(request.UserId, broadcastUsersId));
 
