@@ -19,7 +19,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IUserProfilesRepository _profilesRepository;
-    private readonly IUserProfilePhotosRepository _profilePhotosRepository;
     private readonly IGoogleService _googleService;
     private readonly ITokenService _tokenService;
     private readonly IMediator _mediator;
@@ -28,7 +27,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     public SignInWithGoogleCommandHandler(
       IUsersRepository usersRepository,
       IUserProfilesRepository profilesRepository,
-      IUserProfilePhotosRepository profilePhotosRepository,
       IGoogleService googleService,
       ITokenService tokenService,
       IMediator mediator,
@@ -36,7 +34,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     {
       _usersRepository = usersRepository;
       _profilesRepository = profilesRepository;
-      _profilePhotosRepository = profilePhotosRepository;
       _googleService = googleService;
       _tokenService = tokenService;
       _mediator = mediator;
@@ -54,7 +51,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         var details = await _googleService.GetBody<dynamic>(
           "plus/v1/people/me",
           request.AuthToken,
-          "fields=birthday,name/givenName,emails/value,gender,image/url");
+          "fields=birthday,name/givenName,emails/value,gender");
 
         var email = (string)details.emails[0].value;
 
@@ -138,12 +135,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           user.Id);
 
         await _profilesRepository.Add(profile);
-
-        if (details.image != null)
-        {
-          var photo = new UserProfilePhoto((string)details.image.url, 1, profile.Id);
-          await _profilePhotosRepository.Add(photo);
-        }
 
         transaction.Commit();
       }

@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Uploads.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Attachments;
 
 namespace Skelvy.Application.Users.Commands.UpdateUserProfile
 {
@@ -13,11 +15,16 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
   {
     private readonly IUserProfilesRepository _profilesRepository;
     private readonly IUserProfilePhotosRepository _profilePhotosRepository;
+    private readonly IAttachmentsRepository _attachmentsRepository;
 
-    public UpdateUserProfileCommandHandler(IUserProfilesRepository profilesRepository, IUserProfilePhotosRepository profilePhotosRepository)
+    public UpdateUserProfileCommandHandler(
+      IUserProfilesRepository profilesRepository,
+      IUserProfilePhotosRepository profilePhotosRepository,
+      IAttachmentsRepository attachmentsRepository)
     {
       _profilesRepository = profilesRepository;
       _profilePhotosRepository = profilePhotosRepository;
+      _attachmentsRepository = attachmentsRepository;
     }
 
     public override async Task<Unit> Handle(UpdateUserProfileCommand request)
@@ -40,22 +47,21 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       return Unit.Value;
     }
 
-    private async Task UpdatePhotos(UserProfile profile, IEnumerable<UpdateUserProfilePhotos> photos)
+    private async Task UpdatePhotos(UserProfile profile, IList<UpdateUserProfilePhotos> photos)
     {
-      // Remove old photos
-      var oldPhotos = await _profilePhotosRepository.FindAllByProfileId(profile.Id);
-      await _profilePhotosRepository.RemoveRange(oldPhotos);
+      var oldPhotos = await _profilePhotosRepository.FindAllWithAttachmentByProfileId(profile.Id);
 
-      // Add new photos
-      var newPhotos = PreparePhotos(photos, profile);
+      if (oldPhotos.Count > 0)
+      {
+        await _profilePhotosRepository.RemoveRange(oldPhotos);
+        var oldAttachments = oldPhotos.Select(x => x.Attachment).ToList();
+        await _attachmentsRepository.RemoveRange(oldAttachments);
+      }
+
+      var newAttachments = photos.Select((photo, index) => new Attachment(AttachmentTypes.Image, photo.Url)).ToList();
+      await _attachmentsRepository.AddRange(newAttachments);
+      var newPhotos = newAttachments.Select((attachment, index) => new UserProfilePhoto(attachment.Id, index + 1, profile.Id)).ToList();
       await _profilePhotosRepository.AddRange(newPhotos);
-    }
-
-    private static IEnumerable<UserProfilePhoto> PreparePhotos(
-      IEnumerable<UpdateUserProfilePhotos> photos,
-      UserProfile profile)
-    {
-      return photos.Select((photo, index) => new UserProfilePhoto(photo.Url, index + 1, profile.Id));
     }
   }
 }

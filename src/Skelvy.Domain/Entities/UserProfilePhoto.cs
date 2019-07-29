@@ -2,27 +2,29 @@ namespace Skelvy.Domain.Entities
 {
   public class UserProfilePhoto
   {
-    public UserProfilePhoto(string url, int order, int profileId)
+    public UserProfilePhoto(int attachmentId, int order, int profileId)
     {
-      Url = url;
+      AttachmentId = attachmentId;
       Order = order;
       ProfileId = profileId;
     }
 
-    public UserProfilePhoto(int id, string url, int order, int profileId, UserProfile profile)
+    public UserProfilePhoto(int id, int attachmentId, int order, int profileId, UserProfile profile, Attachment attachment)
     {
       Id = id;
-      Url = url;
+      AttachmentId = attachmentId;
       Order = order;
       ProfileId = profileId;
       Profile = profile;
+      Attachment = attachment;
     }
 
     public int Id { get; private set; }
-    public string Url { get; private set; }
+    public int AttachmentId { get; private set; }
     public int Order { get; private set; }
     public int ProfileId { get; private set; }
 
     public UserProfile Profile { get; private set; }
+    public Attachment Attachment { get; private set; }
   }
 }

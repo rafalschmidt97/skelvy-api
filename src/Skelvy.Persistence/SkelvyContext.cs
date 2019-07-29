@@ -22,6 +22,7 @@ namespace Skelvy.Persistence
     public DbSet<MeetingUser> MeetingUsers { get; private set; }
     public DbSet<MeetingChatMessage> MeetingChatMessages { get; private set; }
     public DbSet<BlockedUser> BlockedUsers { get; private set; }
+    public DbSet<Attachment> Attachments { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
