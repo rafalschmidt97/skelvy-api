@@ -141,9 +141,10 @@ namespace Skelvy.Persistence.Repositories
           foreach (var request in filteredRequests)
           {
             var userPhotos = await Context.UserProfilePhotos
-                .Where(x => x.ProfileId == request.User.Profile.Id)
-                .OrderBy(x => x.Order)
-                .ToListAsync();
+              .Include(x => x.Attachment)
+              .Where(x => x.ProfileId == request.User.Profile.Id)
+              .OrderBy(x => x.Order)
+              .ToListAsync();
 
             request.User.Profile.Photos = userPhotos;
           }
@@ -154,6 +155,7 @@ namespace Skelvy.Persistence.Repositories
         foreach (var request in requests)
         {
           var userPhotos = await Context.UserProfilePhotos
+            .Include(x => x.Attachment)
             .Where(x => x.ProfileId == request.User.Profile.Id)
             .OrderBy(x => x.Order)
             .ToListAsync();

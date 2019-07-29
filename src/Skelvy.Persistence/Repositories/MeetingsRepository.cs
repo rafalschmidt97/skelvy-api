@@ -39,6 +39,7 @@ namespace Skelvy.Persistence.Repositories
         foreach (var user in users)
         {
           var userPhotos = await Context.UserProfilePhotos
+            .Include(x => x.Attachment)
             .Where(x => x.ProfileId == user.User.Profile.Id)
             .OrderBy(x => x.Order)
             .ToListAsync();
@@ -188,6 +189,7 @@ namespace Skelvy.Persistence.Repositories
             foreach (var meetingUser in meeting.Group.Users)
             {
               var userPhotos = await Context.UserProfilePhotos
+                .Include(x => x.Attachment)
                 .Where(x => x.ProfileId == meetingUser.User.Profile.Id)
                 .OrderBy(x => x.Order)
                 .ToListAsync();
@@ -219,6 +221,7 @@ namespace Skelvy.Persistence.Repositories
           foreach (var meetingUser in meeting.Group.Users)
           {
             var userPhotos = await Context.UserProfilePhotos
+              .Include(x => x.Attachment)
               .Where(x => x.ProfileId == meetingUser.User.Profile.Id)
               .OrderBy(x => x.Order)
               .ToListAsync();
