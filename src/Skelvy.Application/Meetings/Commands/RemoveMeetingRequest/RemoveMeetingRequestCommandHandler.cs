@@ -10,18 +10,18 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 {
   public class RemoveMeetingRequestCommandHandler : CommandHandler<RemoveMeetingRequestCommand>
   {
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingRequestsRepository _requestsRepository;
 
-    public RemoveMeetingRequestCommandHandler(IMeetingUsersRepository meetingUsersRepository, IMeetingRequestsRepository requestsRepository)
+    public RemoveMeetingRequestCommandHandler(IGroupUsersRepository groupUsersRepository, IMeetingRequestsRepository requestsRepository)
     {
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupUsersRepository = groupUsersRepository;
       _requestsRepository = requestsRepository;
     }
 
     public override async Task<Unit> Handle(RemoveMeetingRequestCommand request)
     {
-      var meetingUserExists = await _meetingUsersRepository.ExistsOneByUserId(request.UserId);
+      var meetingUserExists = await _groupUsersRepository.ExistsOneByUserId(request.UserId);
 
       if (meetingUserExists)
       {
@@ -39,7 +39,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
       {
         throw new InternalServerErrorException(
           $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusTypes.Found}' " +
-          $"while {nameof(MeetingUser)} does not exists");
+          $"while {nameof(GroupUser)} does not exists");
       }
 
       meetingRequest.Abort();

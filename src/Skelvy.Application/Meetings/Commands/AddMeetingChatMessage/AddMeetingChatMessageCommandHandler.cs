@@ -15,20 +15,20 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 {
   public class AddMeetingChatMessageCommandHandler : CommandHandlerData<AddMeetingChatMessageCommand, MeetingChatMessageDto>
   {
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingChatMessagesRepository _meetingChatMessagesRepository;
     private readonly IAttachmentsRepository _attachmentsRepository;
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
 
     public AddMeetingChatMessageCommandHandler(
-      IMeetingUsersRepository meetingUsersRepository,
+      IGroupUsersRepository groupUsersRepository,
       IMeetingChatMessagesRepository meetingChatMessagesRepository,
       IAttachmentsRepository attachmentsRepository,
       IMediator mediator,
       IMapper mapper)
     {
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupUsersRepository = groupUsersRepository;
       _meetingChatMessagesRepository = meetingChatMessagesRepository;
       _attachmentsRepository = attachmentsRepository;
       _mediator = mediator;
@@ -37,11 +37,11 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
 
     public override async Task<MeetingChatMessageDto> Handle(AddMeetingChatMessageCommand request)
     {
-      var meetingUser = await _meetingUsersRepository.FindOneByUserId(request.UserId);
+      var meetingUser = await _groupUsersRepository.FindOneByUserId(request.UserId);
 
       if (meetingUser == null)
       {
-        throw new NotFoundException($"Entity {nameof(MeetingUser)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}) not found.");
       }
 
       using (var transaction = _meetingChatMessagesRepository.BeginTransaction())
@@ -54,12 +54,12 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingChatMessage
           await _attachmentsRepository.Add(attachment);
         }
 
-        var message = new MeetingChatMessage(request.Message, DateTimeOffset.UtcNow, attachment?.Id, meetingUser.UserId, meetingUser.MeetingId);
+        var message = new MeetingChatMessage(request.Message, DateTimeOffset.UtcNow, attachment?.Id, meetingUser.UserId, meetingUser.GroupId);
         await _meetingChatMessagesRepository.Add(message);
 
         transaction.Commit();
 
-        await _mediator.Publish(new MessageSentEvent(message.Id, message.Message, message.Date, attachment?.Url, message.UserId, message.MeetingId));
+        await _mediator.Publish(new MessageSentEvent(message.Id, message.Message, message.Date, attachment?.Url, message.UserId, message.GroupId));
         return _mapper.Map<MeetingChatMessageDto>(message);
       }
     }

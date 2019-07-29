@@ -31,7 +31,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinkTypesRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         _mediator.Object,
         _logger.Object);
 
@@ -48,7 +49,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinkTypesRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         _mediator.Object,
         _logger.Object);
 
@@ -66,7 +68,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinkTypesRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         _mediator.Object,
         _logger.Object);
 
@@ -84,7 +87,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinkTypesRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         _mediator.Object,
         _logger.Object);
 
@@ -101,7 +105,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingRequestDrinkTypesRepository(dbContext),
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         _mediator.Object,
         _logger.Object);
 

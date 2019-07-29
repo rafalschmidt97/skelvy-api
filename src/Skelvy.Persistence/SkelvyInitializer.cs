@@ -197,9 +197,17 @@ namespace Skelvy.Persistence
 
       context.MeetingRequestDrinkTypes.AddRange(requestsDrinkTypes);
 
+      var groups = new[]
+      {
+        new Group(),
+      };
+
+      context.Groups.AddRange(groups);
+      context.SaveChanges();
+
       var meetings = new[]
       {
-        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, drinkTypes[0].Id),
+        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, groups[0].Id, drinkTypes[0].Id),
       };
 
       context.Meetings.AddRange(meetings);
@@ -207,11 +215,11 @@ namespace Skelvy.Persistence
 
       var meetingUsers = new[]
       {
-        new MeetingUser(meetings[0].Id, users[1].Id, requests[0].Id),
-        new MeetingUser(meetings[0].Id, users[2].Id, requests[1].Id),
+        new GroupUser(meetings[0].Id, users[1].Id, requests[0].Id),
+        new GroupUser(meetings[0].Id, users[2].Id, requests[1].Id),
       };
 
-      context.MeetingUsers.AddRange(meetingUsers);
+      context.GroupUsers.AddRange(meetingUsers);
       context.SaveChanges();
     }
 

@@ -21,7 +21,7 @@ namespace Skelvy.Persistence.Repositories
       int pageSize = 20)
     {
       var messages = await Context.MeetingChatMessages
-        .Where(x => x.MeetingId == meetingId && x.Date < beforeDate)
+        .Where(x => x.GroupId == meetingId && x.Date < beforeDate)
         .OrderByDescending(p => p.Date)
         .Take(pageSize)
         .ToListAsync();
@@ -32,7 +32,7 @@ namespace Skelvy.Persistence.Repositories
     public async Task<IList<MeetingChatMessage>> FindPageLatestByMeetingId(int meetingId, int pageSize = 20)
     {
       var messages = await Context.MeetingChatMessages
-        .Where(x => x.MeetingId == meetingId)
+        .Where(x => x.GroupId == meetingId)
         .OrderByDescending(p => p.Date)
         .Take(pageSize)
         .ToListAsync();

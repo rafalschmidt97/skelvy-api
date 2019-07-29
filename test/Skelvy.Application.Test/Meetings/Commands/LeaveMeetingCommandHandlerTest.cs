@@ -23,7 +23,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new LeaveMeetingCommand(2);
       var dbContext = InitializedDbContext();
       var handler = new LeaveMeetingCommandHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         _mediator.Object);
@@ -37,7 +38,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new LeaveMeetingCommand(2);
       var dbContext = DbContext();
       var handler = new LeaveMeetingCommandHandler(
-        new MeetingUsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         _mediator.Object);

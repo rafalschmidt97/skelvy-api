@@ -13,18 +13,21 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 {
   public class LeaveMeetingCommandHandler : CommandHandler<LeaveMeetingCommand>
   {
-    private readonly IMeetingUsersRepository _meetingUsersRepository;
+    private readonly IGroupsRepository _groupsRepository;
+    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMediator _mediator;
 
     public LeaveMeetingCommandHandler(
-      IMeetingUsersRepository meetingUsersRepository,
+      IGroupsRepository groupsRepository,
+      IGroupUsersRepository groupUsersRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
       IMediator mediator)
     {
-      _meetingUsersRepository = meetingUsersRepository;
+      _groupsRepository = groupsRepository;
+      _groupUsersRepository = groupUsersRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
       _mediator = mediator;
@@ -32,21 +35,21 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 
     public override async Task<Unit> Handle(LeaveMeetingCommand request)
     {
-      var meetingUser = await _meetingUsersRepository.FindOneWithMeetingByUserId(request.UserId);
+      var meetingUser = await _groupUsersRepository.FindOneWithGroupByUserId(request.UserId);
 
       if (meetingUser == null)
       {
-        throw new NotFoundException(nameof(MeetingUser), request.UserId);
+        throw new NotFoundException(nameof(GroupUser), request.UserId);
       }
 
-      var meetingUsers = await _meetingUsersRepository.FindAllWithMeetingRequestByMeetingId(meetingUser.MeetingId);
+      var meetingUsers = await _groupUsersRepository.FindAllWithRequestByGroupId(meetingUser.GroupId);
       var userDetails = meetingUsers.First(x => x.UserId == meetingUser.UserId);
 
       if (userDetails.MeetingRequest.IsSearching)
       {
         throw new InternalServerErrorException(
           $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusTypes.Searching}' " +
-          $"while {nameof(MeetingUser)} exists");
+          $"while {nameof(GroupUser)} exists");
       }
 
       using (var transaction = _meetingsRepository.BeginTransaction())
@@ -54,7 +57,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
         userDetails.Leave();
         userDetails.MeetingRequest.Abort();
 
-        await _meetingUsersRepository.Update(userDetails);
+        await _groupUsersRepository.Update(userDetails);
         await _meetingRequestsRepository.Update(userDetails.MeetingRequest);
 
         var meetingAborted = false;
@@ -65,11 +68,14 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 
           anotherUserDetails.Abort();
           anotherUserDetails.MeetingRequest.MarkAsSearching();
-          meetingUser.Meeting.Abort();
+          var meeting = await _meetingsRepository.FindOneWithGroupByGroupId(meetingUser.GroupId);
+          meeting.Abort();
+          meeting.Group.Abort();
 
-          await _meetingUsersRepository.Update(anotherUserDetails);
+          await _groupUsersRepository.Update(anotherUserDetails);
           await _meetingRequestsRepository.Update(anotherUserDetails.MeetingRequest);
-          await _meetingsRepository.Update(meetingUser.Meeting);
+          await _meetingsRepository.Update(meeting);
+          await _groupsRepository.Update(meeting.Group);
 
           meetingAborted = true;
         }
@@ -78,19 +84,19 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 
         if (!meetingAborted)
         {
-          await _mediator.Publish(new UserLeftMeetingEvent(meetingUser.UserId, meetingUser.MeetingId));
+          await _mediator.Publish(new UserLeftMeetingEvent(meetingUser.UserId, meetingUser.GroupId));
         }
         else
         {
           if (userDetails.ModifiedAt != null)
           {
             await _mediator.Publish(
-              new MeetingAbortedEvent(meetingUser.UserId, meetingUser.MeetingId, userDetails.ModifiedAt.Value));
+              new MeetingAbortedEvent(meetingUser.UserId, meetingUser.GroupId, userDetails.ModifiedAt.Value));
           }
           else
           {
             throw new InternalServerErrorException(
-              $"Entity {nameof(MeetingUser)}(UserId = {meetingUser.UserId}) has modified date null after leaving");
+              $"Entity {nameof(GroupUser)}(UserId = {meetingUser.UserId}) has modified date null after leaving");
           }
         }
       }

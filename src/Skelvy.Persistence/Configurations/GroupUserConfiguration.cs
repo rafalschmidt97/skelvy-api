@@ -4,11 +4,11 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Configurations
 {
-  public class MeetingUserConfiguration : IEntityTypeConfiguration<MeetingUser>
+  public class GroupUserConfiguration : IEntityTypeConfiguration<GroupUser>
   {
-    public void Configure(EntityTypeBuilder<MeetingUser> builder)
+    public void Configure(EntityTypeBuilder<GroupUser> builder)
     {
-      builder.HasOne(x => x.Meeting).WithMany(x => x.Users).OnDelete(DeleteBehavior.Restrict);
+      builder.HasOne(x => x.Group).WithMany(x => x.Users).OnDelete(DeleteBehavior.Restrict);
       builder.HasOne(x => x.User).WithMany().OnDelete(DeleteBehavior.Restrict);
       builder.HasOne(x => x.MeetingRequest).WithMany().OnDelete(DeleteBehavior.Restrict);
 

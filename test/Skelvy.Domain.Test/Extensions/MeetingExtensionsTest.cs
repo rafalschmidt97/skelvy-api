@@ -10,7 +10,7 @@ namespace Skelvy.Domain.Test.Extensions
     [Fact]
     public void ShouldReturnCalculatedDistance()
     {
-      var meeting = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1);
+      var meeting = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
       var request = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
 
       var distance = meeting.GetDistance(request);
