@@ -27,7 +27,7 @@ namespace Skelvy.Application.Meetings.Events.MessageSent
 
     public override async Task<Unit> Handle(MessageSentEvent request)
     {
-      var meetingUsers = await _groupUsersRepository.FindAllByGroupId(request.MeetingId);
+      var meetingUsers = await _groupUsersRepository.FindAllByGroupId(request.GroupId);
       var broadcastUsersId = meetingUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
 
       var sender = await _usersRepository.FindOneWithDetails(request.UserId);
@@ -35,12 +35,12 @@ namespace Skelvy.Application.Meetings.Events.MessageSent
       await _notifications.BroadcastUserSentMessage(
         new UserSentMessageAction(
           request.MessageId,
-          request.Message,
+          request.Text,
           request.Date,
           request.AttachmentUrl,
           request.UserId,
           sender.Profile.Name,
-          request.MeetingId,
+          request.GroupId,
           broadcastUsersId));
 
       return Unit.Value;

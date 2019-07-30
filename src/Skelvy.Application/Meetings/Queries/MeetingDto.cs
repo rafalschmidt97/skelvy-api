@@ -32,18 +32,18 @@ namespace Skelvy.Application.Meetings.Queries
     }
   }
 
-  public class MeetingChatMessageDto : ICustomMapping
+  public class MessageDto : ICustomMapping
   {
     public int Id { get; set; }
-    public string Message { get; set; }
+    public string Text { get; set; }
     public DateTimeOffset Date { get; set; }
     public int UserId { get; set; }
     public string AttachmentUrl { get; set; }
-    public int MeetingId { get; set; }
+    public int GroupId { get; set; }
 
     public void CreateMappings(Profile configuration)
     {
-      configuration.CreateMap<MeetingChatMessage, MeetingChatMessageDto>()
+      configuration.CreateMap<Message, MessageDto>()
         .ForMember(
           destination => destination.AttachmentUrl,
           options => options.MapFrom(x => x.Attachment.Url));

@@ -28,11 +28,11 @@ namespace Skelvy.Infrastructure.Notifications
 
     public async Task BroadcastUserSentMessage(UserSentMessageAction action)
     {
-      await _socketService.BroadcastUserSentMeetingChatMessage(action);
+      await _socketService.BroadcastUserSentMessage(action);
 
       await BroadcastActionToOffline(
         action.UsersId,
-        async (offline) => await _pushService.BroadcastUserSentMeetingChatMessage(action, offline));
+        async (offline) => await _pushService.BroadcastUserSentMessage(action, offline));
     }
 
     public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action)

@@ -5,25 +5,25 @@ namespace Skelvy.Application.Meetings.Infrastructure.Notifications
 {
   public class UserSentMessageAction
   {
-    public UserSentMessageAction(int messageId, string message, DateTimeOffset date, string attachmentUrl, int userId, string userName, int meetingId, IEnumerable<int> usersId)
+    public UserSentMessageAction(int messageId, string text, DateTimeOffset date, string attachmentUrl, int userId, string userName, int groupId, IEnumerable<int> usersId)
     {
       MessageId = messageId;
-      Message = message;
+      Text = text;
       Date = date;
       AttachmentUrl = attachmentUrl;
       UserId = userId;
       UserName = userName;
-      MeetingId = meetingId;
+      GroupId = groupId;
       UsersId = usersId;
     }
 
     public int MessageId { get; private set; }
-    public string Message { get; private set; }
+    public string Text { get; private set; }
     public DateTimeOffset Date { get; private set; }
     public string AttachmentUrl { get; private set; }
     public int UserId { get; private set; }
     public string UserName { get; private set; }
-    public int MeetingId { get; private set; }
+    public int GroupId { get; private set; }
     public IEnumerable<int> UsersId { get; private set; }
   }
 }

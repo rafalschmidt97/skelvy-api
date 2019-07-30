@@ -6,7 +6,7 @@ namespace Skelvy.Application.Notifications.Infrastructure
 {
   public interface IPushNotificationsService
   {
-    Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action, IEnumerable<int> usersId);
+    Task BroadcastUserSentMessage(UserSentMessageAction action, IEnumerable<int> usersId);
     Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId);
     Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId);
     Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId);

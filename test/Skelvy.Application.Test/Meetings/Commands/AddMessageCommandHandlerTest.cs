@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using MediatR;
 using Moq;
-using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
+using Skelvy.Application.Meetings.Commands.AddMessage;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence.Repositories;
@@ -10,11 +10,11 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
 {
-  public class AddMeetingChatMessageCommandHandlerTest : DatabaseRequestTestBase
+  public class AddMessageCommandHandlerTest : DatabaseRequestTestBase
   {
     private readonly Mock<IMediator> _mediator;
 
-    public AddMeetingChatMessageCommandHandlerTest()
+    public AddMessageCommandHandlerTest()
     {
       _mediator = new Mock<IMediator>();
     }
@@ -22,29 +22,29 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new AddMeetingChatMessageCommand("Hello World", null, 2);
+      var request = new AddMessageCommand(1, "Hello World", null, 2);
       var dbContext = InitializedDbContext();
-      var handler = new AddMeetingChatMessageCommandHandler(
+      var handler = new AddMessageCommandHandler(
         new GroupUsersRepository(dbContext),
-        new MeetingChatMessagesRepository(dbContext),
+        new MessagesRepository(dbContext),
         new AttachmentsRepository(dbContext),
         _mediator.Object,
         Mapper());
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<MeetingChatMessageDto>(result);
+      Assert.IsType<MessageDto>(result);
       Assert.NotEqual(default(DateTimeOffset), result.Date);
     }
 
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new AddMeetingChatMessageCommand("Hello World", null, 2);
+      var request = new AddMessageCommand(1, "Hello World", null, 2);
       var dbContext = DbContext();
-      var handler = new AddMeetingChatMessageCommandHandler(
+      var handler = new AddMessageCommandHandler(
         new GroupUsersRepository(dbContext),
-        new MeetingChatMessagesRepository(dbContext),
+        new MessagesRepository(dbContext),
         new AttachmentsRepository(dbContext),
         _mediator.Object,
         Mapper());

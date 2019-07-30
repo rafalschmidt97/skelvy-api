@@ -15,11 +15,13 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
-    public async Task<GroupUser> FindOneByUserId(int userId)
+    public async Task<bool> ExistsOneByUserIdAndGroupId(int userId, int groupId)
     {
-      return await Context.GroupUsers
+      var user = await Context.GroupUsers
         .Include(x => x.Group)
-        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved && !x.Group.IsRemoved);
+        .FirstOrDefaultAsync(x => x.UserId == userId && x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved);
+
+      return user != null;
     }
 
     public async Task<GroupUser> FindOneWithGroupByUserId(int userId)

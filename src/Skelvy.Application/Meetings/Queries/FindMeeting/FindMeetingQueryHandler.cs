@@ -11,13 +11,13 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
   {
     private readonly IMeetingRequestsRepository _requestsRepository;
     private readonly IMeetingsRepository _meetingsRepository;
-    private readonly IMeetingChatMessagesRepository _messagesRepository;
+    private readonly IMessagesRepository _messagesRepository;
     private readonly IMeetingMapper _mapper;
 
     public FindMeetingQueryHandler(
       IMeetingRequestsRepository requestsRepository,
       IMeetingsRepository meetingsRepository,
-      IMeetingChatMessagesRepository messagesRepository,
+      IMessagesRepository messagesRepository,
       IMeetingMapper mapper)
     {
       _requestsRepository = requestsRepository;
@@ -45,7 +45,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
                                                  $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusTypes.Found}'");
         }
 
-        var messages = await _messagesRepository.FindPageLatestByMeetingId(meeting.Id);
+        var messages = await _messagesRepository.FindPageLatestByGroupId(meeting.Id);
         return await _mapper.Map(meeting, messages, meetingRequest, request.Language);
       }
 

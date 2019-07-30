@@ -16,31 +16,31 @@ namespace Skelvy.Infrastructure.Notifications
         .TryAddWithoutValidation("Authorization", "key=" + configuration["SKELVY_GOOGLE_KEY_WEB"]);
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserSentMessage(UserSentMessageAction action, IEnumerable<int> usersId)
     {
       var data = new PushNotificationData
       {
         Action = "UserSentMessage",
         RedirectTo = "chat",
-        Data = new MeetingChatMessageDto
+        Data = new MessageDto
         {
-          Id = action.MeetingId,
-          Message = action.Message,
+          Id = action.GroupId,
+          Text = action.Text,
           Date = action.Date,
           AttachmentUrl = action.AttachmentUrl,
           UserId = action.UserId,
-          MeetingId = action.MeetingId,
+          GroupId = action.GroupId,
         },
       };
 
-      if (action.Message != null)
+      if (action.Text != null)
       {
         await SendNotification(
           usersId,
           new PushNotificationContent
           {
             Title = action.UserName,
-            Body = action.Message,
+            Body = action.Text,
           },
           data);
       }
