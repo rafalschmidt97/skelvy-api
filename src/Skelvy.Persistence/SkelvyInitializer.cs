@@ -213,13 +213,13 @@ namespace Skelvy.Persistence
       context.Meetings.AddRange(meetings);
       context.SaveChanges();
 
-      var meetingUsers = new[]
+      var groupUsers = new[]
       {
-        new GroupUser(meetings[0].Id, users[1].Id, requests[0].Id),
-        new GroupUser(meetings[0].Id, users[2].Id, requests[1].Id),
+        new GroupUser(groups[0].Id, users[1].Id, requests[0].Id),
+        new GroupUser(groups[0].Id, users[2].Id, requests[1].Id),
       };
 
-      context.GroupUsers.AddRange(meetingUsers);
+      context.GroupUsers.AddRange(groupUsers);
       context.SaveChanges();
     }
 

@@ -11,6 +11,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
       RuleFor(x => x.AttachmentUrl).MaximumLength(2048);
       RuleFor(x => x.AttachmentUrl).NotEmpty().When(x => string.IsNullOrEmpty(x.Text));
       RuleFor(x => x.UserId).NotEmpty();
+      RuleFor(x => x.GroupId).NotEmpty();
     }
   }
 }

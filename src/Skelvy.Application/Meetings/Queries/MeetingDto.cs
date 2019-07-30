@@ -39,7 +39,7 @@ namespace Skelvy.Application.Meetings.Queries
     public DateTimeOffset Date { get; set; }
     public int UserId { get; set; }
     public string AttachmentUrl { get; set; }
-    public int MeetingId { get; set; }
+    public int GroupId { get; set; }
 
     public void CreateMappings(Profile configuration)
     {

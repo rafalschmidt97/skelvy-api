@@ -37,11 +37,11 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
 
     public override async Task<MessageDto> Handle(AddMessageCommand request)
     {
-      var meetingUser = await _groupUsersRepository.FindOneByUserId(request.UserId);
+      var existsUser = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.UserId, request.GroupId);
 
-      if (meetingUser == null)
+      if (!existsUser)
       {
-        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {request.GroupId}) not found.");
       }
 
       using (var transaction = _messagesRepository.BeginTransaction())
@@ -54,7 +54,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
           await _attachmentsRepository.Add(attachment);
         }
 
-        var message = new Message(DateTimeOffset.UtcNow, request.Text, attachment?.Id, meetingUser.UserId, meetingUser.GroupId);
+        var message = new Message(DateTimeOffset.UtcNow, request.Text, attachment?.Id, request.UserId, request.GroupId);
         await _messagesRepository.Add(message);
 
         transaction.Commit();

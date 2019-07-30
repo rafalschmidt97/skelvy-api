@@ -13,7 +13,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldReturnMessages()
     {
-      var request = new FindMessagesQuery(2, DateTimeOffset.UtcNow);
+      var request = new FindMessagesQuery(1, 2, DateTimeOffset.UtcNow);
       var dbContext = InitializedDbContext();
       var handler = new FindMessagesQueryHandler(
         new GroupUsersRepository(dbContext),
@@ -29,7 +29,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new FindMessagesQuery(1, DateTimeOffset.UtcNow);
+      var request = new FindMessagesQuery(1, 1, DateTimeOffset.UtcNow);
       var dbContext = DbContext();
       var handler = new FindMessagesQueryHandler(
         new GroupUsersRepository(dbContext),

@@ -6,8 +6,9 @@ namespace Skelvy.Application.Meetings.Queries.FindMessages
 {
   public class FindMessagesQuery : IQuery<IList<MessageDto>>
   {
-    public FindMessagesQuery(int userId, DateTimeOffset beforeDate)
+    public FindMessagesQuery(int groupId, int userId, DateTimeOffset beforeDate)
     {
+      GroupId = groupId;
       UserId = userId;
       BeforeDate = beforeDate;
     }
@@ -16,6 +17,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMessages
     {
     }
 
+    public int GroupId { get; set; }
     public int UserId { get; set; }
     public DateTimeOffset BeforeDate { get; set; }
   }

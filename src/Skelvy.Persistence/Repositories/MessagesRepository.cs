@@ -15,13 +15,13 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
-    public async Task<IList<Message>> FindPageBeforeByMeetingId(
-      int meetingId,
+    public async Task<IList<Message>> FindPageBeforeByGroupId(
+      int groupId,
       DateTimeOffset beforeDate,
       int pageSize = 20)
     {
       var messages = await Context.Messages
-        .Where(x => x.GroupId == meetingId && x.Date < beforeDate)
+        .Where(x => x.GroupId == groupId && x.Date < beforeDate)
         .OrderByDescending(p => p.Date)
         .Take(pageSize)
         .ToListAsync();
@@ -29,10 +29,10 @@ namespace Skelvy.Persistence.Repositories
       return messages.OrderBy(x => x.Date).ToList();
     }
 
-    public async Task<IList<Message>> FindPageLatestByMeetingId(int meetingId, int pageSize = 20)
+    public async Task<IList<Message>> FindPageLatestByGroupId(int groupId, int pageSize = 20)
     {
       var messages = await Context.Messages
-        .Where(x => x.GroupId == meetingId)
+        .Where(x => x.GroupId == groupId)
         .OrderByDescending(p => p.Date)
         .Take(pageSize)
         .ToListAsync();

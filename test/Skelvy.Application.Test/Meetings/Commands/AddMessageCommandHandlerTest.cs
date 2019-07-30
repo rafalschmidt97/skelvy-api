@@ -22,7 +22,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new AddMessageCommand("Hello World", null, 2);
+      var request = new AddMessageCommand(1, "Hello World", null, 2);
       var dbContext = InitializedDbContext();
       var handler = new AddMessageCommandHandler(
         new GroupUsersRepository(dbContext),
@@ -40,7 +40,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new AddMessageCommand("Hello World", null, 2);
+      var request = new AddMessageCommand(1, "Hello World", null, 2);
       var dbContext = DbContext();
       var handler = new AddMessageCommandHandler(
         new GroupUsersRepository(dbContext),

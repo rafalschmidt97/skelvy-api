@@ -26,14 +26,14 @@ namespace Skelvy.Application.Meetings.Queries.FindMessages
 
     public override async Task<IList<MessageDto>> Handle(FindMessagesQuery request)
     {
-      var meetingUser = await _groupUsersRepository.FindOneByUserId(request.UserId);
+      var existsUser = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.UserId, request.GroupId);
 
-      if (meetingUser == null)
+      if (!existsUser)
       {
-        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {request.GroupId}) not found.");
       }
 
-      var messagesBefore = await _messagesRepository.FindPageBeforeByMeetingId(meetingUser.GroupId, request.BeforeDate);
+      var messagesBefore = await _messagesRepository.FindPageBeforeByGroupId(request.GroupId, request.BeforeDate);
       return _mapper.Map<IList<MessageDto>>(messagesBefore);
     }
   }

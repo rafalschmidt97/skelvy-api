@@ -24,12 +24,12 @@ namespace Skelvy.Infrastructure.Notifications
         RedirectTo = "chat",
         Data = new MessageDto
         {
-          Id = action.MeetingId,
+          Id = action.GroupId,
           Text = action.Text,
           Date = action.Date,
           AttachmentUrl = action.AttachmentUrl,
           UserId = action.UserId,
-          MeetingId = action.MeetingId,
+          GroupId = action.GroupId,
         },
       };
 
