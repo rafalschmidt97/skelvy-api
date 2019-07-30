@@ -12,10 +12,10 @@ namespace Skelvy.Domain.Entities
     {
       CreatedAt = DateTimeOffset.UtcNow;
       Users = new List<GroupUser>();
-      ChatMessages = new List<MeetingChatMessage>();
+      Messages = new List<Message>();
     }
 
-    public Group(int id, DateTimeOffset createdAt, DateTimeOffset? modifiedAt, bool isRemoved, string removedReason, IList<GroupUser> users, IList<MeetingChatMessage> chatMessages)
+    public Group(int id, DateTimeOffset createdAt, DateTimeOffset? modifiedAt, bool isRemoved, string removedReason, IList<GroupUser> users, IList<Message> messages)
     {
       Id = id;
       CreatedAt = createdAt;
@@ -23,7 +23,7 @@ namespace Skelvy.Domain.Entities
       IsRemoved = isRemoved;
       RemovedReason = removedReason;
       Users = users;
-      ChatMessages = chatMessages;
+      Messages = messages;
     }
 
     public int Id { get; private set; }
@@ -33,7 +33,7 @@ namespace Skelvy.Domain.Entities
     public string RemovedReason { get; private set; }
 
     public IList<GroupUser> Users { get; set; }
-    public IList<MeetingChatMessage> ChatMessages { get; private set; }
+    public IList<Message> Messages { get; private set; }
 
     public void Abort()
     {

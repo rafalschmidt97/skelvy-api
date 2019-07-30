@@ -18,7 +18,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     private readonly IMeetingRequestsRepository _requestsRepository;
     private readonly IMeetingRequestDrinkTypesRepository _requestDrinkTypesRepository;
     private readonly IGroupUsersRepository _groupUsersRepository;
-    private readonly IMeetingChatMessagesRepository _messagesRepository;
+    private readonly IMessagesRepository _messagesRepository;
     private readonly IBlockedUsersRepository _blockedUsersRepository;
     private readonly IAttachmentsRepository _attachmentsRepository;
 
@@ -30,7 +30,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       IMeetingRequestsRepository requestsRepository,
       IMeetingRequestDrinkTypesRepository requestDrinkTypesRepository,
       IGroupUsersRepository groupUsersRepository,
-      IMeetingChatMessagesRepository messagesRepository,
+      IMessagesRepository messagesRepository,
       IBlockedUsersRepository blockedUsersRepository,
       IAttachmentsRepository attachmentsRepository)
     {

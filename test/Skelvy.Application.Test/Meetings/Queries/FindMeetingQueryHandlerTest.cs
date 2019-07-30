@@ -27,13 +27,13 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var request = new FindMeetingQuery(2, LanguageTypes.EN);
       var dbContext = InitializedDbContext();
       _mapper.Setup(x =>
-          x.Map(It.IsAny<Meeting>(), It.IsAny<IList<MeetingChatMessage>>(), It.IsAny<MeetingRequest>(), It.IsAny<string>()))
-        .ReturnsAsync(new MeetingModel(MeetingRequestStatusTypes.Found, new MeetingDto(), new List<MeetingChatMessageDto>(), new MeetingRequestDto()));
+          x.Map(It.IsAny<Meeting>(), It.IsAny<IList<Message>>(), It.IsAny<MeetingRequest>(), It.IsAny<string>()))
+        .ReturnsAsync(new MeetingModel(MeetingRequestStatusTypes.Found, new MeetingDto(), new List<MessageDto>(), new MeetingRequestDto()));
 
       var handler = new FindMeetingQueryHandler(
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingChatMessagesRepository(dbContext),
+        new MessagesRepository(dbContext),
         _mapper.Object);
 
       var result = await handler.Handle(request);
@@ -54,7 +54,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var handler = new FindMeetingQueryHandler(
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingChatMessagesRepository(dbContext),
+        new MessagesRepository(dbContext),
         _mapper.Object);
 
       var result = await handler.Handle(request);
@@ -71,7 +71,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var handler = new FindMeetingQueryHandler(
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingChatMessagesRepository(dbContext),
+        new MessagesRepository(dbContext),
         _mapper.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

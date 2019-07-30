@@ -14,20 +14,20 @@ namespace Skelvy.Application.Users.Queries.FindSelf
     private readonly IUsersRepository _usersRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingsRepository _meetingsRepository;
-    private readonly IMeetingChatMessagesRepository _chatMessagesRepository;
+    private readonly IMessagesRepository _messagesRepository;
     private readonly IMeetingMapper _mapper;
 
     public FindSelfQueryHandler(
       IUsersRepository usersRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
       IMeetingsRepository meetingsRepository,
-      IMeetingChatMessagesRepository chatMessagesRepository,
+      IMessagesRepository messagesRepository,
       IMeetingMapper mapper)
     {
       _usersRepository = usersRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
       _meetingsRepository = meetingsRepository;
-      _chatMessagesRepository = chatMessagesRepository;
+      _messagesRepository = messagesRepository;
       _mapper = mapper;
     }
 
@@ -54,7 +54,7 @@ namespace Skelvy.Application.Users.Queries.FindSelf
                                         $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusTypes.Found}'");
           }
 
-          var messages = await _chatMessagesRepository.FindPageLatestByMeetingId(meeting.Id);
+          var messages = await _messagesRepository.FindPageLatestByMeetingId(meeting.Id);
 
           return await _mapper.Map(user, meeting, messages, meetingRequest, request.Language);
         }

@@ -15,7 +15,7 @@ namespace Skelvy.Domain.Entities
 
       CreatedAt = DateTimeOffset.UtcNow;
       Roles = new List<UserRole>();
-      MeetingChatMessages = new List<MeetingChatMessage>();
+      Messages = new List<Message>();
       MeetingRequests = new List<MeetingRequest>();
     }
 
@@ -25,7 +25,7 @@ namespace Skelvy.Domain.Entities
 
       CreatedAt = DateTimeOffset.UtcNow;
       Roles = new List<UserRole>();
-      MeetingChatMessages = new List<MeetingChatMessage>();
+      Messages = new List<Message>();
       MeetingRequests = new List<MeetingRequest>();
     }
 
@@ -44,7 +44,7 @@ namespace Skelvy.Domain.Entities
       UserProfile profile,
       IList<UserRole> roles,
       IList<MeetingRequest> meetingRequests,
-      IList<MeetingChatMessage> meetingChatMessages)
+      IList<Message> messages)
     {
       Id = id;
       Email = email;
@@ -60,7 +60,7 @@ namespace Skelvy.Domain.Entities
       Profile = profile;
       Roles = roles;
       MeetingRequests = meetingRequests;
-      MeetingChatMessages = meetingChatMessages;
+      Messages = messages;
     }
 
     public int Id { get; private set; }
@@ -78,7 +78,7 @@ namespace Skelvy.Domain.Entities
     public UserProfile Profile { get; private set; }
     public IList<UserRole> Roles { get; private set; }
     public IList<MeetingRequest> MeetingRequests { get; private set; }
-    public IList<MeetingChatMessage> MeetingChatMessages { get; private set; }
+    public IList<Message> Messages { get; private set; }
 
     public void RegisterFacebook(string facebookId)
     {

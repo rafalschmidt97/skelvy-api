@@ -6,25 +6,25 @@ using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
+namespace Skelvy.Application.Meetings.Queries.FindMessages
 {
-  public class FindMeetingChatMessagesQueryHandler : QueryHandler<FindMeetingChatMessagesQuery, IList<MeetingChatMessageDto>>
+  public class FindMessagesQueryHandler : QueryHandler<FindMessagesQuery, IList<MessageDto>>
   {
     private readonly IGroupUsersRepository _groupUsersRepository;
-    private readonly IMeetingChatMessagesRepository _chatMessagesRepository;
+    private readonly IMessagesRepository _messagesRepository;
     private readonly IMapper _mapper;
 
-    public FindMeetingChatMessagesQueryHandler(
+    public FindMessagesQueryHandler(
       IGroupUsersRepository groupUsersRepository,
-      IMeetingChatMessagesRepository chatMessagesRepository,
+      IMessagesRepository messagesRepository,
       IMapper mapper)
     {
       _groupUsersRepository = groupUsersRepository;
-      _chatMessagesRepository = chatMessagesRepository;
+      _messagesRepository = messagesRepository;
       _mapper = mapper;
     }
 
-    public override async Task<IList<MeetingChatMessageDto>> Handle(FindMeetingChatMessagesQuery request)
+    public override async Task<IList<MessageDto>> Handle(FindMessagesQuery request)
     {
       var meetingUser = await _groupUsersRepository.FindOneByUserId(request.UserId);
 
@@ -33,8 +33,8 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingChatMessages
         throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}) not found.");
       }
 
-      var messagesBefore = await _chatMessagesRepository.FindPageBeforeByMeetingId(meetingUser.GroupId, request.BeforeDate);
-      return _mapper.Map<IList<MeetingChatMessageDto>>(messagesBefore);
+      var messagesBefore = await _messagesRepository.FindPageBeforeByMeetingId(meetingUser.GroupId, request.BeforeDate);
+      return _mapper.Map<IList<MessageDto>>(messagesBefore);
     }
   }
 }

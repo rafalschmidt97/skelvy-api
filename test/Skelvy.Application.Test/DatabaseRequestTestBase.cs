@@ -18,11 +18,11 @@ namespace Skelvy.Application.Test
         new DrinkTypesRepository(DbContext());
     }
 
-    protected static MeetingChatMessagesRepository MeetingChatMessagesRepository(bool initialized = true)
+    protected static MessagesRepository MessagesRepository(bool initialized = true)
     {
       return initialized ?
-        new MeetingChatMessagesRepository(InitializedDbContext()) :
-        new MeetingChatMessagesRepository(DbContext());
+        new MessagesRepository(InitializedDbContext()) :
+        new MessagesRepository(DbContext());
     }
 
     protected static MeetingRequestsRepository MeetingRequestsRepository(bool initialized = true)

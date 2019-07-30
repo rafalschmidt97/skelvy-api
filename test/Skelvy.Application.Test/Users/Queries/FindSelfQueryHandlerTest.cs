@@ -33,7 +33,7 @@ namespace Skelvy.Application.Test.Users.Queries
         new UsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingChatMessagesRepository(dbContext),
+        new MessagesRepository(dbContext),
         _mapper.Object);
 
       var result = await handler.Handle(request);
@@ -50,7 +50,7 @@ namespace Skelvy.Application.Test.Users.Queries
         new UsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingChatMessagesRepository(dbContext),
+        new MessagesRepository(dbContext),
         _mapper.Object);
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

@@ -8,19 +8,19 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Repositories
 {
-  public class MeetingChatMessagesRepository : BaseRepository, IMeetingChatMessagesRepository
+  public class MessagesRepository : BaseRepository, IMessagesRepository
   {
-    public MeetingChatMessagesRepository(SkelvyContext context)
+    public MessagesRepository(SkelvyContext context)
       : base(context)
     {
     }
 
-    public async Task<IList<MeetingChatMessage>> FindPageBeforeByMeetingId(
+    public async Task<IList<Message>> FindPageBeforeByMeetingId(
       int meetingId,
       DateTimeOffset beforeDate,
       int pageSize = 20)
     {
-      var messages = await Context.MeetingChatMessages
+      var messages = await Context.Messages
         .Where(x => x.GroupId == meetingId && x.Date < beforeDate)
         .OrderByDescending(p => p.Date)
         .Take(pageSize)
@@ -29,9 +29,9 @@ namespace Skelvy.Persistence.Repositories
       return messages.OrderBy(x => x.Date).ToList();
     }
 
-    public async Task<IList<MeetingChatMessage>> FindPageLatestByMeetingId(int meetingId, int pageSize = 20)
+    public async Task<IList<Message>> FindPageLatestByMeetingId(int meetingId, int pageSize = 20)
     {
-      var messages = await Context.MeetingChatMessages
+      var messages = await Context.Messages
         .Where(x => x.GroupId == meetingId)
         .OrderByDescending(p => p.Date)
         .Take(pageSize)
@@ -40,22 +40,22 @@ namespace Skelvy.Persistence.Repositories
       return messages.OrderBy(x => x.Date).ToList();
     }
 
-    public async Task<IList<MeetingChatMessage>> FindAllByUsersId(IEnumerable<int> usersId)
+    public async Task<IList<Message>> FindAllByUsersId(IEnumerable<int> usersId)
     {
-      return await Context.MeetingChatMessages
+      return await Context.Messages
         .Where(x => usersId.Any(y => y == x.UserId))
         .ToListAsync();
     }
 
-    public async Task Add(MeetingChatMessage message)
+    public async Task Add(Message message)
     {
-      await Context.MeetingChatMessages.AddAsync(message);
+      await Context.Messages.AddAsync(message);
       await SaveChanges();
     }
 
-    public async Task RemoveRange(IList<MeetingChatMessage> messages)
+    public async Task RemoveRange(IList<Message> messages)
     {
-      Context.MeetingChatMessages.RemoveRange(messages);
+      Context.Messages.RemoveRange(messages);
       await SaveChanges();
     }
   }

@@ -6,7 +6,7 @@ namespace Skelvy.Application.Notifications.Infrastructure
 {
   public interface ISocketNotificationsService
   {
-    Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action);
+    Task BroadcastUserSentMessage(UserSentMessageAction action);
     Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action);
     Task BroadcastUserFoundMeeting(UserFoundMeetingAction action);
     Task BroadcastUserLeftMeeting(UserLeftMeetingAction action);

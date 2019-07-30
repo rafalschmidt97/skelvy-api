@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Skelvy.Application.Meetings.Commands.AddMeetingChatMessage;
+using Skelvy.Application.Meetings.Commands.AddMessage;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
-using Skelvy.Application.Meetings.Queries.FindMeetingChatMessages;
+using Skelvy.Application.Meetings.Queries.FindMessages;
 using Skelvy.Domain.Enums.Users;
 using Skelvy.WebAPI.Filters;
 
@@ -43,14 +43,14 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpGet("{id}/chat")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task<IList<MeetingChatMessageDto>> FindChat(int id, [FromQuery] FindMeetingChatMessagesQuery request)
+    public async Task<IList<MessageDto>> FindMessages(int id, [FromQuery] FindMessagesQuery request)
     {
       request.UserId = id;
       return await Mediator.Send(request);
     }
 
     [HttpGet("self/chat")]
-    public async Task<IList<MeetingChatMessageDto>> FindSelfChat([FromQuery] FindMeetingChatMessagesQuery request)
+    public async Task<IList<MessageDto>> FindSelfMessages([FromQuery] FindMessagesQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
@@ -58,14 +58,14 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPost("{id}/chat")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task<MeetingChatMessageDto> AddChatMessage(int id, AddMeetingChatMessageCommand request)
+    public async Task<MessageDto> AddMessage(int id, AddMessageCommand request)
     {
       request.UserId = id;
       return await Mediator.Send(request);
     }
 
     [HttpPost("self/chat")]
-    public async Task<MeetingChatMessageDto> AddSelfChatMessage(AddMeetingChatMessageCommand request)
+    public async Task<MessageDto> AddSelfMessage(AddMessageCommand request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);

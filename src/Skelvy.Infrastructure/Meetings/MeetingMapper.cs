@@ -24,7 +24,7 @@ namespace Skelvy.Infrastructure.Meetings
       _cache = cache;
     }
 
-    public async Task<SelfModel> Map(User user, Meeting meeting, IList<MeetingChatMessage> messages, MeetingRequest meetingRequest, string language)
+    public async Task<SelfModel> Map(User user, Meeting meeting, IList<Message> messages, MeetingRequest meetingRequest, string language)
     {
       var userDto = _mapper.Map<SelfUserDto>(user);
       var meetingModel = await Map(meeting, messages, meetingRequest, language);
@@ -44,11 +44,11 @@ namespace Skelvy.Infrastructure.Meetings
       return new SelfModel(userDto);
     }
 
-    public async Task<MeetingModel> Map(Meeting meeting, IList<MeetingChatMessage> messages, MeetingRequest meetingRequest, string language)
+    public async Task<MeetingModel> Map(Meeting meeting, IList<Message> messages, MeetingRequest meetingRequest, string language)
     {
       var meetingDto = _mapper.Map<MeetingDto>(meeting);
       meetingDto.City = await GetCity(meeting.Latitude, meeting.Longitude, language);
-      var messagesDto = _mapper.Map<IList<MeetingChatMessageDto>>(messages);
+      var messagesDto = _mapper.Map<IList<MessageDto>>(messages);
       var requestDto = _mapper.Map<MeetingRequestDto>(meetingRequest);
       requestDto.City = await GetCity(meetingRequest.Latitude, meetingRequest.Longitude, language);
       return new MeetingModel(MeetingRequestStatusTypes.Found, meetingDto, messagesDto, requestDto);

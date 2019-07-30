@@ -21,7 +21,7 @@ namespace Skelvy.Persistence
     public DbSet<Meeting> Meetings { get; private set; }
     public DbSet<Group> Groups { get; private set; }
     public DbSet<GroupUser> GroupUsers { get; private set; }
-    public DbSet<MeetingChatMessage> MeetingChatMessages { get; private set; }
+    public DbSet<Message> Messages { get; private set; }
     public DbSet<BlockedUser> BlockedUsers { get; private set; }
     public DbSet<Attachment> Attachments { get; private set; }
 

@@ -16,12 +16,12 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _socket = socket;
     }
 
-    public async Task BroadcastUserSentMeetingChatMessage(UserSentMessageAction action)
+    public async Task BroadcastUserSentMessage(UserSentMessageAction action)
     {
-      await SendNotification("UserSentMeetingChatMessage", action.UsersId, new MeetingChatMessageDto
+      await SendNotification("UserSentMessage", action.UsersId, new MessageDto
       {
         Id = action.MeetingId,
-        Message = action.Message,
+        Text = action.Text,
         Date = action.Date,
         AttachmentUrl = action.AttachmentUrl,
         UserId = action.UserId,

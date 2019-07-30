@@ -11,13 +11,13 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
   {
     private readonly IMeetingRequestsRepository _requestsRepository;
     private readonly IMeetingsRepository _meetingsRepository;
-    private readonly IMeetingChatMessagesRepository _messagesRepository;
+    private readonly IMessagesRepository _messagesRepository;
     private readonly IMeetingMapper _mapper;
 
     public FindMeetingQueryHandler(
       IMeetingRequestsRepository requestsRepository,
       IMeetingsRepository meetingsRepository,
-      IMeetingChatMessagesRepository messagesRepository,
+      IMessagesRepository messagesRepository,
       IMeetingMapper mapper)
     {
       _requestsRepository = requestsRepository;
