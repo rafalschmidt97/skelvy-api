@@ -30,14 +30,14 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPost("{id}")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task<MessageDto> AddMessage(int id, AddMessageCommand request)
+    public async Task<IList<MessageDto>> AddMessage(int id, AddMessageCommand request)
     {
       request.UserId = id;
       return await Mediator.Send(request);
     }
 
     [HttpPost("self")]
-    public async Task<MessageDto> AddSelfMessage(AddMessageCommand request)
+    public async Task<IList<MessageDto>> AddSelfMessage(AddMessageCommand request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);

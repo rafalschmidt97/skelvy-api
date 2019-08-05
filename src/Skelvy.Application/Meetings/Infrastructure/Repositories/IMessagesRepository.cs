@@ -11,7 +11,9 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<IList<Message>> FindPageBeforeByGroupId(int groupId, DateTimeOffset beforeDate, int pageSize = 20);
     Task<IList<Message>> FindPageLatestByGroupId(int groupId, int pageSize = 20);
     Task<IList<Message>> FindAllByUsersId(IEnumerable<int> usersId);
+    Task<Message> FindOneByActionAndUserIdAndGroupId(string action, int userId, int groupId);
     Task Add(Message message);
+    Task Update(Message message);
     Task RemoveRange(IList<Message> messages);
   }
 }

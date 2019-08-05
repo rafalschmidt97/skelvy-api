@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Attachments;
+using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Persistence
@@ -235,8 +236,8 @@ namespace Skelvy.Persistence
 
       var messages = new[]
       {
-        new Message(DateTimeOffset.UtcNow.AddHours(-2), "Hello User3", null, users[1].Id, meetings[0].Id),
-        new Message(DateTimeOffset.UtcNow.AddHours(-1), "Hello User2", null, users[2].Id, meetings[0].Id),
+        new Message(MessageTypes.Response, DateTimeOffset.UtcNow.AddHours(-2), "Hello User3", null, null, users[1].Id, meetings[0].Id),
+        new Message(MessageTypes.Action, DateTimeOffset.UtcNow.AddHours(-1), null, null, MessageActionTypes.Seen, users[2].Id, meetings[0].Id),
       };
 
       context.Messages.AddRange(messages);

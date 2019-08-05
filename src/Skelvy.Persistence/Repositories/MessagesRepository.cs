@@ -47,9 +47,21 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
+    public async Task<Message> FindOneByActionAndUserIdAndGroupId(string action, int userId, int groupId)
+    {
+      return await Context.Messages
+        .FirstOrDefaultAsync(x => x.UserId == userId && x.GroupId == groupId && x.Action == action);
+    }
+
     public async Task Add(Message message)
     {
       await Context.Messages.AddAsync(message);
+      await SaveChanges();
+    }
+
+    public async Task Update(Message message)
+    {
+      Context.Messages.Update(message);
       await SaveChanges();
     }
 

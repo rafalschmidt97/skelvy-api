@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
@@ -22,37 +23,29 @@ namespace Skelvy.Infrastructure.Notifications
       {
         Action = "UserSentMessage",
         RedirectTo = "chat",
-        Data = new MessageDto
-        {
-          Id = action.GroupId,
-          Text = action.Text,
-          Date = action.Date,
-          AttachmentUrl = action.AttachmentUrl,
-          UserId = action.UserId,
-          GroupId = action.GroupId,
-        },
+        Data = action.Messages,
       };
 
-      if (action.Text != null)
+      if (action.Message.Text != null)
       {
         await SendNotification(
           usersId,
           new PushNotificationContent
           {
-            Title = action.UserName,
-            Body = action.Text,
+            Title = action.Message.UserName,
+            Body = action.Message.Text,
           },
           data);
       }
       else
       {
-        if (action.AttachmentUrl != null)
+        if (action.Message.AttachmentUrl != null)
         {
           await SendNotification(
             usersId,
             new PushNotificationContent
             {
-              Title = action.UserName,
+              Title = action.Message.UserName,
               BodyLocKey = "USER_SENT_PHOTO",
             },
             data);
@@ -63,7 +56,7 @@ namespace Skelvy.Infrastructure.Notifications
             usersId,
             new PushNotificationContent
             {
-              Title = action.UserName,
+              Title = action.Message.UserName,
               BodyLocKey = "USER_SENT_MESSAGE",
             },
             data);
@@ -84,7 +77,7 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "UserJoinedMeeting",
           RedirectTo = "meeting",
-          Data = action,
+          Data = new { action.UserId },
         });
     }
 
@@ -117,7 +110,7 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "UserLeftMeeting",
           RedirectTo = "meeting",
-          Data = action,
+          Data = new { action.UserId },
         });
     }
 
@@ -134,7 +127,7 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
-          Data = action,
+          Data = new { action.UserId },
         });
     }
 
