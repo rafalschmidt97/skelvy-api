@@ -7,6 +7,7 @@ using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Events.MessageSent;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Notifications;
 using Skelvy.Application.Uploads.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -71,6 +72,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
     {
       var message = new Message(request.Type, DateTimeOffset.UtcNow, null, null, request.Action, request.UserId, request.GroupId);
       await _mediator.Publish(new MessageSentEvent(
+        NotificationTypes.SilentPush,
         new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, null, message.Action, message.UserId, message.GroupId),
         _mapper.Map<IList<MessageDto>>(new List<Message> { message })));
       return message;
@@ -94,6 +96,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
 
         transaction.Commit();
         await _mediator.Publish(new MessageSentEvent(
+          NotificationTypes.SilentPush,
           new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, null, message.Action, message.UserId, message.GroupId),
           _mapper.Map<IList<MessageDto>>(new List<Message> { message })));
       }
@@ -142,6 +145,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
         transaction.Commit();
 
         await _mediator.Publish(new MessageSentEvent(
+          NotificationTypes.Regular,
           new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, attachment?.Url, message.Action, message.UserId, message.GroupId),
           _mapper.Map<IList<MessageDto>>(new List<Message> { message, seenMessage })));
 

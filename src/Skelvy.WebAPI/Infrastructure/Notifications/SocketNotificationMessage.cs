@@ -22,13 +22,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     public string BodyLocKey { get; set; }
   }
 
-  public static class SocketNotificationTypes
-  {
-    public const string Regular = "regular";
-    public const string SilentPush = "silent_push";
-    public const string NoPush = "no_push";
-  }
-
   public class SocketNotificationData
   {
     public string Action { get; set; }

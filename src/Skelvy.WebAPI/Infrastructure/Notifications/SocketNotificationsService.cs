@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
-using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Notifications;
 using Skelvy.Application.Notifications.Infrastructure;
 using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.Domain.Enums.Meetings;
@@ -38,7 +37,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
               Title = action.Message.UserName,
               Body = action.Message.Text,
             },
-            SocketNotificationTypes.Regular,
+            NotificationTypes.Regular,
             data);
         }
         else
@@ -52,7 +51,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
                 Title = action.Message.UserName,
                 BodyLocKey = "USER_SENT_PHOTO",
               },
-              SocketNotificationTypes.Regular,
+              NotificationTypes.Regular,
               data);
           }
           else
@@ -64,7 +63,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
                 Title = action.Message.UserName,
                 BodyLocKey = "USER_SENT_MESSAGE",
               },
-              SocketNotificationTypes.Regular,
+              NotificationTypes.Regular,
               data);
           }
         }
@@ -78,7 +77,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
             Title = action.Message.UserName,
             BodyLocKey = "USER_SENT_MESSAGE",
           },
-          SocketNotificationTypes.NoPush,
+          NotificationTypes.NoPush,
           data);
       }
     }
@@ -92,7 +91,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_JOINED_MEETING",
         },
-        SocketNotificationTypes.Regular,
+        NotificationTypes.Regular,
         new SocketNotificationData
         {
           Action = "UserJoinedMeeting",
@@ -110,7 +109,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_FOUND_MEETING",
         },
-        SocketNotificationTypes.Regular,
+        NotificationTypes.Regular,
         new SocketNotificationData
         {
           Action = "UserFoundMeeting",
@@ -127,7 +126,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_LEFT_MEETING",
         },
-        SocketNotificationTypes.Regular,
+        NotificationTypes.Regular,
         new SocketNotificationData
         {
           Action = "UserLeftMeeting",
@@ -145,7 +144,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "MEETING_ABORTED",
         },
-        SocketNotificationTypes.Regular,
+        NotificationTypes.Regular,
         new SocketNotificationData
         {
           Action = "MeetingAborted",
@@ -163,7 +162,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING_REQUEST",
           BodyLocKey = "MEETING_REQUEST_EXPIRED",
         },
-        SocketNotificationTypes.Regular,
+        NotificationTypes.Regular,
         new SocketNotificationData
         {
           Action = "MeetingRequestExpired",
@@ -180,7 +179,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "MEETING_EXPIRED",
         },
-        SocketNotificationTypes.Regular,
+        NotificationTypes.Regular,
         new SocketNotificationData
         {
           Action = "MeetingExpired",
@@ -197,7 +196,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "USER",
           BodyLocKey = "USER_REMOVED",
         },
-        SocketNotificationTypes.NoPush,
+        NotificationTypes.NoPush,
         new SocketNotificationData
         {
           Action = "UserRemoved",
@@ -213,7 +212,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "USER",
           BodyLocKey = "USER_DISABLED",
         },
-        SocketNotificationTypes.NoPush,
+        NotificationTypes.NoPush,
         new SocketNotificationData
         {
           Action = "UserDisabled",

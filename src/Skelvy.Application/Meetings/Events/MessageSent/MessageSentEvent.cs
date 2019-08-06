@@ -7,12 +7,14 @@ namespace Skelvy.Application.Meetings.Events.MessageSent
 {
   public class MessageSentEvent : IEvent
   {
-    public MessageSentEvent(MessageSentEventDto message, IList<MessageDto> messages)
+    public MessageSentEvent(string type, MessageSentEventDto message, IList<MessageDto> messages)
     {
+      Type = type;
       Message = message;
       Messages = messages;
     }
 
+    public string Type { get; private set; }
     public MessageSentEventDto Message { get; private set; }
     public IList<MessageDto> Messages { get; private set; }
   }

@@ -34,6 +34,7 @@ namespace Skelvy.Application.Meetings.Events.MessageSent
 
       await _notifications.BroadcastUserSentMessage(
         new UserSentMessageAction(
+          request.Type,
           new UserSentMessageActionDto(
             request.Message.MessageId,
             request.Message.Type,

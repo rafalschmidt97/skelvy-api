@@ -30,9 +30,12 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await _socketService.BroadcastUserSentMessage(action);
 
-      await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastUserSentMessage(action, offline));
+      if (action.Type == NotificationTypes.Regular)
+      {
+        await BroadcastActionToOffline(
+          action.UsersId,
+          async (offline) => await _pushService.BroadcastUserSentMessage(action, offline));
+      }
     }
 
     public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action)

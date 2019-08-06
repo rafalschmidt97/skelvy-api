@@ -6,13 +6,15 @@ namespace Skelvy.Application.Meetings.Infrastructure.Notifications
 {
   public class UserSentMessageAction
   {
-    public UserSentMessageAction(UserSentMessageActionDto message, IList<MessageDto> messages, IList<int> usersId)
+    public UserSentMessageAction(string type, UserSentMessageActionDto message, IList<MessageDto> messages, IList<int> usersId)
     {
+      Type = type;
       Message = message;
       Messages = messages;
       UsersId = usersId;
     }
 
+    public string Type { get; private set; }
     public UserSentMessageActionDto Message { get; private set; }
     public IList<MessageDto> Messages { get; private set; }
     public IList<int> UsersId { get; private set; }
