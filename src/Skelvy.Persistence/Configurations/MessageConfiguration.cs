@@ -13,7 +13,11 @@ namespace Skelvy.Persistence.Configurations
       builder.HasOne(x => x.Attachment).WithMany().OnDelete(DeleteBehavior.Restrict);
 
       builder.HasIndex(e => e.Date);
+      builder.HasIndex(e => e.Action);
+
+      builder.Property(e => e.Type).IsRequired().HasMaxLength(50);
       builder.Property(e => e.Text).HasMaxLength(500);
+      builder.Property(e => e.Action).HasMaxLength(50);
     }
   }
 }
