@@ -11,7 +11,7 @@ using Skelvy.Domain.Exceptions;
 namespace Skelvy.WebAPI.Filters
 {
   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-  public class CustomExceptionFilter : ExceptionFilterAttribute
+  public sealed class CustomExceptionFilter : ExceptionFilterAttribute
   {
     private readonly ILogger<CustomExceptionFilter> _logger;
 
