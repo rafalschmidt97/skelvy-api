@@ -16,6 +16,7 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
     Task<User> FindOneWithRolesByGoogleId(string googleId);
     Task<User> FindOneWithRolesByEmail(string email);
     Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset maxDate);
+    Task<IList<User>> FindAllWithDetailsByUsersId(IEnumerable<int> usersId);
     Task Add(User user);
     Task Update(User user);
     Task RemoveRange(IList<User> users);

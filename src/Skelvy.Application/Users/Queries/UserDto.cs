@@ -14,13 +14,13 @@ namespace Skelvy.Application.Users.Queries
 
     public void CreateMappings(Profile configuration)
     {
-      configuration.CreateMap<BlockedUser, UserDto>()
+      configuration.CreateMap<Relation, UserDto>()
         .ForMember(
           destination => destination.Id,
-          options => options.MapFrom(x => x.BlockUserId))
+          options => options.MapFrom(x => x.RelatedUserId))
         .ForMember(
           destination => destination.Profile,
-          options => options.MapFrom(x => x.BlockUser.Profile));
+          options => options.MapFrom(x => x.RelatedUser.Profile));
     }
   }
 

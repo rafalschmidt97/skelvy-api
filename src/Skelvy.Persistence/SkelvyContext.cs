@@ -22,8 +22,9 @@ namespace Skelvy.Persistence
     public DbSet<Group> Groups { get; private set; }
     public DbSet<GroupUser> GroupUsers { get; private set; }
     public DbSet<Message> Messages { get; private set; }
-    public DbSet<BlockedUser> BlockedUsers { get; private set; }
     public DbSet<Attachment> Attachments { get; private set; }
+    public DbSet<Relation> Relations { get; private set; }
+    public DbSet<FriendRequest> FriendRequests { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

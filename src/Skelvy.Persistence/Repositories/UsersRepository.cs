@@ -82,6 +82,24 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
+    public async Task<IList<User>> FindAllWithDetailsByUsersId(IEnumerable<int> usersId)
+    {
+      var users = await Context.Users
+        .Where(x => usersId.Any(y => y == x.Id))
+        .Include(x => x.Profile)
+        .ToListAsync();
+
+      foreach (var user in users)
+      {
+        user.Profile.Photos = await Context.UserProfilePhotos
+          .Where(x => x.ProfileId == user.Profile.Id)
+          .OrderBy(x => x.Order)
+          .ToListAsync();
+      }
+
+      return users;
+    }
+
     public async Task Add(User user)
     {
       await Context.Users.AddAsync(user);

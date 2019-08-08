@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Notifications.Infrastructure;
+using Skelvy.Application.Relations.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Notifications;
 
 namespace Skelvy.Infrastructure.Notifications
@@ -107,6 +108,24 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await _socketService.BroadcastUserDisabled(action);
       await _emailService.BroadcastUserDisabled(action);
+    }
+
+    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action)
+    {
+      await _socketService.BroadcastUserSentFriendRequest(action);
+
+      await BroadcastActionToOffline(
+        action.UsersId,
+        async (offline) => await _pushService.BroadcastUserSentFriendRequest(action, offline));
+    }
+
+    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action)
+    {
+      await _socketService.BroadcastUserRespondedFriendRequest(action);
+
+      await BroadcastActionToOffline(
+        action.UsersId,
+        async (offline) => await _pushService.BroadcastUserRespondedFriendRequest(action, offline));
     }
 
     public static bool IsConnected(int userId)

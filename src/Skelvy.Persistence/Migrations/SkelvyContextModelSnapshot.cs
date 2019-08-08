@@ -38,34 +38,6 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("Attachments");
                 });
 
-            modelBuilder.Entity("Skelvy.Domain.Entities.BlockedUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BlockUserId");
-
-                    b.Property<DateTimeOffset>("CreatedAt");
-
-                    b.Property<bool>("IsRemoved");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .IsConcurrencyToken();
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BlockUserId");
-
-                    b.HasIndex("IsRemoved");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BlockedUsers");
-                });
-
             modelBuilder.Entity("Skelvy.Domain.Entities.DrinkType", b =>
                 {
                     b.Property<int>("Id")
@@ -82,6 +54,37 @@ namespace Skelvy.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("DrinkTypes");
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.FriendRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreatedAt");
+
+                    b.Property<int>("InvitedUserId");
+
+                    b.Property<int>("InvitingUserId");
+
+                    b.Property<bool>("IsRemoved");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(15);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvitedUserId");
+
+                    b.HasIndex("InvitingUserId");
+
+                    b.HasIndex("IsRemoved");
+
+                    b.ToTable("FriendRequests");
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.Group", b =>
@@ -294,6 +297,38 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("Skelvy.Domain.Entities.Relation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreatedAt");
+
+                    b.Property<bool>("IsRemoved");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .IsConcurrencyToken();
+
+                    b.Property<int>("RelatedUserId");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(15);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsRemoved");
+
+                    b.HasIndex("RelatedUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Relations");
+                });
+
             modelBuilder.Entity("Skelvy.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -422,16 +457,16 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("Skelvy.Domain.Entities.BlockedUser", b =>
+            modelBuilder.Entity("Skelvy.Domain.Entities.FriendRequest", b =>
                 {
-                    b.HasOne("Skelvy.Domain.Entities.User", "BlockUser")
+                    b.HasOne("Skelvy.Domain.Entities.User", "InvitedUser")
                         .WithMany()
-                        .HasForeignKey("BlockUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("InvitedUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Skelvy.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("Skelvy.Domain.Entities.User", "InvitingUser")
+                        .WithMany("FriendsRequests")
+                        .HasForeignKey("InvitingUserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -501,6 +536,19 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasOne("Skelvy.Domain.Entities.User", "User")
                         .WithMany("Messages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.Relation", b =>
+                {
+                    b.HasOne("Skelvy.Domain.Entities.User", "RelatedUser")
+                        .WithMany()
+                        .HasForeignKey("RelatedUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Skelvy.Domain.Entities.User", "User")
+                        .WithMany("Relations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
