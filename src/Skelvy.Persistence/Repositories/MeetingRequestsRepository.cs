@@ -95,22 +95,7 @@ namespace Skelvy.Persistence.Repositories
                     x.MaxDate >= request.MinDate)
         .ToListAsync();
 
-      if (requests.Count > 0)
-      {
-        var blockedUsers = await Context.BlockedUsers
-          .Where(x => x.UserId == user.Id && !x.IsRemoved)
-          .ToListAsync();
-
-        if (blockedUsers.Count > 0)
-        {
-          var filteredRequests = requests.Where(x => blockedUsers.All(y => y.BlockUserId != x.UserId)).ToList();
-          return filteredRequests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
-        }
-
-        return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
-      }
-
-      return default(MeetingRequest);
+      return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
     }
 
     public async Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetails(int userId, double latitude, double longitude)
@@ -131,27 +116,6 @@ namespace Skelvy.Persistence.Repositories
 
       if (requests.Count > 0)
       {
-        var blockedUsers = await Context.BlockedUsers
-          .Where(x => x.UserId == user.Id && !x.IsRemoved)
-          .ToListAsync();
-
-        if (blockedUsers.Count > 0)
-        {
-          var filteredRequests = requests.Where(x => blockedUsers.All(y => y.BlockUserId != x.UserId)).ToList();
-          foreach (var request in filteredRequests)
-          {
-            var userPhotos = await Context.UserProfilePhotos
-              .Include(x => x.Attachment)
-              .Where(x => x.ProfileId == request.User.Profile.Id)
-              .OrderBy(x => x.Order)
-              .ToListAsync();
-
-            request.User.Profile.Photos = userPhotos;
-          }
-
-          return filteredRequests.Where(x => AreMeetingRequestClose(x, user, latitude, longitude)).ToList();
-        }
-
         foreach (var request in requests)
         {
           var userPhotos = await Context.UserProfilePhotos

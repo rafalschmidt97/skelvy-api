@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Relations.Infrastructure;
+using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Uploads.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 
@@ -19,8 +21,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     private readonly IMeetingRequestDrinkTypesRepository _requestDrinkTypesRepository;
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMessagesRepository _messagesRepository;
-    private readonly IBlockedUsersRepository _blockedUsersRepository;
     private readonly IAttachmentsRepository _attachmentsRepository;
+    private readonly IRelationsRepository _relationsRepository;
 
     public RemoveUsersCommandHandler(
       IUsersRepository usersRepository,
@@ -31,8 +33,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       IMeetingRequestDrinkTypesRepository requestDrinkTypesRepository,
       IGroupUsersRepository groupUsersRepository,
       IMessagesRepository messagesRepository,
-      IBlockedUsersRepository blockedUsersRepository,
-      IAttachmentsRepository attachmentsRepository)
+      IAttachmentsRepository attachmentsRepository,
+      IRelationsRepository relationsRepository)
     {
       _usersRepository = usersRepository;
       _rolesRepository = rolesRepository;
@@ -42,8 +44,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       _requestDrinkTypesRepository = requestDrinkTypesRepository;
       _groupUsersRepository = groupUsersRepository;
       _messagesRepository = messagesRepository;
-      _blockedUsersRepository = blockedUsersRepository;
       _attachmentsRepository = attachmentsRepository;
+      _relationsRepository = relationsRepository;
     }
 
     public override async Task<Unit> Handle(RemoveUsersCommand request)
@@ -76,8 +78,10 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
         await _profilePhotosRepository.RemoveRange(userProfilePhotosToRemove);
         await _profilesRepository.RemoveRange(userProfilesToRemove);
 
-        var blockedUsersToRemove = await _blockedUsersRepository.FindAllWithRemovedByUsersId(usersId);
-        await _blockedUsersRepository.RemoveRange(blockedUsersToRemove);
+        var relationsToRemove = await _relationsRepository.FindAllRelationsWithRemovedByUsersId(usersId);
+        await _relationsRepository.RemoveRangeRelation(relationsToRemove);
+        var friendRequestsToRemove = await _relationsRepository.FindAllFriendRequestWithRemovedByUsersId(usersId);
+        await _relationsRepository.RemoveRangeFriendRequest(friendRequestsToRemove);
 
         var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
         await _rolesRepository.RemoveRange(userRolesToRemove);

@@ -14,7 +14,7 @@ namespace Skelvy.Persistence
     {
       SeedUsers(context);
       SeedProfiles(context);
-      SeedBlockedUsers(context);
+      SeedRelations(context);
       SeedDrinkTypes(context);
       SeedMeetingRequests(context);
       SeedMeetings(context);
@@ -108,19 +108,20 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedBlockedUsers(SkelvyContext context)
+    public static void SeedRelations(SkelvyContext context)
     {
-      if (context.BlockedUsers.Any())
+      if (context.Relations.Any())
       {
         return;
       }
 
-      var users = new[]
+      var relations = new[]
       {
-        new BlockedUser(2, 1),
+        new Relation(2, 3, RelationType.Friend),
+        new Relation(3, 2, RelationType.Friend),
       };
 
-      context.BlockedUsers.AddRange(users);
+      context.Relations.AddRange(relations);
       context.SaveChanges();
     }
 

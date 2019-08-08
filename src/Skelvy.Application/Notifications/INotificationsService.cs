@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Relations.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Notifications;
 
 namespace Skelvy.Application.Notifications
@@ -16,5 +17,7 @@ namespace Skelvy.Application.Notifications
     Task BroadcastUserCreated(UserCreatedAction action);
     Task BroadcastUserRemoved(UserRemovedAction action);
     Task BroadcastUserDisabled(UserDisabledAction action);
+    Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action);
+    Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action);
   }
 }

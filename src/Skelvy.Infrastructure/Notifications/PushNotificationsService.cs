@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
-using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Notifications.Infrastructure;
+using Skelvy.Application.Relations.Infrastructure.Notifications;
 
 namespace Skelvy.Infrastructure.Notifications
 {
@@ -161,6 +160,41 @@ namespace Skelvy.Infrastructure.Notifications
           Action = "MeetingExpired",
           RedirectTo = "meeting",
         });
+    }
+
+    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action, IEnumerable<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "FRIENDS",
+          BodyLocKey = "NEW_FRIEND_REQUEST",
+        },
+        new PushNotificationData
+        {
+          Action = "UserSentFriendRequest",
+          RedirectTo = "friends",
+        });
+    }
+
+    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action, IEnumerable<int> usersId)
+    {
+      if (action.IsAccepted)
+      {
+        await SendNotification(
+          usersId,
+          new PushNotificationContent
+          {
+            TitleLocKey = "FRIENDS",
+            BodyLocKey = "FRIEND_REQUEST_ACCEPTED",
+          },
+          new PushNotificationData
+          {
+            Action = "UserRespondedFriendRequest",
+            RedirectTo = "friends",
+          });
+      }
     }
 
     private async Task SendNotification(IEnumerable<int> usersId, PushNotificationContent notification, PushNotificationData data = null)

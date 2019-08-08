@@ -21,8 +21,8 @@ namespace Skelvy.Application.Test.Users.Commands
         new MeetingRequestDrinkTypesRepository(dbContext),
         new GroupUsersRepository(dbContext),
         new MessagesRepository(dbContext),
-        new BlockedUsersRepository(dbContext),
-        new AttachmentsRepository(dbContext));
+        new AttachmentsRepository(dbContext),
+        new RelationsRepository(dbContext));
 
       await handler.Handle(request);
     }

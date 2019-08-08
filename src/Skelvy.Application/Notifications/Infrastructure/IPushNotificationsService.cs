@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Relations.Infrastructure.Notifications;
 
 namespace Skelvy.Application.Notifications.Infrastructure
 {
@@ -13,5 +14,7 @@ namespace Skelvy.Application.Notifications.Infrastructure
     Task BroadcastMeetingAborted(MeetingAbortedAction action, IEnumerable<int> usersId);
     Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId);
     Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId);
+    Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action, IEnumerable<int> usersId);
+    Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action, IEnumerable<int> usersId);
   }
 }

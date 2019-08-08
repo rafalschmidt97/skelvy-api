@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Notifications.Infrastructure;
+using Skelvy.Application.Relations.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Notifications;
 using Skelvy.Domain.Enums.Meetings;
 
@@ -216,6 +217,40 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         new SocketNotificationData
         {
           Action = "UserDisabled",
+        });
+    }
+
+    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action)
+    {
+      await SendNotification(
+        action.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "FRIENDS",
+          BodyLocKey = "NEW_FRIEND_REQUEST",
+        },
+        NotificationTypes.Regular,
+        new SocketNotificationData
+        {
+          Action = "UserSentFriendRequest",
+          RedirectTo = "friends",
+        });
+    }
+
+    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action)
+    {
+      await SendNotification(
+        action.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "FRIENDS",
+          BodyLocKey = action.IsAccepted ? "FRIEND_REQUEST_ACCEPTED" : "FRIEND_REQUEST_DENIED",
+        },
+        NotificationTypes.Regular,
+        new SocketNotificationData
+        {
+          Action = "UserRespondedFriendRequest",
+          RedirectTo = "friends",
         });
     }
 
