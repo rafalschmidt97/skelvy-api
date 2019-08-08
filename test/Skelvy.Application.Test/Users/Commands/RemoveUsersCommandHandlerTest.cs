@@ -22,7 +22,8 @@ namespace Skelvy.Application.Test.Users.Commands
         new GroupUsersRepository(dbContext),
         new MessagesRepository(dbContext),
         new AttachmentsRepository(dbContext),
-        new RelationsRepository(dbContext));
+        new RelationsRepository(dbContext),
+        new FriendRequestsRepository(dbContext));
 
       await handler.Handle(request);
     }

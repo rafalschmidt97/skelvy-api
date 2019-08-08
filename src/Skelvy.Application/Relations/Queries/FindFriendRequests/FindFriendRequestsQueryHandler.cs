@@ -13,16 +13,13 @@ namespace Skelvy.Application.Relations.Queries.FindFriendRequests
   public class
     FindFriendRequestsQueryHandler : QueryHandler<FindFriendRequestsQuery, IList<FriendRequestDto>>
   {
-    private readonly IRelationsRepository _relationsRepository;
+    private readonly IFriendRequestsRepository _friendRequestsRepository;
     private readonly IUsersRepository _usersRepository;
     private readonly IMapper _mapper;
 
-    public FindFriendRequestsQueryHandler(
-      IRelationsRepository relationsRepository,
-      IUsersRepository usersRepository,
-      IMapper mapper)
+    public FindFriendRequestsQueryHandler(IFriendRequestsRepository friendRequestsRepository, IUsersRepository usersRepository, IMapper mapper)
     {
-      _relationsRepository = relationsRepository;
+      _friendRequestsRepository = friendRequestsRepository;
       _usersRepository = usersRepository;
       _mapper = mapper;
     }
@@ -36,7 +33,7 @@ namespace Skelvy.Application.Relations.Queries.FindFriendRequests
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var friendRequests = await _relationsRepository.FindAllFriendRequestsWithInvitingDetailsByUserId(request.UserId);
+      var friendRequests = await _friendRequestsRepository.FindAllWithInvitingDetailsByUserId(request.UserId);
       return _mapper.Map<IList<FriendRequestDto>>(friendRequests);
     }
   }

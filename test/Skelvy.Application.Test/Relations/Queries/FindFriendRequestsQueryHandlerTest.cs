@@ -16,7 +16,7 @@ namespace Skelvy.Application.Test.Relations.Queries
       var dbContext = InitializedDbContext();
 
       var handler = new FindFriendRequestsQueryHandler(
-        new RelationsRepository(dbContext),
+        new FriendRequestsRepository(dbContext),
         new UsersRepository(dbContext),
         Mapper());
 
@@ -33,7 +33,7 @@ namespace Skelvy.Application.Test.Relations.Queries
       var dbContext = InitializedDbContext();
 
       var handler = new FindFriendRequestsQueryHandler(
-        new RelationsRepository(dbContext),
+        new FriendRequestsRepository(dbContext),
         new UsersRepository(dbContext),
         Mapper());
 
@@ -50,7 +50,7 @@ namespace Skelvy.Application.Test.Relations.Queries
       var dbContext = DbContext();
 
       var handler = new FindFriendRequestsQueryHandler(
-        new RelationsRepository(dbContext),
+        new FriendRequestsRepository(dbContext),
         new UsersRepository(dbContext),
         Mapper());
 

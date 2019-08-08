@@ -35,7 +35,7 @@ namespace Skelvy.Application.Relations.Queries.FIndFriends
       }
 
       var friendRelations = await _relationsRepository
-        .FindPageRelationsUsersWithRelatedDetailsByUserIdAndType(request.UserId, RelationType.Friend, request.Page);
+        .FindPageUsersWithRelatedDetailsByUserIdAndType(request.UserId, RelationType.Friend, request.Page);
 
       return _mapper.Map<IList<UserDto>>(friendRelations);
     }

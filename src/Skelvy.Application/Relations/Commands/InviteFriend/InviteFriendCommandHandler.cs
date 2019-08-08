@@ -13,15 +13,18 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
   public class InviteFriendCommandHandler : CommandHandler<InviteFriendCommand>
   {
     private readonly IRelationsRepository _relationsRepository;
+    private readonly IFriendRequestsRepository _friendRequestsRepository;
     private readonly IUsersRepository _usersRepository;
     private readonly IMediator _mediator;
 
     public InviteFriendCommandHandler(
       IRelationsRepository relationsRepository,
+      IFriendRequestsRepository friendRequestsRepository,
       IUsersRepository usersRepository,
       IMediator mediator)
     {
       _relationsRepository = relationsRepository;
+      _friendRequestsRepository = friendRequestsRepository;
       _usersRepository = usersRepository;
       _mediator = mediator;
     }
@@ -32,7 +35,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
 
       var friendRequest = new FriendRequest(request.UserId, request.InvitedUserId);
 
-      await _relationsRepository.AddFriendRequest(friendRequest);
+      await _friendRequestsRepository.Add(friendRequest);
 
       await _mediator.Publish(
         new UserSentFriendRequestEvent(friendRequest.Id, friendRequest.InvitingUserId, friendRequest.InvitedUserId));
@@ -57,7 +60,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
       }
 
       var relationExists = await _relationsRepository
-        .ExistsRelationByUserIdAndRelatedUserIdAndType(request.UserId, request.InvitedUserId, RelationType.Friend);
+        .ExistsByUserIdAndRelatedUserIdAndType(request.UserId, request.InvitedUserId, RelationType.Friend);
 
       if (relationExists)
       {
@@ -65,8 +68,8 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
           $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.InvitedUserId}) already exists.");
       }
 
-      var requestExists = await _relationsRepository
-        .ExistsFriendRequestByInvitingIdAndInvitedId(request.UserId, request.InvitedUserId);
+      var requestExists = await _friendRequestsRepository
+        .ExistsByInvitingIdAndInvitedId(request.UserId, request.InvitedUserId);
 
       if (requestExists)
       {

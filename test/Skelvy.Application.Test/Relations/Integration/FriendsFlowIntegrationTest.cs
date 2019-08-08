@@ -6,6 +6,7 @@ using Moq;
 using Skelvy.Application.Relations.Commands.InviteFriend;
 using Skelvy.Application.Relations.Commands.InviteFriendResponse;
 using Skelvy.Application.Relations.Commands.RemoveFriend;
+using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Relations.Queries.FindFriendRequests;
 using Skelvy.Application.Relations.Queries.FIndFriends;
 using Skelvy.Domain.Enums.Users;
@@ -22,6 +23,7 @@ namespace Skelvy.Application.Test.Relations.Integration
     private const int UserTwoId = 2;
 
     private readonly RelationsRepository _relationsRepository;
+    private readonly IFriendRequestsRepository _friendRequestsRepository;
     private readonly UsersRepository _usersRepository;
     private readonly Mock<IMediator> _mediator;
 
@@ -29,6 +31,7 @@ namespace Skelvy.Application.Test.Relations.Integration
     {
       var context = TestDbContext();
       _relationsRepository = new RelationsRepository(context);
+      _friendRequestsRepository = new FriendRequestsRepository(context);
       _usersRepository = new UsersRepository(context);
       _mediator = new Mock<IMediator>();
     }
@@ -59,7 +62,7 @@ namespace Skelvy.Application.Test.Relations.Integration
     {
       var command = new InviteFriendCommand(UserOneId, UserTwoId);
       var handler =
-        new InviteFriendCommandHandler(_relationsRepository, _usersRepository, _mediator.Object);
+        new InviteFriendCommandHandler(_relationsRepository, _friendRequestsRepository, _usersRepository, _mediator.Object);
 
       await handler.Handle(command);
     }
@@ -68,7 +71,7 @@ namespace Skelvy.Application.Test.Relations.Integration
     {
       var query = new FindFriendRequestsQuery(UserTwoId);
       var handler =
-        new FindFriendRequestsQueryHandler(_relationsRepository, _usersRepository, Mapper());
+        new FindFriendRequestsQueryHandler(_friendRequestsRepository, _usersRepository, Mapper());
 
       var invites = await handler.Handle(query);
 
@@ -77,12 +80,12 @@ namespace Skelvy.Application.Test.Relations.Integration
 
     private async Task UserTwoAcceptsInviteFromUserOne()
     {
-      var invitation = _relationsRepository.FindAllFriendRequestsWithInvitingDetailsByUserId(UserTwoId).Result.FirstOrDefault();
+      var invitation = _friendRequestsRepository.FindAllWithInvitingDetailsByUserId(UserTwoId).Result.FirstOrDefault();
 
       var userFriendsRequestResponseCommand =
         new InviteFriendResponseCommand(UserTwoId, invitation.Id, true);
       var userFriendsRequestResponseCommandHandler =
-        new InviteFriendResponseCommandHandler(_relationsRepository, _usersRepository, _mediator.Object);
+        new InviteFriendResponseCommandHandler(_relationsRepository, _friendRequestsRepository, _usersRepository, _mediator.Object);
 
       await userFriendsRequestResponseCommandHandler.Handle(userFriendsRequestResponseCommand);
     }
@@ -91,16 +94,16 @@ namespace Skelvy.Application.Test.Relations.Integration
     {
       var query = new FindFriendRequestsQuery(UserTwoId);
       var handler =
-        new FindFriendRequestsQueryHandler(_relationsRepository, _usersRepository, Mapper());
+        new FindFriendRequestsQueryHandler(_friendRequestsRepository, _usersRepository, Mapper());
 
       var invites = await handler.Handle(query);
-      var invitesInDatabase = await _relationsRepository.FindAllFriendRequestsWithInvitingDetailsByUserId(UserTwoId);
+      var invitesInDatabase = await _friendRequestsRepository.FindAllWithInvitingDetailsByUserId(UserTwoId);
       return !invites.Any() && !invitesInDatabase.Any();
     }
 
     private async Task<bool> UserOneAndUserTwoHaveAFriendsRelation()
     {
-      var relations = await _relationsRepository.FindAllRelationsByUserIdAndRelatedUserIdAndType(UserOneId, UserTwoId, RelationType.Friend);
+      var relations = await _relationsRepository.FindAllByUserIdAndRelatedUserIdAndType(UserOneId, UserTwoId, RelationType.Friend);
 
       return relations.Count == 2 && relations.All(r => r.Type == RelationType.Friend);
     }
@@ -146,7 +149,7 @@ namespace Skelvy.Application.Test.Relations.Integration
 
     private async Task<bool> UserOneAndUserTwoShouldHaveNoRelation()
     {
-      var relationExists = await _relationsRepository.ExistsRelationByUserIdAndRelatedUserIdAndType(UserOneId, UserTwoId, RelationType.Friend);
+      var relationExists = await _relationsRepository.ExistsByUserIdAndRelatedUserIdAndType(UserOneId, UserTwoId, RelationType.Friend);
       return !relationExists;
     }
   }

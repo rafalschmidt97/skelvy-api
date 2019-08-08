@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
-using Skelvy.Application.Relations.Infrastructure;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Uploads.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
@@ -23,6 +22,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     private readonly IMessagesRepository _messagesRepository;
     private readonly IAttachmentsRepository _attachmentsRepository;
     private readonly IRelationsRepository _relationsRepository;
+    private readonly IFriendRequestsRepository _friendRequestsRepository;
 
     public RemoveUsersCommandHandler(
       IUsersRepository usersRepository,
@@ -34,7 +34,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       IGroupUsersRepository groupUsersRepository,
       IMessagesRepository messagesRepository,
       IAttachmentsRepository attachmentsRepository,
-      IRelationsRepository relationsRepository)
+      IRelationsRepository relationsRepository,
+      IFriendRequestsRepository friendRequestsRepository)
     {
       _usersRepository = usersRepository;
       _rolesRepository = rolesRepository;
@@ -46,6 +47,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       _messagesRepository = messagesRepository;
       _attachmentsRepository = attachmentsRepository;
       _relationsRepository = relationsRepository;
+      _friendRequestsRepository = friendRequestsRepository;
     }
 
     public override async Task<Unit> Handle(RemoveUsersCommand request)
@@ -78,10 +80,10 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
         await _profilePhotosRepository.RemoveRange(userProfilePhotosToRemove);
         await _profilesRepository.RemoveRange(userProfilesToRemove);
 
-        var relationsToRemove = await _relationsRepository.FindAllRelationsWithRemovedByUsersId(usersId);
-        await _relationsRepository.RemoveRangeRelation(relationsToRemove);
-        var friendRequestsToRemove = await _relationsRepository.FindAllFriendRequestWithRemovedByUsersId(usersId);
-        await _relationsRepository.RemoveRangeFriendRequest(friendRequestsToRemove);
+        var relationsToRemove = await _relationsRepository.FindAllWithRemovedByUsersId(usersId);
+        await _relationsRepository.RemoveRange(relationsToRemove);
+        var friendRequestsToRemove = await _friendRequestsRepository.FindAllWithRemovedByUsersId(usersId);
+        await _friendRequestsRepository.RemoveRange(friendRequestsToRemove);
 
         var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
         await _rolesRepository.RemoveRange(userRolesToRemove);

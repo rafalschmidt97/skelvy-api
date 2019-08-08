@@ -15,15 +15,18 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
   public class InviteFriendResponseCommandHandler : CommandHandler<InviteFriendResponseCommand>
   {
     private readonly IRelationsRepository _relationsRepository;
+    private readonly IFriendRequestsRepository _friendRequestsRepository;
     private readonly IUsersRepository _usersRepository;
     private readonly IMediator _mediator;
 
     public InviteFriendResponseCommandHandler(
       IRelationsRepository relationsRepository,
+      IFriendRequestsRepository friendRequestsRepository,
       IUsersRepository usersRepository,
       IMediator mediator)
     {
       _relationsRepository = relationsRepository;
+      _friendRequestsRepository = friendRequestsRepository;
       _usersRepository = usersRepository;
       _mediator = mediator;
     }
@@ -49,8 +52,8 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
           new Relation(friendRequest.InvitedUserId, friendRequest.InvitingUserId, RelationType.Friend),
         };
 
-        await _relationsRepository.UpdateFriendsRequest(friendRequest);
-        await _relationsRepository.AddRangeRelations(relations);
+        await _friendRequestsRepository.Update(friendRequest);
+        await _relationsRepository.AddRange(relations);
 
         transaction.Commit();
 
@@ -70,7 +73,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
         throw new NotFoundException($"Entity {nameof(UserProfile)}(UserId = {request.UserId}) not found.");
       }
 
-      var friendRequest = await _relationsRepository.FindOneFriendRequestByRequestId(request.RequestId);
+      var friendRequest = await _friendRequestsRepository.FindOneByRequestId(request.RequestId);
 
       if (friendRequest == null)
       {

@@ -33,7 +33,7 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
         relation.Abort();
       }
 
-      await _relationsRepository.UpdateRangeRelation(friendRelations);
+      await _relationsRepository.UpdateRange(friendRelations);
 
       return Unit.Value;
     }
@@ -48,7 +48,7 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
       }
 
       var friendRelations = await _relationsRepository
-        .FindAllRelationsByUserIdAndRelatedUserIdAndType(request.UserId, request.RemovedUserId, RelationType.Friend);
+        .FindAllByUserIdAndRelatedUserIdAndType(request.UserId, request.RemovedUserId, RelationType.Friend);
 
       if (!friendRelations.Any())
       {
