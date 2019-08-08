@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindSelfUser;
@@ -18,7 +17,7 @@ namespace Skelvy.Application.Test.Users.Queries
       var result = await handler.Handle(request);
 
       Assert.IsType<SelfUserDto>(result);
-      Assert.NotEqual(default(DateTimeOffset), result.Profile.Birthday);
+      Assert.NotEqual(default, result.Profile.Birthday);
     }
 
     [Fact]

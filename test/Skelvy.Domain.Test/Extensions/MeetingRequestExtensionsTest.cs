@@ -41,7 +41,7 @@ namespace Skelvy.Domain.Test.Extensions
 
       var date = request1.FindCommonDate(request2);
 
-      Assert.NotEqual(default(DateTimeOffset), date);
+      Assert.NotEqual(default, date);
       Assert.True(date >= DateTimeOffset.UtcNow.AddDays(-1).AddMinutes(-1));
       Assert.True(date <= DateTimeOffset.UtcNow.AddDays(1).AddMinutes(1));
     }
@@ -54,7 +54,7 @@ namespace Skelvy.Domain.Test.Extensions
 
       var date = request1.FindCommonDate(request2);
 
-      Assert.Equal(default(DateTimeOffset), date);
+      Assert.Equal(default, date);
     }
 
     [Fact]
@@ -66,7 +66,7 @@ namespace Skelvy.Domain.Test.Extensions
 
       var date = request1.FindCommonDate(request2);
 
-      Assert.NotEqual(default(DateTimeOffset), date);
+      Assert.NotEqual(default, date);
       Assert.Equal(min, date);
     }
 
@@ -138,7 +138,7 @@ namespace Skelvy.Domain.Test.Extensions
 
       var drinkTypeId = request1.FindCommonDrinkTypeId(request2);
 
-      Assert.Equal(default(int), drinkTypeId);
+      Assert.Equal(default, drinkTypeId);
     }
 
     [Fact]

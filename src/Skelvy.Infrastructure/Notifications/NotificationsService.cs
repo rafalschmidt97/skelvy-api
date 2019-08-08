@@ -130,7 +130,7 @@ namespace Skelvy.Infrastructure.Notifications
 
     public static bool IsConnected(int userId)
     {
-      return Connections.FirstOrDefault(x => x == userId) != default(int);
+      return Connections.FirstOrDefault(x => x == userId) != default;
     }
 
     private static Task BroadcastActionToOffline(

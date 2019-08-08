@@ -22,7 +22,7 @@ namespace Skelvy.Common.Serializers
     {
       if (bytesToDeserialize == null)
       {
-        return default(T);
+        return default;
       }
 
       var binaryFormatter = new BinaryFormatter();

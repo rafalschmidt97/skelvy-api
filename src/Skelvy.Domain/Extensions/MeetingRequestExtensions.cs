@@ -38,7 +38,7 @@ namespace Skelvy.Domain.Extensions
     public static DateTimeOffset FindRequiredCommonDate(this MeetingRequest request1, MeetingRequest request2)
     {
       var date = FindCommonDate(request1, request2);
-      return date != default(DateTimeOffset) ? date : throw new DomainException($"{nameof(MeetingRequest)}[Id = {request1.Id}, Id = {request2.Id}]) don't have common date.");
+      return date != default ? date : throw new DomainException($"{nameof(MeetingRequest)}[Id = {request1.Id}, Id = {request2.Id}]) don't have common date.");
     }
 
     public static IEnumerable<int> FindCommonDrinkTypesId(this MeetingRequest request1, MeetingRequest request2)
@@ -57,7 +57,7 @@ namespace Skelvy.Domain.Extensions
     public static int FindRequiredCommonDrinkTypeId(this MeetingRequest request1, MeetingRequest request2)
     {
       var drink = FindCommonDrinkTypeId(request1, request2);
-      return drink != default(int) ? drink : throw new DomainException($"{nameof(MeetingRequest)}[Id = {request1.Id}, Id = {request2.Id}]) don't have common drink.");
+      return drink != default ? drink : throw new DomainException($"{nameof(MeetingRequest)}[Id = {request1.Id}, Id = {request2.Id}]) don't have common drink.");
     }
   }
 }
