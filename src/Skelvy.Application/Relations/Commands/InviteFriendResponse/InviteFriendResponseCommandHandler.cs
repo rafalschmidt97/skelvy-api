@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Relations.Events.UserRespondedFriendRequest;
-using Skelvy.Application.Relations.Infrastructure;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;

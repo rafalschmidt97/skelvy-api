@@ -10,7 +10,7 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
     Task<IList<UserProfilePhoto>> FindAllWithAttachmentByProfileId(int profileId);
     Task<IList<UserProfilePhoto>> FindAllWithRemovedByProfilesId(IEnumerable<int> profilesId);
     Task Add(UserProfilePhoto photo);
-    Task AddRange(IList<UserProfilePhoto> newPhotos);
-    Task RemoveRange(IList<UserProfilePhoto> oldPhotos);
+    Task AddRange(IList<UserProfilePhoto> photos);
+    Task RemoveRange(IList<UserProfilePhoto> photos);
   }
 }

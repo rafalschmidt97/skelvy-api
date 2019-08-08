@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Events.MeetingExpired;
+using Skelvy.Application.Meetings.Events.MeetingsExpired;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Extensions;
 

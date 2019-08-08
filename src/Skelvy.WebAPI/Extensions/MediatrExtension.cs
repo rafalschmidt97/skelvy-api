@@ -1,5 +1,4 @@
 using System.Reflection;
-using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;

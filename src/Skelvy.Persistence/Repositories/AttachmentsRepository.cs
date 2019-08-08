@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Uploads.Infrastructure.Repositories;
-using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Repositories

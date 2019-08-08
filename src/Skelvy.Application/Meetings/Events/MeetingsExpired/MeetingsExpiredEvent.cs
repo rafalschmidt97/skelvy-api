@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Events.MeetingExpired
+namespace Skelvy.Application.Meetings.Events.MeetingsExpired
 {
   public class MeetingsExpiredEvent : IEvent
   {

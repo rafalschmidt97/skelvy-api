@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Skelvy.Persistence.Migrations.Scripts.DrinkTypesInsteadOfDrinks
+namespace Skelvy.Persistence.Migrations.Scripts
 {
   public interface IMigration
   {

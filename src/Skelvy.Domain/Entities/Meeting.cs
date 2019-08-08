@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Skelvy.Domain.Entities.Base;
 using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Domain.Exceptions;

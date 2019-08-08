@@ -6,7 +6,7 @@ using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 
-namespace Skelvy.Application.Meetings.Events.MeetingExpired
+namespace Skelvy.Application.Meetings.Events.MeetingRequestsExpired
 {
   public class MeetingRequestsExpiredEventHandler : EventHandler<MeetingRequestsExpiredEvent>
   {
