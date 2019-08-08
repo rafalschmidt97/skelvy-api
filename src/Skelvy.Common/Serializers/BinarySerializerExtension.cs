@@ -13,11 +13,9 @@ namespace Skelvy.Common.Serializers
       }
 
       var binaryFormatter = new BinaryFormatter();
-      using (var memoryStream = new MemoryStream())
-      {
-        binaryFormatter.Serialize(memoryStream, objectToSerialize);
-        return memoryStream.ToArray();
-      }
+      var memoryStream = new MemoryStream();
+      binaryFormatter.Serialize(memoryStream, objectToSerialize);
+      return memoryStream.ToArray();
     }
 
     public static T BinaryDeserialize<T>(this byte[] bytesToDeserialize)
@@ -28,10 +26,8 @@ namespace Skelvy.Common.Serializers
       }
 
       var binaryFormatter = new BinaryFormatter();
-      using (var memoryStream = new MemoryStream(bytesToDeserialize))
-      {
-        return (T)binaryFormatter.Deserialize(memoryStream);
-      }
+      var memoryStream = new MemoryStream(bytesToDeserialize);
+      return (T)binaryFormatter.Deserialize(memoryStream);
     }
   }
 }

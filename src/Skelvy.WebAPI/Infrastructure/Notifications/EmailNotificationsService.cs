@@ -86,16 +86,12 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     private async Task<string> GetHtmlBody(EmailMessage message)
     {
-      string template;
-
       var path = message.Language != null ?
         $"Views/{message.Language}/{message.TemplateName}.cshtml" :
         $"Views/en/{message.TemplateName}.cshtml";
 
-      using (var reader = new StreamReader(File.OpenRead(path)))
-      {
-        template = await reader.ReadToEndAsync();
-      }
+      var reader = new StreamReader(File.OpenRead(path));
+      var template = await reader.ReadToEndAsync();
 
       return await _templateRenderer.ParseAsync(template, message.Model);
     }
