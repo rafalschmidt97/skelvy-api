@@ -111,7 +111,7 @@ namespace Skelvy.Application.Test.Relations.Integration
       var getUserFriendsListQueryUserTwo = new FindFriendsQuery(UserTwoId, 1);
 
       var getUserFriendsListQueryHandler =
-        new FindFriendsQueryHandler(_relationsRepository, Mapper(), _usersRepository);
+        new FindFriendsQueryHandler(_relationsRepository, _usersRepository, Mapper());
 
       var userOneFriendsList = await getUserFriendsListQueryHandler.Handle(getUserFriendsListQueryUserOne);
       var userTwoFriendsList = await getUserFriendsListQueryHandler.Handle(getUserFriendsListQueryUserTwo);
@@ -136,7 +136,7 @@ namespace Skelvy.Application.Test.Relations.Integration
       var getUserFriendsListQueryUserTwo = new FindFriendsQuery(UserTwoId, 1);
 
       var handler =
-        new FindFriendsQueryHandler(_relationsRepository, Mapper(), _usersRepository);
+        new FindFriendsQueryHandler(_relationsRepository, _usersRepository, Mapper());
 
       var userOneFriendsList = await handler.Handle(getUserFriendsListQueryUserOne);
       var userTwoFriendsList = await handler.Handle(getUserFriendsListQueryUserTwo);

@@ -14,6 +14,7 @@ namespace Skelvy.Persistence
     {
       SeedUsers(context);
       SeedProfiles(context);
+      SeedFriendRequests(context);
       SeedRelations(context);
       SeedDrinkTypes(context);
       SeedMeetingRequests(context);
@@ -105,6 +106,22 @@ namespace Skelvy.Persistence
       };
 
       context.UserProfilePhotos.AddRange(photos);
+      context.SaveChanges();
+    }
+
+    public static void SeedFriendRequests(SkelvyContext context)
+    {
+      if (context.FriendRequests.Any())
+      {
+        return;
+      }
+
+      var friendRequests = new[]
+      {
+        new FriendRequest(1, 2),
+      };
+
+      context.FriendRequests.AddRange(friendRequests);
       context.SaveChanges();
     }
 

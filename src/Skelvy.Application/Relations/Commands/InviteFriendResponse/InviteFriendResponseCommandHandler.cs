@@ -83,15 +83,6 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
           $"Request {nameof(FriendRequest)}(RequestId = {request.RequestId}) not belong to {nameof(User)}(Id = {request.UserId}).");
       }
 
-      var relationExists = await _relationsRepository
-        .ExistsRelationByUserIdAndRelatedUserIdAndType(friendRequest.InvitingUserId, friendRequest.InvitedUserId, RelationType.Friend);
-
-      if (relationExists)
-      {
-        throw new ConflictException(
-          $"Entity {nameof(Relation)}(UserId={friendRequest.InvitedUserId}, RelatedUserId={friendRequest.InvitingUserId}) already exists.");
-      }
-
       return friendRequest;
     }
   }

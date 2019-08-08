@@ -18,14 +18,11 @@ namespace Skelvy.Application.Relations.Queries.FIndFriends
     private readonly IUsersRepository _usersRepository;
     private readonly IMapper _mapper;
 
-    public FindFriendsQueryHandler(
-      IRelationsRepository relationsRepository,
-      IMapper mapper,
-      IUsersRepository usersRepository)
+    public FindFriendsQueryHandler(IRelationsRepository relationsRepository, IUsersRepository usersRepository, IMapper mapper)
     {
       _relationsRepository = relationsRepository;
-      _mapper = mapper;
       _usersRepository = usersRepository;
+      _mapper = mapper;
     }
 
     public override async Task<IList<UserDto>> Handle(FindFriendsQuery request)
