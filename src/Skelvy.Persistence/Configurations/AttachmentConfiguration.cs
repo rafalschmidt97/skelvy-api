@@ -8,7 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<Attachment> builder)
     {
-      builder.Property(e => e.Type).IsRequired().HasMaxLength(50);
+      builder.Property(e => e.Type).IsRequired().HasMaxLength(15);
       builder.Property(e => e.Url).IsRequired().HasMaxLength(2048);
     }
   }

@@ -7,7 +7,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
   {
     public AddMessageCommandValidator()
     {
-      RuleFor(x => x.Type).NotEmpty().MaximumLength(50)
+      RuleFor(x => x.Type).NotEmpty().MaximumLength(15)
         .Must(x => x == MessageTypes.Action || x == MessageTypes.Response)
         .WithMessage($"'Type' must be {MessageTypes.Action} / {MessageTypes.Response}");
 
@@ -24,7 +24,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
       {
         RuleFor(x => x.Text).Empty();
         RuleFor(x => x.AttachmentUrl).Empty();
-        RuleFor(x => x.Action).NotEmpty().MaximumLength(500);
+        RuleFor(x => x.Action).NotEmpty().MaximumLength(15);
         RuleFor(x => x.Action).Must(x =>
             x == MessageActionTypes.Seen || x == MessageActionTypes.TypingOn || x == MessageActionTypes.TypingOff)
           .WithMessage(
