@@ -13,34 +13,28 @@ namespace Skelvy.WebAPI.Controllers
 {
   public class RelationsController : BaseController
   {
-    [HttpGet("relations/self/friends")]
-    public async Task<IList<UserDto>> FindAllSelfFriends([FromQuery] FindFriendsQuery request)
+    [HttpGet("self/friends")]
+    public async Task<IList<UserDto>> FindPageSelfFriends([FromQuery] FindFriendsQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
     }
 
-    [HttpGet("relations/self/friends/pending")]
-    public async Task<IList<FriendRequestDto>> FindAllSelfPendingFriends()
-    {
-      return await Mediator.Send(new FindFriendRequestsQuery(UserId));
-    }
-
-    [HttpPost("relations/self/friends")]
-    public async Task InviteToFriends(InviteFriendCommand request)
-    {
-      request.UserId = UserId;
-      await Mediator.Send(request);
-    }
-
-    [HttpGet("relations/self/friends/requests")]
+    [HttpGet("self/friends/requests")]
     public async Task<IList<FriendRequestDto>> FindAllSelfFriendRequests()
     {
       return await Mediator.Send(new FindFriendRequestsQuery(UserId));
     }
 
-    [HttpPost("relations/self/friends/respond")]
-    public async Task RespondToSelfRequest(InviteFriendResponseCommand request)
+    [HttpPost("self/friends/invite")]
+    public async Task InviteSelfFriend(InviteFriendCommand request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
+    }
+
+    [HttpPost("self/friends/respond")]
+    public async Task RespondSelfFriendRequest(InviteFriendResponseCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);

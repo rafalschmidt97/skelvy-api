@@ -1,41 +1,61 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Skelvy.Application.Meetings.Commands.ConnectMeetingRequest;
+using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
+using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
+using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
-using Skelvy.Domain.Enums.Users;
-using Skelvy.WebAPI.Filters;
+using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
 
 namespace Skelvy.WebAPI.Controllers
 {
   public class MeetingsController : BaseController
   {
-    [HttpGet("{id}")]
-    [AuthorizeRole(RoleType.Admin)]
-    public async Task<MeetingModel> Find(int id, [FromQuery] FindMeetingQuery request)
-    {
-      request.UserId = id;
-      return await Mediator.Send(request);
-    }
-
     [HttpGet("self")]
-    public async Task<MeetingModel> FindSelf([FromQuery] FindMeetingQuery request)
+    public async Task<MeetingModel> FindAllSelf([FromQuery] FindMeetingQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
     }
 
-    [HttpDelete("{id}")]
-    [AuthorizeRole(RoleType.Admin)]
-    public async Task Remove(int id)
-    {
-      await Mediator.Send(new LeaveMeetingCommand(id));
-    }
-
-    [HttpDelete("self")]
-    public async Task RemoveSelf()
+    [HttpDelete("self/leave")]
+    public async Task LeaveSelf()
     {
       await Mediator.Send(new LeaveMeetingCommand(UserId));
+    }
+
+    [HttpPost("self/requests")]
+    public async Task CreateSelfRequest(CreateMeetingRequestCommand request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
+    }
+
+    [HttpDelete("self/requests")]
+    public async Task RemoveSelfRequest()
+    {
+      await Mediator.Send(new RemoveMeetingRequestCommand(UserId));
+    }
+
+    [HttpGet("self/suggestions")]
+    public async Task<MeetingSuggestionsModel> FindSelfMeetingSuggestions([FromQuery] FindMeetingSuggestionsQuery request)
+    {
+      request.UserId = UserId;
+      return await Mediator.Send(request);
+    }
+
+    [HttpPost("{id}/join")]
+    public async Task JoinMeeting(int id)
+    {
+      await Mediator.Send(new JoinMeetingCommand(UserId, id));
+    }
+
+    [HttpPost("self/requests/{id}/connect")]
+    public async Task ConnectSelfMeetingRequest(int id)
+    {
+      await Mediator.Send(new ConnectMeetingRequestCommand(UserId, id));
     }
   }
 }

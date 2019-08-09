@@ -4,38 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.AddMessage;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMessages;
-using Skelvy.Domain.Enums.Users;
-using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI.Controllers
 {
   public class MessagesController : BaseController
   {
-    [HttpGet("{id}")]
-    [AuthorizeRole(RoleType.Admin)]
-    public async Task<IList<MessageDto>> FindMessages(int id, [FromQuery] FindMessagesQuery request)
-    {
-      request.UserId = id;
-      return await Mediator.Send(request);
-    }
-
     [HttpGet("self")]
-    public async Task<IList<MessageDto>> FindSelfMessages([FromQuery] FindMessagesQuery request)
+    public async Task<IList<MessageDto>> FindBeforeSelf([FromQuery] FindMessagesQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
     }
 
-    [HttpPost("{id}")]
-    [AuthorizeRole(RoleType.Admin)]
-    public async Task<IList<MessageDto>> AddMessage(int id, AddMessageCommand request)
-    {
-      request.UserId = id;
-      return await Mediator.Send(request);
-    }
-
     [HttpPost("self")]
-    public async Task<IList<MessageDto>> AddSelfMessage(AddMessageCommand request)
+    public async Task<IList<MessageDto>> AddSelf(AddMessageCommand request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
