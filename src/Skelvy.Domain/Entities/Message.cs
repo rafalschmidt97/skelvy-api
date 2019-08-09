@@ -32,14 +32,14 @@ namespace Skelvy.Domain.Entities
 
     public void UpdateSeen()
     {
-      if (Type == MessageTypes.Action && Action == MessageActionTypes.Seen)
+      if (Type == MessageType.Action && Action == MessageActionType.Seen)
       {
         Date = DateTimeOffset.UtcNow;
       }
       else
       {
         throw new DomainException(
-          $"Entity {nameof(Message)}(Id = {Id}) is not {MessageActionTypes.Seen} or type is not {MessageTypes.Action}.");
+          $"Entity {nameof(Message)}(Id = {Id}) is not {MessageActionType.Seen} or type is not {MessageType.Action}.");
       }
     }
   }

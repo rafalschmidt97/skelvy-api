@@ -12,7 +12,7 @@ namespace Skelvy.Domain.Test.Entities
     public void ShouldUpdateSeen()
     {
       var date = DateTimeOffset.UtcNow.AddHours(-2);
-      var entity = new Message(MessageTypes.Action, date, null, null, MessageActionTypes.Seen, 1, 1);
+      var entity = new Message(MessageType.Action, date, null, null, MessageActionType.Seen, 1, 1);
       entity.UpdateSeen();
 
       Assert.NotEqual(entity.Date, date);
@@ -21,7 +21,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithResponseType()
     {
-      var entity = new Message(MessageTypes.Response, DateTimeOffset.UtcNow, null, null, MessageActionTypes.Seen, 1, 1);
+      var entity = new Message(MessageType.Response, DateTimeOffset.UtcNow, null, null, MessageActionType.Seen, 1, 1);
 
       Assert.Throws<DomainException>(() =>
         entity.UpdateSeen());
@@ -30,7 +30,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithNonSeenType()
     {
-      var entity = new Message(MessageTypes.Action, DateTimeOffset.UtcNow, null, null, MessageActionTypes.TypingOn, 1, 1);
+      var entity = new Message(MessageType.Action, DateTimeOffset.UtcNow, null, null, MessageActionType.TypingOn, 1, 1);
 
       Assert.Throws<DomainException>(() =>
         entity.UpdateSeen());

@@ -1,6 +1,6 @@
 namespace Skelvy.Application.Notifications
 {
-  public static class NotificationTypes
+  public static class NotificationType
   {
     public const string Regular = "regular";
     public const string SilentPush = "silent_push";

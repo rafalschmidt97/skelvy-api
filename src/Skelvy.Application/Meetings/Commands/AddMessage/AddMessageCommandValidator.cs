@@ -8,10 +8,10 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
     public AddMessageCommandValidator()
     {
       RuleFor(x => x.Type).NotEmpty().MaximumLength(15)
-        .Must(x => x == MessageTypes.Action || x == MessageTypes.Response)
-        .WithMessage($"'Type' must be {MessageTypes.Action} / {MessageTypes.Response}");
+        .Must(x => x == MessageType.Action || x == MessageType.Response)
+        .WithMessage($"'Type' must be {MessageType.Action} / {MessageType.Response}");
 
-      When(x => x.Type == MessageTypes.Response, () =>
+      When(x => x.Type == MessageType.Response, () =>
       {
         RuleFor(x => x.Text).MaximumLength(500);
         RuleFor(x => x.Text).NotEmpty().When(x => string.IsNullOrEmpty(x.AttachmentUrl));
@@ -20,15 +20,15 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
         RuleFor(x => x.Action).Empty();
       });
 
-      When(x => x.Type == MessageTypes.Action, () =>
+      When(x => x.Type == MessageType.Action, () =>
       {
         RuleFor(x => x.Text).Empty();
         RuleFor(x => x.AttachmentUrl).Empty();
         RuleFor(x => x.Action).NotEmpty().MaximumLength(15);
         RuleFor(x => x.Action).Must(x =>
-            x == MessageActionTypes.Seen || x == MessageActionTypes.TypingOn || x == MessageActionTypes.TypingOff)
+            x == MessageActionType.Seen || x == MessageActionType.TypingOn || x == MessageActionType.TypingOff)
           .WithMessage(
-            $"'Action' must be {MessageActionTypes.Seen} / {MessageActionTypes.TypingOn} / {MessageActionTypes.TypingOff}");
+            $"'Action' must be {MessageActionType.Seen} / {MessageActionType.TypingOn} / {MessageActionType.TypingOff}");
       });
 
       RuleFor(x => x.UserId).NotEmpty();

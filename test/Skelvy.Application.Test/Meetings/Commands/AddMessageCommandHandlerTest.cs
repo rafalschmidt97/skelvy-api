@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowExceptionWithResponse()
     {
-      var request = new AddMessageCommand(MessageTypes.Response, "Hello World", null, null, 2, 1);
+      var request = new AddMessageCommand(MessageType.Response, "Hello World", null, null, 2, 1);
       var dbContext = InitializedDbContext();
       var handler = new AddMessageCommandHandler(
         new GroupUsersRepository(dbContext),
@@ -41,7 +41,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowExceptionWithPersistenceAction()
     {
-      var request = new AddMessageCommand(MessageTypes.Action, null, null, MessageActionTypes.Seen, 2, 1);
+      var request = new AddMessageCommand(MessageType.Action, null, null, MessageActionType.Seen, 2, 1);
       var dbContext = InitializedDbContext();
       var handler = new AddMessageCommandHandler(
         new GroupUsersRepository(dbContext),
@@ -59,7 +59,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowExceptionWithNonPersistenceAction()
     {
-      var request = new AddMessageCommand(MessageTypes.Action, null, null, MessageActionTypes.TypingOn, 2, 1);
+      var request = new AddMessageCommand(MessageType.Action, null, null, MessageActionType.TypingOn, 2, 1);
       var dbContext = InitializedDbContext();
       var handler = new AddMessageCommandHandler(
         new GroupUsersRepository(dbContext),
@@ -77,7 +77,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new AddMessageCommand(MessageTypes.Response, "Hello World", null, null, 2, 1);
+      var request = new AddMessageCommand(MessageType.Response, "Hello World", null, null, 2, 1);
       var dbContext = DbContext();
       var handler = new AddMessageCommandHandler(
         new GroupUsersRepository(dbContext),

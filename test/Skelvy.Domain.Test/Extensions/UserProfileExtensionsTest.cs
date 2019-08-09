@@ -11,7 +11,7 @@ namespace Skelvy.Domain.Test.Extensions
     [Fact]
     public void ShouldReturnAge()
     {
-      var profile = new Profile("Example", DateTimeOffset.UtcNow.AddYears(-18), GenderTypes.Male, 1);
+      var profile = new Profile("Example", DateTimeOffset.UtcNow.AddYears(-18), GenderType.Male, 1);
 
       var age = profile.GetAge();
 
@@ -21,7 +21,7 @@ namespace Skelvy.Domain.Test.Extensions
     [Fact]
     public void ShouldBeBetweenMeetingRequestAgeRange()
     {
-      var profile = new Profile("Example", DateTimeOffset.UtcNow.AddYears(-18), GenderTypes.Male, 1);
+      var profile = new Profile("Example", DateTimeOffset.UtcNow.AddYears(-18), GenderType.Male, 1);
       var request = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
 
       var result = profile.IsWithinMeetingRequestAgeRange(request);
@@ -32,7 +32,7 @@ namespace Skelvy.Domain.Test.Extensions
     [Fact]
     public void ShouldNotBeBetweenMeetingRequestAgeRange()
     {
-      var profile = new Profile("Example", DateTimeOffset.UtcNow.AddYears(-18), GenderTypes.Male, 1);
+      var profile = new Profile("Example", DateTimeOffset.UtcNow.AddYears(-18), GenderType.Male, 1);
       var request = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 20, 25, 2, 2, 1);
 
       var result = profile.IsWithinMeetingRequestAgeRange(request);

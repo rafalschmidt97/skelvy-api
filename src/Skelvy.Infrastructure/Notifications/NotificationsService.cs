@@ -31,7 +31,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       await _socketService.BroadcastUserSentMessage(action);
 
-      if (action.Type == NotificationTypes.Regular)
+      if (action.Type == NotificationType.Regular)
       {
         await BroadcastActionToOffline(
           action.UsersId,

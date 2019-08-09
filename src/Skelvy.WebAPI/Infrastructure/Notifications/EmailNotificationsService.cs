@@ -98,7 +98,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     private static string GeSubject(EmailMessage message)
     {
-      return message.Language == LanguageTypes.PL ? message.Subject.PL : message.Subject.EN;
+      return message.Language == LanguageType.PL ? message.Subject.PL : message.Subject.EN;
     }
   }
 }

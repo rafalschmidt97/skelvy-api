@@ -48,7 +48,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
       if (userDetails.MeetingRequest.IsSearching)
       {
         throw new InternalServerErrorException(
-          $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusTypes.Searching}' " +
+          $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusType.Searching}' " +
           $"while {nameof(GroupUser)} exists");
       }
 

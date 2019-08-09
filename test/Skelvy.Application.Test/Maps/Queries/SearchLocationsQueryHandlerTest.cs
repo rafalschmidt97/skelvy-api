@@ -24,7 +24,7 @@ namespace Skelvy.Application.Test.Maps.Queries
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new SearchLocationsQuery("Warsaw", LanguageTypes.EN);
+      var request = new SearchLocationsQuery("Warsaw", LanguageType.EN);
       _cache.Setup(x => x.GetOrSetData(It.IsAny<string>(), It.IsAny<TimeSpan>(), It.IsAny<Func<Task<IList<LocationDto>>>>()))
         .ReturnsAsync(new List<LocationDto>());
       var handler = new SearchLocationsQueryHandler(_mapsService.Object, _cache.Object);

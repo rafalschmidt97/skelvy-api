@@ -31,10 +31,10 @@ namespace Skelvy.Persistence
 
       var users = new[]
       {
-        new User("user1@gmail.com", LanguageTypes.EN),
-        new User("user2@gmail.com", LanguageTypes.EN),
-        new User("user3@gmail.com", LanguageTypes.EN),
-        new User("user4@gmail.com", LanguageTypes.EN),
+        new User("user1@gmail.com", LanguageType.EN),
+        new User("user2@gmail.com", LanguageType.EN),
+        new User("user3@gmail.com", LanguageType.EN),
+        new User("user4@gmail.com", LanguageType.EN),
       };
 
       users[0].RegisterFacebook("facebook1");
@@ -64,22 +64,22 @@ namespace Skelvy.Persistence
         new Profile(
           "User1",
           DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          GenderTypes.Male,
+          GenderType.Male,
           users[0].Id),
         new Profile(
           "User2",
           DateTimeOffset.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          GenderTypes.Male,
+          GenderType.Male,
           users[1].Id),
         new Profile(
           "User3",
           DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          GenderTypes.Male,
+          GenderType.Male,
           users[2].Id),
         new Profile(
           "User4",
           DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          GenderTypes.Male,
+          GenderType.Male,
           users[3].Id),
       };
 
@@ -88,10 +88,10 @@ namespace Skelvy.Persistence
 
       var attachments = new[]
       {
-        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=1"),
-        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=2"),
-        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=3"),
-        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=4"),
+        new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=1"),
+        new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=2"),
+        new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=3"),
+        new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=4"),
       };
 
       context.Attachments.AddRange(attachments);
@@ -254,8 +254,8 @@ namespace Skelvy.Persistence
 
       var messages = new[]
       {
-        new Message(MessageTypes.Response, DateTimeOffset.UtcNow.AddHours(-2), "Hello User3", null, null, users[1].Id, meetings[0].Id),
-        new Message(MessageTypes.Action, DateTimeOffset.UtcNow.AddHours(-1), null, null, MessageActionTypes.Seen, users[2].Id, meetings[0].Id),
+        new Message(MessageType.Response, DateTimeOffset.UtcNow.AddHours(-2), "Hello User3", null, null, users[1].Id, meetings[0].Id),
+        new Message(MessageType.Action, DateTimeOffset.UtcNow.AddHours(-1), null, null, MessageActionType.Seen, users[2].Id, meetings[0].Id),
       };
 
       context.Messages.AddRange(messages);

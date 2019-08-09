@@ -24,7 +24,7 @@ namespace Skelvy.Application.Test.Maps.Queries
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new ReverseLocationsQuery(1, 1, LanguageTypes.EN);
+      var request = new ReverseLocationsQuery(1, 1, LanguageType.EN);
       _cache.Setup(x => x.GetOrSetData(It.IsAny<string>(), It.IsAny<TimeSpan>(), It.IsAny<Func<Task<IList<LocationDto>>>>()))
         .ReturnsAsync(new List<LocationDto>());
 

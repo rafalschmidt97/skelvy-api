@@ -1,6 +1,6 @@
 namespace Skelvy.Application.Auth.Commands
 {
-  public static class AuthClaimTypes
+  public static class AuthClaimType
   {
     public const string Type = "OAuth2";
     public const string UserId = "UserId";

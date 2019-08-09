@@ -42,7 +42,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
         if (meeting == null)
         {
           throw new InternalServerErrorException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) not found " +
-                                                 $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusTypes.Found}'");
+                                                 $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusType.Found}'");
         }
 
         var messages = await _messagesRepository.FindPageLatestByGroupId(meeting.Id);

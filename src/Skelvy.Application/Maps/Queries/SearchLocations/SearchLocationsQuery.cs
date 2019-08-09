@@ -18,6 +18,6 @@ namespace Skelvy.Application.Maps.Queries.SearchLocations
     }
 
     public string Search { get; set; }
-    public string Language { get; set; } = LanguageTypes.EN;
+    public string Language { get; set; } = LanguageType.EN;
   }
 }

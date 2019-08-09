@@ -12,7 +12,7 @@ namespace Skelvy.WebAPI.Controllers
   public class MessagesController : BaseController
   {
     [HttpGet("{id}")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task<IList<MessageDto>> FindMessages(int id, [FromQuery] FindMessagesQuery request)
     {
       request.UserId = id;
@@ -27,7 +27,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("{id}")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task<IList<MessageDto>> AddMessage(int id, AddMessageCommand request)
     {
       request.UserId = id;

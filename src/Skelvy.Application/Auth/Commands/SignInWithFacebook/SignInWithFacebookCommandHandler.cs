@@ -131,7 +131,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
         var profile = new Profile(
           (string)details.first_name,
           birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-          details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+          details.gender == GenderType.Female ? GenderType.Female : GenderType.Male,
           user.Id);
 
         await _profilesRepository.Add(profile);

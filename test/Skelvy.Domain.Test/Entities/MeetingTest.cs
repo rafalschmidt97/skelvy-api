@@ -16,7 +16,7 @@ namespace Skelvy.Domain.Test.Entities
 
       Assert.True(entity.IsRemoved);
       Assert.NotNull(entity.ModifiedAt);
-      Assert.Equal(entity.RemovedReason, MeetingRemovedReasonTypes.Aborted);
+      Assert.Equal(entity.RemovedReason, MeetingRemovedReasonType.Aborted);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ namespace Skelvy.Domain.Test.Entities
 
       Assert.True(entity.IsRemoved);
       Assert.NotNull(entity.ModifiedAt);
-      Assert.Equal(entity.RemovedReason, MeetingRemovedReasonTypes.Expired);
+      Assert.Equal(entity.RemovedReason, MeetingRemovedReasonType.Expired);
     }
 
     [Fact]

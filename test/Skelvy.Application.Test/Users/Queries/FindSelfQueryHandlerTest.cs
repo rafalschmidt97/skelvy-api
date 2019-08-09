@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldReturnModel()
     {
-      var request = new FindSelfQuery(1, LanguageTypes.EN);
+      var request = new FindSelfQuery(1, LanguageType.EN);
       var dbContext = InitializedDbContext();
       _mapper.Setup(x =>
           x.Map(It.IsAny<User>(), It.IsAny<MeetingRequest>(), It.IsAny<string>()))
@@ -44,7 +44,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new FindSelfQuery(1, LanguageTypes.EN);
+      var request = new FindSelfQuery(1, LanguageType.EN);
       var dbContext = DbContext();
       var handler = new FindSelfQueryHandler(
         new UsersRepository(dbContext),

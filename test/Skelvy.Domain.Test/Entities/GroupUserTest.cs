@@ -14,7 +14,7 @@ namespace Skelvy.Domain.Test.Entities
       entity.Leave();
 
       Assert.True(entity.IsRemoved);
-      Assert.Equal(entity.RemovedReason, GroupUserRemovedReasonTypes.Left);
+      Assert.Equal(entity.RemovedReason, GroupUserRemovedReasonType.Left);
       Assert.NotNull(entity.ModifiedAt);
     }
 
@@ -35,7 +35,7 @@ namespace Skelvy.Domain.Test.Entities
       entity.Abort();
 
       Assert.True(entity.IsRemoved);
-      Assert.Equal(entity.RemovedReason, GroupUserRemovedReasonTypes.Aborted);
+      Assert.Equal(entity.RemovedReason, GroupUserRemovedReasonType.Aborted);
       Assert.NotNull(entity.ModifiedAt);
     }
 

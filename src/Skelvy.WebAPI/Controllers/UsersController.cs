@@ -33,14 +33,14 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpDelete("{id}")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task Remove(int id)
     {
       await Mediator.Send(new RemoveUserCommand(id));
     }
 
     [HttpPatch("{id}/disabled")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task Disable(int id, DisableUserCommand request)
     {
       request.Id = id;
@@ -48,7 +48,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPatch("{id}/language")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task UpdateLanguage(int id, UpdateUserLanguageCommand request)
     {
       request.UserId = id;
@@ -63,7 +63,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPut("{id}/profile")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task UpdateProfile(int id, UpdateProfileCommand request)
     {
       request.UserId = id;
@@ -78,7 +78,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("{id}/request")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task CreateRequest(int id, CreateMeetingRequestCommand request)
     {
       request.UserId = id;
@@ -93,7 +93,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpDelete("{id}/request")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task RemoveRequest(int id)
     {
       await Mediator.Send(new RemoveMeetingRequestCommand(id));
@@ -106,7 +106,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpGet("{id}/meeting-suggestions")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task<MeetingSuggestionsModel> FindMeetingSuggestions(int id, [FromQuery] FindMeetingSuggestionsQuery request)
     {
       request.UserId = id;
@@ -121,7 +121,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("{id}/join-meeting/{meetingId}")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task JoinMeeting(int id, int meetingId)
     {
       await Mediator.Send(new JoinMeetingCommand(id, meetingId));
@@ -134,7 +134,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("{id}/connect-request/{requestId}")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task ConnectMeetingRequest(int id, int requestId)
     {
       await Mediator.Send(new ConnectMeetingRequestCommand(id, requestId));

@@ -38,10 +38,10 @@ namespace Skelvy.Domain.Entities
         : throw new DomainException(
           $"'Birthday' must show the age of majority for entity {nameof(Profile)}(Id = {Id}).");
 
-      Gender = gender == GenderTypes.Male || gender == GenderTypes.Female || gender == GenderTypes.Other
+      Gender = gender == GenderType.Male || gender == GenderType.Female || gender == GenderType.Other
         ? gender
         : throw new DomainException(
-          $"'Gender' must be {GenderTypes.Male} / {GenderTypes.Female} / {GenderTypes.Other} for entity {nameof(Profile)}(Id = {Id}).");
+          $"'Gender' must be {GenderType.Male} / {GenderType.Female} / {GenderType.Other} for entity {nameof(Profile)}(Id = {Id}).");
 
       if (description != null)
       {

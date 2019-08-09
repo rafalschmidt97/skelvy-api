@@ -1,6 +1,6 @@
 namespace Skelvy.Domain.Enums.Users
 {
-  public static class RoleTypes
+  public static class RoleType
   {
     public const string Admin = "admin";
   }

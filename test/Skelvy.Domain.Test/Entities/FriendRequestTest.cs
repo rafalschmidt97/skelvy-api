@@ -15,7 +15,7 @@ namespace Skelvy.Domain.Test.Entities
 
       Assert.True(entity.IsRemoved);
       Assert.NotNull(entity.ModifiedAt);
-      Assert.Equal(entity.Status, FriendRequestStatusTypes.Accepted);
+      Assert.Equal(entity.Status, FriendRequestStatusType.Accepted);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ namespace Skelvy.Domain.Test.Entities
 
       Assert.True(entity.IsRemoved);
       Assert.NotNull(entity.ModifiedAt);
-      Assert.Equal(entity.Status, FriendRequestStatusTypes.Denied);
+      Assert.Equal(entity.Status, FriendRequestStatusType.Denied);
     }
 
     [Fact]

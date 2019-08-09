@@ -27,7 +27,7 @@ namespace Skelvy.Persistence.Repositories
       return await Context.MeetingRequests
         .FirstOrDefaultAsync(x => x.UserId == userId &&
                                   !x.IsRemoved &&
-                                  x.Status == MeetingRequestStatusTypes.Searching);
+                                  x.Status == MeetingRequestStatusType.Searching);
     }
 
     public async Task<MeetingRequest> FindOneWithDrinkTypesByUserId(int userId)
@@ -48,7 +48,7 @@ namespace Skelvy.Persistence.Repositories
     public async Task<IList<MeetingRequest>> FindAllSearchingAfterOrEqualMaxDate(DateTimeOffset maxDate)
     {
       return await Context.MeetingRequests
-        .Where(x => !x.IsRemoved && x.MaxDate <= maxDate && x.Status == MeetingRequestStatusTypes.Searching)
+        .Where(x => !x.IsRemoved && x.MaxDate <= maxDate && x.Status == MeetingRequestStatusType.Searching)
         .ToListAsync();
     }
 
@@ -59,7 +59,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.Profile)
         .Include(x => x.DrinkTypes)
         .ThenInclude(x => x.DrinkType)
-        .Where(x => !x.IsRemoved && x.Status == MeetingRequestStatusTypes.Searching)
+        .Where(x => !x.IsRemoved && x.Status == MeetingRequestStatusType.Searching)
         .ToListAsync();
     }
 
@@ -78,7 +78,7 @@ namespace Skelvy.Persistence.Repositories
     public async Task<bool> ExistsOneFoundByUserId(int userId)
     {
       return await Context.MeetingRequests
-        .AnyAsync(x => x.UserId == userId && !x.IsRemoved && x.Status == MeetingRequestStatusTypes.Found);
+        .AnyAsync(x => x.UserId == userId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Found);
     }
 
     public async Task<MeetingRequest> FindOneMatchingUserRequest(User user, MeetingRequest request)
@@ -90,7 +90,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.DrinkType)
         .Where(x => !x.IsRemoved &&
                     x.Id != request.Id &&
-                    x.Status == MeetingRequestStatusTypes.Searching &&
+                    x.Status == MeetingRequestStatusType.Searching &&
                     x.MinDate <= request.MaxDate &&
                     x.MaxDate >= request.MinDate)
         .ToListAsync();
@@ -111,7 +111,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.DrinkType)
         .Where(x => x.UserId != userId &&
                     !x.IsRemoved &&
-                    x.Status == MeetingRequestStatusTypes.Searching)
+                    x.Status == MeetingRequestStatusType.Searching)
         .ToListAsync();
 
       if (requests.Any())
@@ -142,7 +142,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.DrinkType)
         .FirstOrDefaultAsync(x => x.Id == meetingRequestId &&
                                   !x.IsRemoved &&
-                                  x.Status == MeetingRequestStatusTypes.Searching);
+                                  x.Status == MeetingRequestStatusType.Searching);
     }
 
     public async Task Add(MeetingRequest request)

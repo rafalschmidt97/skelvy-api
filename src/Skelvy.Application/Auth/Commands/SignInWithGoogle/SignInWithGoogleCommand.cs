@@ -19,6 +19,6 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     [LogMasked]
     public string AuthToken { get; set; }
 
-    public string Language { get; set; } = LanguageTypes.EN;
+    public string Language { get; set; } = LanguageType.EN;
   }
 }

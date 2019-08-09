@@ -58,7 +58,7 @@ namespace Skelvy.Application.Users.Commands.UpdateProfile
         await _attachmentsRepository.RemoveRange(oldAttachments);
       }
 
-      var newAttachments = photos.Select((photo, index) => new Attachment(AttachmentTypes.Image, photo.Url)).ToList();
+      var newAttachments = photos.Select((photo, index) => new Attachment(AttachmentType.Image, photo.Url)).ToList();
       await _attachmentsRepository.AddRange(newAttachments);
       var newPhotos = newAttachments.Select((attachment, index) => new ProfilePhoto(attachment.Id, index + 1, profile.Id)).ToList();
       await _profilePhotosRepository.AddRange(newPhotos);

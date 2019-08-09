@@ -1,6 +1,6 @@
 namespace Skelvy.Domain.Enums.Attachments
 {
-  public static class AttachmentTypes
+  public static class AttachmentType
   {
     public const string Image = "image";
     public const string Video = "video";

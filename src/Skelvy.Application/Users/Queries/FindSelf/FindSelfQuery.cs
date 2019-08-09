@@ -16,6 +16,6 @@ namespace Skelvy.Application.Users.Queries.FindSelf
     }
 
     public int UserId { get; set; }
-    public string Language { get; set; } = LanguageTypes.EN;
+    public string Language { get; set; } = LanguageType.EN;
   }
 }

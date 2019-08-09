@@ -11,7 +11,7 @@ namespace Skelvy.WebAPI.Controllers
   public class MeetingsController : BaseController
   {
     [HttpGet("{id}")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task<MeetingModel> Find(int id, [FromQuery] FindMeetingQuery request)
     {
       request.UserId = id;
@@ -26,7 +26,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpDelete("{id}")]
-    [AuthorizeRole(RoleTypes.Admin)]
+    [AuthorizeRole(RoleType.Admin)]
     public async Task Remove(int id)
     {
       await Mediator.Send(new LeaveMeetingCommand(id));

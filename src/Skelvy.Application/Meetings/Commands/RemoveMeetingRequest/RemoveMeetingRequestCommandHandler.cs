@@ -38,7 +38,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
       if (meetingRequest.IsFound)
       {
         throw new InternalServerErrorException(
-          $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusTypes.Found}' " +
+          $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusType.Found}' " +
           $"while {nameof(GroupUser)} does not exists");
       }
 

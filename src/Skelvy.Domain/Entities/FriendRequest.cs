@@ -12,7 +12,7 @@ namespace Skelvy.Domain.Entities
       InvitingUserId = invitingUserId;
       InvitedUserId = invitedUserId;
 
-      Status = FriendRequestStatusTypes.Pending;
+      Status = FriendRequestStatusType.Pending;
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
@@ -32,7 +32,7 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        Status = FriendRequestStatusTypes.Accepted;
+        Status = FriendRequestStatusType.Accepted;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
@@ -46,7 +46,7 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        Status = FriendRequestStatusTypes.Denied;
+        Status = FriendRequestStatusType.Denied;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else

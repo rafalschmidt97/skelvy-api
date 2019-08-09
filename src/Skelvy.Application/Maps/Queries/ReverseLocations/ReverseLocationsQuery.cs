@@ -20,6 +20,6 @@ namespace Skelvy.Application.Maps.Queries.ReverseLocations
 
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public string Language { get; set; } = LanguageTypes.EN;
+    public string Language { get; set; } = LanguageType.EN;
   }
 }

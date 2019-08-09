@@ -131,7 +131,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
         var profile = new Profile(
           (string)details.name.givenName,
           birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-          details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+          details.gender == GenderType.Female ? GenderType.Female : GenderType.Male,
           user.Id);
 
         await _profilesRepository.Add(profile);

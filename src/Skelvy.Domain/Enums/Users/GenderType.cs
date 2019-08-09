@@ -1,6 +1,6 @@
 namespace Skelvy.Domain.Enums.Users
 {
-  public static class GenderTypes
+  public static class GenderType
   {
     public const string Male = "male";
     public const string Female = "female";

@@ -49,7 +49,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
 
       var messages = new List<Message>();
 
-      if (request.Type == MessageTypes.Action)
+      if (request.Type == MessageType.Action)
       {
         if (IsNonPersistenceMessageAction(request.Action))
         {
@@ -72,7 +72,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
     {
       var message = new Message(request.Type, DateTimeOffset.UtcNow, null, null, request.Action, request.UserId, request.GroupId);
       await _mediator.Publish(new MessageSentEvent(
-        NotificationTypes.SilentPush,
+        NotificationType.SilentPush,
         new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, null, message.Action, message.UserId, message.GroupId),
         _mapper.Map<IList<MessageDto>>(new List<Message> { message })));
       return message;
@@ -84,7 +84,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
 
       using (var transaction = _messagesRepository.BeginTransaction())
       {
-        if (request.Action == MessageActionTypes.Seen)
+        if (request.Action == MessageActionType.Seen)
         {
           message = await AddOrUpdateSeenMessage(request.UserId, request.GroupId);
         }
@@ -96,7 +96,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
 
         transaction.Commit();
         await _mediator.Publish(new MessageSentEvent(
-          NotificationTypes.SilentPush,
+          NotificationType.SilentPush,
           new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, null, message.Action, message.UserId, message.GroupId),
           _mapper.Map<IList<MessageDto>>(new List<Message> { message })));
       }
@@ -108,7 +108,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
     {
       Message message;
       var existingSeenMessage =
-        await _messagesRepository.FindOneByActionAndUserIdAndGroupId(MessageActionTypes.Seen, userId, groupId);
+        await _messagesRepository.FindOneByActionAndUserIdAndGroupId(MessageActionType.Seen, userId, groupId);
 
       if (existingSeenMessage != null)
       {
@@ -118,7 +118,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
       }
       else
       {
-        message = new Message(MessageTypes.Action, DateTimeOffset.UtcNow, null, null, MessageActionTypes.Seen, userId, groupId);
+        message = new Message(MessageType.Action, DateTimeOffset.UtcNow, null, null, MessageActionType.Seen, userId, groupId);
         await _messagesRepository.Add(message);
       }
 
@@ -134,7 +134,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
       {
         if (request.AttachmentUrl != null)
         {
-          attachment = new Attachment(AttachmentTypes.Image, request.AttachmentUrl);
+          attachment = new Attachment(AttachmentType.Image, request.AttachmentUrl);
           await _attachmentsRepository.Add(attachment);
         }
 
@@ -145,7 +145,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
         transaction.Commit();
 
         await _mediator.Publish(new MessageSentEvent(
-          NotificationTypes.Regular,
+          NotificationType.Regular,
           new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, attachment?.Url, message.Action, message.UserId, message.GroupId),
           _mapper.Map<IList<MessageDto>>(new List<Message> { message, seenMessage })));
 
@@ -158,8 +158,8 @@ namespace Skelvy.Application.Meetings.Commands.AddMessage
 
     private static bool IsNonPersistenceMessageAction(string action)
     {
-      return action == MessageActionTypes.TypingOn ||
-             action == MessageActionTypes.TypingOff;
+      return action == MessageActionType.TypingOn ||
+             action == MessageActionType.TypingOff;
     }
   }
 }

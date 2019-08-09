@@ -55,7 +55,7 @@ namespace Skelvy.Infrastructure.Auth.Google
         (string)response.sub,
         accessToken,
         UnixTimestampToDateTime(response.exp),
-        AccessTypes.Google);
+        AccessType.Google);
     }
 
     private static DateTime UnixTimestampToDateTime(dynamic unixTime)

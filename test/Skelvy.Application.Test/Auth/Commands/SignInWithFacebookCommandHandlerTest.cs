@@ -32,7 +32,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
     public SignInWithFacebookCommandHandlerTest()
     {
-      _access = new AccessVerification("facebook1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessTypes.Facebook);
+      _access = new AccessVerification("facebook1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessType.Facebook);
       _facebookService = new Mock<IFacebookService>();
       _tokenService = new Mock<ITokenService>();
       _mediator = new Mock<IMediator>();
@@ -42,7 +42,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithInitializedUser()
     {
-      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageType.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>()))
@@ -65,7 +65,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithNotInitializedUser()
     {
-      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageType.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _facebookService
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
@@ -91,7 +91,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithNotVerifiedUser()
     {
-      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageType.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var dbContext = InitializedDbContext();
       var handler = new SignInWithFacebookCommandHandler(
@@ -109,7 +109,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithTooLongEmail()
     {
-      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageType.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       var graphObject = GraphResponse();
       graphObject.email = "123456789123456789123456789123456789123456789@gmail.com"; // 55 signs
@@ -135,7 +135,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithRemovedUser()
     {
-      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageType.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       var dbContext = ContextWithRemovedUser();
       var handler = new SignInWithFacebookCommandHandler(
@@ -153,7 +153,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithDisabledUser()
     {
-      var request = new SignInWithFacebookCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithFacebookCommand(AuthToken, LanguageType.EN);
       _facebookService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       var dbContext = ContextWithDisabledUser();
       var handler = new SignInWithFacebookCommandHandler(

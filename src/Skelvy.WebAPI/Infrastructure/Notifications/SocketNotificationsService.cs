@@ -27,7 +27,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         Data = action.Messages,
       };
 
-      if (action.Message.Type == MessageTypes.Response)
+      if (action.Message.Type == MessageType.Response)
       {
         if (action.Message.Text != null)
         {
@@ -38,7 +38,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
               Title = action.Message.UserName,
               Body = action.Message.Text,
             },
-            NotificationTypes.Regular,
+            NotificationType.Regular,
             data);
         }
         else
@@ -52,7 +52,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
                 Title = action.Message.UserName,
                 BodyLocKey = "USER_SENT_PHOTO",
               },
-              NotificationTypes.Regular,
+              NotificationType.Regular,
               data);
           }
           else
@@ -64,7 +64,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
                 Title = action.Message.UserName,
                 BodyLocKey = "USER_SENT_MESSAGE",
               },
-              NotificationTypes.Regular,
+              NotificationType.Regular,
               data);
           }
         }
@@ -78,7 +78,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
             Title = action.Message.UserName,
             BodyLocKey = "USER_SENT_MESSAGE",
           },
-          NotificationTypes.NoPush,
+          NotificationType.NoPush,
           data);
       }
     }
@@ -92,7 +92,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_JOINED_MEETING",
         },
-        NotificationTypes.Regular,
+        NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserJoinedMeeting",
@@ -110,7 +110,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_FOUND_MEETING",
         },
-        NotificationTypes.Regular,
+        NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserFoundMeeting",
@@ -127,7 +127,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "USER_LEFT_MEETING",
         },
-        NotificationTypes.Regular,
+        NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserLeftMeeting",
@@ -145,7 +145,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "MEETING_ABORTED",
         },
-        NotificationTypes.Regular,
+        NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "MeetingAborted",
@@ -163,7 +163,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING_REQUEST",
           BodyLocKey = "MEETING_REQUEST_EXPIRED",
         },
-        NotificationTypes.Regular,
+        NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "MeetingRequestExpired",
@@ -180,7 +180,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "MEETING",
           BodyLocKey = "MEETING_EXPIRED",
         },
-        NotificationTypes.Regular,
+        NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "MeetingExpired",
@@ -197,7 +197,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "USER",
           BodyLocKey = "USER_REMOVED",
         },
-        NotificationTypes.NoPush,
+        NotificationType.NoPush,
         new SocketNotificationData
         {
           Action = "UserRemoved",
@@ -213,7 +213,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "USER",
           BodyLocKey = "USER_DISABLED",
         },
-        NotificationTypes.NoPush,
+        NotificationType.NoPush,
         new SocketNotificationData
         {
           Action = "UserDisabled",
@@ -229,7 +229,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "FRIENDS",
           BodyLocKey = "NEW_FRIEND_REQUEST",
         },
-        NotificationTypes.Regular,
+        NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserSentFriendRequest",
@@ -246,7 +246,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "FRIENDS",
           BodyLocKey = action.IsAccepted ? "FRIEND_REQUEST_ACCEPTED" : "FRIEND_REQUEST_DENIED",
         },
-        NotificationTypes.Regular,
+        NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserRespondedFriendRequest",

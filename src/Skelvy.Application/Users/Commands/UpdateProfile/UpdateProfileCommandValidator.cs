@@ -20,8 +20,8 @@ namespace Skelvy.Application.Users.Commands.UpdateProfile
         .WithMessage("'Birthday' must show the age of majority.");
 
       RuleFor(x => x.Gender).NotEmpty().MaximumLength(15)
-        .Must(x => x == GenderTypes.Male || x == GenderTypes.Female || x == GenderTypes.Other)
-        .WithMessage($"'Gender' must be {GenderTypes.Male} / {GenderTypes.Female} / {GenderTypes.Other}");
+        .Must(x => x == GenderType.Male || x == GenderType.Female || x == GenderType.Other)
+        .WithMessage($"'Gender' must be {GenderType.Male} / {GenderType.Female} / {GenderType.Other}");
 
       RuleFor(x => x.Photos).NotEmpty()
         .Must(x => x != null && x.Count <= 3)

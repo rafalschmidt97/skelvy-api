@@ -76,10 +76,10 @@ namespace Skelvy.Domain.Entities
     {
       if (language != Language)
       {
-        Language = language == LanguageTypes.EN || language == LanguageTypes.PL
+        Language = language == LanguageType.EN || language == LanguageType.PL
           ? language
           : throw new DomainException(
-            $"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN} for entity {nameof(Entities.Profile)}(Id = {Id}).");
+            $"'Language' must be {LanguageType.PL} or {LanguageType.EN} for entity {nameof(Entities.Profile)}(Id = {Id}).");
 
         ModifiedAt = DateTimeOffset.UtcNow;
       }
