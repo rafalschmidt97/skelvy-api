@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Skelvy.Application.Meetings.Commands.AddMessage;
-using Skelvy.Application.Meetings.Queries;
-using Skelvy.Application.Meetings.Queries.FindMessages;
+using Skelvy.Application.Messages.Commands.AddMessage;
+using Skelvy.Application.Messages.Queries;
+using Skelvy.Application.Messages.Queries.FindMessages;
 
 namespace Skelvy.WebAPI.Controllers
 {

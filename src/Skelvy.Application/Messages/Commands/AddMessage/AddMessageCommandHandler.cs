@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Events.MessageSent;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
-using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Messages.Events.MessageSent;
+using Skelvy.Application.Messages.Infrastructure.Repositories;
+using Skelvy.Application.Messages.Queries;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Uploads.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -14,7 +15,7 @@ using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Attachments;
 using Skelvy.Domain.Enums.Meetings;
 
-namespace Skelvy.Application.Meetings.Commands.AddMessage
+namespace Skelvy.Application.Messages.Commands.AddMessage
 {
   public class AddMessageCommandHandler : CommandHandlerData<AddMessageCommand, IList<MessageDto>>
   {

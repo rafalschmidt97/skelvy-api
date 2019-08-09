@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using Skelvy.Application.Meetings.Queries;
-using Skelvy.Application.Meetings.Queries.FindMessages;
+using Skelvy.Application.Messages.Queries;
+using Skelvy.Application.Messages.Queries.FindMessages;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 
-namespace Skelvy.Application.Test.Meetings.Queries
+namespace Skelvy.Application.Test.Messages.Queries
 {
   public class FindMessagesQueryHandlerTest : RequestTestBase
   {

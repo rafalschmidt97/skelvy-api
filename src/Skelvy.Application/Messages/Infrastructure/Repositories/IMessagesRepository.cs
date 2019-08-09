@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Meetings.Infrastructure.Repositories
+namespace Skelvy.Application.Messages.Infrastructure.Repositories
 {
   public interface IMessagesRepository : IBaseRepository
   {

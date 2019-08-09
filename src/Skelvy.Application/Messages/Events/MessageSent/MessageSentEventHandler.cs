@@ -2,12 +2,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Messages.Infrastructure.Notifications;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 
-namespace Skelvy.Application.Meetings.Events.MessageSent
+namespace Skelvy.Application.Messages.Events.MessageSent
 {
   public class MessageSentEventHandler : EventHandler<MessageSentEvent>
   {

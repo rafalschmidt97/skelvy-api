@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Moq;
-using Skelvy.Application.Meetings.Commands.AddMessage;
-using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Messages.Commands.AddMessage;
+using Skelvy.Application.Messages.Queries;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 
-namespace Skelvy.Application.Test.Meetings.Commands
+namespace Skelvy.Application.Test.Messages.Commands
 {
   public class AddMessageCommandHandlerTest : DatabaseRequestTestBase
   {

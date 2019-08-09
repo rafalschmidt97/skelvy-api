@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Skelvy.Application.Meetings.Queries.FindMessages
+namespace Skelvy.Application.Messages.Queries.FindMessages
 {
   public class FindMessagesQueryValidator : AbstractValidator<FindMessagesQuery>
   {

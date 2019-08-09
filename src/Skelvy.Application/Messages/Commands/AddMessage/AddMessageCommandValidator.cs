@@ -1,7 +1,7 @@
 using FluentValidation;
 using Skelvy.Domain.Enums.Meetings;
 
-namespace Skelvy.Application.Meetings.Commands.AddMessage
+namespace Skelvy.Application.Messages.Commands.AddMessage
 {
   public class AddMessageCommandValidator : AbstractValidator<AddMessageCommand>
   {

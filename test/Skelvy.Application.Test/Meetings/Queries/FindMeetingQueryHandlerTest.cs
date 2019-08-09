@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
+using Skelvy.Application.Messages.Queries;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;

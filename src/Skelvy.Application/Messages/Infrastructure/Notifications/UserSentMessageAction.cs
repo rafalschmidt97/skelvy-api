@@ -1,27 +1,28 @@
 using System;
 using System.Collections.Generic;
-using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Messages.Queries;
 
-namespace Skelvy.Application.Meetings.Events.MessageSent
+namespace Skelvy.Application.Messages.Infrastructure.Notifications
 {
-  public class MessageSentEvent : IEvent
+  public class UserSentMessageAction
   {
-    public MessageSentEvent(string type, MessageSentEventDto message, IList<MessageDto> messages)
+    public UserSentMessageAction(string type, UserSentMessageActionDto message, IList<MessageDto> messages, IList<int> usersId)
     {
       Type = type;
       Message = message;
       Messages = messages;
+      UsersId = usersId;
     }
 
     public string Type { get; private set; }
-    public MessageSentEventDto Message { get; private set; }
+    public UserSentMessageActionDto Message { get; private set; }
     public IList<MessageDto> Messages { get; private set; }
+    public IList<int> UsersId { get; private set; }
   }
 
-  public class MessageSentEventDto : IEvent
+  public class UserSentMessageActionDto
   {
-    public MessageSentEventDto(int messageId, string type, DateTimeOffset date, string text, string attachmentUrl, string action, int userId, int groupId)
+    public UserSentMessageActionDto(int messageId, string type, DateTimeOffset date, string text, string attachmentUrl, string action, int userId, string userName, int groupId)
     {
       MessageId = messageId;
       Type = type;
@@ -30,6 +31,7 @@ namespace Skelvy.Application.Meetings.Events.MessageSent
       AttachmentUrl = attachmentUrl;
       Action = action;
       UserId = userId;
+      UserName = userName;
       GroupId = groupId;
     }
 
@@ -40,6 +42,7 @@ namespace Skelvy.Application.Meetings.Events.MessageSent
     public string AttachmentUrl { get; private set; }
     public string Action { get; private set; }
     public int UserId { get; private set; }
+    public string UserName { get; private set; }
     public int GroupId { get; private set; }
   }
 }

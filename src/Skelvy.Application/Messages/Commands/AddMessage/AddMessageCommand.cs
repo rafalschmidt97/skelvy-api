@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Messages.Queries;
 
-namespace Skelvy.Application.Meetings.Commands.AddMessage
+namespace Skelvy.Application.Messages.Commands.AddMessage
 {
   public class AddMessageCommand : ICommandData<IList<MessageDto>>
   {

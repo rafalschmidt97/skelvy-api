@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Queries.FindMessages
+namespace Skelvy.Application.Messages.Queries.FindMessages
 {
   public class FindMessagesQuery : IQuery<IList<MessageDto>>
   {

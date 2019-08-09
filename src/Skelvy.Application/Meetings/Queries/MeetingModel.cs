@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Skelvy.Application.Messages.Queries;
 
 namespace Skelvy.Application.Meetings.Queries
 {

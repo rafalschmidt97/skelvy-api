@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Messages.Infrastructure.Notifications;
 using Skelvy.Application.Relations.Infrastructure.Notifications;
 
 namespace Skelvy.Application.Notifications.Infrastructure

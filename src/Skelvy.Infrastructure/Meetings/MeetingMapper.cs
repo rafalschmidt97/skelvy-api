@@ -5,6 +5,7 @@ using AutoMapper;
 using Skelvy.Application.Core.Cache;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Messages.Queries;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
