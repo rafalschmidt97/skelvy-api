@@ -16,9 +16,9 @@ using Skelvy.Common.Extensions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Extensions;
 
-namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
+namespace Skelvy.Application.Meetings.Commands.SearchMeeting
 {
-  public class CreateMeetingRequestCommandHandler : CommandHandler<CreateMeetingRequestCommand>
+  public class SearchMeetingCommandHandler : CommandHandler<SearchMeetingCommand>
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IDrinkTypesRepository _drinkTypesRepository;
@@ -28,9 +28,9 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
     private readonly IGroupsRepository _groupsRepository;
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMediator _mediator;
-    private readonly ILogger<CreateMeetingRequestCommandHandler> _logger;
+    private readonly ILogger<SearchMeetingCommandHandler> _logger;
 
-    public CreateMeetingRequestCommandHandler(
+    public SearchMeetingCommandHandler(
       IUsersRepository usersRepository,
       IDrinkTypesRepository drinkTypesRepository,
       IMeetingsRepository meetingsRepository,
@@ -39,7 +39,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       IGroupsRepository groupsRepository,
       IGroupUsersRepository groupUsersRepository,
       IMediator mediator,
-      ILogger<CreateMeetingRequestCommandHandler> logger)
+      ILogger<SearchMeetingCommandHandler> logger)
     {
       _usersRepository = usersRepository;
       _drinkTypesRepository = drinkTypesRepository;
@@ -52,7 +52,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       _logger = logger;
     }
 
-    public override async Task<Unit> Handle(CreateMeetingRequestCommand request)
+    public override async Task<Unit> Handle(SearchMeetingCommand request)
     {
       await ValidateData(request);
       var newRequest = await CreateNewMeetingRequest(request);
@@ -76,7 +76,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       return Unit.Value;
     }
 
-    private async Task ValidateData(CreateMeetingRequestCommand request)
+    private async Task ValidateData(SearchMeetingCommand request)
     {
       var userExists = await _usersRepository.ExistsOne(request.UserId);
 
@@ -102,7 +102,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       }
     }
 
-    private async Task<MeetingRequest> CreateNewMeetingRequest(CreateMeetingRequestCommand request)
+    private async Task<MeetingRequest> CreateNewMeetingRequest(SearchMeetingCommand request)
     {
       using (var transaction = _meetingRequestsRepository.BeginTransaction())
       {
@@ -142,7 +142,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
         catch (Exception exception)
         {
           _logger.LogError(
-            $"{nameof(CreateMeetingRequestCommand)} Exception while AddUserToMeeting for " +
+            $"{nameof(SearchMeetingCommand)} Exception while AddUserToMeeting for " +
             $"Meeting(Id={meeting.Id}) Request(Id={newRequest.Id}): {exception.Message}");
         }
       }
@@ -187,13 +187,13 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
           if (exception is DbUpdateConcurrencyException)
           {
             _logger.LogError(
-              $"{nameof(CreateMeetingRequestCommand)} Concurrency Exception for while " +
+              $"{nameof(SearchMeetingCommand)} Concurrency Exception for while " +
               $"CreateNewMeeting Requests(Id={newRequest.Id}, Id={existingRequest.Id})");
           }
           else
           {
             _logger.LogError(
-              $"{nameof(CreateMeetingRequestCommand)} Exception for while CreateNewMeeting " +
+              $"{nameof(SearchMeetingCommand)} Exception for while CreateNewMeeting " +
               $"Requests({newRequest.Id}, {existingRequest.Id}): {exception.Message}");
           }
         }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Skelvy.Application.Meetings.Commands.CreateMeetingRequest;
+using Skelvy.Application.Meetings.Commands.SearchMeeting;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence;
 using Skelvy.Persistence.Repositories;
@@ -12,15 +12,15 @@ using Xunit;
 
 namespace Skelvy.Application.Test.Meetings.Commands
 {
-  public class CreateMeetingRequestCommandHandlerTest : RequestTestBase
+  public class SearchMeetingCommandHandlerTest : RequestTestBase
   {
     private readonly Mock<IMediator> _mediator;
-    private readonly Mock<ILogger<CreateMeetingRequestCommandHandler>> _logger;
+    private readonly Mock<ILogger<SearchMeetingCommandHandler>> _logger;
 
-    public CreateMeetingRequestCommandHandlerTest()
+    public SearchMeetingCommandHandlerTest()
     {
       _mediator = new Mock<IMediator>();
-      _logger = new Mock<ILogger<CreateMeetingRequestCommandHandler>>();
+      _logger = new Mock<ILogger<SearchMeetingCommandHandler>>();
     }
 
     [Fact]
@@ -30,7 +30,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       request.MinDate = DateTimeOffset.UtcNow.AddDays(2);
       request.MaxDate = DateTimeOffset.UtcNow.AddDays(4);
       var dbContext = TestDbContextWithMeetings();
-      var handler = new CreateMeetingRequestCommandHandler(
+      var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
         new DrinkTypesRepository(dbContext),
         new MeetingsRepository(dbContext),
@@ -49,7 +49,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       var dbContext = TestDbContext();
-      var handler = new CreateMeetingRequestCommandHandler(
+      var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
         new DrinkTypesRepository(dbContext),
         new MeetingsRepository(dbContext),
@@ -69,7 +69,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = Request();
       request.UserId = 2;
       var dbContext = TestDbContextWithRequests();
-      var handler = new CreateMeetingRequestCommandHandler(
+      var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
         new DrinkTypesRepository(dbContext),
         new MeetingsRepository(dbContext),
@@ -89,7 +89,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = Request();
       request.UserId = 100;
       var dbContext = TestDbContext();
-      var handler = new CreateMeetingRequestCommandHandler(
+      var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
         new DrinkTypesRepository(dbContext),
         new MeetingsRepository(dbContext),
@@ -110,7 +110,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = Request();
       request.DrinkTypes[0].Id = 10;
       var dbContext = TestDbContext();
-      var handler = new CreateMeetingRequestCommandHandler(
+      var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
         new DrinkTypesRepository(dbContext),
         new MeetingsRepository(dbContext),
@@ -130,7 +130,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     {
       var request = Request();
       var dbContext = InitializedDbContext();
-      var handler = new CreateMeetingRequestCommandHandler(
+      var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
         new DrinkTypesRepository(dbContext),
         new MeetingsRepository(dbContext),
@@ -145,9 +145,9 @@ namespace Skelvy.Application.Test.Meetings.Commands
         handler.Handle(request));
     }
 
-    private static CreateMeetingRequestCommand Request()
+    private static SearchMeetingCommand Request()
     {
-      return new CreateMeetingRequestCommand(
+      return new SearchMeetingCommand(
         1,
         DateTimeOffset.UtcNow,
         DateTimeOffset.UtcNow.AddDays(2),

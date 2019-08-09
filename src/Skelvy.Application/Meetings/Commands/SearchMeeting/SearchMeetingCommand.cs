@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
+namespace Skelvy.Application.Meetings.Commands.SearchMeeting
 {
-  public class CreateMeetingRequestCommand : ICommand
+  public class SearchMeetingCommand : ICommand
   {
-    public CreateMeetingRequestCommand(
+    public SearchMeetingCommand(
       int userId,
       DateTimeOffset minDate,
       DateTimeOffset maxDate,
