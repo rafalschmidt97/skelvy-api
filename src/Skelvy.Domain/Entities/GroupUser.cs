@@ -16,33 +16,18 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public GroupUser(int id, DateTimeOffset createdAt, DateTimeOffset? modifiedAt, bool isRemoved, string removedReason, int groupId, int userId, int meetingRequestId, Group group, User user, MeetingRequest meetingRequest)
-    {
-      Id = id;
-      CreatedAt = createdAt;
-      ModifiedAt = modifiedAt;
-      IsRemoved = isRemoved;
-      RemovedReason = removedReason;
-      GroupId = groupId;
-      UserId = userId;
-      MeetingRequestId = meetingRequestId;
-      Group = group;
-      User = user;
-      MeetingRequest = meetingRequest;
-    }
+    public int Id { get; set; }
+    public int GroupId { get; set; }
+    public int UserId { get; set; }
+    public int MeetingRequestId { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? ModifiedAt { get; set; }
+    public bool IsRemoved { get; set; }
+    public string RemovedReason { get; set; }
 
-    public int Id { get; private set; }
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset? ModifiedAt { get; private set; }
-    public bool IsRemoved { get; private set; }
-    public string RemovedReason { get; private set; }
-    public int GroupId { get; private set; }
-    public int UserId { get; private set; }
-    public int MeetingRequestId { get; private set; }
-
-    public Group Group { get; private set; }
-    public User User { get; private set; }
-    public MeetingRequest MeetingRequest { get; private set; }
+    public Group Group { get; set; }
+    public User User { get; set; }
+    public MeetingRequest MeetingRequest { get; set; }
 
     public void Leave()
     {

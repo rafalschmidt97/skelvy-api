@@ -15,24 +15,13 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public Relation(int id, int userId, int relatedUserId, string type, DateTimeOffset createdAt, DateTimeOffset? modifiedAt, bool isRemoved)
-    {
-      Id = id;
-      UserId = userId;
-      RelatedUserId = relatedUserId;
-      Type = type;
-      CreatedAt = createdAt;
-      ModifiedAt = modifiedAt;
-      IsRemoved = isRemoved;
-    }
-
     public int Id { get; set; }
-    public int UserId { get; private set; }
-    public int RelatedUserId { get; private set; }
-    public string Type { get; private set; }
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset? ModifiedAt { get; private set; }
-    public bool IsRemoved { get; private set; }
+    public int UserId { get; set; }
+    public int RelatedUserId { get; set; }
+    public string Type { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? ModifiedAt { get; set; }
+    public bool IsRemoved { get; set; }
 
     public User User { get; set; }
     public User RelatedUser { get; set; }

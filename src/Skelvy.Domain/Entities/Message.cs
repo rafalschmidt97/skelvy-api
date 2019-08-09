@@ -17,33 +17,18 @@ namespace Skelvy.Domain.Entities
       GroupId = groupId;
     }
 
-    public Message(int id, string type, DateTimeOffset date, string text, int? attachmentId, string action, int userId, int groupId, User user, Group group, Attachment attachment)
-    {
-      Id = id;
-      Type = type;
-      Date = date;
-      Text = text;
-      AttachmentId = attachmentId;
-      Action = action;
-      UserId = userId;
-      GroupId = groupId;
-      User = user;
-      Group = group;
-      Attachment = attachment;
-    }
+    public int Id { get; set; }
+    public string Type { get; set; }
+    public DateTimeOffset Date { get; set; }
+    public string Text { get; set; }
+    public int? AttachmentId { get; set; }
+    public string Action { get; set; }
+    public int UserId { get; set; }
+    public int GroupId { get; set; }
 
-    public int Id { get; private set; }
-    public string Type { get; private set; }
-    public DateTimeOffset Date { get; private set; }
-    public string Text { get; private set; }
-    public int? AttachmentId { get; private set; }
-    public string Action { get; private set; }
-    public int UserId { get; private set; }
-    public int GroupId { get; private set; }
-
-    public User User { get; private set; }
-    public Group Group { get; private set; }
-    public Attachment Attachment { get; private set; }
+    public User User { get; set; }
+    public Group Group { get; set; }
+    public Attachment Attachment { get; set; }
 
     public void UpdateSeen()
     {

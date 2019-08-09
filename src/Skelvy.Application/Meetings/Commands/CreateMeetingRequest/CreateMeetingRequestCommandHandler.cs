@@ -116,6 +116,7 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
           request.UserId);
 
         await _meetingRequestsRepository.Add(meetingRequest);
+        meetingRequest.DrinkTypes = new List<MeetingRequestDrinkType>();
         PrepareDrinkTypes(request.DrinkTypes, meetingRequest).ForEach(x => meetingRequest.DrinkTypes.Add(x));
         await _meetingRequestDrinkTypesRepository.AddRange(meetingRequest.DrinkTypes);
         transaction.Commit();

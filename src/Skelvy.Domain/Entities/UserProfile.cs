@@ -14,42 +14,18 @@ namespace Skelvy.Domain.Entities
       Birthday = birthday;
       Gender = gender;
       UserId = userId;
-
-      Photos = new List<UserProfilePhoto>();
     }
 
-    public UserProfile(
-      int id,
-      string name,
-      DateTimeOffset birthday,
-      string gender,
-      string description,
-      DateTimeOffset? modifiedAt,
-      int userId,
-      IList<UserProfilePhoto> photos,
-      User user)
-    {
-      Id = id;
-      Name = name;
-      Birthday = birthday;
-      Gender = gender;
-      Description = description;
-      ModifiedAt = modifiedAt;
-      UserId = userId;
-      Photos = photos;
-      User = user;
-    }
-
-    public int Id { get; private set; }
-    public string Name { get; private set; }
-    public DateTimeOffset Birthday { get; private set; }
-    public string Gender { get; private set; }
-    public string Description { get; private set; }
-    public DateTimeOffset? ModifiedAt { get; private set; }
-    public int UserId { get; private set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public DateTimeOffset Birthday { get; set; }
+    public string Gender { get; set; }
+    public string Description { get; set; }
+    public DateTimeOffset? ModifiedAt { get; set; }
+    public int UserId { get; set; }
 
     public IList<UserProfilePhoto> Photos { get; set; }
-    public User User { get; private set; }
+    public User User { get; set; }
 
     public void Update(string name, DateTimeOffset birthday, string gender, string description)
     {

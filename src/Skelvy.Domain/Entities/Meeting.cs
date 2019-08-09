@@ -18,35 +18,19 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public Meeting(int id, DateTimeOffset date, double latitude, double longitude, int groupId, int drinkTypeId, DateTimeOffset createdAt, DateTimeOffset? modifiedAt, bool isRemoved, string removedReason, Group group, DrinkType drinkType)
-    {
-      Id = id;
-      Date = date;
-      Latitude = latitude;
-      Longitude = longitude;
-      GroupId = groupId;
-      DrinkTypeId = drinkTypeId;
-      CreatedAt = createdAt;
-      ModifiedAt = modifiedAt;
-      IsRemoved = isRemoved;
-      RemovedReason = removedReason;
-      Group = group;
-      DrinkType = drinkType;
-    }
+    public int Id { get; set; }
+    public DateTimeOffset Date { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+    public int GroupId { get; set; }
+    public int DrinkTypeId { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? ModifiedAt { get; set; }
+    public bool IsRemoved { get; set; }
+    public string RemovedReason { get; set; }
 
-    public int Id { get; private set; }
-    public DateTimeOffset Date { get; private set; }
-    public double Latitude { get; private set; }
-    public double Longitude { get; private set; }
-    public int GroupId { get; private set; }
-    public int DrinkTypeId { get; private set; }
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset? ModifiedAt { get; private set; }
-    public bool IsRemoved { get; private set; }
-    public string RemovedReason { get; private set; }
-
-    public Group Group { get; private set; }
-    public DrinkType DrinkType { get; private set; }
+    public Group Group { get; set; }
+    public DrinkType DrinkType { get; set; }
 
     public void Abort()
     {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Exceptions;
@@ -84,11 +85,17 @@ namespace Skelvy.Domain.Test.Extensions
     public void ShouldReturnCommonDrinkTypesId()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
+      request1.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(1, 1),
+        new MeetingRequestDrinkType(1, 2),
+      };
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 2));
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
+      request2.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(2, 2),
+        new MeetingRequestDrinkType(2, 3),
+      };
 
       var drinkTypesId = request1.FindCommonDrinkTypesId(request2).ToList();
 
@@ -100,11 +107,17 @@ namespace Skelvy.Domain.Test.Extensions
     public void ShouldReturnEmptyCommonDrinkTypesId()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
+      request1.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(1, 1),
+        new MeetingRequestDrinkType(1, 2),
+      };
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 4));
+      request2.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(2, 3),
+        new MeetingRequestDrinkType(2, 4),
+      };
 
       var drinkTypesId = request1.FindCommonDrinkTypesId(request2).ToList();
 
@@ -115,11 +128,17 @@ namespace Skelvy.Domain.Test.Extensions
     public void ShouldReturnCommonDrinkTypeId()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
+      request1.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(1, 1),
+        new MeetingRequestDrinkType(1, 2),
+      };
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 2));
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
+      request2.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(2, 2),
+        new MeetingRequestDrinkType(2, 3),
+      };
 
       var drinkTypeId = request1.FindCommonDrinkTypeId(request2);
 
@@ -130,11 +149,17 @@ namespace Skelvy.Domain.Test.Extensions
     public void ShouldReturnDefaultCommonDrinkTypeId()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
+      request1.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(1, 1),
+        new MeetingRequestDrinkType(1, 2),
+      };
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 4));
+      request2.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(2, 3),
+        new MeetingRequestDrinkType(2, 4),
+      };
 
       var drinkTypeId = request1.FindCommonDrinkTypeId(request2);
 
@@ -145,11 +170,17 @@ namespace Skelvy.Domain.Test.Extensions
     public void ShouldCommonDrinkTypeThrowException()
     {
       var request1 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddDays(1), 18, 25, 2, 2, 1);
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 1));
-      request1.DrinkTypes.Add(new MeetingRequestDrinkType(1, 2));
+      request1.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(1, 1),
+        new MeetingRequestDrinkType(1, 2),
+      };
       var request2 = new MeetingRequest(DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(2), 18, 25, 2, 2, 1);
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 3));
-      request2.DrinkTypes.Add(new MeetingRequestDrinkType(2, 4));
+      request2.DrinkTypes = new List<MeetingRequestDrinkType>
+      {
+        new MeetingRequestDrinkType(2, 3),
+        new MeetingRequestDrinkType(2, 4),
+      };
 
       Assert.Throws<DomainException>(() =>
         request1.FindRequiredCommonDrinkTypeId(request2));

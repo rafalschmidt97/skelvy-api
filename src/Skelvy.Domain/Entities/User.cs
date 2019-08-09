@@ -14,9 +14,6 @@ namespace Skelvy.Domain.Entities
       Language = language;
 
       CreatedAt = DateTimeOffset.UtcNow;
-      Roles = new List<UserRole>();
-      Messages = new List<Message>();
-      MeetingRequests = new List<MeetingRequest>();
     }
 
     public User(string language)
@@ -24,63 +21,26 @@ namespace Skelvy.Domain.Entities
       Language = language;
 
       CreatedAt = DateTimeOffset.UtcNow;
-      Roles = new List<UserRole>();
-      Messages = new List<Message>();
-      MeetingRequests = new List<MeetingRequest>();
     }
 
-    public User(
-      int id,
-      string email,
-      string language,
-      string facebookId,
-      string googleId,
-      DateTimeOffset createdAt,
-      DateTimeOffset? modifiedAt,
-      bool isRemoved,
-      DateTimeOffset? forgottenAt,
-      bool isDisabled,
-      string disabledReason,
-      UserProfile profile,
-      IList<UserRole> roles,
-      IList<MeetingRequest> meetingRequests,
-      IList<Message> messages)
-    {
-      Id = id;
-      Email = email;
-      Language = language;
-      FacebookId = facebookId;
-      GoogleId = googleId;
-      CreatedAt = createdAt;
-      ModifiedAt = modifiedAt;
-      IsRemoved = isRemoved;
-      ForgottenAt = forgottenAt;
-      IsDisabled = isDisabled;
-      DisabledReason = disabledReason;
-      Profile = profile;
-      Roles = roles;
-      MeetingRequests = meetingRequests;
-      Messages = messages;
-    }
+    public int Id { get; set; }
+    public string Email { get; set; }
+    public string Language { get; set; }
+    public string FacebookId { get; set; }
+    public string GoogleId { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? ModifiedAt { get; set; }
+    public bool IsRemoved { get; set; }
+    public DateTimeOffset? ForgottenAt { get; set; }
+    public bool IsDisabled { get; set; }
+    public string DisabledReason { get; set; }
 
-    public int Id { get; private set; }
-    public string Email { get; private set; }
-    public string Language { get; private set; }
-    public string FacebookId { get; private set; }
-    public string GoogleId { get; private set; }
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset? ModifiedAt { get; private set; }
-    public bool IsRemoved { get; private set; }
-    public DateTimeOffset? ForgottenAt { get; private set; }
-    public bool IsDisabled { get; private set; }
-    public string DisabledReason { get; private set; }
-
-    public UserProfile Profile { get; private set; }
-    public IList<UserRole> Roles { get; private set; }
-    public IList<MeetingRequest> MeetingRequests { get; private set; }
-    public IList<Message> Messages { get; private set; }
-    public IList<Relation> Relations { get; private set; }
-    public IList<FriendRequest> FriendsRequests { get; private set; }
+    public UserProfile Profile { get; set; }
+    public IList<UserRole> Roles { get; set; }
+    public IList<MeetingRequest> MeetingRequests { get; set; }
+    public IList<Message> Messages { get; set; }
+    public IList<Relation> Relations { get; set; }
+    public IList<FriendRequest> FriendsRequests { get; set; }
 
     public void RegisterFacebook(string facebookId)
     {
