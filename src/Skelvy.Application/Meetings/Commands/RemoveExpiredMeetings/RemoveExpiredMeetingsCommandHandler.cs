@@ -37,7 +37,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
       {
         var isDataChanged = false;
 
-        if (meetingsToRemove.Count != 0)
+        if (meetingsToRemove.Any())
         {
           var meetingsId = meetingsToRemove.Select(x => x.Id);
           var meetingUsers = await _groupUsersRepository.FindAllWithRequestByGroupsId(meetingsId);

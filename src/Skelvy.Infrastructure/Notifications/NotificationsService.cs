@@ -139,7 +139,7 @@ namespace Skelvy.Infrastructure.Notifications
     {
       var connections = GetConnections(connected);
 
-      if (connections.Offline.Count > 0)
+      if (connections.Offline.Any())
       {
         pushAction(connections.Offline);
       }

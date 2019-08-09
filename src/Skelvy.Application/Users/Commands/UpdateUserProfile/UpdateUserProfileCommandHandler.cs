@@ -51,7 +51,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
     {
       var oldPhotos = await _profilePhotosRepository.FindAllWithAttachmentByProfileId(profile.Id);
 
-      if (oldPhotos.Count > 0)
+      if (oldPhotos.Any())
       {
         await _profilePhotosRepository.RemoveRange(oldPhotos);
         var oldAttachments = oldPhotos.Select(x => x.Attachment).ToList();

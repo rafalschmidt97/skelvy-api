@@ -114,7 +114,7 @@ namespace Skelvy.Persistence.Repositories
                     x.Status == MeetingRequestStatusTypes.Searching)
         .ToListAsync();
 
-      if (requests.Count > 0)
+      if (requests.Any())
       {
         foreach (var request in requests)
         {

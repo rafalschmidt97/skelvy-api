@@ -27,7 +27,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
 
       var isDataChanged = false;
 
-      if (requestsToRemove.Count != 0)
+      if (requestsToRemove.Any())
       {
         requestsToRemove.ForEach(x => x.Expire());
         isDataChanged = true;

@@ -107,7 +107,7 @@ namespace Skelvy.Persistence.Repositories
                     x.Group.Users.Count(y => !y.IsRemoved) < 4)
         .ToListAsync();
 
-      if (meetings.Count > 0)
+      if (meetings.Any())
       {
         var matchingMeetings = meetings.Where(x => IsMeetingClose(x, user, latitude, longitude)).ToList();
         matchingMeetings.ForEach(x => x.Group.Users = x.Group.Users.Where(y => !y.IsRemoved).ToList());

@@ -26,7 +26,7 @@ namespace Skelvy.Application.Core.Pipes
         .Where(f => f != null)
         .ToList();
 
-      if (failures.Count != 0)
+      if (failures.Any())
       {
         throw new ValidationException(failures);
       }
