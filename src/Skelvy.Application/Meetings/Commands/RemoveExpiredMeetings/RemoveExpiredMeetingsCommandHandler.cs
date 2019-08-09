@@ -40,12 +40,12 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
         if (meetingsToRemove.Any())
         {
           var meetingsId = meetingsToRemove.Select(x => x.Id);
-          var meetingUsers = await _groupUsersRepository.FindAllWithRequestByGroupsId(meetingsId);
+          var groupUsers = await _groupUsersRepository.FindAllWithRequestByGroupsId(meetingsId);
 
           meetingsToRemove.ForEach(x => x.Expire());
-          var meetingUsersRequest = meetingUsers.Select(x => x.MeetingRequest).ToList();
-          meetingUsersRequest.ForEach(x => x.Expire());
-          await _meetingRequestsRepository.UpdateRange(meetingUsersRequest);
+          var groupUsersRequests = groupUsers.Select(x => x.MeetingRequest).ToList();
+          groupUsersRequests.ForEach(x => x.Expire());
+          await _meetingRequestsRepository.UpdateRange(groupUsersRequests);
 
           isDataChanged = true;
         }

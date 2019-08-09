@@ -62,8 +62,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
         var messagesToRemove = await _messagesRepository.FindAllByUsersId(usersId);
         await _messagesRepository.RemoveRange(messagesToRemove);
 
-        var meetingUsersToRemove = await _groupUsersRepository.FindAllWithRemovedByUsersId(usersId);
-        await _groupUsersRepository.RemoveRange(meetingUsersToRemove);
+        var groupUsersToRemove = await _groupUsersRepository.FindAllWithRemovedByUsersId(usersId);
+        await _groupUsersRepository.RemoveRange(groupUsersToRemove);
 
         var meetingRequestsToRemove = await _requestsRepository.FindAllWithRemovedByUsersId(usersId);
         var meetingRequestsId = meetingRequestsToRemove.Select(y => y.Id);

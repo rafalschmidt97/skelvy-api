@@ -34,7 +34,7 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedReason = MeetingUserRemovedReasonTypes.Left;
+        RemovedReason = GroupUserRemovedReasonTypes.Left;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
@@ -48,7 +48,7 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedReason = MeetingUserRemovedReasonTypes.Aborted;
+        RemovedReason = GroupUserRemovedReasonTypes.Aborted;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else

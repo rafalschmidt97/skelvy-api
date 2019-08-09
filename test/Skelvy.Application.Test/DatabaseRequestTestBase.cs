@@ -39,7 +39,7 @@ namespace Skelvy.Application.Test
         new MeetingsRepository(DbContext());
     }
 
-    protected static GroupUsersRepository MeetingUsersRepository(bool initialized = true)
+    protected static GroupUsersRepository GroupUsersRepository(bool initialized = true)
     {
       return initialized ?
         new GroupUsersRepository(InitializedDbContext()) :

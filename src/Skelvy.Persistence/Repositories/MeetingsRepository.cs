@@ -113,15 +113,15 @@ namespace Skelvy.Persistence.Repositories
         matchingMeetings.ForEach(x => x.Group.Users = x.Group.Users.Where(y => !y.IsRemoved).ToList());
         foreach (var meeting in matchingMeetings)
         {
-          foreach (var meetingUser in meeting.Group.Users)
+          foreach (var groupUser in meeting.Group.Users)
           {
             var userPhotos = await Context.UserProfilePhotos
               .Include(x => x.Attachment)
-              .Where(x => x.ProfileId == meetingUser.User.Profile.Id)
+              .Where(x => x.ProfileId == groupUser.User.Profile.Id)
               .OrderBy(x => x.Order)
               .ToListAsync();
 
-            meetingUser.User.Profile.Photos = userPhotos;
+            groupUser.User.Profile.Photos = userPhotos;
           }
         }
 

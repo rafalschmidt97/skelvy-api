@@ -23,8 +23,8 @@ namespace Skelvy.Application.Meetings.Events.UserLeftMeeting
 
     public override async Task<Unit> Handle(UserLeftMeetingEvent request)
     {
-      var meetingUsers = await _groupUsersRepository.FindAllByGroupId(request.MeetingId);
-      var broadcastUsersId = meetingUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
+      var groupUsers = await _groupUsersRepository.FindAllByGroupId(request.MeetingId);
+      var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
       await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingAction(request.UserId, broadcastUsersId));
 
       return Unit.Value;

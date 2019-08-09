@@ -131,13 +131,13 @@ namespace Skelvy.Application.Meetings.Commands.CreateMeetingRequest
       {
         try
         {
-          var meetingUser = new GroupUser(meeting.Id, newRequest.UserId, newRequest.Id);
-          await _groupUsersRepository.Add(meetingUser);
+          var groupUsers = new GroupUser(meeting.Id, newRequest.UserId, newRequest.Id);
+          await _groupUsersRepository.Add(groupUsers);
           newRequest.MarkAsFound();
           await _meetingRequestsRepository.Update(newRequest);
 
           transaction.Commit();
-          await _mediator.Publish(new UserJoinedMeetingEvent(meetingUser.UserId, meetingUser.GroupId));
+          await _mediator.Publish(new UserJoinedMeetingEvent(groupUsers.UserId, groupUsers.GroupId));
         }
         catch (Exception exception)
         {

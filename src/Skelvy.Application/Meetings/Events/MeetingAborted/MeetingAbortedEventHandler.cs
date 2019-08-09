@@ -23,10 +23,10 @@ namespace Skelvy.Application.Meetings.Events.MeetingAborted
 
     public override async Task<Unit> Handle(MeetingAbortedEvent request)
     {
-      var meetingUsers = await _groupUsersRepository
+      var groupUsers = await _groupUsersRepository
         .FindAllWithRemovedAfterOrEqualAbortedAtByGroupId(request.MeetingId, request.UserLeftAt);
 
-      var broadcastUsersId = meetingUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
+      var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
       await _notifications.BroadcastMeetingAborted(new MeetingAbortedAction(request.UserId, broadcastUsersId));
 
       return Unit.Value;

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Skelvy.Domain.Test.Entities
 {
-  public class MeetingUserTest
+  public class GroupUserTest
   {
     [Fact]
     public void ShouldBeLeft()
@@ -14,7 +14,7 @@ namespace Skelvy.Domain.Test.Entities
       entity.Leave();
 
       Assert.True(entity.IsRemoved);
-      Assert.Equal(entity.RemovedReason, MeetingUserRemovedReasonTypes.Left);
+      Assert.Equal(entity.RemovedReason, GroupUserRemovedReasonTypes.Left);
       Assert.NotNull(entity.ModifiedAt);
     }
 
@@ -35,7 +35,7 @@ namespace Skelvy.Domain.Test.Entities
       entity.Abort();
 
       Assert.True(entity.IsRemoved);
-      Assert.Equal(entity.RemovedReason, MeetingUserRemovedReasonTypes.Aborted);
+      Assert.Equal(entity.RemovedReason, GroupUserRemovedReasonTypes.Aborted);
       Assert.NotNull(entity.ModifiedAt);
     }
 
