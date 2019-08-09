@@ -50,7 +50,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = InitializedDbContext();
       var handler = new SignInWithFacebookCommandHandler(
           new UsersRepository(dbContext),
-          new UserProfilesRepository(dbContext),
+          new ProfilesRepository(dbContext),
           _facebookService.Object,
           _tokenService.Object,
           _mediator.Object,
@@ -76,7 +76,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = DbContext();
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -96,7 +96,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = InitializedDbContext();
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -122,7 +122,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = DbContext();
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -140,7 +140,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = ContextWithRemovedUser();
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -158,7 +158,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = ContextWithDisabledUser();
       var handler = new SignInWithFacebookCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _facebookService.Object,
         _tokenService.Object,
         _mediator.Object,

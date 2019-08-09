@@ -1,8 +1,8 @@
 namespace Skelvy.Domain.Entities
 {
-  public class UserProfilePhoto
+  public class ProfilePhoto
   {
-    public UserProfilePhoto(int attachmentId, int order, int profileId)
+    public ProfilePhoto(int attachmentId, int order, int profileId)
     {
       AttachmentId = attachmentId;
       Order = order;
@@ -14,7 +14,7 @@ namespace Skelvy.Domain.Entities
     public int Order { get; set; }
     public int ProfileId { get; set; }
 
-    public UserProfile Profile { get; set; }
+    public Profile Profile { get; set; }
     public Attachment Attachment { get; set; }
   }
 }

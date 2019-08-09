@@ -52,7 +52,7 @@ namespace Skelvy.Persistence
 
     public static void SeedProfiles(SkelvyContext context)
     {
-      if (context.UserProfiles.Any())
+      if (context.Profiles.Any())
       {
         return;
       }
@@ -61,29 +61,29 @@ namespace Skelvy.Persistence
 
       var profiles = new[]
       {
-        new UserProfile(
+        new Profile(
           "User1",
           DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           GenderTypes.Male,
           users[0].Id),
-        new UserProfile(
+        new Profile(
           "User2",
           DateTimeOffset.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           GenderTypes.Male,
           users[1].Id),
-        new UserProfile(
+        new Profile(
           "User3",
           DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           GenderTypes.Male,
           users[2].Id),
-        new UserProfile(
+        new Profile(
           "User4",
           DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
           GenderTypes.Male,
           users[3].Id),
       };
 
-      context.UserProfiles.AddRange(profiles);
+      context.Profiles.AddRange(profiles);
       context.SaveChanges();
 
       var attachments = new[]
@@ -99,13 +99,13 @@ namespace Skelvy.Persistence
 
       var photos = new[]
       {
-        new UserProfilePhoto(attachments[0].Id, 1, profiles[0].Id),
-        new UserProfilePhoto(attachments[1].Id, 1, profiles[1].Id),
-        new UserProfilePhoto(attachments[2].Id, 1, profiles[2].Id),
-        new UserProfilePhoto(attachments[3].Id, 1, profiles[3].Id),
+        new ProfilePhoto(attachments[0].Id, 1, profiles[0].Id),
+        new ProfilePhoto(attachments[1].Id, 1, profiles[1].Id),
+        new ProfilePhoto(attachments[2].Id, 1, profiles[2].Id),
+        new ProfilePhoto(attachments[3].Id, 1, profiles[3].Id),
       };
 
-      context.UserProfilePhotos.AddRange(photos);
+      context.ProfilePhotos.AddRange(photos);
       context.SaveChanges();
     }
 

@@ -38,7 +38,7 @@ namespace Skelvy.Persistence.Repositories
 
         foreach (var user in users)
         {
-          var userPhotos = await Context.UserProfilePhotos
+          var userPhotos = await Context.ProfilePhotos
             .Include(x => x.Attachment)
             .Where(x => x.ProfileId == user.User.Profile.Id)
             .OrderBy(x => x.Order)
@@ -115,7 +115,7 @@ namespace Skelvy.Persistence.Repositories
         {
           foreach (var groupUser in meeting.Group.Users)
           {
-            var userPhotos = await Context.UserProfilePhotos
+            var userPhotos = await Context.ProfilePhotos
               .Include(x => x.Attachment)
               .Where(x => x.ProfileId == groupUser.User.Profile.Id)
               .OrderBy(x => x.Order)

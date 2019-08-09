@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
-using AutoMapper;
 using Skelvy.Application.Core.Mappers;
 using Skelvy.Common.Extensions;
 using Skelvy.Domain.Entities;
+using AutoMapperProfile = AutoMapper.Profile;
 
 namespace Skelvy.Application.Users.Queries
 {
   public class UserDto : ICustomMapping
   {
     public int Id { get; set; }
-    public UserProfileDto Profile { get; set; }
+    public ProfileDto Profile { get; set; }
 
-    public void CreateMappings(Profile configuration)
+    public void CreateMappings(AutoMapperProfile configuration)
     {
       configuration.CreateMap<Relation, UserDto>()
         .ForMember(
@@ -24,30 +24,30 @@ namespace Skelvy.Application.Users.Queries
     }
   }
 
-  public class UserProfileDto : ICustomMapping
+  public class ProfileDto : ICustomMapping
   {
     public string Name { get; set; }
     public int Age { get; set; }
     public string Gender { get; set; }
     public string Description { get; set; }
-    public IList<UserProfilePhotoDto> Photos { get; set; }
+    public IList<ProfilePhotoDto> Photos { get; set; }
 
-    public void CreateMappings(Profile configuration)
+    public void CreateMappings(AutoMapperProfile configuration)
     {
-      configuration.CreateMap<UserProfile, UserProfileDto>()
+      configuration.CreateMap<Profile, ProfileDto>()
         .ForMember(
           destination => destination.Age,
           options => options.MapFrom(x => x.Birthday.GetAge()));
     }
   }
 
-  public class UserProfilePhotoDto : ICustomMapping
+  public class ProfilePhotoDto : ICustomMapping
   {
     public string Url { get; set; }
 
-    public void CreateMappings(Profile configuration)
+    public void CreateMappings(AutoMapperProfile configuration)
     {
-      configuration.CreateMap<UserProfilePhoto, UserProfilePhotoDto>()
+      configuration.CreateMap<ProfilePhoto, ProfilePhotoDto>()
         .ForMember(
           destination => destination.Url,
           options => options.MapFrom(x => x.Attachment.Url));
@@ -57,15 +57,15 @@ namespace Skelvy.Application.Users.Queries
   public class SelfUserDto
   {
     public int Id { get; set; }
-    public SelfUserProfileDto Profile { get; set; }
+    public SelfProfileDto Profile { get; set; }
   }
 
-  public class SelfUserProfileDto
+  public class SelfProfileDto
   {
     public string Name { get; set; }
     public DateTimeOffset Birthday { get; set; }
     public string Gender { get; set; }
     public string Description { get; set; }
-    public IList<UserProfilePhotoDto> Photos { get; set; }
+    public IList<ProfilePhotoDto> Photos { get; set; }
   }
 }

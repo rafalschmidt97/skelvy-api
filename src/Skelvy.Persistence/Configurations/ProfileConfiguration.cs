@@ -4,9 +4,9 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Configurations
 {
-  public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
+  public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
   {
-    public void Configure(EntityTypeBuilder<UserProfile> builder)
+    public void Configure(EntityTypeBuilder<Profile> builder)
     {
       builder.HasOne(x => x.User).WithOne(x => x.Profile).OnDelete(DeleteBehavior.Restrict);
 

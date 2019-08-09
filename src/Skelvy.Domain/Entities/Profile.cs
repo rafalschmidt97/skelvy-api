@@ -6,9 +6,9 @@ using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
-  public class UserProfile : IModifiableEntity
+  public class Profile : IModifiableEntity
   {
-    public UserProfile(string name, DateTimeOffset birthday, string gender, int userId)
+    public Profile(string name, DateTimeOffset birthday, string gender, int userId)
     {
       Name = name.Trim();
       Birthday = birthday;
@@ -24,24 +24,24 @@ namespace Skelvy.Domain.Entities
     public DateTimeOffset? ModifiedAt { get; set; }
     public int UserId { get; set; }
 
-    public IList<UserProfilePhoto> Photos { get; set; }
+    public IList<ProfilePhoto> Photos { get; set; }
     public User User { get; set; }
 
     public void Update(string name, DateTimeOffset birthday, string gender, string description)
     {
       Name = name != null
         ? name.Trim()
-        : throw new DomainException($"'Name' must not be null for entity {nameof(UserProfile)}(Id = {Id}).");
+        : throw new DomainException($"'Name' must not be null for entity {nameof(Profile)}(Id = {Id}).");
 
       Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18)
         ? birthday
         : throw new DomainException(
-          $"'Birthday' must show the age of majority for entity {nameof(UserProfile)}(Id = {Id}).");
+          $"'Birthday' must show the age of majority for entity {nameof(Profile)}(Id = {Id}).");
 
       Gender = gender == GenderTypes.Male || gender == GenderTypes.Female || gender == GenderTypes.Other
         ? gender
         : throw new DomainException(
-          $"'Gender' must be {GenderTypes.Male} / {GenderTypes.Female} / {GenderTypes.Other} for entity {nameof(UserProfile)}(Id = {Id}).");
+          $"'Gender' must be {GenderTypes.Male} / {GenderTypes.Female} / {GenderTypes.Other} for entity {nameof(Profile)}(Id = {Id}).");
 
       if (description != null)
       {

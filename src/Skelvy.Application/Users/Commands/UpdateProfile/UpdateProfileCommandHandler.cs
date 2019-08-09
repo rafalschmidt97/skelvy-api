@@ -9,17 +9,17 @@ using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Attachments;
 
-namespace Skelvy.Application.Users.Commands.UpdateUserProfile
+namespace Skelvy.Application.Users.Commands.UpdateProfile
 {
-  public class UpdateUserProfileCommandHandler : CommandHandler<UpdateUserProfileCommand>
+  public class UpdateProfileCommandHandler : CommandHandler<UpdateProfileCommand>
   {
-    private readonly IUserProfilesRepository _profilesRepository;
-    private readonly IUserProfilePhotosRepository _profilePhotosRepository;
+    private readonly IProfilesRepository _profilesRepository;
+    private readonly IProfilePhotosRepository _profilePhotosRepository;
     private readonly IAttachmentsRepository _attachmentsRepository;
 
-    public UpdateUserProfileCommandHandler(
-      IUserProfilesRepository profilesRepository,
-      IUserProfilePhotosRepository profilePhotosRepository,
+    public UpdateProfileCommandHandler(
+      IProfilesRepository profilesRepository,
+      IProfilePhotosRepository profilePhotosRepository,
       IAttachmentsRepository attachmentsRepository)
     {
       _profilesRepository = profilesRepository;
@@ -27,13 +27,13 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       _attachmentsRepository = attachmentsRepository;
     }
 
-    public override async Task<Unit> Handle(UpdateUserProfileCommand request)
+    public override async Task<Unit> Handle(UpdateProfileCommand request)
     {
       var profile = await _profilesRepository.FindOneByUserId(request.UserId);
 
       if (profile == null)
       {
-        throw new NotFoundException(nameof(UserProfile), request.UserId);
+        throw new NotFoundException(nameof(Profile), request.UserId);
       }
 
       using (var transaction = _profilesRepository.BeginTransaction())
@@ -47,7 +47,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
       return Unit.Value;
     }
 
-    private async Task UpdatePhotos(UserProfile profile, IList<UpdateUserProfilePhotos> photos)
+    private async Task UpdatePhotos(Profile profile, IList<UpdateProfilePhotos> photos)
     {
       var oldPhotos = await _profilePhotosRepository.FindAllWithAttachmentByProfileId(profile.Id);
 
@@ -60,7 +60,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
 
       var newAttachments = photos.Select((photo, index) => new Attachment(AttachmentTypes.Image, photo.Url)).ToList();
       await _attachmentsRepository.AddRange(newAttachments);
-      var newPhotos = newAttachments.Select((attachment, index) => new UserProfilePhoto(attachment.Id, index + 1, profile.Id)).ToList();
+      var newPhotos = newAttachments.Select((attachment, index) => new ProfilePhoto(attachment.Id, index + 1, profile.Id)).ToList();
       await _profilePhotosRepository.AddRange(newPhotos);
     }
   }

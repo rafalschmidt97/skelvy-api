@@ -8,8 +8,8 @@ using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
+using Skelvy.Application.Users.Commands.UpdateProfile;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
-using Skelvy.Application.Users.Commands.UpdateUserProfile;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindSelfUser;
 using Skelvy.Application.Users.Queries.FindUser;
@@ -64,14 +64,14 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPut("{id}/profile")]
     [AuthorizeRole(RoleTypes.Admin)]
-    public async Task UpdateProfile(int id, UpdateUserProfileCommand request)
+    public async Task UpdateProfile(int id, UpdateProfileCommand request)
     {
       request.UserId = id;
       await Mediator.Send(request);
     }
 
     [HttpPut("self/profile")]
-    public async Task UpdateSelfProfile(UpdateUserProfileCommand request)
+    public async Task UpdateSelfProfile(UpdateProfileCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);

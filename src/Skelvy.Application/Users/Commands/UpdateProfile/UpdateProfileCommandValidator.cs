@@ -2,11 +2,11 @@ using System;
 using FluentValidation;
 using Skelvy.Domain.Enums.Users;
 
-namespace Skelvy.Application.Users.Commands.UpdateUserProfile
+namespace Skelvy.Application.Users.Commands.UpdateProfile
 {
-  public class UpdateUserProfileCommandValidator : AbstractValidator<UpdateUserProfileCommand>
+  public class UpdateProfileCommandValidator : AbstractValidator<UpdateProfileCommand>
   {
-    public UpdateUserProfileCommandValidator()
+    public UpdateProfileCommandValidator()
     {
       RuleFor(x => x.UserId).NotEmpty();
       RuleFor(x => x.Name).NotEmpty().MinimumLength(3).MaximumLength(50)
@@ -27,13 +27,13 @@ namespace Skelvy.Application.Users.Commands.UpdateUserProfile
         .Must(x => x != null && x.Count <= 3)
         .WithMessage("'Photos' must contain fewer than 3 items.");
 
-      RuleForEach(x => x.Photos).SetValidator(new UpdateUserProfilePhotosValidator());
+      RuleForEach(x => x.Photos).SetValidator(new UpdateProfilePhotosValidator());
     }
   }
 
-  public class UpdateUserProfilePhotosValidator : AbstractValidator<UpdateUserProfilePhotos>
+  public class UpdateProfilePhotosValidator : AbstractValidator<UpdateProfilePhotos>
   {
-    public UpdateUserProfilePhotosValidator()
+    public UpdateProfilePhotosValidator()
     {
       RuleFor(x => x.Url).NotEmpty().MaximumLength(2048);
     }

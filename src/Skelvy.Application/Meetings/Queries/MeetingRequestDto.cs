@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using Skelvy.Application.Core.Mappers;
 using Skelvy.Application.Drinks.Queries;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Domain.Entities;
+using AutoMapperProfile = AutoMapper.Profile;
 
 namespace Skelvy.Application.Meetings.Queries
 {
@@ -21,7 +21,7 @@ namespace Skelvy.Application.Meetings.Queries
     public string City { get; set; }
     public IList<DrinkTypeDto> DrinkTypes { get; set; }
 
-    public void CreateMappings(Profile configuration)
+    public void CreateMappings(AutoMapperProfile configuration)
     {
       configuration.CreateMap<MeetingRequest, MeetingRequestDto>()
         .ForMember(
@@ -46,7 +46,7 @@ namespace Skelvy.Application.Meetings.Queries
     public IList<DrinkTypeDto> DrinkTypes { get; set; }
     public UserDto User { get; set; }
 
-    public void CreateMappings(Profile configuration)
+    public void CreateMappings(AutoMapperProfile configuration)
     {
       configuration.CreateMap<MeetingRequest, MeetingRequestWithUserDto>()
         .ForMember(

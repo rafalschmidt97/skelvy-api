@@ -35,7 +35,7 @@ namespace Skelvy.Domain.Entities
     public bool IsDisabled { get; set; }
     public string DisabledReason { get; set; }
 
-    public UserProfile Profile { get; set; }
+    public Profile Profile { get; set; }
     public IList<UserRole> Roles { get; set; }
     public IList<MeetingRequest> MeetingRequests { get; set; }
     public IList<Message> Messages { get; set; }
@@ -79,7 +79,7 @@ namespace Skelvy.Domain.Entities
         Language = language == LanguageTypes.EN || language == LanguageTypes.PL
           ? language
           : throw new DomainException(
-            $"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN} for entity {nameof(UserProfile)}(Id = {Id}).");
+            $"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN} for entity {nameof(Entities.Profile)}(Id = {Id}).");
 
         ModifiedAt = DateTimeOffset.UtcNow;
       }

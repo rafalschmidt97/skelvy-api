@@ -3,14 +3,14 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Domain.Extensions
 {
-  public static class UserProfileExtension
+  public static class ProfileExtension
   {
-    public static int GetAge(this UserProfile profile)
+    public static int GetAge(this Profile profile)
     {
       return profile.Birthday.GetAge();
     }
 
-    public static bool IsWithinMeetingRequestAgeRange(this UserProfile profile, MeetingRequest request)
+    public static bool IsWithinMeetingRequestAgeRange(this Profile profile, MeetingRequest request)
     {
       var age = GetAge(profile);
       return age >= request.MinAge && (request.MaxAge >= 55 || age <= request.MaxAge);

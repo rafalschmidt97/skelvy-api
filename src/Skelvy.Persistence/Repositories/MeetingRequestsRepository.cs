@@ -118,7 +118,7 @@ namespace Skelvy.Persistence.Repositories
       {
         foreach (var request in requests)
         {
-          var userPhotos = await Context.UserProfilePhotos
+          var userPhotos = await Context.ProfilePhotos
             .Include(x => x.Attachment)
             .Where(x => x.ProfileId == request.User.Profile.Id)
             .OrderBy(x => x.Order)
