@@ -4,9 +4,9 @@ using Skelvy.Application.Messages.Queries;
 
 namespace Skelvy.Application.Messages.Infrastructure.Notifications
 {
-  public class UserSentMessageAction
+  public class UserSentMessageNotification
   {
-    public UserSentMessageAction(string type, UserSentMessageActionDto message, IList<MessageDto> messages, IList<int> usersId)
+    public UserSentMessageNotification(string type, UserSentMessageNotificationDto message, IList<MessageDto> messages, IList<int> usersId)
     {
       Type = type;
       Message = message;
@@ -15,14 +15,14 @@ namespace Skelvy.Application.Messages.Infrastructure.Notifications
     }
 
     public string Type { get; private set; }
-    public UserSentMessageActionDto Message { get; private set; }
+    public UserSentMessageNotificationDto Message { get; private set; }
     public IList<MessageDto> Messages { get; private set; }
     public IList<int> UsersId { get; private set; }
   }
 
-  public class UserSentMessageActionDto
+  public class UserSentMessageNotificationDto
   {
-    public UserSentMessageActionDto(int messageId, string type, DateTimeOffset date, string text, string attachmentUrl, string action, int userId, string userName, int groupId)
+    public UserSentMessageNotificationDto(int messageId, string type, DateTimeOffset date, string text, string attachmentUrl, string action, int userId, string userName, int groupId)
     {
       MessageId = messageId;
       Type = type;

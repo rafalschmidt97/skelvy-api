@@ -23,36 +23,36 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _templateRenderer = templateRenderer;
     }
 
-    public async Task BroadcastUserCreated(UserCreatedAction action)
+    public async Task BroadcastUserCreated(UserCreatedNotification notification)
     {
       var message = new EmailMessage(
-        action.Email,
-        action.Language,
+        notification.Email,
+        notification.Language,
         new EmailMessageSubject("Your account has been created", "Twoje konto zostało utworzone"),
         "Created");
 
       await SendEmail(message);
     }
 
-    public async Task BroadcastUserRemoved(UserRemovedAction action)
+    public async Task BroadcastUserRemoved(UserRemovedNotification notification)
     {
       var message = new EmailMessage(
-        action.Email,
-        action.Language,
+        notification.Email,
+        notification.Language,
         new EmailMessageSubject("Your account has been deleted", "Twoje konto zostało usunięte"),
         "Removed");
 
       await SendEmail(message);
     }
 
-    public async Task BroadcastUserDisabled(UserDisabledAction action)
+    public async Task BroadcastUserDisabled(UserDisabledNotification notification)
     {
       dynamic model = new ExpandoObject();
-      model.Reason = action.Reason;
+      model.Reason = notification.Reason;
 
       var message = new EmailMessage(
-        action.Email,
-        action.Language,
+        notification.Email,
+        notification.Language,
         new EmailMessageSubject("Your account has been disabled", "Twoje konto zostało zablokowane"),
         "Disabled",
         model);

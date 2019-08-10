@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Skelvy.Application.Meetings.Infrastructure.Notifications
 {
-  public class UserFoundMeetingAction
+  public class MeetingRequestExpiredNotification
   {
-    public UserFoundMeetingAction(IEnumerable<int> usersId)
+    public MeetingRequestExpiredNotification(IEnumerable<int> usersId)
     {
       UsersId = usersId;
     }

@@ -17,35 +17,35 @@ namespace Skelvy.Infrastructure.Notifications
         .TryAddWithoutValidation("Authorization", "key=" + configuration["SKELVY_GOOGLE_KEY_WEB"]);
     }
 
-    public async Task BroadcastUserSentMessage(UserSentMessageAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserSentMessage(UserSentMessageNotification notification, IEnumerable<int> usersId)
     {
       var data = new PushNotificationData
       {
         Action = "UserSentMessage",
         RedirectTo = "chat",
-        Data = action.Messages,
+        Data = notification.Messages,
       };
 
-      if (action.Message.Text != null)
+      if (notification.Message.Text != null)
       {
         await SendNotification(
           usersId,
           new PushNotificationContent
           {
-            Title = action.Message.UserName,
-            Body = action.Message.Text,
+            Title = notification.Message.UserName,
+            Body = notification.Message.Text,
           },
           data);
       }
       else
       {
-        if (action.Message.AttachmentUrl != null)
+        if (notification.Message.AttachmentUrl != null)
         {
           await SendNotification(
             usersId,
             new PushNotificationContent
             {
-              Title = action.Message.UserName,
+              Title = notification.Message.UserName,
               BodyLocKey = "USER_SENT_PHOTO",
             },
             data);
@@ -56,7 +56,7 @@ namespace Skelvy.Infrastructure.Notifications
             usersId,
             new PushNotificationContent
             {
-              Title = action.Message.UserName,
+              Title = notification.Message.UserName,
               BodyLocKey = "USER_SENT_MESSAGE",
             },
             data);
@@ -64,7 +64,7 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
@@ -77,11 +77,11 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "UserJoinedMeeting",
           RedirectTo = "meeting",
-          Data = new { action.UserId },
+          Data = new { notification.UserId },
         });
     }
 
-    public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
@@ -97,7 +97,7 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
@@ -110,11 +110,11 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "UserLeftMeeting",
           RedirectTo = "meeting",
-          Data = new { action.UserId },
+          Data = new { notification.UserId },
         });
     }
 
-    public async Task BroadcastMeetingAborted(MeetingAbortedAction action, IEnumerable<int> usersId)
+    public async Task BroadcastMeetingAborted(MeetingAbortedNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
@@ -127,11 +127,11 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
-          Data = new { action.UserId },
+          Data = new { notification.UserId },
         });
     }
 
-    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId)
+    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
@@ -147,7 +147,7 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId)
+    public async Task BroadcastMeetingExpired(MeetingExpiredNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
@@ -163,7 +163,7 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
@@ -179,9 +179,9 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action, IEnumerable<int> usersId)
+    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification, IEnumerable<int> usersId)
     {
-      if (action.IsAccepted)
+      if (notification.IsAccepted)
       {
         await SendNotification(
           usersId,

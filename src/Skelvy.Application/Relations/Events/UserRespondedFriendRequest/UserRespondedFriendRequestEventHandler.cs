@@ -21,7 +21,7 @@ namespace Skelvy.Application.Relations.Events.UserRespondedFriendRequest
       var usersId = new List<int> { request.InvitedUserId, request.InvitingUserId };
 
       await _notifications.BroadcastUserRespondedFriendRequest(
-        new UserRespondedFriendRequestAction(request.RequestId, request.IsAccepted, usersId));
+        new UserRespondedFriendRequestNotification(request.RequestId, request.IsAccepted, usersId));
 
       return Unit.Value;
     }

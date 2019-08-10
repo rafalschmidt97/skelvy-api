@@ -25,7 +25,7 @@ namespace Skelvy.Application.Meetings.Events.UserJoinedMeeting
     {
       var groupUsers = await _groupUsersRepository.FindAllByGroupId(request.MeetingId);
       var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingAction(request.UserId, broadcastUsersId));
+      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingNotification(request.UserId, broadcastUsersId));
 
       return Unit.Value;
     }

@@ -8,16 +8,16 @@ namespace Skelvy.Application.Notifications.Infrastructure
 {
   public interface ISocketNotificationsService
   {
-    Task BroadcastUserSentMessage(UserSentMessageAction action);
-    Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action);
-    Task BroadcastUserFoundMeeting(UserFoundMeetingAction action);
-    Task BroadcastUserLeftMeeting(UserLeftMeetingAction action);
-    Task BroadcastMeetingAborted(MeetingAbortedAction action);
-    Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action);
-    Task BroadcastMeetingExpired(MeetingExpiredAction action);
-    Task BroadcastUserRemoved(UserRemovedAction action);
-    Task BroadcastUserDisabled(UserDisabledAction action);
-    Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action);
-    Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action);
+    Task BroadcastUserSentMessage(UserSentMessageNotification notification);
+    Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification);
+    Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification);
+    Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification);
+    Task BroadcastMeetingAborted(MeetingAbortedNotification notification);
+    Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification);
+    Task BroadcastMeetingExpired(MeetingExpiredNotification notification);
+    Task BroadcastUserRemoved(UserRemovedNotification notification);
+    Task BroadcastUserDisabled(UserDisabledNotification notification);
+    Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification);
+    Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification);
   }
 }

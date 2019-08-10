@@ -1,8 +1,8 @@
 namespace Skelvy.Application.Users.Infrastructure.Notifications
 {
-  public class UserRemovedAction
+  public class UserRemovedNotification
   {
-    public UserRemovedAction(int userId, string email, string language)
+    public UserRemovedNotification(int userId, string email, string language)
     {
       UserId = userId;
       Email = email;

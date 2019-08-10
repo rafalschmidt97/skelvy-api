@@ -33,9 +33,9 @@ namespace Skelvy.Application.Messages.Events.MessageSent
       var sender = await _usersRepository.FindOneWithDetails(request.Message.UserId);
 
       await _notifications.BroadcastUserSentMessage(
-        new UserSentMessageAction(
+        new UserSentMessageNotification(
           request.Type,
-          new UserSentMessageActionDto(
+          new UserSentMessageNotificationDto(
             request.Message.MessageId,
             request.Message.Type,
             request.Message.Date,

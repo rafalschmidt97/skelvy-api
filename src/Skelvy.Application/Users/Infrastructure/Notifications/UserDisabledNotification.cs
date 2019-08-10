@@ -1,8 +1,8 @@
 namespace Skelvy.Application.Users.Infrastructure.Notifications
 {
-  public class UserDisabledAction
+  public class UserDisabledNotification
   {
-    public UserDisabledAction(int userId, string reason, string email, string language)
+    public UserDisabledNotification(int userId, string reason, string email, string language)
     {
       UserId = userId;
       Reason = reason;

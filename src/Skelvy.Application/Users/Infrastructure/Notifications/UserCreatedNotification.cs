@@ -1,8 +1,8 @@
 namespace Skelvy.Application.Users.Infrastructure.Notifications
 {
-  public class UserCreatedAction
+  public class UserCreatedNotification
   {
-    public UserCreatedAction(int userId, string email, string language)
+    public UserCreatedNotification(int userId, string email, string language)
     {
       UserId = userId;
       Email = email;

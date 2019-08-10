@@ -8,14 +8,14 @@ namespace Skelvy.Application.Notifications.Infrastructure
 {
   public interface IPushNotificationsService
   {
-    Task BroadcastUserSentMessage(UserSentMessageAction action, IEnumerable<int> usersId);
-    Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action, IEnumerable<int> usersId);
-    Task BroadcastUserFoundMeeting(UserFoundMeetingAction action, IEnumerable<int> usersId);
-    Task BroadcastUserLeftMeeting(UserLeftMeetingAction action, IEnumerable<int> usersId);
-    Task BroadcastMeetingAborted(MeetingAbortedAction action, IEnumerable<int> usersId);
-    Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action, IEnumerable<int> usersId);
-    Task BroadcastMeetingExpired(MeetingExpiredAction action, IEnumerable<int> usersId);
-    Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action, IEnumerable<int> usersId);
-    Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action, IEnumerable<int> usersId);
+    Task BroadcastUserSentMessage(UserSentMessageNotification notification, IEnumerable<int> usersId);
+    Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification, IEnumerable<int> usersId);
+    Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification, IEnumerable<int> usersId);
+    Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification, IEnumerable<int> usersId);
+    Task BroadcastMeetingAborted(MeetingAbortedNotification notification, IEnumerable<int> usersId);
+    Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification, IEnumerable<int> usersId);
+    Task BroadcastMeetingExpired(MeetingExpiredNotification notification, IEnumerable<int> usersId);
+    Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification, IEnumerable<int> usersId);
+    Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification, IEnumerable<int> usersId);
   }
 }

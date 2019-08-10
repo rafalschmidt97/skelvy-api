@@ -18,7 +18,7 @@ namespace Skelvy.Application.Users.Events.UserDisabled
     public override async Task<Unit> Handle(UserDisabledEvent request)
     {
       await _notifications.BroadcastUserDisabled(
-        new UserDisabledAction(request.UserId, request.Reason, request.Email, request.Language));
+        new UserDisabledNotification(request.UserId, request.Reason, request.Email, request.Language));
 
       return Unit.Value;
     }

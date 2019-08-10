@@ -17,7 +17,7 @@ namespace Skelvy.Application.Auth.Events.UserCreated
 
     public override async Task<Unit> Handle(UserCreatedEvent request)
     {
-      await _notifications.BroadcastUserCreated(new UserCreatedAction(request.UserId, request.Email, request.Language));
+      await _notifications.BroadcastUserCreated(new UserCreatedNotification(request.UserId, request.Email, request.Language));
       return Unit.Value;
     }
   }

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Skelvy.Application.Meetings.Infrastructure.Notifications
 {
-  public class UserLeftMeetingAction
+  public class UserLeftMeetingNotification
   {
-    public UserLeftMeetingAction(int userId, IEnumerable<int> usersId)
+    public UserLeftMeetingNotification(int userId, IEnumerable<int> usersId)
     {
       UserId = userId;
       UsersId = usersId;

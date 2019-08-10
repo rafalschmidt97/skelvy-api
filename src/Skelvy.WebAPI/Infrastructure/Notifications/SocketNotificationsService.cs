@@ -19,38 +19,38 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       _socket = socket;
     }
 
-    public async Task BroadcastUserSentMessage(UserSentMessageAction action)
+    public async Task BroadcastUserSentMessage(UserSentMessageNotification notification)
     {
       var data = new SocketNotificationData
       {
         Action = "UserSentMessage",
         RedirectTo = "chat",
-        Data = action.Messages,
+        Data = notification.Messages,
       };
 
-      if (action.Message.Type == MessageType.Response)
+      if (notification.Message.Type == MessageType.Response)
       {
-        if (action.Message.Text != null)
+        if (notification.Message.Text != null)
         {
           await SendNotification(
-            action.UsersId,
+            notification.UsersId,
             new SocketNotificationContent
             {
-              Title = action.Message.UserName,
-              Body = action.Message.Text,
+              Title = notification.Message.UserName,
+              Body = notification.Message.Text,
             },
             NotificationType.Regular,
             data);
         }
         else
         {
-          if (action.Message.AttachmentUrl != null)
+          if (notification.Message.AttachmentUrl != null)
           {
             await SendNotification(
-              action.UsersId,
+              notification.UsersId,
               new SocketNotificationContent
               {
-                Title = action.Message.UserName,
+                Title = notification.Message.UserName,
                 BodyLocKey = "USER_SENT_PHOTO",
               },
               NotificationType.Regular,
@@ -59,10 +59,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           else
           {
             await SendNotification(
-              action.UsersId,
+              notification.UsersId,
               new SocketNotificationContent
               {
-                Title = action.Message.UserName,
+                Title = notification.Message.UserName,
                 BodyLocKey = "USER_SENT_MESSAGE",
               },
               NotificationType.Regular,
@@ -73,10 +73,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       else
       {
         await SendNotification(
-          action.UsersId,
+          notification.UsersId,
           new SocketNotificationContent
           {
-            Title = action.Message.UserName,
+            Title = notification.Message.UserName,
             BodyLocKey = "USER_SENT_MESSAGE",
           },
           NotificationType.NoPush,
@@ -84,10 +84,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification)
     {
       await SendNotification(
-        action.UsersId,
+        notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "MEETING",
@@ -98,14 +98,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserJoinedMeeting",
           RedirectTo = "meeting",
-          Data = new { action.UserId },
+          Data = new { notification.UserId },
         });
     }
 
-    public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action)
+    public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification)
     {
       await SendNotification(
-        action.UsersId,
+        notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "MEETING",
@@ -119,10 +119,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action)
+    public async Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification)
     {
       await SendNotification(
-        action.UsersId,
+        notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "MEETING",
@@ -133,14 +133,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserLeftMeeting",
           RedirectTo = "meeting",
-          Data = action,
+          Data = notification,
         });
     }
 
-    public async Task BroadcastMeetingAborted(MeetingAbortedAction action)
+    public async Task BroadcastMeetingAborted(MeetingAbortedNotification notification)
     {
       await SendNotification(
-        action.UsersId,
+        notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "MEETING",
@@ -151,14 +151,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
-          Data = action,
+          Data = notification,
         });
     }
 
-    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action)
+    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification)
     {
       await SendNotification(
-        action.UsersId,
+        notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "MEETING_REQUEST",
@@ -172,10 +172,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastMeetingExpired(MeetingExpiredAction action)
+    public async Task BroadcastMeetingExpired(MeetingExpiredNotification notification)
     {
       await SendNotification(
-        action.UsersId,
+        notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "MEETING",
@@ -189,10 +189,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserRemoved(UserRemovedAction action)
+    public async Task BroadcastUserRemoved(UserRemovedNotification notification)
     {
       await SendNotification(
-        new List<int> { action.UserId },
+        new List<int> { notification.UserId },
         new SocketNotificationContent
         {
           TitleLocKey = "USER",
@@ -205,10 +205,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserDisabled(UserDisabledAction action)
+    public async Task BroadcastUserDisabled(UserDisabledNotification notification)
     {
       await SendNotification(
-        new List<int> { action.UserId },
+        new List<int> { notification.UserId },
         new SocketNotificationContent
         {
           TitleLocKey = "USER",
@@ -221,10 +221,10 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action)
+    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification)
     {
       await SendNotification(
-        action.UsersId,
+        notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "FRIENDS",
@@ -238,14 +238,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action)
+    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification)
     {
       await SendNotification(
-        action.UsersId,
+        notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "FRIENDS",
-          BodyLocKey = action.IsAccepted ? "FRIEND_REQUEST_ACCEPTED" : "FRIEND_REQUEST_DENIED",
+          BodyLocKey = notification.IsAccepted ? "FRIEND_REQUEST_ACCEPTED" : "FRIEND_REQUEST_DENIED",
         },
         NotificationType.Regular,
         new SocketNotificationData

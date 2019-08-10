@@ -19,7 +19,7 @@ namespace Skelvy.Application.Meetings.Events.UsersConnectedToMeeting
     public override async Task<Unit> Handle(UsersConnectedToMeetingEvent request)
     {
       var usersId = new List<int> { request.User1Id, request.User2Id };
-      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingAction(usersId));
+      await _notifications.BroadcastUserFoundMeeting(new UserFoundMeetingNotification(usersId));
 
       return Unit.Value;
     }
