@@ -20,7 +20,7 @@ namespace Skelvy.WebAPI.Controllers
       return await Mediator.Send(request);
     }
 
-    [HttpDelete("self/leave")]
+    [HttpPost("self/leave")]
     public async Task LeaveSelf()
     {
       await Mediator.Send(new LeaveMeetingCommand(UserId));
