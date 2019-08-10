@@ -11,7 +11,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldHasConnectedFacebook()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.RegisterFacebook("facebook1");
 
       Assert.NotNull(entity.FacebookId);
@@ -21,7 +21,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithConnectedFacebook()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.RegisterFacebook("facebook1");
 
       Assert.Throws<DomainException>(() =>
@@ -31,7 +31,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldHasConnectedGoogle()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.RegisterGoogle("google1");
 
       Assert.NotNull(entity.GoogleId);
@@ -41,7 +41,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithConnectedGoogle()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.RegisterGoogle("google1");
 
       Assert.Throws<DomainException>(() =>
@@ -51,7 +51,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldHasUpdatedLanguage()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.UpdateLanguage(LanguageType.PL);
 
       Assert.Equal(LanguageType.PL, entity.Language);
@@ -59,18 +59,28 @@ namespace Skelvy.Domain.Test.Entities
     }
 
     [Fact]
-    public void ShouldThrowExceptionWithUpdatingSameLanguage()
+    public void ShouldThrowExceptionWithBadLanguage()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
 
       Assert.Throws<DomainException>(() =>
-        entity.UpdateLanguage(LanguageType.EN));
+        entity.UpdateLanguage("x"));
+    }
+
+    [Fact]
+    public void ShouldHasUpdatedName()
+    {
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
+      entity.UpdateName("example");
+
+      Assert.Equal("example", entity.Name);
+      Assert.NotNull(entity.ModifiedAt);
     }
 
     [Fact]
     public void ShouldBeRemoved()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.Remove(DateTimeOffset.UtcNow);
 
       Assert.True(entity.IsRemoved);
@@ -81,7 +91,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithRemoved()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.Remove(DateTimeOffset.UtcNow);
 
       Assert.Throws<DomainException>(() =>
@@ -91,7 +101,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldBeDisabled()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.Disable("Test");
 
       Assert.True(entity.IsDisabled);
@@ -102,7 +112,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithDisabled()
     {
-      var entity = new User("example@gmail.com", LanguageType.EN);
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
       entity.Disable("Test");
 
       Assert.Throws<DomainException>(() =>

@@ -10,6 +10,7 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
   {
     Task<User> FindOne(int id);
     Task<bool> ExistsOne(int id);
+    Task<bool> ExistsOneWithRemovedByName(string name);
     Task<User> FindOneWithDetails(int id);
     Task<User> FindOneWithRoles(int userId);
     Task<User> FindOneWithRolesByFacebookId(string facebookId);

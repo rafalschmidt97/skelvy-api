@@ -12,11 +12,13 @@ namespace Skelvy.Persistence.Configurations
       builder.HasIndex(e => e.FacebookId).IsUnique();
       builder.HasIndex(e => e.GoogleId).IsUnique();
       builder.HasIndex(e => e.Email).IsUnique();
+      builder.HasIndex(e => e.Name).IsUnique();
 
       builder.Property(e => e.Email).HasMaxLength(50);
       builder.Property(e => e.Language).IsRequired().HasMaxLength(15);
       builder.Property(e => e.FacebookId).HasMaxLength(50);
       builder.Property(e => e.GoogleId).HasMaxLength(50);
+      builder.Property(e => e.Name).IsRequired().HasMaxLength(50);
       builder.Property(e => e.DisabledReason).HasMaxLength(1024);
       builder.Property(e => e.ModifiedAt).IsConcurrencyToken();
     }

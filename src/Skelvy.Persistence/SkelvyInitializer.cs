@@ -31,10 +31,10 @@ namespace Skelvy.Persistence
 
       var users = new[]
       {
-        new User("user1@gmail.com", LanguageType.EN),
-        new User("user2@gmail.com", LanguageType.EN),
-        new User("user3@gmail.com", LanguageType.EN),
-        new User("user4@gmail.com", LanguageType.EN),
+        new User("user1@gmail.com", "user.1", LanguageType.EN),
+        new User("user2@gmail.com", "user.2", LanguageType.EN),
+        new User("user3@gmail.com", "user.3", LanguageType.EN),
+        new User("user4@gmail.com", "user.4", LanguageType.EN),
       };
 
       users[0].RegisterFacebook("facebook1");

@@ -27,6 +27,11 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == id && !x.IsRemoved);
     }
 
+    public async Task<bool> ExistsOneWithRemovedByName(string name)
+    {
+      return await Context.Users.AnyAsync(x => x.Name == name);
+    }
+
     public async Task<User> FindOneWithDetails(int id)
     {
       var user = await Context.Users

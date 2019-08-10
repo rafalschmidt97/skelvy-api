@@ -57,7 +57,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
         if (email == null)
         {
-          user = new User(request.Language);
+          user = new User("user." + verified.UserId, request.Language);
           user.RegisterFacebook(verified.UserId);
           await CreateUserWithProfile(user, details);
 
@@ -74,7 +74,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
               throw new UnauthorizedException($"Entity {nameof(User)}(FacebookId = {verified.UserId}, Email = {email}) has too long email");
             }
 
-            user = new User(email, request.Language);
+            user = new User(email, "user." + verified.UserId, request.Language);
             user.RegisterFacebook(verified.UserId);
             await CreateUserWithProfile(user, details);
 

@@ -4,6 +4,7 @@ using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateProfile;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
+using Skelvy.Application.Users.Commands.UpdateUserName;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.FindSelfUser;
 using Skelvy.Application.Users.Queries.FindUser;
@@ -28,6 +29,13 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPatch("self/language")]
     public async Task UpdateSelfLanguage(UpdateUserLanguageCommand request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
+    }
+
+    [HttpPatch("self/name")]
+    public async Task UpdateSelfName(UpdateUserNameCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);
