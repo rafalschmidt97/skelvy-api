@@ -31,14 +31,14 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
       RuleFor(x => x.Latitude).NotEmpty();
       RuleFor(x => x.Longitude).NotEmpty();
 
-      RuleFor(x => x.DrinkTypes).NotEmpty();
-      RuleForEach(x => x.DrinkTypes).SetValidator(new SearchMeetingDrinkTypeValidator());
+      RuleFor(x => x.Activities).NotEmpty();
+      RuleForEach(x => x.Activities).SetValidator(new SearchMeetingActivityValidator());
     }
   }
 
-  public class SearchMeetingDrinkTypeValidator : AbstractValidator<CreateMeetingRequestDrinkType>
+  public class SearchMeetingActivityValidator : AbstractValidator<CreateMeetingRequestActivity>
   {
-    public SearchMeetingDrinkTypeValidator()
+    public SearchMeetingActivityValidator()
     {
       RuleFor(x => x.Id).NotEmpty();
     }

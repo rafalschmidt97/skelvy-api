@@ -41,23 +41,23 @@ namespace Skelvy.Domain.Extensions
       return date != default ? date : throw new DomainException($"{nameof(MeetingRequest)}[Id = {request1.Id}, Id = {request2.Id}]) don't have common date.");
     }
 
-    public static IEnumerable<int> FindCommonDrinkTypesId(this MeetingRequest request1, MeetingRequest request2)
+    public static IEnumerable<int> FindCommonActivitiesId(this MeetingRequest request1, MeetingRequest request2)
     {
-      return request1.DrinkTypes
-        .Where(x => request2.DrinkTypes.Any(y => y.DrinkTypeId == x.DrinkTypeId))
-        .Select(x => x.DrinkTypeId)
+      return request1.Activities
+        .Where(x => request2.Activities.Any(y => y.ActivityId == x.ActivityId))
+        .Select(x => x.ActivityId)
         .ToList();
     }
 
-    public static int FindCommonDrinkTypeId(this MeetingRequest request1, MeetingRequest request2)
+    public static int FindCommonActivityId(this MeetingRequest request1, MeetingRequest request2)
     {
-      return FindCommonDrinkTypesId(request1, request2).FirstOrDefault();
+      return FindCommonActivitiesId(request1, request2).FirstOrDefault();
     }
 
-    public static int FindRequiredCommonDrinkTypeId(this MeetingRequest request1, MeetingRequest request2)
+    public static int FindRequiredCommonActivityId(this MeetingRequest request1, MeetingRequest request2)
     {
-      var drink = FindCommonDrinkTypeId(request1, request2);
-      return drink != default ? drink : throw new DomainException($"{nameof(MeetingRequest)}[Id = {request1.Id}, Id = {request2.Id}]) don't have common drink.");
+      var activity = FindCommonActivityId(request1, request2);
+      return activity != default ? activity : throw new DomainException($"{nameof(MeetingRequest)}[Id = {request1.Id}, Id = {request2.Id}]) don't have common activity.");
     }
   }
 }

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Skelvy.Application.Activities.Queries;
 using Skelvy.Application.Core.Mappers;
-using Skelvy.Application.Drinks.Queries;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Domain.Entities;
 using AutoMapperProfile = AutoMapper.Profile;
@@ -19,14 +19,14 @@ namespace Skelvy.Application.Meetings.Queries
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string City { get; set; }
-    public IList<DrinkTypeDto> DrinkTypes { get; set; }
+    public IList<ActivityDto> Activities { get; set; }
 
     public void CreateMappings(AutoMapperProfile configuration)
     {
       configuration.CreateMap<MeetingRequest, MeetingRequestDto>()
         .ForMember(
-          destination => destination.DrinkTypes,
-          options => options.MapFrom(x => x.DrinkTypes.Select(y => y.DrinkType)))
+          destination => destination.Activities,
+          options => options.MapFrom(x => x.Activities.Select(y => y.Activity)))
         .ForMember(
           destination => destination.City,
           options => options.Ignore());
@@ -43,15 +43,15 @@ namespace Skelvy.Application.Meetings.Queries
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string City { get; set; }
-    public IList<DrinkTypeDto> DrinkTypes { get; set; }
+    public IList<ActivityDto> Activities { get; set; }
     public UserDto User { get; set; }
 
     public void CreateMappings(AutoMapperProfile configuration)
     {
       configuration.CreateMap<MeetingRequest, MeetingRequestWithUserDto>()
         .ForMember(
-          destination => destination.DrinkTypes,
-          options => options.MapFrom(x => x.DrinkTypes.Select(y => y.DrinkType)))
+          destination => destination.Activities,
+          options => options.MapFrom(x => x.Activities.Select(y => y.Activity)))
         .ForMember(
           destination => destination.City,
           options => options.Ignore());

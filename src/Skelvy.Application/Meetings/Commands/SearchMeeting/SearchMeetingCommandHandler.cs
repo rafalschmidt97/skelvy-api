@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Skelvy.Application.Activities.Infrastructure.Repositories;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Drinks.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Events.UserFoundMeeting;
 using Skelvy.Application.Meetings.Events.UserJoinedMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
@@ -21,10 +21,10 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
   public class SearchMeetingCommandHandler : CommandHandler<SearchMeetingCommand>
   {
     private readonly IUsersRepository _usersRepository;
-    private readonly IDrinkTypesRepository _drinkTypesRepository;
+    private readonly IActivitiesRepository _activitiesRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
-    private readonly IMeetingRequestDrinkTypesRepository _meetingRequestDrinkTypesRepository;
+    private readonly IMeetingRequestActivityRepository _meetingRequestActivityRepository;
     private readonly IGroupsRepository _groupsRepository;
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMediator _mediator;
@@ -32,20 +32,20 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
 
     public SearchMeetingCommandHandler(
       IUsersRepository usersRepository,
-      IDrinkTypesRepository drinkTypesRepository,
+      IActivitiesRepository activitiesRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
-      IMeetingRequestDrinkTypesRepository meetingRequestDrinkTypesRepository,
+      IMeetingRequestActivityRepository meetingRequestActivityRepository,
       IGroupsRepository groupsRepository,
       IGroupUsersRepository groupUsersRepository,
       IMediator mediator,
       ILogger<SearchMeetingCommandHandler> logger)
     {
       _usersRepository = usersRepository;
-      _drinkTypesRepository = drinkTypesRepository;
+      _activitiesRepository = activitiesRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
-      _meetingRequestDrinkTypesRepository = meetingRequestDrinkTypesRepository;
+      _meetingRequestActivityRepository = meetingRequestActivityRepository;
       _groupsRepository = groupsRepository;
       _groupUsersRepository = groupUsersRepository;
       _mediator = mediator;
@@ -85,12 +85,12 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var drinkTypes = await _drinkTypesRepository.FindAll();
-      var filteredDrinkTypes = drinkTypes.Where(x => request.DrinkTypes.Any(y => y.Id == x.Id)).ToList();
+      var activities = await _activitiesRepository.FindAll();
+      var filteredActivities = activities.Where(x => request.Activities.Any(y => y.Id == x.Id)).ToList();
 
-      if (filteredDrinkTypes.Count != request.DrinkTypes.Count)
+      if (filteredActivities.Count != request.Activities.Count)
       {
-        throw new NotFoundException(nameof(DrinkType), request.DrinkTypes);
+        throw new NotFoundException(nameof(Activity), request.Activities);
       }
 
       var requestExists = await _meetingRequestsRepository.ExistsOneByUserId(request.UserId);
@@ -116,9 +116,9 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
           request.UserId);
 
         await _meetingRequestsRepository.Add(meetingRequest);
-        meetingRequest.DrinkTypes = new List<MeetingRequestDrinkType>();
-        PrepareDrinkTypes(request.DrinkTypes, meetingRequest).ForEach(x => meetingRequest.DrinkTypes.Add(x));
-        await _meetingRequestDrinkTypesRepository.AddRange(meetingRequest.DrinkTypes);
+        meetingRequest.Activities = new List<MeetingRequestActivity>();
+        PrepareActivities(request.Activities, meetingRequest).ForEach(x => meetingRequest.Activities.Add(x));
+        await _meetingRequestActivityRepository.AddRange(meetingRequest.Activities);
         transaction.Commit();
 
         return meetingRequest;
@@ -162,7 +162,7 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
             newRequest.Latitude,
             newRequest.Longitude,
             group.Id,
-            newRequest.FindRequiredCommonDrinkTypeId(existingRequest));
+            newRequest.FindRequiredCommonActivityId(existingRequest));
 
           await _meetingsRepository.Add(meeting);
 
@@ -200,11 +200,11 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
       }
     }
 
-    private static IEnumerable<MeetingRequestDrinkType> PrepareDrinkTypes(
-      IEnumerable<CreateMeetingRequestDrinkType> requestDrinkTypes,
+    private static IEnumerable<MeetingRequestActivity> PrepareActivities(
+      IEnumerable<CreateMeetingRequestActivity> requestActivities,
       MeetingRequest request)
     {
-      return requestDrinkTypes.Select(requestDrink => new MeetingRequestDrinkType(request.Id, requestDrink.Id));
+      return requestActivities.Select(activity => new MeetingRequestActivity(request.Id, activity.Id));
     }
   }
 }

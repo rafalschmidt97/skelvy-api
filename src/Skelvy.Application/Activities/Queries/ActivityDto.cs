@@ -1,6 +1,6 @@
-namespace Skelvy.Application.Drinks.Queries
+namespace Skelvy.Application.Activities.Queries
 {
-  public class DrinkTypeDto
+  public class ActivityDto
   {
     public int Id { get; set; }
     public string Name { get; set; }

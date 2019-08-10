@@ -30,7 +30,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -48,7 +48,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -67,7 +67,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -86,7 +86,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -104,7 +104,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -119,7 +119,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var context = DbContext();
       SkelvyInitializer.SeedUsers(context);
       SkelvyInitializer.SeedProfiles(context);
-      SkelvyInitializer.SeedDrinkTypes(context);
+      SkelvyInitializer.SeedActivities(context);
       return context;
     }
 

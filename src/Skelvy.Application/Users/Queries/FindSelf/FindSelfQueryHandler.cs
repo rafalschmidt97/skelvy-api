@@ -41,13 +41,13 @@ namespace Skelvy.Application.Users.Queries.FindSelf
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var meetingRequest = await _meetingRequestsRepository.FindOneWithDrinkTypesByUserId(request.UserId);
+      var meetingRequest = await _meetingRequestsRepository.FindOneWithActivitiesByUserId(request.UserId);
 
       if (meetingRequest != null)
       {
         if (meetingRequest.IsFound)
         {
-          var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndDrinkByUserId(request.UserId);
+          var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndActivityByUserId(request.UserId);
 
           if (meeting == null)
           {

@@ -8,7 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<Meeting> builder)
     {
-      builder.HasOne(x => x.DrinkType).WithMany().OnDelete(DeleteBehavior.Restrict);
+      builder.HasOne(x => x.Activity).WithMany().OnDelete(DeleteBehavior.Restrict);
       builder.HasOne(x => x.Group).WithMany().OnDelete(DeleteBehavior.Restrict);
 
       builder.HasIndex(e => e.IsRemoved);

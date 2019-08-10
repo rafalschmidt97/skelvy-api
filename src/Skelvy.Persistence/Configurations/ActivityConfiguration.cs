@@ -4,9 +4,9 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Configurations
 {
-  public class DrinkConfiguration : IEntityTypeConfiguration<DrinkType>
+  public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
   {
-    public void Configure(EntityTypeBuilder<DrinkType> builder)
+    public void Configure(EntityTypeBuilder<Activity> builder)
     {
       builder.HasIndex(e => e.Name).IsUnique();
 

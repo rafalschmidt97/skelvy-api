@@ -36,7 +36,7 @@ namespace Skelvy.Domain.Entities
     public bool IsRemoved { get; set; }
     public string RemovedReason { get; set; }
 
-    public IList<MeetingRequestDrinkType> DrinkTypes { get; set; }
+    public IList<MeetingRequestActivity> Activities { get; set; }
     public User User { get; set; }
 
     public bool IsSearching => Status == MeetingRequestStatusType.Searching;

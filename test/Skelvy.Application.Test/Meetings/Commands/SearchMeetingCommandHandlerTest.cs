@@ -32,10 +32,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = TestDbContextWithMeetings();
       var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
-        new DrinkTypesRepository(dbContext),
+        new ActivitiesRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -51,10 +51,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = TestDbContext();
       var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
-        new DrinkTypesRepository(dbContext),
+        new ActivitiesRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -71,10 +71,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = TestDbContextWithRequests();
       var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
-        new DrinkTypesRepository(dbContext),
+        new ActivitiesRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -91,10 +91,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = TestDbContext();
       var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
-        new DrinkTypesRepository(dbContext),
+        new ActivitiesRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -108,14 +108,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldThrowExceptionWithInvalidDrink()
     {
       var request = Request();
-      request.DrinkTypes[0].Id = 10;
+      request.Activities[0].Id = 10;
       var dbContext = TestDbContext();
       var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
-        new DrinkTypesRepository(dbContext),
+        new ActivitiesRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -132,10 +132,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = InitializedDbContext();
       var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),
-        new DrinkTypesRepository(dbContext),
+        new ActivitiesRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object,
@@ -155,9 +155,9 @@ namespace Skelvy.Application.Test.Meetings.Commands
         25,
         1,
         1,
-        new List<CreateMeetingRequestDrinkType>
+        new List<CreateMeetingRequestActivity>
         {
-          new CreateMeetingRequestDrinkType(1),
+          new CreateMeetingRequestActivity(1),
         });
     }
 
@@ -166,7 +166,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var context = DbContext();
       SkelvyInitializer.SeedUsers(context);
       SkelvyInitializer.SeedProfiles(context);
-      SkelvyInitializer.SeedDrinkTypes(context);
+      SkelvyInitializer.SeedActivities(context);
       return context;
     }
 

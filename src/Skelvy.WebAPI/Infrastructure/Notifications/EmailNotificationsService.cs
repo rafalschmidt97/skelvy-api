@@ -64,7 +64,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
     {
       var body = await GetHtmlBody(message);
 
-      var email = new MailMessage()
+      var email = new MailMessage
       {
         From = new MailAddress(_configuration["SKELVY_EMAIL_USERNAME"], _configuration["SKELVY_EMAIL_NAME"]),
         To = { message.To },

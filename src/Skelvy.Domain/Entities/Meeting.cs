@@ -7,13 +7,13 @@ namespace Skelvy.Domain.Entities
 {
   public class Meeting : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public Meeting(DateTimeOffset date, double latitude, double longitude, int groupId, int drinkTypeId)
+    public Meeting(DateTimeOffset date, double latitude, double longitude, int groupId, int activityId)
     {
       Date = date;
       Latitude = latitude;
       Longitude = longitude;
       GroupId = groupId;
-      DrinkTypeId = drinkTypeId;
+      ActivityId = activityId;
 
       CreatedAt = DateTimeOffset.UtcNow;
     }
@@ -23,14 +23,14 @@ namespace Skelvy.Domain.Entities
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public int GroupId { get; set; }
-    public int DrinkTypeId { get; set; }
+    public int ActivityId { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? ModifiedAt { get; set; }
     public bool IsRemoved { get; set; }
     public string RemovedReason { get; set; }
 
     public Group Group { get; set; }
-    public DrinkType DrinkType { get; set; }
+    public Activity Activity { get; set; }
 
     public void Abort()
     {
