@@ -11,7 +11,7 @@ namespace Skelvy.Application.Test.Users.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new UpdateUserLanguageCommand(1, LanguageTypes.PL);
+      var request = new UpdateUserLanguageCommand(1, LanguageType.PL);
       var handler = new UpdateUserLanguageCommandHandler(UsersRepository());
 
       await handler.Handle(request);
@@ -20,7 +20,7 @@ namespace Skelvy.Application.Test.Users.Commands
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new UpdateUserLanguageCommand(1, LanguageTypes.PL);
+      var request = new UpdateUserLanguageCommand(1, LanguageType.PL);
       var handler = new UpdateUserLanguageCommandHandler(UsersRepository(false));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

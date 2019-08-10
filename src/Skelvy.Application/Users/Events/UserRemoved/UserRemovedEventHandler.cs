@@ -17,7 +17,7 @@ namespace Skelvy.Application.Users.Events.UserRemoved
 
     public override async Task<Unit> Handle(UserRemovedEvent request)
     {
-      await _notifications.BroadcastUserRemoved(new UserRemovedAction(request.UserId, request.Email, request.Language));
+      await _notifications.BroadcastUserRemoved(new UserRemovedNotification(request.UserId, request.Email, request.Language));
       return Unit.Value;
     }
   }

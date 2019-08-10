@@ -55,7 +55,7 @@ namespace Skelvy.WebAPI.Extensions
 
     private static Info CreateInfoForApiVersion(ApiVersionDescription description)
     {
-      var info = new Info()
+      var info = new Info
       {
         Title = $"Skelvy API {description.ApiVersion}",
         Description = "Mobile app for meetings over your favorite drinks 🚀",

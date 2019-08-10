@@ -1,9 +1,9 @@
-using AutoMapper;
+using AutoMapperProfile = AutoMapper.Profile;
 
 namespace Skelvy.Application.Core.Mappers
 {
   public interface ICustomMapping
   {
-    void CreateMappings(Profile configuration);
+    void CreateMappings(AutoMapperProfile configuration);
   }
 }

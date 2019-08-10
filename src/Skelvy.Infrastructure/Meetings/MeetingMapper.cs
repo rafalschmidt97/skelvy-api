@@ -5,6 +5,7 @@ using AutoMapper;
 using Skelvy.Application.Core.Cache;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Messages.Queries;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
@@ -51,14 +52,14 @@ namespace Skelvy.Infrastructure.Meetings
       var messagesDto = _mapper.Map<IList<MessageDto>>(messages);
       var requestDto = _mapper.Map<MeetingRequestDto>(meetingRequest);
       requestDto.City = await GetCity(meetingRequest.Latitude, meetingRequest.Longitude, language);
-      return new MeetingModel(MeetingRequestStatusTypes.Found, meetingDto, messagesDto, requestDto);
+      return new MeetingModel(MeetingRequestStatusType.Found, meetingDto, messagesDto, requestDto);
     }
 
     public async Task<MeetingModel> Map(MeetingRequest meetingRequest, string language)
     {
       var requestDto = _mapper.Map<MeetingRequestDto>(meetingRequest);
       requestDto.City = await GetCity(meetingRequest.Latitude, meetingRequest.Longitude, language);
-      return new MeetingModel(MeetingRequestStatusTypes.Searching, requestDto);
+      return new MeetingModel(MeetingRequestStatusType.Searching, requestDto);
     }
 
     public async Task<MeetingSuggestionsModel> Map(IList<MeetingRequest> requests, IList<Meeting> meetings, string language)

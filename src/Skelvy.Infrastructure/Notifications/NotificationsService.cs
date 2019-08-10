@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Messages.Infrastructure.Notifications;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Notifications.Infrastructure;
 using Skelvy.Application.Relations.Infrastructure.Notifications;
@@ -27,105 +28,105 @@ namespace Skelvy.Infrastructure.Notifications
       _emailService = emailService;
     }
 
-    public async Task BroadcastUserSentMessage(UserSentMessageAction action)
+    public async Task BroadcastUserSentMessage(UserSentMessageNotification notification)
     {
-      await _socketService.BroadcastUserSentMessage(action);
+      await _socketService.BroadcastUserSentMessage(notification);
 
-      if (action.Type == NotificationTypes.Regular)
+      if (notification.Type == NotificationType.Regular)
       {
         await BroadcastActionToOffline(
-          action.UsersId,
-          async (offline) => await _pushService.BroadcastUserSentMessage(action, offline));
+          notification.UsersId,
+          async (offline) => await _pushService.BroadcastUserSentMessage(notification, offline));
       }
     }
 
-    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingAction action)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification)
     {
-      await _socketService.BroadcastUserJoinedMeeting(action);
+      await _socketService.BroadcastUserJoinedMeeting(notification);
 
       await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastUserJoinedMeeting(action, offline));
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastUserJoinedMeeting(notification, offline));
     }
 
-    public async Task BroadcastUserFoundMeeting(UserFoundMeetingAction action)
+    public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification)
     {
-      await _socketService.BroadcastUserFoundMeeting(action);
+      await _socketService.BroadcastUserFoundMeeting(notification);
 
       await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastUserFoundMeeting(action, offline));
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastUserFoundMeeting(notification, offline));
     }
 
-    public async Task BroadcastUserLeftMeeting(UserLeftMeetingAction action)
+    public async Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification)
     {
-      await _socketService.BroadcastUserLeftMeeting(action);
+      await _socketService.BroadcastUserLeftMeeting(notification);
 
       await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastUserLeftMeeting(action, offline));
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastUserLeftMeeting(notification, offline));
     }
 
-    public async Task BroadcastMeetingAborted(MeetingAbortedAction action)
+    public async Task BroadcastMeetingAborted(MeetingAbortedNotification notification)
     {
-      await _socketService.BroadcastMeetingAborted(action);
+      await _socketService.BroadcastMeetingAborted(notification);
 
       await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastMeetingAborted(action, offline));
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastMeetingAborted(notification, offline));
     }
 
-    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredAction action)
+    public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification)
     {
-      await _socketService.BroadcastMeetingRequestExpired(action);
+      await _socketService.BroadcastMeetingRequestExpired(notification);
 
       await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastMeetingRequestExpired(action, offline));
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastMeetingRequestExpired(notification, offline));
     }
 
-    public async Task BroadcastMeetingExpired(MeetingExpiredAction action)
+    public async Task BroadcastMeetingExpired(MeetingExpiredNotification notification)
     {
-      await _socketService.BroadcastMeetingExpired(action);
+      await _socketService.BroadcastMeetingExpired(notification);
 
       await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastMeetingExpired(action, offline));
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastMeetingExpired(notification, offline));
     }
 
-    public async Task BroadcastUserCreated(UserCreatedAction action)
+    public async Task BroadcastUserCreated(UserCreatedNotification notification)
     {
-      await _emailService.BroadcastUserCreated(action);
+      await _emailService.BroadcastUserCreated(notification);
     }
 
-    public async Task BroadcastUserRemoved(UserRemovedAction action)
+    public async Task BroadcastUserRemoved(UserRemovedNotification notification)
     {
-      await _socketService.BroadcastUserRemoved(action);
-      await _emailService.BroadcastUserRemoved(action);
+      await _socketService.BroadcastUserRemoved(notification);
+      await _emailService.BroadcastUserRemoved(notification);
     }
 
-    public async Task BroadcastUserDisabled(UserDisabledAction action)
+    public async Task BroadcastUserDisabled(UserDisabledNotification notification)
     {
-      await _socketService.BroadcastUserDisabled(action);
-      await _emailService.BroadcastUserDisabled(action);
+      await _socketService.BroadcastUserDisabled(notification);
+      await _emailService.BroadcastUserDisabled(notification);
     }
 
-    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestAction action)
+    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification)
     {
-      await _socketService.BroadcastUserSentFriendRequest(action);
+      await _socketService.BroadcastUserSentFriendRequest(notification);
 
       await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastUserSentFriendRequest(action, offline));
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastUserSentFriendRequest(notification, offline));
     }
 
-    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestAction action)
+    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification)
     {
-      await _socketService.BroadcastUserRespondedFriendRequest(action);
+      await _socketService.BroadcastUserRespondedFriendRequest(notification);
 
       await BroadcastActionToOffline(
-        action.UsersId,
-        async (offline) => await _pushService.BroadcastUserRespondedFriendRequest(action, offline));
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastUserRespondedFriendRequest(notification, offline));
     }
 
     public static bool IsConnected(int userId)
@@ -135,13 +136,13 @@ namespace Skelvy.Infrastructure.Notifications
 
     private static Task BroadcastActionToOffline(
       IEnumerable<int> connected,
-      Action<IList<int>> pushAction)
+      Action<IList<int>> pushNotification)
     {
       var connections = GetConnections(connected);
 
       if (connections.Offline.Any())
       {
-        pushAction(connections.Offline);
+        pushNotification(connections.Offline);
       }
 
       return Task.CompletedTask;

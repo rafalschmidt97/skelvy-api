@@ -18,7 +18,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
   public class SignInWithGoogleCommandHandler : QueryHandler<SignInWithGoogleCommand, AuthDto>
   {
     private readonly IUsersRepository _usersRepository;
-    private readonly IUserProfilesRepository _profilesRepository;
+    private readonly IProfilesRepository _profilesRepository;
     private readonly IGoogleService _googleService;
     private readonly ITokenService _tokenService;
     private readonly IMediator _mediator;
@@ -26,7 +26,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
     public SignInWithGoogleCommandHandler(
       IUsersRepository usersRepository,
-      IUserProfilesRepository profilesRepository,
+      IProfilesRepository profilesRepository,
       IGoogleService googleService,
       ITokenService tokenService,
       IMediator mediator,
@@ -128,10 +128,10 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
             CultureInfo.CurrentCulture).ToUniversalTime()
           : DateTimeOffset.UtcNow;
 
-        var profile = new UserProfile(
+        var profile = new Profile(
           (string)details.name.givenName,
           birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-          details.gender == GenderTypes.Female ? GenderTypes.Female : GenderTypes.Male,
+          details.gender == GenderType.Female ? GenderType.Female : GenderType.Male,
           user.Id);
 
         await _profilesRepository.Add(profile);

@@ -60,7 +60,7 @@ namespace Skelvy.Infrastructure.Auth.Facebook
         (string)response.data.user_id,
         accessToken,
         UnixTimestampToDateTime(response.data.expires_at),
-        AccessTypes.Facebook);
+        AccessType.Facebook);
     }
 
     private static DateTime UnixTimestampToDateTime(dynamic unixTime)

@@ -35,7 +35,7 @@ namespace Skelvy.Persistence.Repositories
 
       foreach (var relation in relations)
       {
-        var userPhotos = await Context.UserProfilePhotos
+        var userPhotos = await Context.ProfilePhotos
           .Include(x => x.Attachment)
           .Where(x => x.ProfileId == relation.RelatedUser.Profile.Id)
           .OrderBy(x => x.Order)

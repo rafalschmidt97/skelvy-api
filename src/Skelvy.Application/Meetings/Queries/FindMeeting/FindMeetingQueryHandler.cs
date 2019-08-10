@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Messages.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
@@ -28,7 +29,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
 
     public override async Task<MeetingModel> Handle(FindMeetingQuery request)
     {
-      var meetingRequest = await _requestsRepository.FindOneWithDrinkTypesByUserId(request.UserId);
+      var meetingRequest = await _requestsRepository.FindOneWithActivitiesByUserId(request.UserId);
 
       if (meetingRequest == null)
       {
@@ -37,12 +38,12 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
 
       if (meetingRequest.IsFound)
       {
-        var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndDrinkByUserId(request.UserId);
+        var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndActivityByUserId(request.UserId);
 
         if (meeting == null)
         {
           throw new InternalServerErrorException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) not found " +
-                                                 $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusTypes.Found}'");
+                                                 $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusType.Found}'");
         }
 
         var messages = await _messagesRepository.FindPageLatestByGroupId(meeting.Id);

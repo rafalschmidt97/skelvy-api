@@ -22,14 +22,14 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == id && !x.IsRemoved);
     }
 
-    public async Task<Meeting> FindOneWithUsersDetailsAndDrinkByUserId(int userId)
+    public async Task<Meeting> FindOneWithUsersDetailsAndActivityByUserId(int userId)
     {
       var meeting = await Context.Meetings
         .Include(x => x.Group)
         .ThenInclude(y => y.Users)
         .ThenInclude(y => y.User)
         .ThenInclude(y => y.Profile)
-        .Include(x => x.DrinkType)
+        .Include(x => x.Activity)
         .FirstOrDefaultAsync(x => x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) && !x.IsRemoved);
 
       if (meeting != null)
@@ -38,7 +38,7 @@ namespace Skelvy.Persistence.Repositories
 
         foreach (var user in users)
         {
-          var userPhotos = await Context.UserProfilePhotos
+          var userPhotos = await Context.ProfilePhotos
             .Include(x => x.Attachment)
             .Where(x => x.ProfileId == user.User.Profile.Id)
             .OrderBy(x => x.Order)
@@ -77,8 +77,8 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Group)
         .ThenInclude(x => x.Users)
         .ThenInclude(x => x.MeetingRequest)
-        .ThenInclude(x => x.DrinkTypes)
-        .ThenInclude(x => x.DrinkType)
+        .ThenInclude(x => x.Activities)
+        .ThenInclude(x => x.Activity)
         .Where(x => !x.IsRemoved &&
                     x.Date >= request.MinDate &&
                     x.Date <= request.MaxDate &&
@@ -102,7 +102,7 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Group)
         .ThenInclude(x => x.Users)
         .ThenInclude(x => x.MeetingRequest)
-        .Include(x => x.DrinkType)
+        .Include(x => x.Activity)
         .Where(x => !x.IsRemoved &&
                     x.Group.Users.Count(y => !y.IsRemoved) < 4)
         .ToListAsync();
@@ -113,15 +113,15 @@ namespace Skelvy.Persistence.Repositories
         matchingMeetings.ForEach(x => x.Group.Users = x.Group.Users.Where(y => !y.IsRemoved).ToList());
         foreach (var meeting in matchingMeetings)
         {
-          foreach (var meetingUser in meeting.Group.Users)
+          foreach (var groupUser in meeting.Group.Users)
           {
-            var userPhotos = await Context.UserProfilePhotos
+            var userPhotos = await Context.ProfilePhotos
               .Include(x => x.Attachment)
-              .Where(x => x.ProfileId == meetingUser.User.Profile.Id)
+              .Where(x => x.ProfileId == groupUser.User.Profile.Id)
               .OrderBy(x => x.Order)
               .ToListAsync();
 
-            meetingUser.User.Profile.Photos = userPhotos;
+            groupUser.User.Profile.Photos = userPhotos;
           }
         }
 
@@ -141,8 +141,8 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Group)
         .ThenInclude(x => x.Users)
         .ThenInclude(x => x.MeetingRequest)
-        .ThenInclude(x => x.DrinkTypes)
-        .ThenInclude(x => x.DrinkType)
+        .ThenInclude(x => x.Activities)
+        .ThenInclude(x => x.Activity)
         .FirstOrDefaultAsync(x => x.Id == meetingId &&
                                   !x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
                                   !x.IsRemoved);
@@ -171,7 +171,7 @@ namespace Skelvy.Persistence.Repositories
       return meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.User.Profile.IsWithinMeetingRequestAgeRange(request)) &&
              meeting.Group.Users.Where(x => !x.IsRemoved).All(x => requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
              meeting.GetDistance(request) <= 10 &&
-             request.DrinkTypes.Any(x => x.DrinkTypeId == meeting.DrinkTypeId);
+             request.Activities.Any(x => x.ActivityId == meeting.ActivityId);
     }
 
     private static bool IsMeetingClose(Meeting meeting, User user, double latitude, double longitude)

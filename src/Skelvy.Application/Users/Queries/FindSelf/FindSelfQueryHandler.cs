@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Messages.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -40,18 +41,18 @@ namespace Skelvy.Application.Users.Queries.FindSelf
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var meetingRequest = await _meetingRequestsRepository.FindOneWithDrinkTypesByUserId(request.UserId);
+      var meetingRequest = await _meetingRequestsRepository.FindOneWithActivitiesByUserId(request.UserId);
 
       if (meetingRequest != null)
       {
         if (meetingRequest.IsFound)
         {
-          var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndDrinkByUserId(request.UserId);
+          var meeting = await _meetingsRepository.FindOneWithUsersDetailsAndActivityByUserId(request.UserId);
 
           if (meeting == null)
           {
             throw new InternalServerErrorException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) not found " +
-                                        $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusTypes.Found}'");
+                                        $"while {nameof(MeetingRequest)} is marked as '{MeetingRequestStatusType.Found}'");
           }
 
           var messages = await _messagesRepository.FindPageLatestByGroupId(meeting.Id);

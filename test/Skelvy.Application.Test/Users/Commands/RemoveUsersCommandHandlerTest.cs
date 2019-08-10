@@ -15,10 +15,10 @@ namespace Skelvy.Application.Test.Users.Commands
       var handler = new RemoveUsersCommandHandler(
         new UsersRepository(dbContext),
         new UserRolesRepository(dbContext),
-        new UserProfilesRepository(dbContext),
-        new UserProfilePhotosRepository(dbContext),
+        new ProfilesRepository(dbContext),
+        new ProfilePhotosRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestDrinkTypesRepository(dbContext),
+        new MeetingRequestActivityRepository(dbContext),
         new GroupUsersRepository(dbContext),
         new MessagesRepository(dbContext),
         new AttachmentsRepository(dbContext),

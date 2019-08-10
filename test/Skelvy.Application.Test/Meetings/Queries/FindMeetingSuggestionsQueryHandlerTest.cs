@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldReturnSuggestions()
     {
-      var request = new FindMeetingSuggestionsQuery(4, 1, 1, LanguageTypes.EN);
+      var request = new FindMeetingSuggestionsQuery(4, 1, 1, LanguageType.EN);
       var dbContext = InitializedDbContext();
       _mapper.Setup(x =>
           x.Map(It.IsAny<IList<MeetingRequest>>(), It.IsAny<IList<Meeting>>(), It.IsAny<string>()))
@@ -43,7 +43,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldThrowExceptionWithMatchedUser()
     {
-      var request = new FindMeetingSuggestionsQuery(2, 1, 1, LanguageTypes.EN);
+      var request = new FindMeetingSuggestionsQuery(2, 1, 1, LanguageType.EN);
       var dbContext = InitializedDbContext();
       var handler = new FindMeetingSuggestionsQueryHandler(
         new UsersRepository(dbContext),
@@ -58,7 +58,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldThrowExceptionWithNotExistingUser()
     {
-      var request = new FindMeetingSuggestionsQuery(1, 1, 1, LanguageTypes.EN);
+      var request = new FindMeetingSuggestionsQuery(1, 1, 1, LanguageType.EN);
       var dbContext = DbContext();
       var handler = new FindMeetingSuggestionsQueryHandler(
         new UsersRepository(dbContext),

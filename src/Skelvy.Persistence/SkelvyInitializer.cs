@@ -16,7 +16,7 @@ namespace Skelvy.Persistence
       SeedProfiles(context);
       SeedFriendRequests(context);
       SeedRelations(context);
-      SeedDrinkTypes(context);
+      SeedActivities(context);
       SeedMeetingRequests(context);
       SeedMeetings(context);
       SeedMessages(context);
@@ -31,10 +31,10 @@ namespace Skelvy.Persistence
 
       var users = new[]
       {
-        new User("user1@gmail.com", LanguageTypes.EN),
-        new User("user2@gmail.com", LanguageTypes.EN),
-        new User("user3@gmail.com", LanguageTypes.EN),
-        new User("user4@gmail.com", LanguageTypes.EN),
+        new User("user1@gmail.com", LanguageType.EN),
+        new User("user2@gmail.com", LanguageType.EN),
+        new User("user3@gmail.com", LanguageType.EN),
+        new User("user4@gmail.com", LanguageType.EN),
       };
 
       users[0].RegisterFacebook("facebook1");
@@ -52,7 +52,7 @@ namespace Skelvy.Persistence
 
     public static void SeedProfiles(SkelvyContext context)
     {
-      if (context.UserProfiles.Any())
+      if (context.Profiles.Any())
       {
         return;
       }
@@ -61,37 +61,37 @@ namespace Skelvy.Persistence
 
       var profiles = new[]
       {
-        new UserProfile(
+        new Profile(
           "User1",
           DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          GenderTypes.Male,
+          GenderType.Male,
           users[0].Id),
-        new UserProfile(
+        new Profile(
           "User2",
           DateTimeOffset.ParseExact("22/04/1996", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          GenderTypes.Male,
+          GenderType.Male,
           users[1].Id),
-        new UserProfile(
+        new Profile(
           "User3",
           DateTimeOffset.ParseExact("22/04/1995", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          GenderTypes.Male,
+          GenderType.Male,
           users[2].Id),
-        new UserProfile(
+        new Profile(
           "User4",
           DateTimeOffset.ParseExact("22/04/1997", "dd/MM/yyyy", CultureInfo.CurrentCulture).ToUniversalTime(),
-          GenderTypes.Male,
+          GenderType.Male,
           users[3].Id),
       };
 
-      context.UserProfiles.AddRange(profiles);
+      context.Profiles.AddRange(profiles);
       context.SaveChanges();
 
       var attachments = new[]
       {
-        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=1"),
-        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=2"),
-        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=3"),
-        new Attachment(AttachmentTypes.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=4"),
+        new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=1"),
+        new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=2"),
+        new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=3"),
+        new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=4"),
       };
 
       context.Attachments.AddRange(attachments);
@@ -99,13 +99,13 @@ namespace Skelvy.Persistence
 
       var photos = new[]
       {
-        new UserProfilePhoto(attachments[0].Id, 1, profiles[0].Id),
-        new UserProfilePhoto(attachments[1].Id, 1, profiles[1].Id),
-        new UserProfilePhoto(attachments[2].Id, 1, profiles[2].Id),
-        new UserProfilePhoto(attachments[3].Id, 1, profiles[3].Id),
+        new ProfilePhoto(attachments[0].Id, 1, profiles[0].Id),
+        new ProfilePhoto(attachments[1].Id, 1, profiles[1].Id),
+        new ProfilePhoto(attachments[2].Id, 1, profiles[2].Id),
+        new ProfilePhoto(attachments[3].Id, 1, profiles[3].Id),
       };
 
-      context.UserProfilePhotos.AddRange(photos);
+      context.ProfilePhotos.AddRange(photos);
       context.SaveChanges();
     }
 
@@ -142,20 +142,20 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedDrinkTypes(SkelvyContext context)
+    public static void SeedActivities(SkelvyContext context)
     {
-      if (context.DrinkTypes.Any())
+      if (context.Activities.Any())
       {
         return;
       }
 
-      var drinkTypes = new[]
+      var activities = new[]
       {
-        new DrinkType("soft drinks"),
-        new DrinkType("alcoholic drinks"),
+        new Activity("soft drinks"),
+        new Activity("alcoholic drinks"),
       };
 
-      context.DrinkTypes.AddRange(drinkTypes);
+      context.Activities.AddRange(activities);
       context.SaveChanges();
     }
 
@@ -167,7 +167,7 @@ namespace Skelvy.Persistence
       }
 
       var users = context.Users.ToList();
-      var drinkTypes = context.DrinkTypes.ToList();
+      var activities = context.Activities.ToList();
 
       var requests = new[]
       {
@@ -177,12 +177,12 @@ namespace Skelvy.Persistence
       context.MeetingRequests.AddRange(requests);
       context.SaveChanges();
 
-      var requestsDrinkTypes = new[]
+      var requestActivities = new[]
       {
-        new MeetingRequestDrinkType(requests[0].Id, drinkTypes[0].Id),
+        new MeetingRequestActivity(requests[0].Id, activities[0].Id),
       };
 
-      context.MeetingRequestDrinkTypes.AddRange(requestsDrinkTypes);
+      context.MeetingRequestActivities.AddRange(requestActivities);
       context.SaveChanges();
     }
 
@@ -194,7 +194,7 @@ namespace Skelvy.Persistence
       }
 
       var users = context.Users.ToList();
-      var drinkTypes = context.DrinkTypes.ToList();
+      var activities = context.Activities.ToList();
 
       var requests = new[]
       {
@@ -208,13 +208,13 @@ namespace Skelvy.Persistence
       context.MeetingRequests.AddRange(requests);
       context.SaveChanges();
 
-      var requestsDrinkTypes = new[]
+      var requestActivities = new[]
       {
-        new MeetingRequestDrinkType(requests[0].Id, drinkTypes[0].Id),
-        new MeetingRequestDrinkType(requests[1].Id, drinkTypes[0].Id),
+        new MeetingRequestActivity(requests[0].Id, activities[0].Id),
+        new MeetingRequestActivity(requests[1].Id, activities[0].Id),
       };
 
-      context.MeetingRequestDrinkTypes.AddRange(requestsDrinkTypes);
+      context.MeetingRequestActivities.AddRange(requestActivities);
 
       var groups = new[]
       {
@@ -226,7 +226,7 @@ namespace Skelvy.Persistence
 
       var meetings = new[]
       {
-        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, groups[0].Id, drinkTypes[0].Id),
+        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, groups[0].Id, activities[0].Id),
       };
 
       context.Meetings.AddRange(meetings);
@@ -254,8 +254,8 @@ namespace Skelvy.Persistence
 
       var messages = new[]
       {
-        new Message(MessageTypes.Response, DateTimeOffset.UtcNow.AddHours(-2), "Hello User3", null, null, users[1].Id, meetings[0].Id),
-        new Message(MessageTypes.Action, DateTimeOffset.UtcNow.AddHours(-1), null, null, MessageActionTypes.Seen, users[2].Id, meetings[0].Id),
+        new Message(MessageType.Response, DateTimeOffset.UtcNow.AddHours(-2), "Hello User3", null, null, users[1].Id, meetings[0].Id),
+        new Message(MessageType.Action, DateTimeOffset.UtcNow.AddHours(-1), null, null, MessageActionType.Seen, users[2].Id, meetings[0].Id),
       };
 
       context.Messages.AddRange(messages);

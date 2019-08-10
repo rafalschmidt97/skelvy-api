@@ -36,7 +36,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
       if (isDataChanged)
       {
         await _meetingRequestsRepository.UpdateRange(requestsToRemove);
-        await _mediator.Publish(new MeetingRequestExpiredAction(requestsToRemove.Select(x => x.Id)));
+        await _mediator.Publish(new MeetingRequestExpiredNotification(requestsToRemove.Select(x => x.Id)));
       }
 
       return Unit.Value;

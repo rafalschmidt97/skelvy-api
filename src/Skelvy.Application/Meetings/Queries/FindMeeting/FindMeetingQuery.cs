@@ -16,6 +16,6 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
     }
 
     public int UserId { get; set; }
-    public string Language { get; set; } = LanguageTypes.EN;
+    public string Language { get; set; } = LanguageType.EN;
   }
 }

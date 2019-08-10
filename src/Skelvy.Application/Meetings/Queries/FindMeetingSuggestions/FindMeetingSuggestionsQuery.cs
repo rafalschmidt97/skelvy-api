@@ -20,6 +20,6 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
     public int UserId { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public string Language { get; set; } = LanguageTypes.EN;
+    public string Language { get; set; } = LanguageType.EN;
   }
 }

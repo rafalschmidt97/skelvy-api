@@ -35,7 +35,7 @@ namespace Skelvy.Persistence.Repositories
 
       if (user != null)
       {
-        var userPhotos = await Context.UserProfilePhotos
+        var userPhotos = await Context.ProfilePhotos
           .Include(x => x.Attachment)
           .Where(x => x.ProfileId == user.Profile.Id)
           .OrderBy(x => x.Order)
@@ -91,7 +91,7 @@ namespace Skelvy.Persistence.Repositories
 
       foreach (var user in users)
       {
-        user.Profile.Photos = await Context.UserProfilePhotos
+        user.Profile.Photos = await Context.ProfilePhotos
           .Where(x => x.ProfileId == user.Profile.Id)
           .OrderBy(x => x.Order)
           .ToListAsync();

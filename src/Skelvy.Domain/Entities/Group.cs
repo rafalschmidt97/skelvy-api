@@ -11,36 +11,23 @@ namespace Skelvy.Domain.Entities
     public Group()
     {
       CreatedAt = DateTimeOffset.UtcNow;
-      Users = new List<GroupUser>();
-      Messages = new List<Message>();
     }
 
-    public Group(int id, DateTimeOffset createdAt, DateTimeOffset? modifiedAt, bool isRemoved, string removedReason, IList<GroupUser> users, IList<Message> messages)
-    {
-      Id = id;
-      CreatedAt = createdAt;
-      ModifiedAt = modifiedAt;
-      IsRemoved = isRemoved;
-      RemovedReason = removedReason;
-      Users = users;
-      Messages = messages;
-    }
-
-    public int Id { get; private set; }
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset? ModifiedAt { get; private set; }
-    public bool IsRemoved { get; private set; }
-    public string RemovedReason { get; private set; }
+    public int Id { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? ModifiedAt { get; set; }
+    public bool IsRemoved { get; set; }
+    public string RemovedReason { get; set; }
 
     public IList<GroupUser> Users { get; set; }
-    public IList<Message> Messages { get; private set; }
+    public IList<Message> Messages { get; set; }
 
     public void Abort()
     {
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedReason = MeetingRemovedReasonTypes.Aborted;
+        RemovedReason = MeetingRemovedReasonType.Aborted;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
@@ -54,7 +41,7 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedReason = MeetingRemovedReasonTypes.Expired;
+        RemovedReason = MeetingRemovedReasonType.Expired;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else

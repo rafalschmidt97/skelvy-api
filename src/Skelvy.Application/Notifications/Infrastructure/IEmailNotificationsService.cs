@@ -5,8 +5,8 @@ namespace Skelvy.Application.Notifications.Infrastructure
 {
   public interface IEmailNotificationsService
   {
-    Task BroadcastUserCreated(UserCreatedAction action);
-    Task BroadcastUserRemoved(UserRemovedAction action);
-    Task BroadcastUserDisabled(UserDisabledAction action);
+    Task BroadcastUserCreated(UserCreatedNotification notification);
+    Task BroadcastUserRemoved(UserRemovedNotification notification);
+    Task BroadcastUserDisabled(UserDisabledNotification notification);
   }
 }

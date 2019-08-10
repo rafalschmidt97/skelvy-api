@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Messages.Infrastructure.Repositories;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Uploads.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
@@ -14,10 +15,10 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IUserRolesRepository _rolesRepository;
-    private readonly IUserProfilesRepository _profilesRepository;
-    private readonly IUserProfilePhotosRepository _profilePhotosRepository;
+    private readonly IProfilesRepository _profilesRepository;
+    private readonly IProfilePhotosRepository _profilePhotosRepository;
     private readonly IMeetingRequestsRepository _requestsRepository;
-    private readonly IMeetingRequestDrinkTypesRepository _requestDrinkTypesRepository;
+    private readonly IMeetingRequestActivityRepository _requestActivityRepository;
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMessagesRepository _messagesRepository;
     private readonly IAttachmentsRepository _attachmentsRepository;
@@ -27,10 +28,10 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     public RemoveUsersCommandHandler(
       IUsersRepository usersRepository,
       IUserRolesRepository rolesRepository,
-      IUserProfilesRepository profilesRepository,
-      IUserProfilePhotosRepository profilePhotosRepository,
+      IProfilesRepository profilesRepository,
+      IProfilePhotosRepository profilePhotosRepository,
       IMeetingRequestsRepository requestsRepository,
-      IMeetingRequestDrinkTypesRepository requestDrinkTypesRepository,
+      IMeetingRequestActivityRepository requestActivityRepository,
       IGroupUsersRepository groupUsersRepository,
       IMessagesRepository messagesRepository,
       IAttachmentsRepository attachmentsRepository,
@@ -42,7 +43,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       _profilesRepository = profilesRepository;
       _profilePhotosRepository = profilePhotosRepository;
       _requestsRepository = requestsRepository;
-      _requestDrinkTypesRepository = requestDrinkTypesRepository;
+      _requestActivityRepository = requestActivityRepository;
       _groupUsersRepository = groupUsersRepository;
       _messagesRepository = messagesRepository;
       _attachmentsRepository = attachmentsRepository;
@@ -62,23 +63,23 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
         var messagesToRemove = await _messagesRepository.FindAllByUsersId(usersId);
         await _messagesRepository.RemoveRange(messagesToRemove);
 
-        var meetingUsersToRemove = await _groupUsersRepository.FindAllWithRemovedByUsersId(usersId);
-        await _groupUsersRepository.RemoveRange(meetingUsersToRemove);
+        var groupUsersToRemove = await _groupUsersRepository.FindAllWithRemovedByUsersId(usersId);
+        await _groupUsersRepository.RemoveRange(groupUsersToRemove);
 
         var meetingRequestsToRemove = await _requestsRepository.FindAllWithRemovedByUsersId(usersId);
         var meetingRequestsId = meetingRequestsToRemove.Select(y => y.Id);
-        var meetingRequestDrinkTypesToRemove = await _requestDrinkTypesRepository.FindAllByRequestsId(meetingRequestsId);
-        await _requestDrinkTypesRepository.RemoveRange(meetingRequestDrinkTypesToRemove);
+        var meetingRequestActivitiesToRemove = await _requestActivityRepository.FindAllByRequestsId(meetingRequestsId);
+        await _requestActivityRepository.RemoveRange(meetingRequestActivitiesToRemove);
         await _requestsRepository.RemoveRange(meetingRequestsToRemove);
 
-        var userProfilesToRemove = await _profilesRepository.FindAllByUsersId(usersId);
-        var userProfilesId = userProfilesToRemove.Select(y => y.Id).ToList();
-        var userProfilePhotosToRemove = await _profilePhotosRepository.FindAllWithRemovedByProfilesId(userProfilesId);
-        var attachmentsId = userProfilePhotosToRemove.Select(y => y.AttachmentId).ToList();
+        var profilesToRemove = await _profilesRepository.FindAllByUsersId(usersId);
+        var profilesId = profilesToRemove.Select(y => y.Id).ToList();
+        var profilePhotosToRemove = await _profilePhotosRepository.FindAllWithRemovedByProfilesId(profilesId);
+        var attachmentsId = profilePhotosToRemove.Select(y => y.AttachmentId).ToList();
         var attachmentsToRemove = await _attachmentsRepository.FindAllByAttachmentsId(attachmentsId);
         await _attachmentsRepository.RemoveRange(attachmentsToRemove);
-        await _profilePhotosRepository.RemoveRange(userProfilePhotosToRemove);
-        await _profilesRepository.RemoveRange(userProfilesToRemove);
+        await _profilePhotosRepository.RemoveRange(profilePhotosToRemove);
+        await _profilesRepository.RemoveRange(profilesToRemove);
 
         var relationsToRemove = await _relationsRepository.FindAllWithRemovedByUsersId(usersId);
         await _relationsRepository.RemoveRange(relationsToRemove);

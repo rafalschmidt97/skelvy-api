@@ -80,11 +80,11 @@ namespace Skelvy.Persistence.Repositories
 
     public async Task<bool> ExistsOneByUserId(int userId)
     {
-      var meetingUser = await Context.GroupUsers
+      var groupUser = await Context.GroupUsers
         .Include(x => x.Group)
         .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved && !x.Group.IsRemoved);
 
-      return meetingUser != null;
+      return groupUser != null;
     }
 
     public async Task Add(GroupUser groupUser)

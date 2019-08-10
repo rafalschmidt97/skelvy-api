@@ -10,10 +10,10 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   {
     Task<MeetingRequest> FindOneWithExpiredById(int id);
     Task<MeetingRequest> FindOneSearchingByUserId(int userId);
-    Task<MeetingRequest> FindOneWithDrinkTypesByUserId(int userId);
+    Task<MeetingRequest> FindOneWithActivitiesByUserId(int userId);
     Task<IList<MeetingRequest>> FindAllWithRemovedByUsersId(IEnumerable<int> usersId);
     Task<IList<MeetingRequest>> FindAllSearchingAfterOrEqualMaxDate(DateTimeOffset maxDate);
-    Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndDrinkTypes();
+    Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndActivities();
     Task<bool> ExistsOne(int requestId);
     Task<bool> ExistsOneByUserId(int userId);
     Task<bool> ExistsOneFoundByUserId(int userId);

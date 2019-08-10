@@ -10,8 +10,8 @@ namespace Skelvy.Application.Users.Queries.FindSelf
       RuleFor(x => x.UserId).NotEmpty();
 
       RuleFor(x => x.Language).NotEmpty()
-        .Must(x => x == LanguageTypes.EN || x == LanguageTypes.PL)
-        .WithMessage($"'Language' must be {LanguageTypes.PL} or {LanguageTypes.EN}");
+        .Must(x => x == LanguageType.EN || x == LanguageType.PL)
+        .WithMessage($"'Language' must be {LanguageType.PL} or {LanguageType.EN}");
     }
   }
 }

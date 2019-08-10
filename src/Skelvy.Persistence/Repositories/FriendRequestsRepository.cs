@@ -24,7 +24,7 @@ namespace Skelvy.Persistence.Repositories
 
       foreach (var request in requests)
       {
-        request.InvitingUser.Profile.Photos = await Context.UserProfilePhotos
+        request.InvitingUser.Profile.Photos = await Context.ProfilePhotos
           .Where(x => x.ProfileId == request.InvitingUser.Profile.Id)
           .OrderBy(x => x.Order)
           .ToListAsync();

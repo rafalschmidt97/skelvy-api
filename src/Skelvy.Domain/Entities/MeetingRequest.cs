@@ -8,16 +8,8 @@ namespace Skelvy.Domain.Entities
 {
   public class MeetingRequest : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public MeetingRequest(
-      DateTimeOffset minDate,
-      DateTimeOffset maxDate,
-      int minAge,
-      int maxAge,
-      double latitude,
-      double longitude,
-      int userId)
+    public MeetingRequest(DateTimeOffset minDate, DateTimeOffset maxDate, int minAge, int maxAge, double latitude, double longitude, int userId)
     {
-      Status = MeetingRequestStatusTypes.Searching;
       MinDate = minDate;
       MaxDate = maxDate;
       MinAge = minAge;
@@ -26,63 +18,29 @@ namespace Skelvy.Domain.Entities
       Longitude = longitude;
       UserId = userId;
 
+      Status = MeetingRequestStatusType.Searching;
       CreatedAt = DateTimeOffset.UtcNow;
-      DrinkTypes = new List<MeetingRequestDrinkType>();
     }
 
-    public MeetingRequest(
-      int id,
-      string status,
-      DateTimeOffset minDate,
-      DateTimeOffset maxDate,
-      int minAge,
-      int maxAge,
-      double latitude,
-      double longitude,
-      DateTimeOffset createdAt,
-      DateTimeOffset? modifiedAt,
-      bool isRemoved,
-      string removedReason,
-      int userId,
-      IList<MeetingRequestDrinkType> drinkTypes,
-      User user)
-    {
-      Id = id;
-      Status = status;
-      MinDate = minDate;
-      MaxDate = maxDate;
-      MinAge = minAge;
-      MaxAge = maxAge;
-      Latitude = latitude;
-      Longitude = longitude;
-      CreatedAt = createdAt;
-      ModifiedAt = modifiedAt;
-      IsRemoved = isRemoved;
-      RemovedReason = removedReason;
-      UserId = userId;
-      DrinkTypes = drinkTypes;
-      User = user;
-    }
+    public int Id { get; set; }
+    public string Status { get; set; }
+    public DateTimeOffset MinDate { get; set; }
+    public DateTimeOffset MaxDate { get; set; }
+    public int MinAge { get; set; }
+    public int MaxAge { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+    public int UserId { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? ModifiedAt { get; set; }
+    public bool IsRemoved { get; set; }
+    public string RemovedReason { get; set; }
 
-    public int Id { get; private set; }
-    public string Status { get; private set; }
-    public DateTimeOffset MinDate { get; private set; }
-    public DateTimeOffset MaxDate { get; private set; }
-    public int MinAge { get; private set; }
-    public int MaxAge { get; private set; }
-    public double Latitude { get; private set; }
-    public double Longitude { get; private set; }
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset? ModifiedAt { get; private set; }
-    public bool IsRemoved { get; private set; }
-    public string RemovedReason { get; private set; }
-    public int UserId { get; private set; }
+    public IList<MeetingRequestActivity> Activities { get; set; }
+    public User User { get; set; }
 
-    public IList<MeetingRequestDrinkType> DrinkTypes { get; private set; }
-    public User User { get; private set; }
-
-    public bool IsSearching => Status == MeetingRequestStatusTypes.Searching;
-    public bool IsFound => Status == MeetingRequestStatusTypes.Found;
+    public bool IsSearching => Status == MeetingRequestStatusType.Searching;
+    public bool IsFound => Status == MeetingRequestStatusType.Found;
 
     public void MarkAsSearching()
     {
@@ -90,7 +48,7 @@ namespace Skelvy.Domain.Entities
       {
         if (!IsSearching)
         {
-          Status = MeetingRequestStatusTypes.Searching;
+          Status = MeetingRequestStatusType.Searching;
           ModifiedAt = DateTimeOffset.UtcNow;
         }
         else
@@ -110,7 +68,7 @@ namespace Skelvy.Domain.Entities
       {
         if (!IsFound)
         {
-          Status = MeetingRequestStatusTypes.Found;
+          Status = MeetingRequestStatusType.Found;
           ModifiedAt = DateTimeOffset.UtcNow;
         }
         else
@@ -129,7 +87,7 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedReason = MeetingRequestRemovedReasonTypes.Aborted;
+        RemovedReason = MeetingRequestRemovedReasonType.Aborted;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
@@ -143,7 +101,7 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        RemovedReason = MeetingRequestRemovedReasonTypes.Expired;
+        RemovedReason = MeetingRequestRemovedReasonType.Expired;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else

@@ -32,7 +32,7 @@ namespace Skelvy.Application.Test.Auth.Commands
 
     public SignInWithGoogleCommandHandlerTest()
     {
-      _access = new AccessVerification("google1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessTypes.Google);
+      _access = new AccessVerification("google1", AuthToken, DateTimeOffset.UtcNow.AddDays(3), AccessType.Google);
       _googleService = new Mock<IGoogleService>();
       _tokenService = new Mock<ITokenService>();
       _mediator = new Mock<IMediator>();
@@ -42,7 +42,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithInitializedUser()
     {
-      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageType.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _tokenService.Setup(x =>
         x.Generate(It.IsAny<User>()))
@@ -50,7 +50,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = InitializedDbContext();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -65,7 +65,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldReturnTokenWithNotInitializedUser()
     {
-      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageType.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       _googleService
         .Setup(x => x.GetBody<dynamic>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
@@ -76,7 +76,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = DbContext();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -91,12 +91,12 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithNotVerifiedUser()
     {
-      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageType.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var dbContext = InitializedDbContext();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -109,7 +109,7 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithTooLongEmail()
     {
-      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageType.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).ReturnsAsync(_access);
       var peopleResponse = PeopleResponse();
       peopleResponse.emails[0].value = "123456789123456789123456789123456789123456789@gmail.com"; // 55 signs
@@ -122,7 +122,7 @@ namespace Skelvy.Application.Test.Auth.Commands
       var dbContext = DbContext();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -135,12 +135,12 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithRemovedUser()
     {
-      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageType.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var dbContext = ContextWithRemovedUser();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,
@@ -153,12 +153,12 @@ namespace Skelvy.Application.Test.Auth.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithDisabledUser()
     {
-      var request = new SignInWithGoogleCommand(AuthToken, LanguageTypes.EN);
+      var request = new SignInWithGoogleCommand(AuthToken, LanguageType.EN);
       _googleService.Setup(x => x.Verify(It.IsAny<string>())).Throws<UnauthorizedException>();
       var dbContext = ContextWithDisabledUser();
       var handler = new SignInWithGoogleCommandHandler(
         new UsersRepository(dbContext),
-        new UserProfilesRepository(dbContext),
+        new ProfilesRepository(dbContext),
         _googleService.Object,
         _tokenService.Object,
         _mediator.Object,

@@ -69,7 +69,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
 
       if (!userExists)
       {
-        throw new NotFoundException($"Entity {nameof(UserProfile)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(Profile)}(UserId = {request.UserId}) not found.");
       }
 
       var friendRequest = await _friendRequestsRepository.FindOneByRequestId(request.RequestId);

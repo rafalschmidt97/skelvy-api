@@ -18,7 +18,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
     private readonly IUsersRepository _usersRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
-    private readonly IMeetingRequestDrinkTypesRepository _meetingRequestDrinkTypesRepository;
+    private readonly IMeetingRequestActivityRepository _meetingRequestActivityRepository;
     private readonly IGroupsRepository _groupsRepository;
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMediator _mediator;
@@ -28,7 +28,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       IUsersRepository usersRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
-      IMeetingRequestDrinkTypesRepository meetingRequestDrinkTypesRepository,
+      IMeetingRequestActivityRepository meetingRequestActivityRepository,
       IGroupsRepository groupsRepository,
       IGroupUsersRepository groupUsersRepository,
       IMediator mediator,
@@ -37,7 +37,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       _usersRepository = usersRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
-      _meetingRequestDrinkTypesRepository = meetingRequestDrinkTypesRepository;
+      _meetingRequestActivityRepository = meetingRequestActivityRepository;
       _groupsRepository = groupsRepository;
       _groupUsersRepository = groupUsersRepository;
       _mediator = mediator;
@@ -140,12 +140,12 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
 
       await _meetingRequestsRepository.Add(meetingRequest);
 
-      connectingMeetingRequest.DrinkTypes.ForEach(x =>
+      connectingMeetingRequest.Activities.ForEach(x =>
       {
-        meetingRequest.DrinkTypes.Add(new MeetingRequestDrinkType(meetingRequest.Id, x.DrinkTypeId));
+        meetingRequest.Activities.Add(new MeetingRequestActivity(meetingRequest.Id, x.ActivityId));
       });
 
-      await _meetingRequestDrinkTypesRepository.AddRange(meetingRequest.DrinkTypes);
+      await _meetingRequestActivityRepository.AddRange(meetingRequest.Activities);
 
       return meetingRequest;
     }
@@ -160,7 +160,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
         request1.Latitude,
         request1.Longitude,
         group.Id,
-        request1.FindRequiredCommonDrinkTypeId(request2));
+        request1.FindRequiredCommonActivityId(request2));
 
       await _meetingsRepository.Add(meeting);
 
