@@ -27,6 +27,11 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == id && !x.IsRemoved);
     }
 
+    public async Task<bool> ExistsOneWithRemovedByName(string name)
+    {
+      return await Context.Users.AnyAsync(x => x.Name == name);
+    }
+
     public async Task<User> FindOneWithDetails(int id)
     {
       var user = await Context.Users
@@ -95,6 +100,38 @@ namespace Skelvy.Persistence.Repositories
           .Where(x => x.ProfileId == user.Profile.Id)
           .OrderBy(x => x.Order)
           .ToListAsync();
+      }
+
+      return users;
+    }
+
+    public async Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLike(int userId, string userName, int page, int pageSize = 10)
+    {
+      var skip = (page - 1) * pageSize;
+      var users = await Context.Users
+        .Include(x => x.Profile)
+        .Where(x => x.Id != userId && EF.Functions.Like(x.Name, "%" + userName + "%"))
+        .Select(x => new UserWithRelationType
+        {
+          Id = x.Id,
+          Profile = x.Profile,
+        })
+        .OrderBy(x => x.Id)
+        .Skip(skip)
+        .Take(pageSize)
+        .ToListAsync();
+
+      foreach (var user in users)
+      {
+        user.Profile.Photos = await Context.ProfilePhotos
+          .Where(x => x.ProfileId == user.Profile.Id)
+          .OrderBy(x => x.Order)
+          .ToListAsync();
+
+        var relation = await Context.Relations
+          .FirstOrDefaultAsync(x => x.UserId == userId && x.RelatedUserId == user.Id);
+
+        user.RelationType = relation?.Type;
       }
 
       return users;

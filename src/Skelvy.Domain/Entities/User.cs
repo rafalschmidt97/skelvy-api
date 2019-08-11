@@ -8,16 +8,18 @@ namespace Skelvy.Domain.Entities
 {
   public class User : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public User(string email, string language)
+    public User(string email, string name, string language)
     {
       Email = email;
+      Name = name;
       Language = language;
 
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public User(string language)
+    public User(string name, string language)
     {
+      Name = name;
       Language = language;
 
       CreatedAt = DateTimeOffset.UtcNow;
@@ -25,6 +27,7 @@ namespace Skelvy.Domain.Entities
 
     public int Id { get; set; }
     public string Email { get; set; }
+    public string Name { get; set; }
     public string Language { get; set; }
     public string FacebookId { get; set; }
     public string GoogleId { get; set; }
@@ -74,19 +77,18 @@ namespace Skelvy.Domain.Entities
 
     public void UpdateLanguage(string language)
     {
-      if (language != Language)
-      {
-        Language = language == LanguageType.EN || language == LanguageType.PL
-          ? language
-          : throw new DomainException(
-            $"'Language' must be {LanguageType.PL} or {LanguageType.EN} for entity {nameof(Entities.Profile)}(Id = {Id}).");
+      Language = language == LanguageType.EN || language == LanguageType.PL
+        ? language
+        : throw new DomainException(
+          $"'Language' must be {LanguageType.PL} or {LanguageType.EN} for entity {nameof(Entities.Profile)}(Id = {Id}).");
 
-        ModifiedAt = DateTimeOffset.UtcNow;
-      }
-      else
-      {
-        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) has set current language.");
-      }
+      ModifiedAt = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateName(string name)
+    {
+      Name = name;
+      ModifiedAt = DateTimeOffset.UtcNow;
     }
 
     public void Remove(DateTimeOffset forgottenAt)
