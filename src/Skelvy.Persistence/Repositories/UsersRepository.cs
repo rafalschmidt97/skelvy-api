@@ -105,6 +105,38 @@ namespace Skelvy.Persistence.Repositories
       return users;
     }
 
+    public async Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLike(int userId, string userName, int page, int pageSize = 10)
+    {
+      var skip = (page - 1) * pageSize;
+      var users = await Context.Users
+        .Include(x => x.Profile)
+        .Where(x => x.Id != userId && EF.Functions.Like(x.Name, "%" + userName + "%"))
+        .Select(x => new UserWithRelationType
+        {
+          Id = x.Id,
+          Profile = x.Profile,
+        })
+        .OrderBy(x => x.Id)
+        .Skip(skip)
+        .Take(pageSize)
+        .ToListAsync();
+
+      foreach (var user in users)
+      {
+        user.Profile.Photos = await Context.ProfilePhotos
+          .Where(x => x.ProfileId == user.Profile.Id)
+          .OrderBy(x => x.Order)
+          .ToListAsync();
+
+        var relation = await Context.Relations
+          .FirstOrDefaultAsync(x => x.UserId == userId && x.RelatedUserId == user.Id);
+
+        user.RelationType = relation?.Type;
+      }
+
+      return users;
+    }
+
     public async Task Add(User user)
     {
       await Context.Users.AddAsync(user);

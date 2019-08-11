@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Users.Commands.DisableUser;
@@ -9,6 +10,7 @@ using Skelvy.Application.Users.Queries;
 using Skelvy.Application.Users.Queries.CheckUserName;
 using Skelvy.Application.Users.Queries.FindSelfUser;
 using Skelvy.Application.Users.Queries.FindUser;
+using Skelvy.Application.Users.Queries.FIndUsers;
 using Skelvy.Domain.Enums.Users;
 using Skelvy.WebAPI.Filters;
 
@@ -26,6 +28,13 @@ namespace Skelvy.WebAPI.Controllers
     public async Task<SelfUserDto> FindSelf()
     {
       return await Mediator.Send(new FindSelfUserQuery(UserId));
+    }
+
+    [HttpGet]
+    public async Task<IList<UserWithRelationTypeDto>> FindAll([FromQuery] FindUsersQuery request)
+    {
+      request.UserId = UserId;
+      return await Mediator.Send(request);
     }
 
     [HttpPatch("self/language")]

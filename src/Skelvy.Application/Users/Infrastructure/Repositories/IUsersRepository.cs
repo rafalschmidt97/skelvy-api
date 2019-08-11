@@ -18,8 +18,16 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
     Task<User> FindOneWithRolesByEmail(string email);
     Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset maxDate);
     Task<IList<User>> FindAllWithDetailsByUsersId(IEnumerable<int> usersId);
+    Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLike(int userId, string userName, int page, int pageSize = 10);
     Task Add(User user);
     Task Update(User user);
     Task RemoveRange(IList<User> users);
+  }
+
+  public class UserWithRelationType
+  {
+    public int Id { get; set; }
+    public Profile Profile { get; set; }
+    public string RelationType { get; set; }
   }
 }
