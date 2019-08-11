@@ -6,6 +6,7 @@ using Skelvy.Application.Users.Commands.UpdateProfile;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Application.Users.Commands.UpdateUserName;
 using Skelvy.Application.Users.Queries;
+using Skelvy.Application.Users.Queries.CheckUserName;
 using Skelvy.Application.Users.Queries.FindSelfUser;
 using Skelvy.Application.Users.Queries.FindUser;
 using Skelvy.Domain.Enums.Users;
@@ -32,6 +33,12 @@ namespace Skelvy.WebAPI.Controllers
     {
       request.UserId = UserId;
       await Mediator.Send(request);
+    }
+
+    [HttpGet("name-available")]
+    public async Task<bool> CheckUserName([FromQuery] CheckUserNameQuery request)
+    {
+      return await Mediator.Send(request);
     }
 
     [HttpPatch("self/name")]
