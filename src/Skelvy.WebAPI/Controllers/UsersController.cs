@@ -71,7 +71,7 @@ namespace Skelvy.WebAPI.Controllers
       await Mediator.Send(new RemoveUserCommand(id));
     }
 
-    [HttpPatch("{id}/disabled")]
+    [HttpPatch("{id}/disable")]
     [AuthorizeRole(RoleType.Admin)]
     public async Task Disable(int id, DisableUserCommand request)
     {
