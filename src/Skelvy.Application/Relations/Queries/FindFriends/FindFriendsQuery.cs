@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Users.Queries;
 
-namespace Skelvy.Application.Relations.Queries.FIndFriends
+namespace Skelvy.Application.Relations.Queries.FindFriends
 {
   public class FindFriendsQuery : IQuery<IList<UserDto>>
   {

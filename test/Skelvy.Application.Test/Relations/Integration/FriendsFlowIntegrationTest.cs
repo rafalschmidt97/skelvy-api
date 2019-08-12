@@ -8,7 +8,7 @@ using Skelvy.Application.Relations.Commands.InviteFriendResponse;
 using Skelvy.Application.Relations.Commands.RemoveFriend;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Relations.Queries.FindFriendRequests;
-using Skelvy.Application.Relations.Queries.FIndFriends;
+using Skelvy.Application.Relations.Queries.FindFriends;
 using Skelvy.Domain.Enums.Users;
 using Skelvy.Persistence;
 using Skelvy.Persistence.Repositories;

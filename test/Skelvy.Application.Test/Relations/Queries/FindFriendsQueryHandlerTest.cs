@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Skelvy.Application.Relations.Queries.FIndFriends;
+using Skelvy.Application.Relations.Queries.FindFriends;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence.Repositories;

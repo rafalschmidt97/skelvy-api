@@ -6,7 +6,7 @@ using Skelvy.Application.Relations.Commands.InviteFriendResponse;
 using Skelvy.Application.Relations.Commands.RemoveFriend;
 using Skelvy.Application.Relations.Queries;
 using Skelvy.Application.Relations.Queries.FindFriendRequests;
-using Skelvy.Application.Relations.Queries.FIndFriends;
+using Skelvy.Application.Relations.Queries.FindFriends;
 using Skelvy.Application.Users.Queries;
 
 namespace Skelvy.WebAPI.Controllers

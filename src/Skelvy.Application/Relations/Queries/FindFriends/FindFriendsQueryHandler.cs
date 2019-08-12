@@ -9,7 +9,7 @@ using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Users;
 
-namespace Skelvy.Application.Relations.Queries.FIndFriends
+namespace Skelvy.Application.Relations.Queries.FindFriends
 {
   public class FindFriendsQueryHandler : QueryHandler<FindFriendsQuery, IList<UserDto>>
   {

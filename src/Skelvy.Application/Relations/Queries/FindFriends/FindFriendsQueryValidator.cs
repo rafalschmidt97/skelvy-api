@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Skelvy.Application.Relations.Queries.FIndFriends
+namespace Skelvy.Application.Relations.Queries.FindFriends
 {
   public class FindFriendsQueryValidator : AbstractValidator<FindFriendsQuery>
   {
