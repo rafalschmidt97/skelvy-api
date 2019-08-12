@@ -161,14 +161,14 @@ namespace Skelvy.Persistence.Repositories
     private static bool IsMeetingMatchRequest(Meeting meeting, MeetingRequest request, User requestUser)
     {
       return meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.User.Profile.IsWithinMeetingRequestAgeRange(request)) &&
-             meeting.Group.Users.Where(x => !x.IsRemoved).All(x => requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
+             meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.MeetingRequest == null || requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
              meeting.GetDistance(request) <= 10 &&
              request.Activities.Any(x => x.ActivityId == meeting.ActivityId);
     }
 
     private static bool IsMeetingClose(Meeting meeting, User user, double latitude, double longitude)
     {
-      return meeting.Group.Users.Where(x => !x.IsRemoved).All(x => user.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
+      return meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.MeetingRequest == null || user.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
              meeting.GetDistance(latitude, longitude) <= 10;
     }
   }

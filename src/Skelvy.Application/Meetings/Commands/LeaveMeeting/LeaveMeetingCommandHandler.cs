@@ -40,7 +40,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
       var groupUsers = await _groupUsersRepository.FindAllWithRequestByGroupId(groupUser.GroupId);
       var userDetails = groupUsers.First(x => x.UserId == groupUser.UserId);
 
-      if (userDetails.MeetingRequest.IsSearching)
+      if (userDetails.MeetingRequest != null && userDetails.MeetingRequest.IsSearching)
       {
         throw new InternalServerErrorException(
           $"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) is marked as '{MeetingRequestStatusType.Searching}' " +
@@ -50,25 +50,32 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
       using (var transaction = _meetingsRepository.BeginTransaction())
       {
         userDetails.Leave();
-        userDetails.MeetingRequest.Abort();
-
         await _groupUsersRepository.Update(userDetails);
-        await _meetingRequestsRepository.Update(userDetails.MeetingRequest);
+
+        if (userDetails.MeetingRequest != null)
+        {
+          userDetails.MeetingRequest.Abort();
+          await _meetingRequestsRepository.Update(userDetails.MeetingRequest);
+        }
 
         var meetingAborted = false;
 
         if (groupUsers.Count == 2)
         {
           var anotherUserDetails = groupUsers.First(x => x.UserId != groupUser.UserId);
-
           anotherUserDetails.Abort();
-          anotherUserDetails.MeetingRequest.MarkAsSearching();
+
+          if (anotherUserDetails.MeetingRequest != null)
+          {
+            anotherUserDetails.MeetingRequest.MarkAsSearching();
+            await _meetingRequestsRepository.Update(anotherUserDetails.MeetingRequest);
+          }
+
           var meetingDetails = await _meetingsRepository.FindOneWithGroupByGroupId(groupUser.GroupId);
           meetingDetails.Abort();
           meetingDetails.Group.Abort();
 
           await _groupUsersRepository.Update(anotherUserDetails);
-          await _meetingRequestsRepository.Update(anotherUserDetails.MeetingRequest);
           await _meetingsRepository.Update(meetingDetails);
           await _groupsRepository.Update(meetingDetails.Group);
 

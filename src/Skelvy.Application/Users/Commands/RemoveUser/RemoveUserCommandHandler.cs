@@ -65,26 +65,24 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
         foreach (var groupUser in groupUsers)
         {
           var groupUsersDetails = await _groupUsersRepository.FindAllWithRequestByGroupId(groupUser.GroupId);
-          var groupUserDetails = groupUsersDetails.First(x => x.UserId == groupUser.UserId);
+          var userDetails = groupUsersDetails.First(x => x.UserId == groupUser.UserId);
 
           using (var transaction = _usersRepository.BeginTransaction())
           {
-            groupUserDetails.Leave();
+            userDetails.Leave();
+            await _groupUsersRepository.Update(userDetails);
 
-            if (groupUserDetails.MeetingRequest != null)
+            if (userDetails.MeetingRequest != null)
             {
-              groupUserDetails.MeetingRequest.Abort();
-              await _meetingRequestsRepository.Update(groupUserDetails.MeetingRequest);
+              userDetails.MeetingRequest.Abort();
+              await _meetingRequestsRepository.Update(userDetails.MeetingRequest);
             }
-
-            await _groupUsersRepository.Update(groupUserDetails);
 
             var meetingAborted = false;
 
-            if (groupUsersDetails.Count == 2)
+            if (groupUsers.Count == 2)
             {
-              var anotherUserDetails = groupUsersDetails.First(x => x.UserId != groupUser.UserId);
-
+              var anotherUserDetails = groupUsers.First(x => x.UserId != groupUser.UserId);
               anotherUserDetails.Abort();
 
               if (anotherUserDetails.MeetingRequest != null)
@@ -93,23 +91,13 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
                 await _meetingRequestsRepository.Update(anotherUserDetails.MeetingRequest);
               }
 
+              var meetingDetails = await _meetingsRepository.FindOneWithGroupByGroupId(groupUser.GroupId);
+              meetingDetails.Abort();
+              meetingDetails.Group.Abort();
+
               await _groupUsersRepository.Update(anotherUserDetails);
-
-              var group = await _groupsRepository.FindOne(groupUser.GroupId);
-
-              if (group != null)
-              {
-                group.Abort();
-                await _groupsRepository.Update(group);
-              }
-
-              var meeting = await _meetingsRepository.FindOneByGroupId(groupUser.GroupId);
-
-              if (meeting != null)
-              {
-                meeting.Abort();
-                await _meetingsRepository.Update(meeting);
-              }
+              await _meetingsRepository.Update(meetingDetails);
+              await _groupsRepository.Update(meetingDetails.Group);
 
               meetingAborted = true;
             }
@@ -122,10 +110,10 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
             }
             else
             {
-              if (groupUserDetails.ModifiedAt != null)
+              if (userDetails.ModifiedAt != null)
               {
                 await _mediator.Publish(
-                  new MeetingAbortedEvent(groupUser.UserId, groupUser.GroupId, groupUserDetails.ModifiedAt.Value));
+                  new MeetingAbortedEvent(groupUser.UserId, groupUser.GroupId, userDetails.ModifiedAt.Value));
               }
               else
               {
