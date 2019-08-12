@@ -25,7 +25,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("self/requests")]
-    public async Task CreateSelfRequest(SearchMeetingCommand request)
+    public async Task SearchSelfRequest(SearchMeetingCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);
