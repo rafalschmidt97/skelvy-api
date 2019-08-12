@@ -6,6 +6,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
   {
     public LeaveMeetingCommandValidator()
     {
+      RuleFor(x => x.MeetingId).NotEmpty();
       RuleFor(x => x.UserId).NotEmpty();
     }
   }

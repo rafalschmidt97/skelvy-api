@@ -22,20 +22,21 @@ namespace Skelvy.Persistence.Repositories
       return await Context.MeetingRequests.FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<MeetingRequest> FindOneSearchingByUserId(int userId)
+    public async Task<MeetingRequest> FindOneSearchingByRequestId(int requestId)
     {
       return await Context.MeetingRequests
-        .FirstOrDefaultAsync(x => x.UserId == userId &&
+        .FirstOrDefaultAsync(x => x.Id == requestId &&
                                   !x.IsRemoved &&
                                   x.Status == MeetingRequestStatusType.Searching);
     }
 
-    public async Task<MeetingRequest> FindOneWithActivitiesByUserId(int userId)
+    public async Task<IList<MeetingRequest>> FindAllSearchingWithActivitiesByUserId(int userId)
     {
       return await Context.MeetingRequests
         .Include(x => x.Activities)
         .ThenInclude(x => x.Activity)
-        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved);
+        .Where(x => x.UserId == userId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Searching)
+        .ToListAsync();
     }
 
     public async Task<IList<MeetingRequest>> FindAllWithRemovedByUsersId(IEnumerable<int> usersId)
@@ -69,16 +70,10 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == requestId && !x.IsRemoved);
     }
 
-    public async Task<bool> ExistsOneByUserId(int userId)
+    public async Task<bool> ExistsOneFoundByRequestId(int requestId)
     {
       return await Context.MeetingRequests
-        .AnyAsync(x => x.UserId == userId && !x.IsRemoved);
-    }
-
-    public async Task<bool> ExistsOneFoundByUserId(int userId)
-    {
-      return await Context.MeetingRequests
-        .AnyAsync(x => x.UserId == userId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Found);
+        .AnyAsync(x => x.Id == requestId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Found);
     }
 
     public async Task<MeetingRequest> FindOneMatchingUserRequest(User user, MeetingRequest request)
@@ -133,14 +128,14 @@ namespace Skelvy.Persistence.Repositories
       return new List<MeetingRequest>();
     }
 
-    public async Task<MeetingRequest> FindOneForUserWithUserDetails(int meetingRequestId, int userId)
+    public async Task<MeetingRequest> FindOneSearchingWithUserDetailsByRequestId(int requestId)
     {
       return await Context.MeetingRequests
         .Include(x => x.User)
         .ThenInclude(x => x.Profile)
         .Include(x => x.Activities)
         .ThenInclude(x => x.Activity)
-        .FirstOrDefaultAsync(x => x.Id == meetingRequestId &&
+        .FirstOrDefaultAsync(x => x.Id == requestId &&
                                   !x.IsRemoved &&
                                   x.Status == MeetingRequestStatusType.Searching);
     }

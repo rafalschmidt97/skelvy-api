@@ -28,16 +28,6 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
 
     public override async Task<MeetingSuggestionsModel> Handle(FindMeetingSuggestionsQuery request)
     {
-      await ValidateData(request);
-
-      var requests = await _requestsRepository.FindAllCloseToPreferencesWithUserDetails(request.UserId, request.Latitude, request.Longitude);
-      var meetings = await _meetingsRepository.FindAllCloseToPreferencesWithUsersDetails(request.UserId, request.Latitude, request.Longitude);
-
-      return await _mapper.Map(requests, meetings, request.Language);
-    }
-
-    private async Task ValidateData(FindMeetingSuggestionsQuery request)
-    {
       var userExists = await _usersRepository.ExistsOne(request.UserId);
 
       if (!userExists)
@@ -45,13 +35,10 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var foundRequestExists = await _requestsRepository.ExistsOneFoundByUserId(request.UserId);
+      var requests = await _requestsRepository.FindAllCloseToPreferencesWithUserDetails(request.UserId, request.Latitude, request.Longitude);
+      var meetings = await _meetingsRepository.FindAllCloseToPreferencesWithUsersDetails(request.UserId, request.Latitude, request.Longitude);
 
-      if (foundRequestExists)
-      {
-        throw new ConflictException(
-          $"Entity {nameof(MeetingRequest)}(UserId={request.UserId}) is marked as found. Leave meeting first.");
-      }
+      return await _mapper.Map(requests, meetings, request.Language);
     }
   }
 }

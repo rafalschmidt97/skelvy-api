@@ -219,6 +219,7 @@ namespace Skelvy.Persistence
       var groups = new[]
       {
         new Group(),
+        new Group(),
       };
 
       context.Groups.AddRange(groups);
@@ -236,6 +237,8 @@ namespace Skelvy.Persistence
       {
         new GroupUser(groups[0].Id, users[1].Id, requests[0].Id),
         new GroupUser(groups[0].Id, users[2].Id, requests[1].Id),
+        new GroupUser(groups[1].Id, users[0].Id),
+        new GroupUser(groups[1].Id, users[3].Id),
       };
 
       context.GroupUsers.AddRange(groupUsers);

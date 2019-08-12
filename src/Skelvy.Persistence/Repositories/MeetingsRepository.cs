@@ -22,35 +22,27 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == id && !x.IsRemoved);
     }
 
-    public async Task<Meeting> FindOneWithUsersDetailsAndActivityByUserId(int userId)
+    public async Task<Meeting> FindOne(int id)
     {
-      var meeting = await Context.Meetings
+      return await Context.Meetings
+        .FirstOrDefaultAsync(x => x.Id == id && !x.IsRemoved);
+    }
+
+    public async Task<IList<Meeting>> FindAllWithActivityByUserId(int userId)
+    {
+      return await Context.Meetings
         .Include(x => x.Group)
         .ThenInclude(y => y.Users)
-        .ThenInclude(y => y.User)
-        .ThenInclude(y => y.Profile)
         .Include(x => x.Activity)
-        .FirstOrDefaultAsync(x => x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) && !x.IsRemoved);
+        .Where(x => x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) && !x.IsRemoved)
+        .ToListAsync();
+    }
 
-      if (meeting != null)
-      {
-        var users = meeting.Group.Users.Where(x => !x.IsRemoved).ToList();
-
-        foreach (var user in users)
-        {
-          var userPhotos = await Context.ProfilePhotos
-            .Include(x => x.Attachment)
-            .Where(x => x.ProfileId == user.User.Profile.Id)
-            .OrderBy(x => x.Order)
-            .ToListAsync();
-
-          user.User.Profile.Photos = userPhotos;
-        }
-
-        meeting.Group.Users = users;
-      }
-
-      return meeting;
+    public async Task<Meeting> FindOneByGroupId(int groupId)
+    {
+      return await Context.Meetings
+        .Include(x => x.Group)
+        .FirstOrDefaultAsync(x => x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved);
     }
 
     public async Task<Meeting> FindOneWithGroupByGroupId(int groupId)

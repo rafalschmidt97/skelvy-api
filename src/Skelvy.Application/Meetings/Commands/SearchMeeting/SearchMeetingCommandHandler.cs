@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Skelvy.Application.Activities.Infrastructure.Repositories;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Events.UserFoundMeeting;
-using Skelvy.Application.Meetings.Events.UserJoinedMeeting;
+using Skelvy.Application.Meetings.Events.UserJoinedGroup;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -92,14 +92,6 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
       {
         throw new NotFoundException(nameof(Activity), request.Activities);
       }
-
-      var requestExists = await _meetingRequestsRepository.ExistsOneByUserId(request.UserId);
-
-      if (requestExists)
-      {
-        throw new ConflictException(
-          $"Entity {nameof(MeetingRequest)}({nameof(request.UserId)}={request.UserId}) already exists.");
-      }
     }
 
     private async Task<MeetingRequest> CreateNewMeetingRequest(SearchMeetingCommand request)
@@ -137,7 +129,7 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
           await _meetingRequestsRepository.Update(newRequest);
 
           transaction.Commit();
-          await _mediator.Publish(new UserJoinedMeetingEvent(groupUsers.UserId, groupUsers.GroupId));
+          await _mediator.Publish(new UserJoinedGroupEvent(groupUsers.UserId, groupUsers.GroupId));
         }
         catch (Exception exception)
         {

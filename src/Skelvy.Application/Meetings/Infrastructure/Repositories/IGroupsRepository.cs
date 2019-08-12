@@ -7,7 +7,8 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
 {
   public interface IGroupsRepository : IBaseRepository
   {
-    Task<Group> FindOneByGroupId(int id);
+    Task<Group> FindOne(int id);
+    Task<IList<Group>> FindAllWithUsersDetailsAndMessagesByUserId(int userId, int messagesSageSize = 20);
     Task Add(Group attachment);
     Task Update(Group group);
     Task Remove(Group attachment);

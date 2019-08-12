@@ -1,11 +1,11 @@
 using FluentValidation;
 using Skelvy.Domain.Enums.Users;
 
-namespace Skelvy.Application.Meetings.Queries.FindMeeting
+namespace Skelvy.Application.Meetings.Queries.FindGroups
 {
-  public class FindMeetingQueryValidator : AbstractValidator<FindMeetingQuery>
+  public class FindGroupsQueryValidator : AbstractValidator<FindGroupsQuery>
   {
-    public FindMeetingQueryValidator()
+    public FindGroupsQueryValidator()
     {
       RuleFor(x => x.UserId).NotEmpty();
 

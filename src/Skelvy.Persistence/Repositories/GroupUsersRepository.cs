@@ -24,11 +24,20 @@ namespace Skelvy.Persistence.Repositories
       return user != null;
     }
 
-    public async Task<GroupUser> FindOneWithGroupByUserId(int userId)
+    public async Task<bool> ExistsOneByMeetingRequest(int requestId)
+    {
+      var user = await Context.GroupUsers
+        .Include(x => x.Group)
+        .FirstOrDefaultAsync(x => x.MeetingRequestId == requestId && !x.IsRemoved && !x.Group.IsRemoved);
+
+      return user != null;
+    }
+
+    public async Task<GroupUser> FindOneWithGroupByUserIdAndGroupId(int userId, int groupId)
     {
       return await Context.GroupUsers
         .Include(x => x.Group)
-        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved && !x.Group.IsRemoved);
+        .FirstOrDefaultAsync(x => x.UserId == userId && x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved);
     }
 
     public async Task<IList<GroupUser>> FindAllByGroupId(int groupId)
@@ -36,6 +45,14 @@ namespace Skelvy.Persistence.Repositories
       return await Context.GroupUsers
         .Include(x => x.Group)
         .Where(x => x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved)
+        .ToListAsync();
+    }
+
+    public async Task<IList<GroupUser>> FindAllByUserId(int userId)
+    {
+      return await Context.GroupUsers
+        .Include(x => x.Group)
+        .Where(x => x.UserId == userId && !x.IsRemoved && !x.Group.IsRemoved)
         .ToListAsync();
     }
 
@@ -75,6 +92,14 @@ namespace Skelvy.Persistence.Repositories
     {
       return await Context.GroupUsers
         .Where(x => x.GroupId == groupId && !x.IsRemoved)
+        .ToListAsync();
+    }
+
+    public async Task<IList<GroupUser>> FindAllWithGroupByGroupId(int groupId)
+    {
+      return await Context.GroupUsers
+        .Include(x => x.Group)
+        .Where(x => x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved)
         .ToListAsync();
     }
 

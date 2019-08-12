@@ -35,12 +35,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 
     public override async Task<Unit> Handle(LeaveMeetingCommand request)
     {
-      var groupUser = await _groupUsersRepository.FindOneWithGroupByUserId(request.UserId);
-
-      if (groupUser == null)
-      {
-        throw new NotFoundException(nameof(GroupUser), request.UserId);
-      }
+      var groupUser = await ValidateData(request);
 
       var groupUsers = await _groupUsersRepository.FindAllWithRequestByGroupId(groupUser.GroupId);
       var userDetails = groupUsers.First(x => x.UserId == groupUser.UserId);
@@ -68,14 +63,14 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 
           anotherUserDetails.Abort();
           anotherUserDetails.MeetingRequest.MarkAsSearching();
-          var meeting = await _meetingsRepository.FindOneWithGroupByGroupId(groupUser.GroupId);
-          meeting.Abort();
-          meeting.Group.Abort();
+          var meetingDetails = await _meetingsRepository.FindOneWithGroupByGroupId(groupUser.GroupId);
+          meetingDetails.Abort();
+          meetingDetails.Group.Abort();
 
           await _groupUsersRepository.Update(anotherUserDetails);
           await _meetingRequestsRepository.Update(anotherUserDetails.MeetingRequest);
-          await _meetingsRepository.Update(meeting);
-          await _groupsRepository.Update(meeting.Group);
+          await _meetingsRepository.Update(meetingDetails);
+          await _groupsRepository.Update(meetingDetails.Group);
 
           meetingAborted = true;
         }
@@ -102,6 +97,25 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
       }
 
       return Unit.Value;
+    }
+
+    private async Task<GroupUser> ValidateData(LeaveMeetingCommand request)
+    {
+      var meeting = await _meetingsRepository.FindOne(request.MeetingId);
+
+      if (meeting == null)
+      {
+        throw new NotFoundException(nameof(Meeting), request.UserId);
+      }
+
+      var groupUser = await _groupUsersRepository.FindOneWithGroupByUserIdAndGroupId(request.UserId, meeting.GroupId);
+
+      if (groupUser == null)
+      {
+        throw new NotFoundException(nameof(GroupUser), request.UserId);
+      }
+
+      return groupUser;
     }
   }
 }

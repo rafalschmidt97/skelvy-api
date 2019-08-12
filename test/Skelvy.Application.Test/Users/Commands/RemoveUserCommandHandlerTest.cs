@@ -18,9 +18,25 @@ namespace Skelvy.Application.Test.Users.Commands
     }
 
     [Fact]
-    public async Task ShouldNotThrowException()
+    public async Task ShouldNotThrowExceptionWithUserWithoutMeeting()
     {
       var request = new RemoveUserCommand(1);
+      var dbContext = InitializedDbContext();
+      var handler = new RemoveUserCommandHandler(
+        new UsersRepository(dbContext),
+        new GroupsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new MeetingRequestsRepository(dbContext),
+        _mediator.Object);
+
+      await handler.Handle(request);
+    }
+
+    [Fact]
+    public async Task ShouldNotThrowExceptionWithUserWithMeeting()
+    {
+      var request = new RemoveUserCommand(2);
       var dbContext = InitializedDbContext();
       var handler = new RemoveUserCommandHandler(
         new UsersRepository(dbContext),

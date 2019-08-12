@@ -125,26 +125,6 @@ namespace Skelvy.Application.Test.Meetings.Commands
         handler.Handle(request));
     }
 
-    [Fact]
-    public async Task ShouldThrowExceptionWithExistingRequest()
-    {
-      var request = Request();
-      var dbContext = InitializedDbContext();
-      var handler = new SearchMeetingCommandHandler(
-        new UsersRepository(dbContext),
-        new ActivitiesRepository(dbContext),
-        new MeetingsRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext),
-        new GroupsRepository(dbContext),
-        new GroupUsersRepository(dbContext),
-        _mediator.Object,
-        _logger.Object);
-
-      await Assert.ThrowsAsync<ConflictException>(() =>
-        handler.Handle(request));
-    }
-
     private static SearchMeetingCommand Request()
     {
       return new SearchMeetingCommand(

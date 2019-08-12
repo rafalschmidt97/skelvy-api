@@ -48,7 +48,8 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
     {
       await ValidateData(request);
       var user = await _usersRepository.FindOneWithDetails(request.UserId);
-      var connectingMeetingRequest = await _meetingRequestsRepository.FindOneForUserWithUserDetails(request.MeetingRequestId, request.UserId);
+      var connectingMeetingRequest =
+        await _meetingRequestsRepository.FindOneSearchingWithUserDetailsByRequestId(request.MeetingRequestId);
 
       if (connectingMeetingRequest != null)
       {
@@ -77,22 +78,6 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       {
         throw new NotFoundException(nameof(MeetingRequest), request.MeetingRequestId);
       }
-
-      var userRequestExists = await _meetingRequestsRepository.ExistsOneFoundByUserId(request.UserId);
-
-      if (userRequestExists)
-      {
-        throw new ConflictException(
-          $"Entity {nameof(MeetingRequest)}({nameof(request.UserId)}={request.UserId}) already exists.");
-      }
-
-      var userMeetingExists = await _groupUsersRepository.ExistsOneByUserId(request.UserId);
-
-      if (userMeetingExists)
-      {
-        throw new ConflictException(
-          $"Entity {nameof(Meeting)}({nameof(request.UserId)}={request.UserId}) already exists.");
-      }
     }
 
     private async Task ConnectUsersToMeeting(User user, MeetingRequest connectingMeetingRequest)
@@ -101,7 +86,6 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       {
         try
         {
-          await AbortSearchingRequest(user);
           var request = await CreateNewMeetingRequest(user, connectingMeetingRequest);
           var meeting = await CreateNewMeeting(request, connectingMeetingRequest);
           transaction.Commit();
@@ -113,17 +97,6 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
             $"{nameof(ConnectMeetingRequestCommand)} Exception while CreateNewMeetingRequest/CreateNewMeeting for " +
             $"User(Id={user.Id}): {exception.Message}");
         }
-      }
-    }
-
-    private async Task AbortSearchingRequest(User user)
-    {
-      var request = await _meetingRequestsRepository.FindOneSearchingByUserId(user.Id);
-
-      if (request != null)
-      {
-        request.Abort();
-        await _meetingRequestsRepository.Update(request);
       }
     }
 

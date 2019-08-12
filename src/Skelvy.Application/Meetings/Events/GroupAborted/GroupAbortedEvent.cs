@@ -1,11 +1,11 @@
 using System;
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Events.MeetingAborted
+namespace Skelvy.Application.Meetings.Events.GroupAborted
 {
-  public class MeetingAbortedEvent : IEvent
+  public class GroupAbortedEvent : IEvent
   {
-    public MeetingAbortedEvent(int userId, int groupId, DateTimeOffset userLeftAt)
+    public GroupAbortedEvent(int userId, int groupId, DateTimeOffset userLeftAt)
     {
       UserId = userId;
       GroupId = groupId;

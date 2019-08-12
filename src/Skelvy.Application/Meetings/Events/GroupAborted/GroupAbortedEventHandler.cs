@@ -6,14 +6,14 @@ using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 
-namespace Skelvy.Application.Meetings.Events.UserJoinedMeeting
+namespace Skelvy.Application.Meetings.Events.GroupAborted
 {
-  public class UserJoinedMeetingEventHandler : EventHandler<UserJoinedMeetingEvent>
+  public class GroupAbortedEventHandler : EventHandler<GroupAbortedEvent>
   {
     private readonly INotificationsService _notifications;
     private readonly IGroupUsersRepository _groupUsersRepository;
 
-    public UserJoinedMeetingEventHandler(
+    public GroupAbortedEventHandler(
       INotificationsService notifications,
       IGroupUsersRepository groupUsersRepository)
     {
@@ -21,11 +21,13 @@ namespace Skelvy.Application.Meetings.Events.UserJoinedMeeting
       _groupUsersRepository = groupUsersRepository;
     }
 
-    public override async Task<Unit> Handle(UserJoinedMeetingEvent request)
+    public override async Task<Unit> Handle(GroupAbortedEvent request)
     {
-      var groupUsers = await _groupUsersRepository.FindAllByGroupId(request.MeetingId);
+      var groupUsers = await _groupUsersRepository
+        .FindAllWithRemovedAfterOrEqualAbortedAtByGroupId(request.GroupId, request.UserLeftAt);
+
       var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingNotification(request.UserId, broadcastUsersId));
+      await _notifications.BroadcastGroupAborted(new GroupAbortedNotification(request.UserId, broadcastUsersId));
 
       return Unit.Value;
     }

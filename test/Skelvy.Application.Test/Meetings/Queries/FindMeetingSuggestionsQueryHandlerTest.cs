@@ -27,7 +27,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var dbContext = InitializedDbContext();
       _mapper.Setup(x =>
           x.Map(It.IsAny<IList<MeetingRequest>>(), It.IsAny<IList<Meeting>>(), It.IsAny<string>()))
-        .ReturnsAsync(new MeetingSuggestionsModel(new List<MeetingRequestWithUserDto>(), new List<MeetingDto>()));
+        .ReturnsAsync(new MeetingSuggestionsModel(new List<MeetingRequestWithUserDto>(), new List<MeetingWithUsersDto>()));
 
       var handler = new FindMeetingSuggestionsQueryHandler(
         new UsersRepository(dbContext),
@@ -38,21 +38,6 @@ namespace Skelvy.Application.Test.Meetings.Queries
       var result = await handler.Handle(request);
 
       Assert.IsType<MeetingSuggestionsModel>(result);
-    }
-
-    [Fact]
-    public async Task ShouldThrowExceptionWithMatchedUser()
-    {
-      var request = new FindMeetingSuggestionsQuery(2, 1, 1, LanguageType.EN);
-      var dbContext = InitializedDbContext();
-      var handler = new FindMeetingSuggestionsQueryHandler(
-        new UsersRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingsRepository(dbContext),
-        _mapper.Object);
-
-      await Assert.ThrowsAsync<ConflictException>(() =>
-        handler.Handle(request));
     }
 
     [Fact]

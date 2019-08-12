@@ -1,17 +1,17 @@
 using Skelvy.Application.Core.Bus;
 using Skelvy.Domain.Enums.Users;
 
-namespace Skelvy.Application.Users.Queries.FindSelf
+namespace Skelvy.Application.Meetings.Queries.FindGroups
 {
-  public class FindSelfQuery : IQuery<SelfModel>
+  public class FindGroupsQuery : IQuery<GroupsModel>
   {
-    public FindSelfQuery(int userId, string language)
+    public FindGroupsQuery(int userId, string language)
     {
       UserId = userId;
       Language = language;
     }
 
-    public FindSelfQuery() // required for FromQuery attribute
+    public FindGroupsQuery() // required for FromQuery attribute
     {
     }
 

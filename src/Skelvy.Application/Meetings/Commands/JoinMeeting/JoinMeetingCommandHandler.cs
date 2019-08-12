@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Events.UserJoinedMeeting;
+using Skelvy.Application.Meetings.Events.UserJoinedGroup;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -74,22 +74,6 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       {
         throw new NotFoundException(nameof(Meeting), request.MeetingId);
       }
-
-      var requestExists = await _meetingRequestsRepository.ExistsOneFoundByUserId(request.UserId);
-
-      if (requestExists)
-      {
-        throw new ConflictException(
-          $"Entity {nameof(MeetingRequest)}({nameof(request.UserId)}={request.UserId}) already exists.");
-      }
-
-      var userMeetingExists = await _groupUsersRepository.ExistsOneByUserId(request.UserId);
-
-      if (userMeetingExists)
-      {
-        throw new ConflictException(
-          $"Entity {nameof(Meeting)}({nameof(request.UserId)}={request.UserId}) already exists.");
-      }
     }
 
     private async Task JoinUserToMeeting(User user, Meeting meeting)
@@ -98,11 +82,10 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       {
         try
         {
-          await AbortSearchingRequest(user);
           var request = await CreateNewMeetingRequest(user, meeting);
           var groupUser = await AddUserToMeeting(request, meeting);
           transaction.Commit();
-          await _mediator.Publish(new UserJoinedMeetingEvent(groupUser.UserId, groupUser.GroupId));
+          await _mediator.Publish(new UserJoinedGroupEvent(groupUser.UserId, groupUser.GroupId));
         }
         catch (Exception exception)
         {
@@ -110,17 +93,6 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
             $"{nameof(JoinMeetingCommand)} Exception while CreateNewMeetingRequest/AddUserToMeeting for " +
             $"Meeting(Id={meeting.Id}) User(Id={user.Id}): {exception.Message}");
         }
-      }
-    }
-
-    private async Task AbortSearchingRequest(User user)
-    {
-      var request = await _meetingRequestsRepository.FindOneSearchingByUserId(user.Id);
-
-      if (request != null)
-      {
-        request.Abort();
-        await _meetingRequestsRepository.Update(request);
       }
     }
 
@@ -137,6 +109,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
         meeting.Latitude,
         meeting.Longitude,
         user.Id);
+      meetingRequest.MarkAsFound();
 
       await _meetingRequestsRepository.Add(meetingRequest);
       meetingRequest.Activities.Add(new MeetingRequestActivity(meetingRequest.Id, meeting.ActivityId));
@@ -149,8 +122,6 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
     {
       var groupUser = new GroupUser(meeting.Id, newRequest.UserId, newRequest.Id);
       await _groupUsersRepository.Add(groupUser);
-      newRequest.MarkAsFound();
-      await _meetingRequestsRepository.Update(newRequest);
       return groupUser;
     }
   }

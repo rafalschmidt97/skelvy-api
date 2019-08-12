@@ -9,10 +9,11 @@ namespace Skelvy.Application.Notifications
   public interface INotificationsService
   {
     Task BroadcastUserSentMessage(UserSentMessageNotification notification);
-    Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification);
+    Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification);
     Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification);
     Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification);
     Task BroadcastMeetingAborted(MeetingAbortedNotification notification);
+    Task BroadcastGroupAborted(GroupAbortedNotification notification);
     Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification);
     Task BroadcastMeetingExpired(MeetingExpiredNotification notification);
     Task BroadcastUserCreated(UserCreatedNotification notification);

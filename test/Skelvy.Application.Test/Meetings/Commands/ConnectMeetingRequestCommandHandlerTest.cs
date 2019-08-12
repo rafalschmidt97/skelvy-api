@@ -77,43 +77,6 @@ namespace Skelvy.Application.Test.Meetings.Commands
         handler.Handle(request));
     }
 
-    [Fact]
-    public async Task ShouldConnectWithExistingRequest()
-    {
-      var request = new ConnectMeetingRequestCommand(1, 1);
-      var dbContext = InitializedDbContext();
-      var handler = new ConnectMeetingRequestCommandHandler(
-        new UsersRepository(dbContext),
-        new MeetingsRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext),
-        new GroupsRepository(dbContext),
-        new GroupUsersRepository(dbContext),
-        _mediator.Object,
-        _logger.Object);
-
-      await handler.Handle(request);
-    }
-
-    [Fact]
-    public async Task ShouldThrowExceptionWithExistingMeeting()
-    {
-      var request = new ConnectMeetingRequestCommand(2, 1);
-      var dbContext = InitializedDbContext();
-      var handler = new ConnectMeetingRequestCommandHandler(
-        new UsersRepository(dbContext),
-        new MeetingsRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext),
-        new GroupsRepository(dbContext),
-        new GroupUsersRepository(dbContext),
-        _mediator.Object,
-        _logger.Object);
-
-      await Assert.ThrowsAsync<ConflictException>(() =>
-        handler.Handle(request));
-    }
-
     private static SkelvyContext TestDbContext()
     {
       var context = DbContext();
