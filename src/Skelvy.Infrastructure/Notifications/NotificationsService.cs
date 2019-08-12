@@ -40,13 +40,13 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification)
+    public async Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification)
     {
-      await _socketService.BroadcastUserJoinedMeeting(notification);
+      await _socketService.BroadcastUserJoinedGroup(notification);
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastUserJoinedMeeting(notification, offline));
+        async (offline) => await _pushService.BroadcastUserJoinedGroup(notification, offline));
     }
 
     public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification)
@@ -74,6 +74,15 @@ namespace Skelvy.Infrastructure.Notifications
       await BroadcastActionToOffline(
         notification.UsersId,
         async (offline) => await _pushService.BroadcastMeetingAborted(notification, offline));
+    }
+
+    public async Task BroadcastGroupAborted(GroupAbortedNotification notification)
+    {
+      await _socketService.BroadcastGroupAborted(notification);
+
+      await BroadcastActionToOffline(
+        notification.UsersId,
+        async (offline) => await _pushService.BroadcastGroupAborted(notification, offline));
     }
 
     public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification)

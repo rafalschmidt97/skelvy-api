@@ -10,25 +10,16 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
 {
   public class RemoveMeetingRequestCommandHandler : CommandHandler<RemoveMeetingRequestCommand>
   {
-    private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingRequestsRepository _requestsRepository;
 
-    public RemoveMeetingRequestCommandHandler(IGroupUsersRepository groupUsersRepository, IMeetingRequestsRepository requestsRepository)
+    public RemoveMeetingRequestCommandHandler(IMeetingRequestsRepository requestsRepository)
     {
-      _groupUsersRepository = groupUsersRepository;
       _requestsRepository = requestsRepository;
     }
 
     public override async Task<Unit> Handle(RemoveMeetingRequestCommand request)
     {
-      var groupUserExists = await _groupUsersRepository.ExistsOneByUserId(request.UserId);
-
-      if (groupUserExists)
-      {
-        throw new ConflictException($"Entity {nameof(Meeting)}(UserId = {request.UserId}) exists. Leave meeting instead.");
-      }
-
-      var meetingRequest = await _requestsRepository.FindOneSearchingByUserId(request.UserId);
+      var meetingRequest = await _requestsRepository.FindOneSearchingByRequestId(request.RequestId);
 
       if (meetingRequest == null)
       {

@@ -64,19 +64,19 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification, IEnumerable<int> usersId)
+    public async Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
-          BodyLocKey = "USER_JOINED_MEETING",
+          TitleLocKey = "GROUP",
+          BodyLocKey = "USER_JOINED_GROUP",
         },
         new PushNotificationData
         {
-          Action = "UserJoinedMeeting",
-          RedirectTo = "meeting",
+          Action = "UserJoinedGroup",
+          RedirectTo = "group",
           Data = new { notification.UserId },
         });
     }
@@ -127,6 +127,23 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
+          Data = new { notification.UserId },
+        });
+    }
+
+    public async Task BroadcastGroupAborted(GroupAbortedNotification notification, IList<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "GROUP",
+          BodyLocKey = "GROUP_ABORTED",
+        },
+        new PushNotificationData
+        {
+          Action = "GroupAborted",
+          RedirectTo = "group",
           Data = new { notification.UserId },
         });
     }

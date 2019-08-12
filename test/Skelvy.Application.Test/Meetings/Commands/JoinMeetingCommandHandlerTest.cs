@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Common.Exceptions;
@@ -13,12 +12,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
   public class JoinMeetingCommandHandlerTest : RequestTestBase
   {
     private readonly Mock<IMediator> _mediator;
-    private readonly Mock<ILogger<JoinMeetingCommandHandler>> _logger;
 
     public JoinMeetingCommandHandlerTest()
     {
       _mediator = new Mock<IMediator>();
-      _logger = new Mock<ILogger<JoinMeetingCommandHandler>>();
     }
 
     [Fact]
@@ -29,11 +26,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new JoinMeetingCommandHandler(
         new UsersRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext),
         new GroupUsersRepository(dbContext),
-        _mediator.Object,
-        _logger.Object);
+        _mediator.Object);
 
       await handler.Handle(request);
     }
@@ -46,11 +40,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new JoinMeetingCommandHandler(
         new UsersRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext),
         new GroupUsersRepository(dbContext),
-        _mediator.Object,
-        _logger.Object);
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -64,48 +55,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new JoinMeetingCommandHandler(
         new UsersRepository(dbContext),
         new MeetingsRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext),
         new GroupUsersRepository(dbContext),
-        _mediator.Object,
-        _logger.Object);
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
-        handler.Handle(request));
-    }
-
-    [Fact]
-    public async Task ShouldJoinWithExistingRequest()
-    {
-      var request = new JoinMeetingCommand(1, 1);
-      var dbContext = InitializedDbContext();
-      var handler = new JoinMeetingCommandHandler(
-        new UsersRepository(dbContext),
-        new MeetingsRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext),
-        new GroupUsersRepository(dbContext),
-        _mediator.Object,
-        _logger.Object);
-
-      await handler.Handle(request);
-    }
-
-    [Fact]
-    public async Task ShouldThrowExceptionWithExistingMeeting()
-    {
-      var request = new JoinMeetingCommand(2, 1);
-      var dbContext = InitializedDbContext();
-      var handler = new JoinMeetingCommandHandler(
-        new UsersRepository(dbContext),
-        new MeetingsRepository(dbContext),
-        new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext),
-        new GroupUsersRepository(dbContext),
-        _mediator.Object,
-        _logger.Object);
-
-      await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));
     }
 

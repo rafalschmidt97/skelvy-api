@@ -16,10 +16,18 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
+    public GroupUser(int groupId, int userId)
+    {
+      GroupId = groupId;
+      UserId = userId;
+
+      CreatedAt = DateTimeOffset.UtcNow;
+    }
+
     public int Id { get; set; }
     public int GroupId { get; set; }
     public int UserId { get; set; }
-    public int MeetingRequestId { get; set; }
+    public int? MeetingRequestId { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? ModifiedAt { get; set; }
     public bool IsRemoved { get; set; }

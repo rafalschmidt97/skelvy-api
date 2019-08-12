@@ -6,6 +6,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
   {
     public RemoveMeetingRequestCommandValidator()
     {
+      RuleFor(x => x.RequestId).NotEmpty();
       RuleFor(x => x.UserId).NotEmpty();
     }
   }

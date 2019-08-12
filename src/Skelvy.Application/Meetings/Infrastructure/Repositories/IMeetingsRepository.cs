@@ -9,7 +9,9 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   public interface IMeetingsRepository : IBaseRepository
   {
     Task<bool> ExistsOne(int id);
-    Task<Meeting> FindOneWithUsersDetailsAndActivityByUserId(int userId);
+    Task<Meeting> FindOne(int id);
+    Task<IList<Meeting>> FindAllWithActivityByUserId(int userId);
+    Task<Meeting> FindOneByGroupId(int groupId);
     Task<Meeting> FindOneWithGroupByGroupId(int groupId);
     Task<IList<Meeting>> FindAllAfterOrEqualDate(DateTimeOffset maxDate);
     Task<Meeting> FindOneMatchingUserRequest(User user, MeetingRequest request);

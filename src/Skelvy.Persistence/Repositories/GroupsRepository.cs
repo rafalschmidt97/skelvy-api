@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
@@ -13,9 +14,43 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
-    public async Task<Group> FindOneByGroupId(int id)
+    public async Task<Group> FindOne(int id)
     {
       return await Context.Groups.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<IList<Group>> FindAllWithUsersDetailsAndMessagesByUserId(int userId, int messagesSageSize = 20)
+    {
+      var groups = await Context.Groups
+        .Include(y => y.Users)
+        .ThenInclude(x => x.User)
+        .ThenInclude(x => x.Profile)
+        .Where(x => x.Users.Any(y => y.UserId == userId && !y.IsRemoved) && !x.IsRemoved)
+        .ToListAsync();
+
+      foreach (var group in groups)
+      {
+        foreach (var groupUser in group.Users)
+        {
+          var userPhotos = await Context.ProfilePhotos
+            .Include(x => x.Attachment)
+            .Where(x => x.ProfileId == groupUser.User.Profile.Id)
+            .OrderBy(x => x.Order)
+            .ToListAsync();
+
+          groupUser.User.Profile.Photos = userPhotos;
+        }
+
+        var messages = await Context.Messages
+          .Where(x => x.GroupId == group.Id)
+          .OrderByDescending(p => p.Date)
+          .Take(messagesSageSize)
+          .ToListAsync();
+
+        group.Messages = messages.OrderBy(x => x.Date).ToList();
+      }
+
+      return groups;
     }
 
     public async Task Add(Group attachment)

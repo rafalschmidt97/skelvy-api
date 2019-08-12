@@ -11,35 +11,20 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldNotThrowException()
     {
-      var request = new RemoveMeetingRequestCommand(1);
+      var request = new RemoveMeetingRequestCommand(1, 1);
       var dbContext = InitializedDbContext();
       var handler = new RemoveMeetingRequestCommandHandler(
-        new GroupUsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext));
 
       await handler.Handle(request);
     }
 
     [Fact]
-    public async Task ShouldThrowExceptionWithExistingMeeting()
+    public async Task ShouldThrowExceptionWithoutSearchingRequest()
     {
-      var request = new RemoveMeetingRequestCommand(2);
+      var request = new RemoveMeetingRequestCommand(10, 1);
       var dbContext = InitializedDbContext();
       var handler = new RemoveMeetingRequestCommandHandler(
-        new GroupUsersRepository(dbContext),
-        new MeetingRequestsRepository(dbContext));
-
-      await Assert.ThrowsAsync<ConflictException>(() =>
-        handler.Handle(request));
-    }
-
-    [Fact]
-    public async Task ShouldThrowException()
-    {
-      var request = new RemoveMeetingRequestCommand(1);
-      var dbContext = DbContext();
-      var handler = new RemoveMeetingRequestCommandHandler(
-        new GroupUsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
