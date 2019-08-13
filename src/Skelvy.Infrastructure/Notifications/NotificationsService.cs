@@ -13,7 +13,7 @@ namespace Skelvy.Infrastructure.Notifications
 {
   public class NotificationsService : INotificationsService
   {
-    public static readonly HashSet<int> Connections = new HashSet<int>();
+    public static readonly List<Connection> Connections = new List<Connection>();
     private readonly IPushNotificationsService _pushService;
     private readonly ISocketNotificationsService _socketService;
     private readonly IEmailNotificationsService _emailService;
@@ -36,7 +36,7 @@ namespace Skelvy.Infrastructure.Notifications
       {
         await BroadcastActionToOffline(
           notification.UsersId,
-          async (offline) => await _pushService.BroadcastUserSentMessage(notification, offline));
+          async offline => await _pushService.BroadcastUserSentMessage(notification, offline));
       }
     }
 
@@ -46,7 +46,7 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastUserJoinedGroup(notification, offline));
+        async offline => await _pushService.BroadcastUserJoinedGroup(notification, offline));
     }
 
     public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification)
@@ -55,7 +55,7 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastUserFoundMeeting(notification, offline));
+        async offline => await _pushService.BroadcastUserFoundMeeting(notification, offline));
     }
 
     public async Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification)
@@ -64,7 +64,7 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastUserLeftMeeting(notification, offline));
+        async offline => await _pushService.BroadcastUserLeftMeeting(notification, offline));
     }
 
     public async Task BroadcastMeetingAborted(MeetingAbortedNotification notification)
@@ -82,7 +82,7 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastGroupAborted(notification, offline));
+        async offline => await _pushService.BroadcastGroupAborted(notification, offline));
     }
 
     public async Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification)
@@ -91,7 +91,7 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastMeetingRequestExpired(notification, offline));
+        async offline => await _pushService.BroadcastMeetingRequestExpired(notification, offline));
     }
 
     public async Task BroadcastMeetingExpired(MeetingExpiredNotification notification)
@@ -100,7 +100,7 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastMeetingExpired(notification, offline));
+        async offline => await _pushService.BroadcastMeetingExpired(notification, offline));
     }
 
     public async Task BroadcastUserCreated(UserCreatedNotification notification)
@@ -126,7 +126,7 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastUserSentFriendRequest(notification, offline));
+        async offline => await _pushService.BroadcastUserSentFriendRequest(notification, offline));
     }
 
     public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification)
@@ -135,57 +135,38 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastUserRespondedFriendRequest(notification, offline));
+        async offline => await _pushService.BroadcastUserRespondedFriendRequest(notification, offline));
     }
 
     public static bool IsConnected(int userId)
     {
-      return Connections.FirstOrDefault(x => x == userId) != default;
+      return Connections.Any(x => x.UserId == userId);
     }
 
     private static Task BroadcastActionToOffline(
-      IEnumerable<int> connected,
+      IEnumerable<int> usersId,
       Action<IList<int>> pushNotification)
     {
-      var connections = GetConnections(connected);
+      var offlineUsersId = usersId.Where(userId => !IsConnected(userId)).ToList();
 
-      if (connections.Offline.Any())
+      if (offlineUsersId.Any())
       {
-        pushNotification(connections.Offline);
+        pushNotification(offlineUsersId);
       }
 
       return Task.CompletedTask;
     }
-
-    private static Connections GetConnections(IEnumerable<int> usersId)
-    {
-      var connections = new Connections();
-
-      foreach (var userId in usersId)
-      {
-        if (IsConnected(userId))
-        {
-          connections.Online.Add(userId);
-        }
-        else
-        {
-          connections.Offline.Add(userId);
-        }
-      }
-
-      return connections;
-    }
   }
 
-  public class Connections
+  public class Connection
   {
-    public Connections()
+    public Connection(int userId, string connectionId)
     {
-      Online = new List<int>();
-      Offline = new List<int>();
+      UserId = userId;
+      ConnectionId = connectionId;
     }
 
-    public IList<int> Online { get; }
-    public IList<int> Offline { get; }
+    public int UserId { get; }
+    public string ConnectionId { get; }
   }
 }

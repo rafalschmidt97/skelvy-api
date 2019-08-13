@@ -17,12 +17,12 @@ namespace Skelvy.WebAPI.Hubs
 
     public override async Task OnConnectedAsync()
     {
-      await _socket.ConnectUser(UserId);
+      await _socket.ConnectUser(UserId, ConnectionId);
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-      await _socket.DisconnectUser(UserId);
+      await _socket.DisconnectUser(UserId, ConnectionId);
     }
   }
 }

@@ -39,14 +39,16 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       await _subscriber.PublishAsync("Message", message.JsonSerialize());
     }
 
-    public async Task ConnectUser(int userId)
+    public async Task ConnectUser(int userId, string connectionId)
     {
-      await _subscriber.PublishAsync("ConnectUser", userId);
+      var connection = new Connection(userId, connectionId);
+      await _subscriber.PublishAsync("ConnectUser", connection.JsonSerialize());
     }
 
-    public async Task DisconnectUser(int userId)
+    public async Task DisconnectUser(int userId, string connectionId)
     {
-      await _subscriber.PublishAsync("DisconnectUser", userId);
+      var connection = new Connection(userId, connectionId);
+      await _subscriber.PublishAsync("DisconnectUser", connection.JsonSerialize());
     }
 
     private void InitializeConnection()
@@ -56,8 +58,16 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         if (!_initialized)
         {
           _initialized = true;
-          var connections = ((string)action).JsonDeserialize<HashSet<int>>();
-          NotificationsService.Connections.UnionWith(connections);
+          var connections = ((string)action).JsonDeserialize<List<Connection>>();
+
+          foreach (var connection in connections)
+          {
+            if (!NotificationsService.Connections.Any(x =>
+              x.UserId == connection.UserId && x.ConnectionId == connection.ConnectionId))
+            {
+              NotificationsService.Connections.Add(connection);
+            }
+          }
         }
       });
 
@@ -95,20 +105,28 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
       _subscriber.Subscribe("ConnectUser", (channel, action) =>
       {
-        var userId = (int)action;
-        NotificationsService.Connections.Add(userId);
+        var connection = ((string)action).JsonDeserialize<Connection>();
+        if (!NotificationsService.Connections.Any(x =>
+          x.UserId == connection.UserId && x.ConnectionId == connection.ConnectionId))
+        {
+          NotificationsService.Connections.Add(connection);
+        }
       });
 
       _subscriber.Subscribe("DisconnectUser", (channel, action) =>
       {
-        var userId = (int)action;
-        NotificationsService.Connections.Remove(userId);
+        var connection = ((string)action).JsonDeserialize<Connection>();
+        NotificationsService.Connections.RemoveAll(x => x.UserId == connection.UserId && x.ConnectionId == connection.ConnectionId);
       });
     }
 
     private async Task SendNotificationToOnline(IEnumerable<int> usersId, string action, object data)
     {
-      var onlineUsersId = NotificationsService.Connections.Where(x => usersId.Any(y => y == x));
+      var onlineUsersId = NotificationsService.Connections
+        .Where(x => usersId.Any(y => y == x.UserId))
+        .Select(x => x.UserId)
+        .ToList();
+
       await SendNotification(onlineUsersId, action, data);
     }
 

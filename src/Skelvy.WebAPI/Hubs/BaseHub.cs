@@ -11,5 +11,6 @@ namespace Skelvy.WebAPI.Hubs
     protected BaseHub(IMediator mediator) => Mediator = mediator;
     protected IMediator Mediator { get; }
     protected int UserId => int.Parse(Context.User.FindFirst(ClaimTypes.Sid).Value);
+    protected string ConnectionId => Context.ConnectionId;
   }
 }
