@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Notifications;
+using Skelvy.Application.Meetings.Events.MeetingRequestsExpired;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Extensions;
 
@@ -36,7 +36,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
       if (isDataChanged)
       {
         await _meetingRequestsRepository.UpdateRange(requestsToRemove);
-        await _mediator.Publish(new MeetingRequestExpiredNotification(requestsToRemove.Select(x => x.Id)));
+        await _mediator.Publish(new MeetingRequestsExpiredEvent(requestsToRemove.Select(x => x.Id)));
       }
 
       return Unit.Value;
