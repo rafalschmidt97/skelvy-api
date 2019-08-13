@@ -14,7 +14,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new RemoveMeetingRequestCommand(1, 1);
       var dbContext = InitializedDbContext();
       var handler = new RemoveMeetingRequestCommandHandler(
-        new MeetingRequestsRepository(dbContext));
+        new MeetingRequestsRepository(dbContext),
+        new UsersRepository(dbContext));
 
       await handler.Handle(request);
     }
@@ -25,7 +26,21 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var request = new RemoveMeetingRequestCommand(10, 1);
       var dbContext = InitializedDbContext();
       var handler = new RemoveMeetingRequestCommandHandler(
-        new MeetingRequestsRepository(dbContext));
+        new MeetingRequestsRepository(dbContext),
+        new UsersRepository(dbContext));
+
+      await Assert.ThrowsAsync<NotFoundException>(() =>
+        handler.Handle(request));
+    }
+
+    [Fact]
+    public async Task ShouldThrowExceptionWithoutUser()
+    {
+      var request = new RemoveMeetingRequestCommand(1, 10);
+      var dbContext = InitializedDbContext();
+      var handler = new RemoveMeetingRequestCommandHandler(
+        new MeetingRequestsRepository(dbContext),
+        new UsersRepository(dbContext));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

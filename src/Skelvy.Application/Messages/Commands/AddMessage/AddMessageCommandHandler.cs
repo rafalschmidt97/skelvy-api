@@ -41,9 +41,9 @@ namespace Skelvy.Application.Messages.Commands.AddMessage
 
     public override async Task<IList<MessageDto>> Handle(AddMessageCommand request)
     {
-      var existsUser = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.UserId, request.GroupId);
+      var groupUserExists = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.UserId, request.GroupId);
 
-      if (!existsUser)
+      if (!groupUserExists)
       {
         throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {request.GroupId}) not found.");
       }
