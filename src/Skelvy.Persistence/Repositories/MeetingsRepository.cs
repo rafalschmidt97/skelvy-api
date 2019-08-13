@@ -123,7 +123,7 @@ namespace Skelvy.Persistence.Repositories
       return new List<Meeting>();
     }
 
-    public async Task<Meeting> FindOneForUserWithUsersDetails(int meetingId, int userId)
+    public async Task<Meeting> FindOneNotBelongingWithUsersDetailsByMeetingIdAndUserId(int meetingId, int userId)
     {
       return await Context.Meetings
         .Include(x => x.Group)

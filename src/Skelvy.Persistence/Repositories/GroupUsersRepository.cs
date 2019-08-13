@@ -24,7 +24,7 @@ namespace Skelvy.Persistence.Repositories
       return user != null;
     }
 
-    public async Task<bool> ExistsOneByMeetingRequest(int requestId)
+    public async Task<bool> ExistsOneByMeetingRequestId(int requestId)
     {
       var user = await Context.GroupUsers
         .Include(x => x.Group)
@@ -101,15 +101,6 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Group)
         .Where(x => x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved)
         .ToListAsync();
-    }
-
-    public async Task<bool> ExistsOneByUserId(int userId)
-    {
-      var groupUser = await Context.GroupUsers
-        .Include(x => x.Group)
-        .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsRemoved && !x.Group.IsRemoved);
-
-      return groupUser != null;
     }
 
     public async Task Add(GroupUser groupUser)

@@ -37,7 +37,8 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var meeting = await _meetingsRepository.FindOneForUserWithUsersDetails(request.MeetingId, request.UserId);
+      var meeting = await _meetingsRepository
+        .FindOneNotBelongingWithUsersDetailsByMeetingIdAndUserId(request.MeetingId, request.UserId);
 
       if (meeting == null)
       {
