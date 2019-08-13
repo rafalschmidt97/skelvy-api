@@ -43,6 +43,12 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeetingRequest
           $"while {nameof(GroupUser)} does not exists");
       }
 
+      if (meetingRequest.UserId != request.UserId)
+      {
+        throw new ForbiddenException(
+          $"Entity {nameof(MeetingRequest)}(Id = {request.RequestId}) does not belong to {nameof(User)}(Id = {request.UserId}");
+      }
+
       meetingRequest.Abort();
 
       await _requestsRepository.Update(meetingRequest);

@@ -45,5 +45,18 @@ namespace Skelvy.Application.Test.Meetings.Commands
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
     }
+
+    [Fact]
+    public async Task ShouldThrowExceptionWithNonUserRequest()
+    {
+      var request = new RemoveMeetingRequestCommand(1, 2);
+      var dbContext = InitializedDbContext();
+      var handler = new RemoveMeetingRequestCommandHandler(
+        new MeetingRequestsRepository(dbContext),
+        new UsersRepository(dbContext));
+
+      await Assert.ThrowsAsync<ForbiddenException>(() =>
+        handler.Handle(request));
+    }
   }
 }
