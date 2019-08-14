@@ -66,6 +66,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.Users)
         .ThenInclude(x => x.User)
         .ThenInclude(x => x.Profile)
+        .Include(x => x.Activity)
         .Include(x => x.Group)
         .ThenInclude(x => x.Users)
         .ThenInclude(x => x.MeetingRequest)
@@ -162,14 +163,14 @@ namespace Skelvy.Persistence.Repositories
     {
       return meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.User.Profile.IsWithinMeetingRequestAgeRange(request)) &&
              meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.MeetingRequest == null || requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
-             meeting.GetDistance(request) <= 10 &&
+             meeting.GetDistance(request) <= meeting.Activity.Distance &&
              request.Activities.Any(x => x.ActivityId == meeting.ActivityId);
     }
 
     private static bool IsMeetingClose(Meeting meeting, User user, double latitude, double longitude)
     {
       return meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.MeetingRequest == null || user.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
-             meeting.GetDistance(latitude, longitude) <= 10;
+             meeting.GetDistance(latitude, longitude) <= meeting.Activity.Distance;
     }
   }
 }
