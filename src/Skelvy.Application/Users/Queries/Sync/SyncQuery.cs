@@ -1,17 +1,17 @@
 using Skelvy.Application.Core.Bus;
 using Skelvy.Domain.Enums.Users;
 
-namespace Skelvy.Application.Meetings.Queries.FindGroups
+namespace Skelvy.Application.Users.Queries.Sync
 {
-  public class FindGroupsQuery : IQuery<GroupsModel>
+  public class SyncQuery : IQuery<SyncModel>
   {
-    public FindGroupsQuery(int userId, string language)
+    public SyncQuery(int userId, string language)
     {
       UserId = userId;
       Language = language;
     }
 
-    public FindGroupsQuery() // required for FromQuery attribute
+    public SyncQuery() // required for FromQuery attribute
     {
     }
 

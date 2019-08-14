@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Meetings.Queries.FindGroups
+namespace Skelvy.Application.Users.Queries.Sync
 {
-  public class FindGroupsQueryHandler : QueryHandler<FindGroupsQuery, GroupsModel>
+  public class SyncQueryHandler : QueryHandler<SyncQuery, SyncModel>
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IMeetingRequestsRepository _requestsRepository;
@@ -18,7 +19,7 @@ namespace Skelvy.Application.Meetings.Queries.FindGroups
     private readonly IMeetingMapper _meetingMapper;
     private readonly IMapper _mapper;
 
-    public FindGroupsQueryHandler(
+    public SyncQueryHandler(
       IUsersRepository usersRepository,
       IMeetingRequestsRepository requestsRepository,
       IMeetingsRepository meetingsRepository,
@@ -34,7 +35,7 @@ namespace Skelvy.Application.Meetings.Queries.FindGroups
       _mapper = mapper;
     }
 
-    public override async Task<GroupsModel> Handle(FindGroupsQuery request)
+    public override async Task<SyncModel> Handle(SyncQuery request)
     {
       var existsUser = await _usersRepository.ExistsOne(request.UserId);
 
@@ -47,7 +48,7 @@ namespace Skelvy.Application.Meetings.Queries.FindGroups
       var meetings = await _meetingsRepository.FindAllWithActivityByUserId(request.UserId);
       var groups = await _groupsRepository.FindAllWithUsersDetailsAndMessagesByUserId(request.UserId);
 
-      return new GroupsModel(
+      return new SyncModel(
         await _meetingMapper.Map(requests, request.Language),
         await _meetingMapper.Map(meetings, request.Language),
         _mapper.Map<IList<GroupDto>>(groups));

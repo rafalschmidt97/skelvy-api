@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Skelvy.Application.Meetings.Queries;
 
-namespace Skelvy.Application.Meetings.Queries
+namespace Skelvy.Application.Users.Queries
 {
-  public class GroupsModel
+  public class SyncModel
   {
-    public GroupsModel(IList<MeetingRequestDto> requests, IList<MeetingDto> meetings, IList<GroupDto> groups)
+    public SyncModel(IList<MeetingRequestDto> requests, IList<MeetingDto> meetings, IList<GroupDto> groups)
     {
       Requests = requests;
       Meetings = meetings;

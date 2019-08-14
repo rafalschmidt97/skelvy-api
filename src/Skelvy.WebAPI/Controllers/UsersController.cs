@@ -11,6 +11,7 @@ using Skelvy.Application.Users.Queries.CheckUserName;
 using Skelvy.Application.Users.Queries.FindSelfUser;
 using Skelvy.Application.Users.Queries.FindUser;
 using Skelvy.Application.Users.Queries.FIndUsers;
+using Skelvy.Application.Users.Queries.Sync;
 using Skelvy.Domain.Enums.Users;
 using Skelvy.WebAPI.Filters;
 
@@ -62,6 +63,13 @@ namespace Skelvy.WebAPI.Controllers
     {
       request.UserId = UserId;
       await Mediator.Send(request);
+    }
+
+    [HttpGet("self/sync")]
+    public async Task<SyncModel> FindAllSelfGroups([FromQuery] SyncQuery request)
+    {
+      request.UserId = UserId;
+      return await Mediator.Send(request);
     }
 
     [HttpDelete("{id}")]

@@ -1,19 +1,20 @@
 using System.Threading.Tasks;
 using Moq;
 using Skelvy.Application.Meetings.Queries;
-using Skelvy.Application.Meetings.Queries.FindGroups;
+using Skelvy.Application.Users.Queries;
+using Skelvy.Application.Users.Queries.Sync;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Enums.Users;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 
-namespace Skelvy.Application.Test.Meetings.Queries
+namespace Skelvy.Application.Test.Users.Queries
 {
-  public class FindGroupsQueryHandlerTest : RequestTestBase
+  public class SyncQueryHandlerTest : RequestTestBase
   {
     private readonly Mock<IMeetingMapper> _mapper;
 
-    public FindGroupsQueryHandlerTest()
+    public SyncQueryHandlerTest()
     {
       _mapper = new Mock<IMeetingMapper>();
     }
@@ -21,9 +22,9 @@ namespace Skelvy.Application.Test.Meetings.Queries
     [Fact]
     public async Task ShouldReturnMeeting()
     {
-      var request = new FindGroupsQuery(2, LanguageType.EN);
+      var request = new SyncQuery(2, LanguageType.EN);
       var dbContext = InitializedDbContext();
-      var handler = new FindGroupsQueryHandler(
+      var handler = new SyncQueryHandler(
         new UsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
@@ -33,15 +34,15 @@ namespace Skelvy.Application.Test.Meetings.Queries
 
       var result = await handler.Handle(request);
 
-      Assert.IsType<GroupsModel>(result);
+      Assert.IsType<SyncModel>(result);
     }
 
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new FindGroupsQuery(1, LanguageType.EN);
+      var request = new SyncQuery(1, LanguageType.EN);
       var dbContext = DbContext();
-      var handler = new FindGroupsQueryHandler(
+      var handler = new SyncQueryHandler(
         new UsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
