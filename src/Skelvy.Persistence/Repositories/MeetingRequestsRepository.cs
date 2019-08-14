@@ -168,14 +168,13 @@ namespace Skelvy.Persistence.Repositories
     {
       return request1.User.Profile.IsWithinMeetingRequestAgeRange(request2) &&
              requestUser.Profile.IsWithinMeetingRequestAgeRange(request1) &&
-             request1.GetDistance(request2) <= 10 &&
-             request2.Activities.Any(x => request1.Activities.Any(y => y.ActivityId == x.ActivityId));
+             request2.Activities.Any(x => request1.Activities.Any(y => y.ActivityId == x.ActivityId) && request1.GetDistance(request2) <= x.Activity.Distance);
     }
 
     private static bool AreMeetingRequestClose(MeetingRequest request, User user, double latitude, double longitude)
     {
       return user.Profile.IsWithinMeetingRequestAgeRange(request) &&
-             request.GetDistance(latitude, longitude) <= 10;
+             request.GetDistance(latitude, longitude) <= 15;
     }
   }
 }

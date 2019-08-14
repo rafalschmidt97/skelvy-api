@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Activities;
 using Skelvy.Domain.Enums.Attachments;
 using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Domain.Enums.Users;
@@ -151,8 +152,17 @@ namespace Skelvy.Persistence
 
       var activities = new[]
       {
-        new Activity("soft drinks"),
-        new Activity("alcoholic drinks"),
+        new Activity("Soft drinks", ActivityType.Party, 4, 15),
+        new Activity("Alcoholic drinks", ActivityType.Party, 4, 15),
+        new Activity("Board games", ActivityType.Party, 4, 15),
+        new Activity("Running", ActivityType.Sport, 4, 10),
+        new Activity("Cycling", ActivityType.Sport, 4, 20),
+        new Activity("Motorcycling", ActivityType.Sport, 4, 30),
+        new Activity("Football", ActivityType.Sport, 12, 15),
+        new Activity("Basketball", ActivityType.Sport, 12, 15),
+        new Activity("Volleyball", ActivityType.Sport, 12, 15),
+        new Activity("Tennis", ActivityType.Sport, 2, 15),
+        new Activity("Squash", ActivityType.Sport, 2, 15),
       };
 
       context.Activities.AddRange(activities);

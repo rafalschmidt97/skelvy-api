@@ -108,7 +108,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     public async Task ShouldThrowExceptionWithInvalidDrink()
     {
       var request = Request();
-      request.Activities[0].Id = 10;
+      request.Activities[0].Id = 100;
       var dbContext = TestDbContext();
       var handler = new SearchMeetingCommandHandler(
         new UsersRepository(dbContext),

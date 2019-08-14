@@ -10,6 +10,7 @@ namespace Skelvy.Persistence.Configurations
     {
       builder.HasIndex(e => e.Name).IsUnique();
 
+      builder.Property(e => e.Type).IsRequired().HasMaxLength(15);
       builder.Property(e => e.Name).IsRequired().HasMaxLength(50);
     }
   }
