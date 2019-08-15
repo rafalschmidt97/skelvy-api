@@ -6,14 +6,14 @@ using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 
-namespace Skelvy.Application.Meetings.Events.UserLeftMeeting
+namespace Skelvy.Application.Meetings.Events.UserLeftGroup
 {
-  public class UserLeftMeetingEventHandler : EventHandler<UserLeftMeetingEvent>
+  public class UserLeftGroupEventHandler : EventHandler<UserLeftGroupEvent>
   {
     private readonly INotificationsService _notifications;
     private readonly IGroupUsersRepository _groupUsersRepository;
 
-    public UserLeftMeetingEventHandler(
+    public UserLeftGroupEventHandler(
       INotificationsService notifications,
       IGroupUsersRepository groupUsersRepository)
     {
@@ -21,13 +21,13 @@ namespace Skelvy.Application.Meetings.Events.UserLeftMeeting
       _groupUsersRepository = groupUsersRepository;
     }
 
-    public override async Task<Unit> Handle(UserLeftMeetingEvent request)
+    public override async Task<Unit> Handle(UserLeftGroupEvent request)
     {
       var groupUsers = await _groupUsersRepository.FindAllByGroupId(request.GroupId);
       var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
 
-      await _notifications.BroadcastUserLeftMeeting(
-        new UserLeftMeetingNotification(request.UserId, request.GroupId, request.MeetingId, broadcastUsersId));
+      await _notifications.BroadcastUserLeftGroup(
+        new UserLeftGroupNotification(request.UserId, request.GroupId, broadcastUsersId));
 
       return Unit.Value;
     }

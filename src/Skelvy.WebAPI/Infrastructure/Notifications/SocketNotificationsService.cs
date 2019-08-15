@@ -137,6 +137,24 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "GROUP",
+          BodyLocKey = "USER_LEFT_GROUP",
+        },
+        NotificationType.Regular,
+        new SocketNotificationData
+        {
+          Action = "UserLeftGroup",
+          RedirectTo = "group",
+          Data = notification,
+        });
+    }
+
     public async Task BroadcastMeetingAborted(MeetingAbortedNotification notification)
     {
       await SendNotification(

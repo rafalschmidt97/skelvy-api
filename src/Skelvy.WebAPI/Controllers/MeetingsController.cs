@@ -4,6 +4,7 @@ using Skelvy.Application.Meetings.Commands.AddMeeting;
 using Skelvy.Application.Meetings.Commands.AddMeetingRequest;
 using Skelvy.Application.Meetings.Commands.ConnectMeetingRequest;
 using Skelvy.Application.Meetings.Commands.JoinMeeting;
+using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
 using Skelvy.Application.Meetings.Commands.UpdateMeeting;
 using Skelvy.Application.Meetings.Queries;
@@ -32,6 +33,12 @@ namespace Skelvy.WebAPI.Controllers
     public async Task JoinSelfMeeting(int id)
     {
       await Mediator.Send(new JoinMeetingCommand(UserId, id));
+    }
+
+    [HttpPost("{id}/leave")]
+    public async Task LeaveSelf(int id)
+    {
+      await Mediator.Send(new LeaveMeetingCommand(id, UserId));
     }
 
     [HttpPost("self/requests")]

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Events.MeetingAborted;
+using Skelvy.Application.Meetings.Events.UserLeftGroup;
 using Skelvy.Application.Meetings.Events.UserLeftMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Events.UserDisabled;
@@ -87,65 +88,60 @@ namespace Skelvy.Application.Users.Commands.DisableUser
               }
             }
 
-            var groupAborted = false;
+            var meeting = await _meetingsRepository.FindOneByGroupId(groupUserDetails.GroupId);
+            var abortedMeeting = false;
 
-            if (groupUsers.Count == 2)
+            if (meeting != null)
             {
-              var meeting = await _meetingsRepository.FindOneByGroupId(groupUserDetails.GroupId);
-
-              if (meeting != null)
+              if (groupUsers.Count == 2 && !meeting.IsPrivate)
               {
                 meeting.Abort();
                 await _meetingsRepository.Update(meeting);
 
-                if (!meeting.IsPrivate)
+                var anotherUserDetails = groupUsers.First(x => x.UserId != groupUserDetails.UserId);
+                anotherUserDetails.Abort();
+                await _groupUsersRepository.Update(anotherUserDetails);
+
+                if (anotherUserDetails.MeetingRequestId != null)
                 {
-                  var anotherUserDetails = groupUsers.First(x => x.UserId != groupUserDetails.UserId);
-                  anotherUserDetails.Abort();
-                  await _groupUsersRepository.Update(anotherUserDetails);
+                  var anotherMeetingRequest = await _meetingRequestsRepository.FindOne(anotherUserDetails.MeetingRequestId.Value);
 
-                  if (anotherUserDetails.MeetingRequestId != null)
+                  if (anotherMeetingRequest != null)
                   {
-                    var anotherMeetingRequest = await _meetingRequestsRepository.FindOne(anotherUserDetails.MeetingRequestId.Value);
-
-                    if (anotherMeetingRequest != null)
-                    {
-                      anotherMeetingRequest.MarkAsSearching();
-                      await _meetingRequestsRepository.Update(anotherMeetingRequest);
-                    }
+                    anotherMeetingRequest.MarkAsSearching();
+                    await _meetingRequestsRepository.Update(anotherMeetingRequest);
                   }
-
-                  var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
-
-                  if (group != null)
-                  {
-                    group.Abort();
-                    await _groupsRepository.Update(group);
-                  }
-
-                  groupAborted = true;
                 }
+
+                var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
+
+                if (group != null)
+                {
+                  group.Abort();
+                  await _groupsRepository.Update(group);
+                }
+
+                abortedMeeting = true;
               }
             }
 
             transaction.Commit();
 
-            if (!groupAborted)
+            if (meeting != null)
             {
-              await _mediator.Publish(new UserLeftMeetingEvent(groupUserDetails.UserId, groupUserDetails.GroupId));
-            }
-            else
-            {
-              if (groupUserDetails.ModifiedAt != null)
+              if (!abortedMeeting)
+              {
+                await _mediator.Publish(new UserLeftMeetingEvent(groupUserDetails.UserId, groupUserDetails.GroupId, meeting.Id));
+              }
+              else if (groupUserDetails.ModifiedAt != null)
               {
                 await _mediator.Publish(
                   new MeetingAbortedEvent(groupUserDetails.UserId, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
               }
-              else
-              {
-                throw new InternalServerErrorException(
-                  $"Entity {nameof(GroupUser)}(UserId = {groupUserDetails.UserId}) has modified date null after leaving");
-              }
+            }
+            else
+            {
+              await _mediator.Publish(new UserLeftGroupEvent(groupUserDetails.UserId, groupUserDetails.GroupId));
             }
           }
         }

@@ -2,8 +2,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Events.MeetingAborted;
-using Skelvy.Application.Meetings.Events.UserLeftMeeting;
+using Skelvy.Application.Meetings.Events.GroupAborted;
+using Skelvy.Application.Meetings.Events.UserLeftGroup;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -57,63 +57,29 @@ namespace Skelvy.Application.Meetings.Commands.LeaveGroup
 
         var groupAborted = false;
 
-        if (groupUsers.Count == 2)
+        if (groupUsers.Count == 1)
         {
-          var meeting = await _meetingsRepository.FindOneByGroupId(groupUserDetails.GroupId);
+          var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
 
-          if (meeting != null)
+          if (group != null)
           {
-            meeting.Abort();
-            await _meetingsRepository.Update(meeting);
-
-            if (!meeting.IsPrivate)
-            {
-              var anotherUserDetails = groupUsers.First(x => x.UserId != groupUserDetails.UserId);
-              anotherUserDetails.Abort();
-              await _groupUsersRepository.Update(anotherUserDetails);
-
-              if (anotherUserDetails.MeetingRequestId != null)
-              {
-                var anotherMeetingRequest = await _meetingRequestsRepository.FindOne(anotherUserDetails.MeetingRequestId.Value);
-
-                if (anotherMeetingRequest != null)
-                {
-                  anotherMeetingRequest.MarkAsSearching();
-                  await _meetingRequestsRepository.Update(anotherMeetingRequest);
-                }
-              }
-
-              var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
-
-              if (group != null)
-              {
-                group.Abort();
-                await _groupsRepository.Update(group);
-              }
-
-              groupAborted = true;
-            }
+            group.Abort();
+            await _groupsRepository.Update(group);
           }
+
+          groupAborted = true;
         }
 
         transaction.Commit();
 
         if (!groupAborted)
         {
-          await _mediator.Publish(new UserLeftMeetingEvent(groupUserDetails.UserId, groupUserDetails.GroupId));
+          await _mediator.Publish(new UserLeftGroupEvent(groupUserDetails.UserId, groupUserDetails.GroupId));
         }
-        else
+        else if (groupUserDetails.ModifiedAt != null)
         {
-          if (groupUserDetails.ModifiedAt != null)
-          {
-            await _mediator.Publish(
-              new MeetingAbortedEvent(groupUserDetails.UserId, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
-          }
-          else
-          {
-            throw new InternalServerErrorException(
-              $"Entity {nameof(GroupUser)}(UserId = {groupUserDetails.UserId}) has modified date null after leaving");
-          }
+          await _mediator.Publish(
+            new GroupAbortedEvent(groupUserDetails.UserId, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
         }
       }
 
@@ -127,6 +93,13 @@ namespace Skelvy.Application.Meetings.Commands.LeaveGroup
       if (groupUser == null)
       {
         throw new NotFoundException(nameof(GroupUser), request.UserId);
+      }
+
+      var existsMeeting = await _meetingsRepository.ExistsOneByGroupId(request.GroupId);
+
+      if (existsMeeting)
+      {
+        throw new ConflictException($"Entity {nameof(GroupUser)}(UserId = {request.UserId} is associated with meeting.");
       }
     }
   }

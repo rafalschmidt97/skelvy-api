@@ -114,6 +114,23 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification, IList<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "GROUP",
+          BodyLocKey = "USER_LEFT_GROUP",
+        },
+        new PushNotificationData
+        {
+          Action = "UserLeftGroup",
+          RedirectTo = "group",
+          Data = new { notification.UserId },
+        });
+    }
+
     public async Task BroadcastMeetingAborted(MeetingAbortedNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
