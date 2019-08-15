@@ -59,17 +59,6 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndActivities()
-    {
-      return await Context.MeetingRequests
-        .Include(x => x.User)
-        .ThenInclude(x => x.Profile)
-        .Include(x => x.Activities)
-        .ThenInclude(x => x.Activity)
-        .Where(x => !x.IsRemoved && x.Status == MeetingRequestStatusType.Searching)
-        .ToListAsync();
-    }
-
     public async Task<bool> ExistsOne(int requestId)
     {
       return await Context.MeetingRequests
@@ -80,23 +69,6 @@ namespace Skelvy.Persistence.Repositories
     {
       return await Context.MeetingRequests
         .AnyAsync(x => x.Id == requestId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Found);
-    }
-
-    public async Task<MeetingRequest> FindOneMatchingByUserAndRequest(User user, MeetingRequest request)
-    {
-      var requests = await Context.MeetingRequests
-        .Include(x => x.User)
-        .ThenInclude(x => x.Profile)
-        .Include(x => x.Activities)
-        .ThenInclude(x => x.Activity)
-        .Where(x => !x.IsRemoved &&
-                    x.Id != request.Id &&
-                    x.Status == MeetingRequestStatusType.Searching &&
-                    x.MinDate <= request.MaxDate &&
-                    x.MaxDate >= request.MinDate)
-        .ToListAsync();
-
-      return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
     }
 
     public async Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
@@ -168,13 +140,6 @@ namespace Skelvy.Persistence.Repositories
     {
       Context.MeetingRequests.RemoveRange(requests);
       await SaveChanges();
-    }
-
-    private static bool AreRequestsMatch(MeetingRequest request1, MeetingRequest request2, User requestUser)
-    {
-      return request1.User.Profile.IsWithinMeetingRequestAgeRange(request2) &&
-             requestUser.Profile.IsWithinMeetingRequestAgeRange(request1) &&
-             request2.Activities.Any(x => request1.Activities.Any(y => y.ActivityId == x.ActivityId) && request1.GetDistance(request2) <= x.Activity.Distance);
     }
 
     private static bool AreMeetingRequestClose(MeetingRequest request, User user, double latitude, double longitude)

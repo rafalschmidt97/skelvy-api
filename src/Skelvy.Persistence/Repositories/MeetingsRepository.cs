@@ -59,28 +59,6 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<Meeting> FindOneMatchingUserRequest(User user, MeetingRequest request)
-    {
-      var meetings = await Context.Meetings
-        .Include(x => x.Group)
-        .ThenInclude(x => x.Users)
-        .ThenInclude(x => x.User)
-        .ThenInclude(x => x.Profile)
-        .Include(x => x.Activity)
-        .Include(x => x.Group)
-        .ThenInclude(x => x.Users)
-        .ThenInclude(x => x.MeetingRequest)
-        .ThenInclude(x => x.Activities)
-        .ThenInclude(x => x.Activity)
-        .Where(x => !x.IsRemoved &&
-                    x.Date >= request.MinDate &&
-                    x.Date <= request.MaxDate &&
-                    x.Group.Users.Count(y => !y.IsRemoved) < 4)
-        .ToListAsync();
-
-      return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
-    }
-
     public async Task<IList<Meeting>> FindAllCloseToPreferencesWithUsersDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
     {
       var user = await Context.Users
@@ -97,7 +75,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.MeetingRequest)
         .Include(x => x.Activity)
         .Where(x => !x.IsRemoved &&
-                    x.Group.Users.Count(y => !y.IsRemoved) < 4)
+                    x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size)
         .ToListAsync();
 
       if (meetings.Any())
@@ -157,14 +135,6 @@ namespace Skelvy.Persistence.Repositories
     {
       Context.Meetings.UpdateRange(meetings);
       await SaveChanges();
-    }
-
-    private static bool IsMeetingMatchRequest(Meeting meeting, MeetingRequest request, User requestUser)
-    {
-      return meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.User.Profile.IsWithinMeetingRequestAgeRange(request)) &&
-             meeting.Group.Users.Where(x => !x.IsRemoved).All(x => x.MeetingRequest == null || requestUser.Profile.IsWithinMeetingRequestAgeRange(x.MeetingRequest)) &&
-             meeting.GetDistance(request) <= meeting.Activity.Distance &&
-             request.Activities.Any(x => x.ActivityId == meeting.ActivityId);
     }
 
     private static bool IsMeetingClose(Meeting meeting, User user, double latitude, double longitude)
