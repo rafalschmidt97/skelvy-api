@@ -32,9 +32,11 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("self/requests/{id}/connect")]
-    public async Task ConnectSelfMeetingRequest(int id)
+    public async Task ConnectSelfMeetingRequest(int id, ConnectMeetingRequestCommand request)
     {
-      await Mediator.Send(new ConnectMeetingRequestCommand(UserId, id));
+      request.UserId = UserId;
+      request.MeetingRequestId = id;
+      await Mediator.Send(request);
     }
 
     [HttpDelete("self/requests/{id}")]

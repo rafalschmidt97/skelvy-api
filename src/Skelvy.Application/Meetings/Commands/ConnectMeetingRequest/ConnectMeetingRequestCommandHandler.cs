@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -41,26 +42,13 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
 
     public override async Task<Unit> Handle(ConnectMeetingRequestCommand request)
     {
-      var user = await _usersRepository.FindOneWithDetails(request.UserId);
-
-      if (user == null)
-      {
-        throw new NotFoundException(nameof(User), request.UserId);
-      }
-
-      var connectingMeetingRequest =
-        await _meetingRequestsRepository.FindOneSearchingWithUserDetailsByRequestId(request.MeetingRequestId);
-
-      if (connectingMeetingRequest == null)
-      {
-        throw new NotFoundException(nameof(MeetingRequest), request.MeetingRequestId);
-      }
+      var (user, connectingMeetingRequest) = await ValidateData(request);
 
       using (var transaction = _groupUsersRepository.BeginTransaction())
       {
         try
         {
-          var meeting = await CreateNewMeeting(user, connectingMeetingRequest);
+          var meeting = await CreateNewMeeting(user, connectingMeetingRequest, request);
           transaction.Commit();
           await _mediator.Publish(new UserConnectedToMeetingEvent(connectingMeetingRequest.UserId, meeting.Id));
         }
@@ -75,30 +63,61 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       return Unit.Value;
     }
 
-    private async Task<Meeting> CreateNewMeeting(User user, MeetingRequest request)
+    private async Task<(User, MeetingRequest)> ValidateData(ConnectMeetingRequestCommand request)
+    {
+      var user = await _usersRepository.FindOneWithDetails(request.UserId);
+
+      if (user == null)
+      {
+        throw new NotFoundException(nameof(User), request.UserId);
+      }
+
+      var connectingMeetingRequest =
+        await _meetingRequestsRepository
+          .FindOneNonSelfSearchingWithUserDetailsAndActivitiesByRequestIdAndUserId(request.MeetingRequestId, request.UserId);
+
+      if (connectingMeetingRequest == null)
+      {
+        throw new NotFoundException(nameof(MeetingRequest), request.MeetingRequestId);
+      }
+
+      if (connectingMeetingRequest.Activities.All(x => x.ActivityId != request.ActivityId))
+      {
+        throw new BadRequestException("Activity must be selected from request preferences");
+      }
+
+      if (request.Date < connectingMeetingRequest.MinDate || request.Date > connectingMeetingRequest.MaxDate)
+      {
+        throw new BadRequestException("Date must be between request preferences");
+      }
+
+      return (user, connectingMeetingRequest);
+    }
+
+    private async Task<Meeting> CreateNewMeeting(User user, MeetingRequest meetingRequest, ConnectMeetingRequestCommand request)
     {
       var group = new Group();
       await _groupsRepository.Add(group);
 
       var meeting = new Meeting(
-        request.MinDate,
-        request.Latitude,
-        request.Longitude,
+        request.Date,
+        meetingRequest.Latitude,
+        meetingRequest.Longitude,
         group.Id,
-        request.Activities[0].ActivityId);
+        request.ActivityId);
 
       await _meetingsRepository.Add(meeting);
 
       var groupUsers = new[]
       {
         new GroupUser(group.Id, user.Id),
-        new GroupUser(group.Id, request.UserId, request.Id),
+        new GroupUser(group.Id, meetingRequest.UserId, meetingRequest.Id),
       };
 
       await _groupUsersRepository.AddRange(groupUsers);
 
-      request.MarkAsFound();
-      await _meetingRequestsRepository.Update(request);
+      meetingRequest.MarkAsFound();
+      await _meetingRequestsRepository.Update(meetingRequest);
 
       return meeting;
     }
