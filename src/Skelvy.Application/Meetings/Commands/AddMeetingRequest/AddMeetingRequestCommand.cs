@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Meetings.Queries;
 
 namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
 {
-  public class AddMeetingRequestCommand : ICommand
+  public class AddMeetingRequestCommand : ICommandData<MeetingRequestDto>
   {
     public AddMeetingRequestCommand(
       int userId,

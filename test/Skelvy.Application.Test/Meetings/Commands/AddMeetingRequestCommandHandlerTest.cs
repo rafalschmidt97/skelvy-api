@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Commands.AddMeetingRequest;
+using Skelvy.Application.Meetings.Queries;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 using Skelvy.Persistence;
@@ -21,9 +22,12 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new ActivitiesRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext));
+        new MeetingRequestActivityRepository(dbContext),
+        Mapper());
 
-      await handler.Handle(request);
+      var result = await handler.Handle(request);
+
+      Assert.IsType<MeetingRequestDto>(result);
     }
 
     [Fact]
@@ -36,7 +40,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new ActivitiesRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext));
+        new MeetingRequestActivityRepository(dbContext),
+        Mapper());
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
     }
@@ -51,7 +56,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new ActivitiesRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext));
+        new MeetingRequestActivityRepository(dbContext),
+        Mapper());
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
     }
@@ -65,7 +71,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new UsersRepository(dbContext),
         new ActivitiesRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
-        new MeetingRequestActivityRepository(dbContext));
+        new MeetingRequestActivityRepository(dbContext),
+        Mapper());
       await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));
     }

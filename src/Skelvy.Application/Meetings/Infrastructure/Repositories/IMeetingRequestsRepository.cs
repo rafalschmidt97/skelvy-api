@@ -8,6 +8,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
 {
   public interface IMeetingRequestsRepository : IBaseRepository
   {
+    Task<MeetingRequest> FindOne(int id);
     Task<MeetingRequest> FindOneWithExpiredById(int id);
     Task<MeetingRequest> FindOneSearchingByRequestId(int requestId);
     Task<int> CountSearchingByUserId(int userId);
@@ -16,7 +17,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<IList<MeetingRequest>> FindAllSearchingAfterOrEqualMaxDateByDate(DateTimeOffset maxDate);
     Task<bool> ExistsOne(int requestId);
     Task<bool> ExistsOneFoundByRequestId(int requestId);
-    Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude);
+    Task<IList<MeetingRequest>> FindAllCloseWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude);
     Task<MeetingRequest> FindOneNonSelfSearchingWithUserDetailsAndActivitiesByRequestIdAndUserId(int requestId, int userId);
     Task Add(MeetingRequest request);
     Task Update(MeetingRequest request);

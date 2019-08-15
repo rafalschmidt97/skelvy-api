@@ -38,7 +38,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       }
 
       var meeting = await _meetingsRepository
-        .FindOneNotBelongingByMeetingIdAndUserId(request.MeetingId, request.UserId);
+        .FindOneNonHiddenNotBelongingByMeetingIdAndUserId(request.MeetingId, request.UserId);
 
       if (meeting == null)
       {

@@ -22,6 +22,12 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == id && !x.IsRemoved);
     }
 
+    public async Task<bool> ExistsOneByGroupId(int groupId)
+    {
+      return await Context.Meetings
+        .AnyAsync(x => x.GroupId == groupId && !x.IsRemoved);
+    }
+
     public async Task<Meeting> FindOne(int id)
     {
       return await Context.Meetings
@@ -59,7 +65,7 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<IList<Meeting>> FindAllCloseToPreferencesWithUsersDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
+    public async Task<IList<Meeting>> FindAllNonHiddenCloseWithUsersDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
     {
       var user = await Context.Users
         .Include(x => x.Profile)
@@ -75,6 +81,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.MeetingRequest)
         .Include(x => x.Activity)
         .Where(x => !x.IsRemoved &&
+                    !x.IsHidden &&
                     x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size)
         .ToListAsync();
 
@@ -102,12 +109,13 @@ namespace Skelvy.Persistence.Repositories
       return new List<Meeting>();
     }
 
-    public async Task<Meeting> FindOneNotBelongingByMeetingIdAndUserId(int meetingId, int userId)
+    public async Task<Meeting> FindOneNonHiddenNotBelongingByMeetingIdAndUserId(int meetingId, int userId)
     {
       return await Context.Meetings
         .Include(x => x.Group)
         .ThenInclude(x => x.Users)
         .FirstOrDefaultAsync(x => x.Id == meetingId &&
+                                  !x.IsHidden &&
                                   !x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
                                   !x.IsRemoved);
     }

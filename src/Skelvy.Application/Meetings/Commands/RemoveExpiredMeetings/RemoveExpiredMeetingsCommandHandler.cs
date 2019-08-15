@@ -39,8 +39,8 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
 
         if (meetingsToRemove.Any())
         {
-          var meetingsId = meetingsToRemove.Select(x => x.Id);
-          var groupUsers = await _groupUsersRepository.FindAllWithRequestByGroupsId(meetingsId);
+          var groupsId = meetingsToRemove.Select(x => x.GroupId);
+          var groupUsers = await _groupUsersRepository.FindAllWithRequestByGroupsId(groupsId);
 
           meetingsToRemove.ForEach(x => x.Expire());
           var groupUsersRequests = groupUsers.Select(x => x.MeetingRequest).Where(x => x != null).ToList();

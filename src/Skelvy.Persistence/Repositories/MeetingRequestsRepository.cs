@@ -17,6 +17,12 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
+    public async Task<MeetingRequest> FindOne(int id)
+    {
+      return await Context.MeetingRequests
+        .FirstOrDefaultAsync(x => x.Id == id && !x.IsRemoved);
+    }
+
     public async Task<MeetingRequest> FindOneWithExpiredById(int id)
     {
       return await Context.MeetingRequests.FirstOrDefaultAsync(x => x.Id == id);
@@ -71,7 +77,7 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == requestId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Found);
     }
 
-    public async Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
+    public async Task<IList<MeetingRequest>> FindAllCloseWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
     {
       var user = await Context.Users
         .Include(x => x.Profile)

@@ -15,6 +15,8 @@ namespace Skelvy.Persistence.Configurations
       builder.HasIndex(e => e.Date);
       builder.HasIndex(e => e.Latitude);
       builder.HasIndex(e => e.Longitude);
+      builder.HasIndex(e => e.IsPrivate);
+      builder.HasIndex(e => e.IsHidden);
 
       builder.Property(e => e.RemovedReason).HasMaxLength(15);
       builder.Property(e => e.ModifiedAt).IsConcurrencyToken();

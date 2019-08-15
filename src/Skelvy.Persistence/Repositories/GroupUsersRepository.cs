@@ -56,7 +56,7 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<IList<GroupUser>> FindAllWithRequestByGroupId(int groupId)
+    public async Task<IList<GroupUser>> FindAllWithGroupAndRequestByGroupId(int groupId)
     {
       return await Context.GroupUsers
         .Include(x => x.Group)
@@ -92,14 +92,6 @@ namespace Skelvy.Persistence.Repositories
     {
       return await Context.GroupUsers
         .Where(x => x.GroupId == groupId && !x.IsRemoved)
-        .ToListAsync();
-    }
-
-    public async Task<IList<GroupUser>> FindAllWithGroupByGroupId(int groupId)
-    {
-      return await Context.GroupUsers
-        .Include(x => x.Group)
-        .Where(x => x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved)
         .ToListAsync();
     }
 
