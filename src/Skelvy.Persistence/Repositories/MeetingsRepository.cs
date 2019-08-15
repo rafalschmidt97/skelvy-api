@@ -102,18 +102,11 @@ namespace Skelvy.Persistence.Repositories
       return new List<Meeting>();
     }
 
-    public async Task<Meeting> FindOneNotBelongingWithUsersDetailsByMeetingIdAndUserId(int meetingId, int userId)
+    public async Task<Meeting> FindOneNotBelongingByMeetingIdAndUserId(int meetingId, int userId)
     {
       return await Context.Meetings
         .Include(x => x.Group)
         .ThenInclude(x => x.Users)
-        .ThenInclude(x => x.User)
-        .ThenInclude(x => x.Profile)
-        .Include(x => x.Group)
-        .ThenInclude(x => x.Users)
-        .ThenInclude(x => x.MeetingRequest)
-        .ThenInclude(x => x.Activities)
-        .ThenInclude(x => x.Activity)
         .FirstOrDefaultAsync(x => x.Id == meetingId &&
                                   !x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
                                   !x.IsRemoved);
