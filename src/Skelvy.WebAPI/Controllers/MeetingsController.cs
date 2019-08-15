@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.AddMeeting;
 using Skelvy.Application.Meetings.Commands.AddMeetingRequest;
+using Skelvy.Application.Meetings.Commands.AddUserToMeeting;
 using Skelvy.Application.Meetings.Commands.ConnectMeetingRequest;
 using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
@@ -33,6 +34,14 @@ namespace Skelvy.WebAPI.Controllers
     public async Task JoinSelfMeeting(int id)
     {
       await Mediator.Send(new JoinMeetingCommand(UserId, id));
+    }
+
+    [HttpPost("{id}/add")]
+    public async Task AddSelfUserToMeeting(int id, AddUserToMeetingCommand request)
+    {
+      request.UserId = UserId;
+      request.MeetingId = id;
+      await Mediator.Send(request);
     }
 
     [HttpPost("{id}/leave")]

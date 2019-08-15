@@ -109,7 +109,7 @@ namespace Skelvy.Persistence.Repositories
       return new List<Meeting>();
     }
 
-    public async Task<Meeting> FindOneNonHiddenNonBelongingNonFullByMeetingIdAndUserId(int meetingId, int userId)
+    public async Task<Meeting> FindOneNonHiddenAndNonBelongingAndNonFullByMeetingIdAndUserId(int meetingId, int userId)
     {
       return await Context.Meetings
         .Include(x => x.Group)
@@ -119,6 +119,19 @@ namespace Skelvy.Persistence.Repositories
                                   !x.IsHidden &&
                                   x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size &&
                                   !x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
+                                  !x.IsRemoved);
+    }
+
+    public async Task<Meeting> FindOneUserBelongingAndAddedUserNonBelongingAndNonFullByMeetingIdAndUserId(int meetingId, int userId, int addedUserId)
+    {
+      return await Context.Meetings
+        .Include(x => x.Group)
+        .ThenInclude(x => x.Users)
+        .Include(x => x.Activity)
+        .FirstOrDefaultAsync(x => x.Id == meetingId &&
+                                  x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size &&
+                                  x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
+                                  !x.Group.Users.Any(y => y.UserId == addedUserId && !y.IsRemoved) &&
                                   !x.IsRemoved);
     }
 
