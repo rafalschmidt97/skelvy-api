@@ -9,6 +9,25 @@ namespace Skelvy.Domain.Test.Entities
   public class MeetingTest
   {
     [Fact]
+    public void ShouldBeUpdated()
+    {
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
+      entity.Update(DateTimeOffset.UtcNow.AddDays(1), 2, 2, true, true);
+
+      Assert.True(entity.IsPrivate);
+      Assert.NotNull(entity.ModifiedAt);
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionWhileUpdatingWithInvalidDate()
+    {
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
+
+      Assert.Throws<DomainException>(() =>
+        entity.Update(DateTimeOffset.UtcNow.AddDays(-1), 2, 2, true, true));
+    }
+
+    [Fact]
     public void ShouldBeAborted()
     {
       var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);

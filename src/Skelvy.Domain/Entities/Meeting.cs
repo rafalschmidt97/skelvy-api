@@ -41,6 +41,20 @@ namespace Skelvy.Domain.Entities
     public Group Group { get; set; }
     public Activity Activity { get; set; }
 
+    public void Update(DateTimeOffset date, double latitude, double longitude, bool isPrivate, bool isHidden)
+    {
+      Date = date >= DateTimeOffset.UtcNow.AddDays(-1)
+        ? date
+        : throw new DomainException("'Date' must show the future.");
+
+      Latitude = latitude;
+      Longitude = longitude;
+      IsPrivate = isPrivate;
+      IsHidden = isHidden;
+
+      ModifiedAt = DateTimeOffset.UtcNow;
+    }
+
     public void Abort()
     {
       if (!IsRemoved)

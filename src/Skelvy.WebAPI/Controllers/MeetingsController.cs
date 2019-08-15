@@ -5,6 +5,7 @@ using Skelvy.Application.Meetings.Commands.AddMeetingRequest;
 using Skelvy.Application.Meetings.Commands.ConnectMeetingRequest;
 using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
+using Skelvy.Application.Meetings.Commands.UpdateMeeting;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
 
@@ -15,6 +16,14 @@ namespace Skelvy.WebAPI.Controllers
     [HttpPost]
     public async Task AddSelfMeeting(AddMeetingCommand request)
     {
+      request.UserId = UserId;
+      await Mediator.Send(request);
+    }
+
+    [HttpPost("{id}")]
+    public async Task UpdateSelfMeeting(int id, UpdateMeetingCommand request)
+    {
+      request.MeetingId = id;
       request.UserId = UserId;
       await Mediator.Send(request);
     }
