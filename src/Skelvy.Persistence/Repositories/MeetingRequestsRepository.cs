@@ -30,6 +30,12 @@ namespace Skelvy.Persistence.Repositories
                                   x.Status == MeetingRequestStatusType.Searching);
     }
 
+    public async Task<int> CountSearchingByUserId(int userId)
+    {
+      return await Context.MeetingRequests
+        .CountAsync(x => x.UserId == userId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Searching);
+    }
+
     public async Task<IList<MeetingRequest>> FindAllSearchingWithActivitiesByUserId(int userId)
     {
       return await Context.MeetingRequests
