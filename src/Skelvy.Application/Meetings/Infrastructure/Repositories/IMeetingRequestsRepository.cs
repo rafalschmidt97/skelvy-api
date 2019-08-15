@@ -10,15 +10,14 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   {
     Task<MeetingRequest> FindOneWithExpiredById(int id);
     Task<MeetingRequest> FindOneSearchingByRequestId(int requestId);
+    Task<int> CountSearchingByUserId(int userId);
     Task<IList<MeetingRequest>> FindAllSearchingWithActivitiesByUserId(int userId);
     Task<IList<MeetingRequest>> FindAllWithRemovedByUsersId(IEnumerable<int> usersId);
-    Task<IList<MeetingRequest>> FindAllSearchingAfterOrEqualMaxDate(DateTimeOffset maxDate);
-    Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndActivities();
+    Task<IList<MeetingRequest>> FindAllSearchingAfterOrEqualMaxDateByDate(DateTimeOffset maxDate);
     Task<bool> ExistsOne(int requestId);
     Task<bool> ExistsOneFoundByRequestId(int requestId);
-    Task<MeetingRequest> FindOneMatchingUserRequest(User user, MeetingRequest request);
-    Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetails(int userId, double latitude, double longitude);
-    Task<MeetingRequest> FindOneSearchingWithUserDetailsByRequestId(int requestId);
+    Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude);
+    Task<MeetingRequest> FindOneNonSelfSearchingWithUserDetailsAndActivitiesByRequestIdAndUserId(int requestId, int userId);
     Task Add(MeetingRequest request);
     Task Update(MeetingRequest request);
     Task UpdateRange(IList<MeetingRequest> requests);

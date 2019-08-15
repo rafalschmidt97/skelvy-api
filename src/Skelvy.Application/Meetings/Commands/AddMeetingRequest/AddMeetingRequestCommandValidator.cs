@@ -1,11 +1,11 @@
 using System;
 using FluentValidation;
 
-namespace Skelvy.Application.Meetings.Commands.SearchMeeting
+namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
 {
-  public class SearchMeetingCommandValidator : AbstractValidator<SearchMeetingCommand>
+  public class AddMeetingRequestCommandValidator : AbstractValidator<AddMeetingRequestCommand>
   {
-    public SearchMeetingCommandValidator()
+    public AddMeetingRequestCommandValidator()
     {
       RuleFor(x => x.UserId).NotEmpty();
 
@@ -32,13 +32,13 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
       RuleFor(x => x.Longitude).NotEmpty();
 
       RuleFor(x => x.Activities).NotEmpty();
-      RuleForEach(x => x.Activities).SetValidator(new SearchMeetingActivityValidator());
+      RuleForEach(x => x.Activities).SetValidator(new AddMeetingRequestActivityValidator());
     }
   }
 
-  public class SearchMeetingActivityValidator : AbstractValidator<CreateMeetingRequestActivity>
+  public class AddMeetingRequestActivityValidator : AbstractValidator<AddMeetingRequestActivity>
   {
-    public SearchMeetingActivityValidator()
+    public AddMeetingRequestActivityValidator()
     {
       RuleFor(x => x.Id).NotEmpty();
     }

@@ -57,7 +57,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
 
       using (var transaction = _usersRepository.BeginTransaction())
       {
-        var usersToRemove = await _usersRepository.FindAllRemovedAfterForgottenAt(today);
+        var usersToRemove = await _usersRepository.FindAllRemovedAfterForgottenAtByDate(today);
         var usersId = usersToRemove.Select(x => x.Id).ToList();
 
         var messagesToRemove = await _messagesRepository.FindAllByUsersId(usersId);

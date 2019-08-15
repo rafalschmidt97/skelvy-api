@@ -30,6 +30,12 @@ namespace Skelvy.Persistence.Repositories
                                   x.Status == MeetingRequestStatusType.Searching);
     }
 
+    public async Task<int> CountSearchingByUserId(int userId)
+    {
+      return await Context.MeetingRequests
+        .CountAsync(x => x.UserId == userId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Searching);
+    }
+
     public async Task<IList<MeetingRequest>> FindAllSearchingWithActivitiesByUserId(int userId)
     {
       return await Context.MeetingRequests
@@ -46,21 +52,10 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<IList<MeetingRequest>> FindAllSearchingAfterOrEqualMaxDate(DateTimeOffset maxDate)
+    public async Task<IList<MeetingRequest>> FindAllSearchingAfterOrEqualMaxDateByDate(DateTimeOffset maxDate)
     {
       return await Context.MeetingRequests
         .Where(x => !x.IsRemoved && x.MaxDate <= maxDate && x.Status == MeetingRequestStatusType.Searching)
-        .ToListAsync();
-    }
-
-    public async Task<IList<MeetingRequest>> FindAllSearchingWithUsersDetailsAndActivities()
-    {
-      return await Context.MeetingRequests
-        .Include(x => x.User)
-        .ThenInclude(x => x.Profile)
-        .Include(x => x.Activities)
-        .ThenInclude(x => x.Activity)
-        .Where(x => !x.IsRemoved && x.Status == MeetingRequestStatusType.Searching)
         .ToListAsync();
     }
 
@@ -76,24 +71,7 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == requestId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Found);
     }
 
-    public async Task<MeetingRequest> FindOneMatchingUserRequest(User user, MeetingRequest request)
-    {
-      var requests = await Context.MeetingRequests
-        .Include(x => x.User)
-        .ThenInclude(x => x.Profile)
-        .Include(x => x.Activities)
-        .ThenInclude(x => x.Activity)
-        .Where(x => !x.IsRemoved &&
-                    x.Id != request.Id &&
-                    x.Status == MeetingRequestStatusType.Searching &&
-                    x.MinDate <= request.MaxDate &&
-                    x.MaxDate >= request.MinDate)
-        .ToListAsync();
-
-      return requests.FirstOrDefault(x => AreRequestsMatch(x, request, user));
-    }
-
-    public async Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetails(int userId, double latitude, double longitude)
+    public async Task<IList<MeetingRequest>> FindAllCloseToPreferencesWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
     {
       var user = await Context.Users
         .Include(x => x.Profile)
@@ -128,7 +106,7 @@ namespace Skelvy.Persistence.Repositories
       return new List<MeetingRequest>();
     }
 
-    public async Task<MeetingRequest> FindOneSearchingWithUserDetailsByRequestId(int requestId)
+    public async Task<MeetingRequest> FindOneNonSelfSearchingWithUserDetailsAndActivitiesByRequestIdAndUserId(int requestId, int userId)
     {
       return await Context.MeetingRequests
         .Include(x => x.User)
@@ -136,6 +114,7 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Activities)
         .ThenInclude(x => x.Activity)
         .FirstOrDefaultAsync(x => x.Id == requestId &&
+                                  x.UserId != userId &&
                                   !x.IsRemoved &&
                                   x.Status == MeetingRequestStatusType.Searching);
     }
@@ -162,13 +141,6 @@ namespace Skelvy.Persistence.Repositories
     {
       Context.MeetingRequests.RemoveRange(requests);
       await SaveChanges();
-    }
-
-    private static bool AreRequestsMatch(MeetingRequest request1, MeetingRequest request2, User requestUser)
-    {
-      return request1.User.Profile.IsWithinMeetingRequestAgeRange(request2) &&
-             requestUser.Profile.IsWithinMeetingRequestAgeRange(request1) &&
-             request2.Activities.Any(x => request1.Activities.Any(y => y.ActivityId == x.ActivityId) && request1.GetDistance(request2) <= x.Activity.Distance);
     }
 
     private static bool AreMeetingRequestClose(MeetingRequest request, User user, double latitude, double longitude)

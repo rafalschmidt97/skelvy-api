@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Commands.SearchMeeting
+namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
 {
-  public class SearchMeetingCommand : ICommand
+  public class AddMeetingRequestCommand : ICommand
   {
-    public SearchMeetingCommand(
+    public AddMeetingRequestCommand(
       int userId,
       DateTimeOffset minDate,
       DateTimeOffset maxDate,
@@ -14,7 +14,7 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
       int maxAge,
       double latitude,
       double longitude,
-      IList<CreateMeetingRequestActivity> activities)
+      IList<AddMeetingRequestActivity> activities)
     {
       UserId = userId;
       MinDate = minDate;
@@ -33,12 +33,12 @@ namespace Skelvy.Application.Meetings.Commands.SearchMeeting
     public int MaxAge { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public IList<CreateMeetingRequestActivity> Activities { get; set; }
+    public IList<AddMeetingRequestActivity> Activities { get; set; }
   }
 
-  public class CreateMeetingRequestActivity
+  public class AddMeetingRequestActivity
   {
-    public CreateMeetingRequestActivity(int id)
+    public AddMeetingRequestActivity(int id)
     {
       Id = id;
     }

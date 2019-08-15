@@ -35,8 +35,8 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var requests = await _requestsRepository.FindAllCloseToPreferencesWithUserDetails(request.UserId, request.Latitude, request.Longitude);
-      var meetings = await _meetingsRepository.FindAllCloseToPreferencesWithUsersDetails(request.UserId, request.Latitude, request.Longitude);
+      var requests = await _requestsRepository.FindAllCloseToPreferencesWithUserDetailsByUserIdAndLocation(request.UserId, request.Latitude, request.Longitude);
+      var meetings = await _meetingsRepository.FindAllCloseToPreferencesWithUsersDetailsByUserIdAndLocation(request.UserId, request.Latitude, request.Longitude);
 
       return await _mapper.Map(requests, meetings, request.Language);
     }

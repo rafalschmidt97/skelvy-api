@@ -30,22 +30,22 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
 
     public override async Task<Unit> Handle(JoinMeetingCommand request)
     {
-      var user = await _usersRepository.FindOneWithDetails(request.UserId);
+      var existsUser = await _usersRepository.ExistsOne(request.UserId);
 
-      if (user == null)
+      if (!existsUser)
       {
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
       var meeting = await _meetingsRepository
-        .FindOneNotBelongingWithUsersDetailsByMeetingIdAndUserId(request.MeetingId, request.UserId);
+        .FindOneNotBelongingByMeetingIdAndUserId(request.MeetingId, request.UserId);
 
       if (meeting == null)
       {
         throw new NotFoundException(nameof(Meeting), request.MeetingId);
       }
 
-      var groupUser = new GroupUser(meeting.Id, user.Id);
+      var groupUser = new GroupUser(meeting.GroupId, request.UserId);
       await _groupUsersRepository.Add(groupUser);
       await _mediator.Publish(new UserJoinedGroupEvent(groupUser.UserId, groupUser.GroupId));
 
