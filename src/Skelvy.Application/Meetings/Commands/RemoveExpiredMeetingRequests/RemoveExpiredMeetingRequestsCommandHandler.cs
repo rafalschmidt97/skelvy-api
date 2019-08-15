@@ -23,7 +23,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetingRequests
     public override async Task<Unit> Handle(RemoveExpiredMeetingRequestsCommand request)
     {
       var yesterday = DateTimeOffset.UtcNow.AddDays(-1);
-      var requestsToRemove = await _meetingRequestsRepository.FindAllSearchingAfterOrEqualMaxDate(yesterday);
+      var requestsToRemove = await _meetingRequestsRepository.FindAllSearchingAfterOrEqualMaxDateByDate(yesterday);
 
       var isDataChanged = false;
 

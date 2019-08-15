@@ -16,7 +16,7 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
     Task<User> FindOneWithRolesByFacebookId(string facebookId);
     Task<User> FindOneWithRolesByGoogleId(string googleId);
     Task<User> FindOneWithRolesByEmail(string email);
-    Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset maxDate);
+    Task<IList<User>> FindAllRemovedAfterForgottenAtByDate(DateTimeOffset maxDate);
     Task<IList<User>> FindAllWithDetailsByUsersId(IEnumerable<int> usersId);
     Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLike(int userId, string userName, int page, int pageSize = 10);
     Task Add(User user);

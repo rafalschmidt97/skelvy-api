@@ -81,7 +81,7 @@ namespace Skelvy.Persistence.Repositories
       return meetings.FirstOrDefault(x => IsMeetingMatchRequest(x, request, user));
     }
 
-    public async Task<IList<Meeting>> FindAllCloseToPreferencesWithUsersDetails(int userId, double latitude, double longitude)
+    public async Task<IList<Meeting>> FindAllCloseToPreferencesWithUsersDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
     {
       var user = await Context.Users
         .Include(x => x.Profile)

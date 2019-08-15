@@ -42,7 +42,7 @@ namespace Skelvy.Application.Meetings.Commands.MatchMeetingRequests
 
       foreach (var meetingRequest in requests)
       {
-        var existingRequest = await _meetingRequestsRepository.FindOneMatchingUserRequest(meetingRequest.User, meetingRequest);
+        var existingRequest = await _meetingRequestsRepository.FindOneMatchingByUserAndRequest(meetingRequest.User, meetingRequest);
 
         if (existingRequest != null)
         {

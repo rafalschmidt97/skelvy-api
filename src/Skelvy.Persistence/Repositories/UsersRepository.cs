@@ -80,7 +80,7 @@ namespace Skelvy.Persistence.Repositories
         .FirstOrDefaultAsync(x => x.Email == email);
     }
 
-    public async Task<IList<User>> FindAllRemovedAfterForgottenAt(DateTimeOffset maxDate)
+    public async Task<IList<User>> FindAllRemovedAfterForgottenAtByDate(DateTimeOffset maxDate)
     {
       return await Context.Users
         .Where(x => x.IsRemoved && x.ForgottenAt < maxDate)
