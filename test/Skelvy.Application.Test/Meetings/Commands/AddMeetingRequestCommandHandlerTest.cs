@@ -87,6 +87,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         25,
         1,
         1,
+        null,
         new List<AddMeetingRequestActivity>
         {
           new AddMeetingRequestActivity(1),

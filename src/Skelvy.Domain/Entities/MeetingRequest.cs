@@ -8,7 +8,7 @@ namespace Skelvy.Domain.Entities
 {
   public class MeetingRequest : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public MeetingRequest(DateTimeOffset minDate, DateTimeOffset maxDate, int minAge, int maxAge, double latitude, double longitude, int userId)
+    public MeetingRequest(DateTimeOffset minDate, DateTimeOffset maxDate, int minAge, int maxAge, double latitude, double longitude, string description, int userId)
     {
       MinDate = minDate;
       MaxDate = maxDate;
@@ -16,10 +16,16 @@ namespace Skelvy.Domain.Entities
       MaxAge = maxAge;
       Latitude = latitude;
       Longitude = longitude;
+      Description = description;
       UserId = userId;
 
       Status = MeetingRequestStatusType.Searching;
       CreatedAt = DateTimeOffset.UtcNow;
+    }
+
+    public MeetingRequest(DateTimeOffset minDate, DateTimeOffset maxDate, int minAge, int maxAge, double latitude, double longitude, int userId)
+      : this(minDate, maxDate, minAge, maxAge, latitude, longitude, null, userId)
+    {
     }
 
     public int Id { get; set; }
@@ -30,6 +36,7 @@ namespace Skelvy.Domain.Entities
     public int MaxAge { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public string Description { get; set; }
     public int UserId { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? ModifiedAt { get; set; }
