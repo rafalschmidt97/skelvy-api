@@ -16,6 +16,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
       RuleFor(x => x.Latitude).NotEmpty();
       RuleFor(x => x.Longitude).NotEmpty();
       RuleFor(x => x.ActivityId).NotEmpty();
+      RuleFor(x => x.Size).NotEmpty();
     }
   }
 }

@@ -82,6 +82,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
         request.Date,
         request.Latitude,
         request.Longitude,
+        request.Size,
         true,
         true,
         group.Id,

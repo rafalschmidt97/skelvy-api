@@ -237,7 +237,7 @@ namespace Skelvy.Persistence
 
       var meetings = new[]
       {
-        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, groups[0].Id, activities[0].Id),
+        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, activities[0].Size, false, false, groups[0].Id, activities[0].Id),
       };
 
       context.Meetings.AddRange(meetings);

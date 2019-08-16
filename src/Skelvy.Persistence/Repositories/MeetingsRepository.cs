@@ -114,10 +114,9 @@ namespace Skelvy.Persistence.Repositories
       return await Context.Meetings
         .Include(x => x.Group)
         .ThenInclude(x => x.Users)
-        .Include(x => x.Activity)
         .FirstOrDefaultAsync(x => x.Id == meetingId &&
                                   !x.IsHidden &&
-                                  x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size &&
+                                  x.Group.Users.Count(y => !y.IsRemoved) < x.Size &&
                                   !x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
                                   !x.IsRemoved);
     }
@@ -127,9 +126,8 @@ namespace Skelvy.Persistence.Repositories
       return await Context.Meetings
         .Include(x => x.Group)
         .ThenInclude(x => x.Users)
-        .Include(x => x.Activity)
         .FirstOrDefaultAsync(x => x.Id == meetingId &&
-                                  x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size &&
+                                  x.Group.Users.Count(y => !y.IsRemoved) < x.Size &&
                                   x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
                                   !x.Group.Users.Any(y => y.UserId == addedUserId && !y.IsRemoved) &&
                                   !x.IsRemoved);

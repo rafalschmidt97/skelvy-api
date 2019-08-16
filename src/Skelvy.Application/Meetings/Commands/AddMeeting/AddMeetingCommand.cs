@@ -6,12 +6,13 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
 {
   public class AddMeetingCommand : ICommandData<MeetingDto>
   {
-    public AddMeetingCommand(int userId, DateTimeOffset date, double latitude, double longitude, int activityId)
+    public AddMeetingCommand(int userId, DateTimeOffset date, double latitude, double longitude, int size, int activityId)
     {
       UserId = userId;
       Date = date;
       Latitude = latitude;
       Longitude = longitude;
+      Size = size;
       ActivityId = activityId;
     }
 
@@ -19,6 +20,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
     public DateTimeOffset Date { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public int Size { get; set; }
     public int ActivityId { get; set; }
   }
 }

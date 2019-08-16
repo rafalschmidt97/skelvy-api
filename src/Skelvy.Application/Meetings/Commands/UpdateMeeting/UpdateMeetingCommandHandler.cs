@@ -28,7 +28,7 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
     {
       var meeting = await ValidateData(request);
 
-      meeting.Update(request.Date, request.Latitude, request.Longitude, request.IsPrivate, request.IsHidden);
+      meeting.Update(request.Date, request.Latitude, request.Longitude, request.Size, request.IsPrivate, request.IsHidden);
       await _meetingsRepository.Update(meeting);
 
       return Unit.Value;

@@ -18,7 +18,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<bool> ExistsOne(int requestId);
     Task<bool> ExistsOneFoundByRequestId(int requestId);
     Task<IList<MeetingRequest>> FindAllCloseWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude);
-    Task<MeetingRequest> FindOneNonSelfSearchingWithUserDetailsAndActivitiesByRequestIdAndUserId(int requestId, int userId);
+    Task<MeetingRequest> FindOneSearchingWithActivitiesByRequestIdAndUserId(int requestId, int userId);
     Task Add(MeetingRequest request);
     Task Update(MeetingRequest request);
     Task UpdateRange(IList<MeetingRequest> requests);

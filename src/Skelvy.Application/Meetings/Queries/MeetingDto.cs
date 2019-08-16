@@ -16,6 +16,9 @@ namespace Skelvy.Application.Meetings.Queries
     public DateTimeOffset Date { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public int Size { get; set; }
+    public bool IsPrivate { get; set; }
+    public bool IsHidden { get; set; }
     public string City { get; set; }
     public int GroupId { get; set; }
     public ActivityDto Activity { get; set; }

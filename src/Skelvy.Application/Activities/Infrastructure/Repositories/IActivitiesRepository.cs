@@ -8,6 +8,7 @@ namespace Skelvy.Application.Activities.Infrastructure.Repositories
   public interface IActivitiesRepository : IBaseRepository
   {
     Task<bool> ExistsOne(int id);
+    Task<Activity> FindOne(int id);
     Task<IList<Activity>> FindAll();
   }
 }

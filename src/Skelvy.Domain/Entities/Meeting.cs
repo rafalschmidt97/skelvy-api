@@ -7,11 +7,12 @@ namespace Skelvy.Domain.Entities
 {
   public class Meeting : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public Meeting(DateTimeOffset date, double latitude, double longitude, bool isPrivate, bool isHidden, int groupId, int activityId)
+    public Meeting(DateTimeOffset date, double latitude, double longitude, int size, bool isPrivate, bool isHidden, int groupId, int activityId)
     {
       Date = date;
       Latitude = latitude;
       Longitude = longitude;
+      Size = size;
       IsPrivate = isPrivate;
       IsHidden = isHidden;
       GroupId = groupId;
@@ -20,15 +21,11 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public Meeting(DateTimeOffset date, double latitude, double longitude, int groupId, int activityId)
-      : this(date, latitude, longitude, false, false, groupId, activityId)
-    {
-    }
-
     public int Id { get; set; }
     public DateTimeOffset Date { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public int Size { get; set; }
     public bool IsPrivate { get; set; }
     public bool IsHidden { get; set; }
     public int GroupId { get; set; }
@@ -41,7 +38,7 @@ namespace Skelvy.Domain.Entities
     public Group Group { get; set; }
     public Activity Activity { get; set; }
 
-    public void Update(DateTimeOffset date, double latitude, double longitude, bool isPrivate, bool isHidden)
+    public void Update(DateTimeOffset date, double latitude, double longitude, int size, bool isPrivate, bool isHidden)
     {
       Date = date >= DateTimeOffset.UtcNow.AddDays(-1)
         ? date
@@ -49,6 +46,7 @@ namespace Skelvy.Domain.Entities
 
       Latitude = latitude;
       Longitude = longitude;
+      Size = size;
       IsPrivate = isPrivate;
       IsHidden = isHidden;
 

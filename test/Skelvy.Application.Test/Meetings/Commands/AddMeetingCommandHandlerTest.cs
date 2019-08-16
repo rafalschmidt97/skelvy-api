@@ -13,7 +13,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldAddRequest()
     {
-      var request = new AddMeetingCommand(1, DateTimeOffset.UtcNow, 1, 1, 1);
+      var request = new AddMeetingCommand(1, DateTimeOffset.UtcNow, 1, 1, 4, 1);
       var dbContext = InitializedDbContext();
       var handler = new AddMeetingCommandHandler(
         new UsersRepository(dbContext),
@@ -31,7 +31,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithInvalidUser()
     {
-      var request = new AddMeetingCommand(100, DateTimeOffset.UtcNow, 1, 1, 1);
+      var request = new AddMeetingCommand(100, DateTimeOffset.UtcNow, 1, 1, 4, 1);
       var dbContext = InitializedDbContext();
       var handler = new AddMeetingCommandHandler(
         new UsersRepository(dbContext),
@@ -48,7 +48,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithInvalidActivity()
     {
-      var request = new AddMeetingCommand(100, DateTimeOffset.UtcNow, 1, 1, 100);
+      var request = new AddMeetingCommand(100, DateTimeOffset.UtcNow, 1, 1, 4, 100);
       var dbContext = InitializedDbContext();
       var handler = new AddMeetingCommandHandler(
         new UsersRepository(dbContext),

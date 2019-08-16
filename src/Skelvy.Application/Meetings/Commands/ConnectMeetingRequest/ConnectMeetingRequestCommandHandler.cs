@@ -72,13 +72,17 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var connectingMeetingRequest =
-        await _meetingRequestsRepository
-          .FindOneNonSelfSearchingWithUserDetailsAndActivitiesByRequestIdAndUserId(request.MeetingRequestId, request.UserId);
+      var connectingMeetingRequest = await _meetingRequestsRepository
+          .FindOneSearchingWithActivitiesByRequestIdAndUserId(request.MeetingRequestId, request.UserId);
 
       if (connectingMeetingRequest == null)
       {
         throw new NotFoundException(nameof(MeetingRequest), request.MeetingRequestId);
+      }
+
+      if (connectingMeetingRequest.UserId == request.UserId)
+      {
+        throw new ConflictException($"{nameof(MeetingRequest)}(Id = {request.MeetingRequestId} must be be non self");
       }
 
       if (connectingMeetingRequest.Activities.All(x => x.ActivityId != request.ActivityId))
@@ -99,10 +103,15 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       var group = new Group();
       await _groupsRepository.Add(group);
 
+      var size = meetingRequest.Activities.First(x => x.ActivityId == request.ActivityId).Activity.Size;
+
       var meeting = new Meeting(
         request.Date,
         meetingRequest.Latitude,
         meetingRequest.Longitude,
+        size,
+        true,
+        true,
         group.Id,
         request.ActivityId);
 

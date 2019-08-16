@@ -11,8 +11,8 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldBeUpdated()
     {
-      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
-      entity.Update(DateTimeOffset.UtcNow.AddDays(1), 2, 2, true, true);
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 4, false, false, 1, 1);
+      entity.Update(DateTimeOffset.UtcNow.AddDays(1), 2, 2, 6, true, true);
 
       Assert.True(entity.IsPrivate);
       Assert.NotNull(entity.ModifiedAt);
@@ -21,16 +21,16 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWhileUpdatingWithInvalidDate()
     {
-      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 4, false, false, 1, 1);
 
       Assert.Throws<DomainException>(() =>
-        entity.Update(DateTimeOffset.UtcNow.AddDays(-1), 2, 2, true, true));
+        entity.Update(DateTimeOffset.UtcNow.AddDays(-1), 2, 2, 6, true, true));
     }
 
     [Fact]
     public void ShouldBeAborted()
     {
-      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 4, false, false, 1, 1);
       entity.Abort();
 
       Assert.True(entity.IsRemoved);
@@ -41,7 +41,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithAborted()
     {
-      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 4, false, false, 1, 1);
       entity.Abort();
 
       Assert.Throws<DomainException>(() =>
@@ -51,7 +51,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldBeExpired()
     {
-      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 4, false, false, 1, 1);
       entity.Expire();
 
       Assert.True(entity.IsRemoved);
@@ -62,7 +62,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithExpired()
     {
-      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 1, 1);
+      var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 4, false, false, 1, 1);
       entity.Expire();
 
       Assert.Throws<DomainException>(() =>
