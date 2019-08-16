@@ -48,7 +48,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
           request.MaxAge,
           request.Latitude,
           request.Longitude,
-          request.Description?.Trim(),
+          request.Description,
           request.UserId);
 
         await _meetingRequestsRepository.Add(meetingRequest);

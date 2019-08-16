@@ -14,6 +14,13 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
+    public async Task<IList<MeetingRequestActivity>> FindAllByRequestId(int requestId)
+    {
+      return await Context.MeetingRequestActivities
+        .Where(x => x.MeetingRequestId == requestId)
+        .ToListAsync();
+    }
+
     public async Task<IList<MeetingRequestActivity>> FindAllByRequestsId(IEnumerable<int> requestsId)
     {
       return await Context.MeetingRequestActivities

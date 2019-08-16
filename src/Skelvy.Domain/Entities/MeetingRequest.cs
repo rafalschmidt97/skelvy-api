@@ -16,7 +16,7 @@ namespace Skelvy.Domain.Entities
       MaxAge = maxAge;
       Latitude = latitude;
       Longitude = longitude;
-      Description = description;
+      Description = description?.Trim();
       UserId = userId;
 
       Status = MeetingRequestStatusType.Searching;
@@ -48,6 +48,36 @@ namespace Skelvy.Domain.Entities
 
     public bool IsSearching => Status == MeetingRequestStatusType.Searching;
     public bool IsFound => Status == MeetingRequestStatusType.Found;
+
+    public void Update(DateTimeOffset minDate, DateTimeOffset maxDate, int minAge, int maxAge, double latitude, double longitude, string description)
+    {
+      MinDate = minDate >= DateTimeOffset.UtcNow.AddDays(-1)
+        ? minDate
+        : throw new DomainException(
+          $"'MinDate' must show the future for entity {nameof(MeetingRequest)}(Id = {Id}).");
+
+      MaxDate = maxDate >= minDate
+        ? maxDate
+        : throw new DomainException(
+          $"'MaxDate' must be after 'MinDate' for entity {nameof(MeetingRequest)}(Id = {Id}).");
+
+      MinAge = minAge >= 18
+        ? minAge
+        : throw new DomainException(
+          $"'MinAge' must show the age of majority for entity {nameof(MeetingRequest)}(Id = {Id}).");
+
+      MaxAge = maxAge >= minAge && maxAge - minAge >= 5 && maxAge <= 55
+        ? maxAge
+        : throw new DomainException(
+          "'MaxAge' must be bigger than 'MinAge' and age difference must be more or equal to 5 years and " +
+          $"'MaxAge' must be less or equal 55. for entity {nameof(MeetingRequest)}(Id = {Id}).");
+
+      Latitude = latitude;
+      Longitude = longitude;
+      Description = description?.Trim();
+
+      ModifiedAt = DateTimeOffset.UtcNow;
+    }
 
     public void MarkAsSearching()
     {
