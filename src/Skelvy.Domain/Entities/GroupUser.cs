@@ -7,19 +7,21 @@ namespace Skelvy.Domain.Entities
 {
   public class GroupUser : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public GroupUser(int groupId, int userId, int meetingRequestId)
+    public GroupUser(int groupId, int userId, int meetingRequestId, string role)
     {
       GroupId = groupId;
       UserId = userId;
       MeetingRequestId = meetingRequestId;
+      Role = role;
 
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public GroupUser(int groupId, int userId)
+    public GroupUser(int groupId, int userId, string role)
     {
       GroupId = groupId;
       UserId = userId;
+      Role = role;
 
       CreatedAt = DateTimeOffset.UtcNow;
     }
@@ -28,6 +30,7 @@ namespace Skelvy.Domain.Entities
     public int GroupId { get; set; }
     public int UserId { get; set; }
     public int? MeetingRequestId { get; set; }
+    public string Role { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? ModifiedAt { get; set; }
     public bool IsRemoved { get; set; }
@@ -36,6 +39,24 @@ namespace Skelvy.Domain.Entities
     public Group Group { get; set; }
     public User User { get; set; }
     public MeetingRequest MeetingRequest { get; set; }
+
+    public bool CanAddUserToGroup => Role != GroupUserRoleType.Owner ||
+                                     Role != GroupUserRoleType.Admin ||
+                                     Role != GroupUserRoleType.Privileged;
+
+    public string GetInheritedRole()
+    {
+      switch (Role)
+      {
+        case GroupUserRoleType.Owner:
+        case GroupUserRoleType.Admin:
+          return GroupUserRoleType.Admin;
+        case GroupUserRoleType.Privileged:
+          return GroupUserRoleType.Member;
+        default:
+          throw new DomainException($"Entity {nameof(GroupUser)}(Id = {Id}) does not have permission to inherit role");
+      }
+    }
 
     public void Leave()
     {

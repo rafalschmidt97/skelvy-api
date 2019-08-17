@@ -245,10 +245,10 @@ namespace Skelvy.Persistence
 
       var groupUsers = new[]
       {
-        new GroupUser(groups[0].Id, users[1].Id, requests[0].Id),
-        new GroupUser(groups[0].Id, users[2].Id, requests[1].Id),
-        new GroupUser(groups[1].Id, users[0].Id),
-        new GroupUser(groups[1].Id, users[3].Id),
+        new GroupUser(groups[0].Id, users[1].Id, requests[0].Id, GroupUserRoleType.Admin),
+        new GroupUser(groups[0].Id, users[2].Id, requests[1].Id, GroupUserRoleType.Admin),
+        new GroupUser(groups[1].Id, users[0].Id, GroupUserRoleType.Admin),
+        new GroupUser(groups[1].Id, users[3].Id, GroupUserRoleType.Admin),
       };
 
       context.GroupUsers.AddRange(groupUsers);

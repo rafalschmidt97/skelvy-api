@@ -9,6 +9,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   public interface IGroupUsersRepository : IBaseRepository
   {
     Task<bool> ExistsOneByUserIdAndGroupId(int userId, int groupId);
+    Task<GroupUser> FindOneByUserIdAndGroupId(int userId, int groupId);
     Task<bool> ExistsOneByMeetingRequestId(int requestId);
     Task<GroupUser> FindOneWithGroupByUserIdAndGroupId(int userId, int groupId);
     Task<IList<GroupUser>> FindAllByGroupId(int groupId);

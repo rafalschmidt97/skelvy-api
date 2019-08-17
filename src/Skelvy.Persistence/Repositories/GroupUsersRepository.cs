@@ -24,6 +24,13 @@ namespace Skelvy.Persistence.Repositories
       return user != null;
     }
 
+    public async Task<GroupUser> FindOneByUserIdAndGroupId(int userId, int groupId)
+    {
+      return await Context.GroupUsers
+        .Include(x => x.Group)
+        .FirstOrDefaultAsync(x => x.UserId == userId && x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved);
+    }
+
     public async Task<bool> ExistsOneByMeetingRequestId(int requestId)
     {
       var user = await Context.GroupUsers

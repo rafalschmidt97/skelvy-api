@@ -99,6 +99,22 @@ namespace Skelvy.Application.Test.Meetings.Commands
         handler.Handle(request));
     }
 
+    [Fact]
+    public async Task ShouldThrowExceptionWithAlreadyAddedUser()
+    {
+      var request = new AddUserToMeetingCommand(2, 1, 3);
+      var dbContext = TestDbContextWithRelations();
+      var handler = new AddUserToMeetingCommandHandler(
+        new UsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
+        new GroupUsersRepository(dbContext),
+        new RelationsRepository(dbContext),
+        _mediator.Object);
+
+      await Assert.ThrowsAsync<ConflictException>(() =>
+        handler.Handle(request));
+    }
+
     private static SkelvyContext TestDbContextWithRelations()
     {
       var context = InitializedDbContext();

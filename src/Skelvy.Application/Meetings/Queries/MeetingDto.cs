@@ -55,18 +55,31 @@ namespace Skelvy.Application.Meetings.Queries
     }
   }
 
-  public class GroupDto : ICustomMapping
+  public class GroupDto
   {
     public int Id { get; set; }
-    public IList<UserDto> Users { get; set; }
+    public IList<GroupUserDto> Users { get; set; }
     public IList<MessageDto> Messages { get; set; }
+  }
+
+  public class GroupUserDto : ICustomMapping
+  {
+    public int Id { get; set; }
+    public string Role { get; set; }
+    public ProfileDto Profile { get; set; }
 
     public void CreateMappings(AutoMapperProfile configuration)
     {
-      configuration.CreateMap<Group, GroupDto>()
+      configuration.CreateMap<GroupUser, GroupUserDto>()
         .ForMember(
-          destination => destination.Users,
-          options => options.MapFrom(x => x.Users.Select(y => y.User)));
+          destination => destination.Id,
+          options => options.MapFrom(x => x.UserId))
+        .ForMember(
+          destination => destination.Role,
+          options => options.MapFrom(x => x.Role))
+        .ForMember(
+          destination => destination.Profile,
+          options => options.MapFrom(x => x.User.Profile));
     }
   }
 }

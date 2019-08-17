@@ -13,7 +13,9 @@ namespace Skelvy.Persistence.Configurations
       builder.HasOne(x => x.MeetingRequest).WithMany().OnDelete(DeleteBehavior.Restrict);
 
       builder.HasIndex(e => e.IsRemoved);
+      builder.HasIndex(e => e.Role);
 
+      builder.Property(e => e.Role).IsRequired().HasMaxLength(15);
       builder.Property(e => e.RemovedReason).HasMaxLength(15);
       builder.Property(e => e.ModifiedAt).IsConcurrencyToken();
     }

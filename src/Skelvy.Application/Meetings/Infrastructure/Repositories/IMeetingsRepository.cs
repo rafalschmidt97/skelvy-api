@@ -16,8 +16,8 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<Meeting> FindOneWithGroupByGroupId(int groupId);
     Task<IList<Meeting>> FindAllAfterOrEqualDate(DateTimeOffset maxDate);
     Task<IList<Meeting>> FindAllNonHiddenCloseWithUsersDetailsByUserIdAndLocation(int userId, double latitude, double longitude);
-    Task<Meeting> FindOneNonHiddenAndNonBelongingAndNonFullByMeetingIdAndUserId(int meetingId, int userId);
-    Task<Meeting> FindOneUserBelongingAndAddedUserNonBelongingAndNonFullByMeetingIdAndUserId(int meetingId, int userId, int addedUserId);
+    Task<Meeting> FindOneNonHiddenAndNonFullByMeetingIdAndUserId(int meetingId, int userId);
+    Task<Meeting> FindOneNonFullByMeetingId(int meetingId);
     Task Add(Meeting meeting);
     Task Update(Meeting meeting);
     Task UpdateRange(IList<Meeting> meetings);

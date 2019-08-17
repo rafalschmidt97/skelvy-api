@@ -7,6 +7,7 @@ using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Application.Meetings.Commands.AddMeeting
 {
@@ -52,7 +53,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
 
     private async Task AddUserToMeeting(Meeting meeting, AddMeetingCommand request)
     {
-      var groupUser = new GroupUser(meeting.GroupId, request.UserId);
+      var groupUser = new GroupUser(meeting.GroupId, request.UserId, GroupUserRoleType.Owner);
       await _groupUsersRepository.Add(groupUser);
     }
 

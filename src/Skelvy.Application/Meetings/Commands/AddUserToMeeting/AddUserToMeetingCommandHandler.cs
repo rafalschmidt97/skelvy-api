@@ -35,16 +35,16 @@ namespace Skelvy.Application.Meetings.Commands.AddUserToMeeting
 
     public override async Task<Unit> Handle(AddUserToMeetingCommand request)
     {
-      var meeting = await ValidateData(request);
+      var (meeting, groupUser) = await ValidateData(request);
 
-      var groupUser = new GroupUser(meeting.GroupId, request.UserId);
-      await _groupUsersRepository.Add(groupUser);
-      await _mediator.Publish(new UserJoinedGroupEvent(groupUser.UserId, groupUser.GroupId));
+      var addedGroupUser = new GroupUser(meeting.GroupId, request.UserId, groupUser.GetInheritedRole());
+      await _groupUsersRepository.Add(addedGroupUser);
+      await _mediator.Publish(new UserJoinedGroupEvent(addedGroupUser.UserId, addedGroupUser.GroupId));
 
       return Unit.Value;
     }
 
-    private async Task<Meeting> ValidateData(AddUserToMeetingCommand request)
+    private async Task<(Meeting, GroupUser)> ValidateData(AddUserToMeetingCommand request)
     {
       var existsUser = await _usersRepository.ExistsOne(request.UserId);
 
@@ -68,15 +68,33 @@ namespace Skelvy.Application.Meetings.Commands.AddUserToMeeting
         throw new NotFoundException(nameof(Relation), request.AddedUserId);
       }
 
-      var meeting = await _meetingsRepository
-        .FindOneUserBelongingAndAddedUserNonBelongingAndNonFullByMeetingIdAndUserId(request.MeetingId, request.UserId, request.AddedUserId);
+      var meeting = await _meetingsRepository.FindOneNonFullByMeetingId(request.MeetingId);
 
       if (meeting == null)
       {
         throw new NotFoundException(nameof(Meeting), request.MeetingId);
       }
 
-      return meeting;
+      var groupUser = await _groupUsersRepository.FindOneByUserIdAndGroupId(request.UserId, meeting.GroupId);
+
+      if (groupUser == null)
+      {
+        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) not found.");
+      }
+
+      if (!groupUser.CanAddUserToGroup)
+      {
+        throw new ForbiddenException($"Entity {nameof(GroupUser)}(Id = {groupUser.Id}) does not have permission to add users");
+      }
+
+      var existsGroupAddedUser = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.AddedUserId, meeting.GroupId);
+
+      if (existsGroupAddedUser)
+      {
+        throw new ConflictException($"Entity {nameof(GroupUser)}(UserId = {request.AddedUserId}, GroupId = {meeting.GroupId}) is already added.");
+      }
+
+      return (meeting, groupUser);
     }
   }
 }

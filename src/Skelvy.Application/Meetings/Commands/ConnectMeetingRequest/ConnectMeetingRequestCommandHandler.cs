@@ -9,6 +9,7 @@ using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
 {
@@ -119,8 +120,8 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
 
       var groupUsers = new[]
       {
-        new GroupUser(group.Id, user.Id),
-        new GroupUser(group.Id, meetingRequest.UserId, meetingRequest.Id),
+        new GroupUser(group.Id, user.Id, GroupUserRoleType.Admin),
+        new GroupUser(group.Id, meetingRequest.UserId, meetingRequest.Id, GroupUserRoleType.Admin),
       };
 
       await _groupUsersRepository.AddRange(groupUsers);

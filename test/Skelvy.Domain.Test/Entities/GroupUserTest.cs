@@ -10,7 +10,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldBeLeft()
     {
-      var entity = new GroupUser(1, 1, 1);
+      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
       entity.Leave();
 
       Assert.True(entity.IsRemoved);
@@ -21,7 +21,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithLeft()
     {
-      var entity = new GroupUser(1, 1, 1);
+      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
       entity.Leave();
 
       Assert.Throws<DomainException>(() =>
@@ -31,7 +31,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldBeAborted()
     {
-      var entity = new GroupUser(1, 1, 1);
+      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
       entity.Abort();
 
       Assert.True(entity.IsRemoved);
@@ -42,7 +42,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithAborted()
     {
-      var entity = new GroupUser(1, 1, 1);
+      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
       entity.Abort();
 
       Assert.Throws<DomainException>(() =>
