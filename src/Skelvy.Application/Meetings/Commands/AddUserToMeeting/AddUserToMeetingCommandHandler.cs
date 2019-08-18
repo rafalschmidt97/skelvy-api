@@ -35,16 +35,16 @@ namespace Skelvy.Application.Meetings.Commands.AddUserToMeeting
 
     public override async Task<Unit> Handle(AddUserToMeetingCommand request)
     {
-      var (meeting, groupUser) = await ValidateData(request);
+      var meeting = await ValidateData(request);
 
-      var addedGroupUser = new GroupUser(meeting.GroupId, request.UserId, groupUser.GetInheritedRole());
+      var addedGroupUser = new GroupUser(meeting.GroupId, request.UserId);
       await _groupUsersRepository.Add(addedGroupUser);
       await _mediator.Publish(new UserJoinedMeetingEvent(addedGroupUser.UserId, addedGroupUser.GroupId));
 
       return Unit.Value;
     }
 
-    private async Task<(Meeting, GroupUser)> ValidateData(AddUserToMeetingCommand request)
+    private async Task<Meeting> ValidateData(AddUserToMeetingCommand request)
     {
       var existsUser = await _usersRepository.ExistsOne(request.UserId);
 
@@ -94,7 +94,7 @@ namespace Skelvy.Application.Meetings.Commands.AddUserToMeeting
         throw new ConflictException($"Entity {nameof(GroupUser)}(UserId = {request.AddedUserId}, GroupId = {meeting.GroupId}) is already added.");
       }
 
-      return (meeting, groupUser);
+      return meeting;
     }
   }
 }

@@ -6,7 +6,6 @@ using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Application.Meetings.Commands.JoinMeeting
 {
@@ -33,7 +32,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
     {
       var meeting = await ValidateData(request);
 
-      var groupUser = new GroupUser(meeting.GroupId, request.UserId, GroupUserRoleType.Member);
+      var groupUser = new GroupUser(meeting.GroupId, request.UserId);
       await _groupUsersRepository.Add(groupUser);
       await _mediator.Publish(new UserJoinedMeetingEvent(groupUser.UserId, groupUser.GroupId));
 

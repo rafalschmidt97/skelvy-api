@@ -7,7 +7,7 @@ namespace Skelvy.Domain.Entities
 {
   public class GroupUser : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public GroupUser(int groupId, int userId, int meetingRequestId, string role)
+    public GroupUser(int groupId, int userId, int meetingRequestId, string role = GroupUserRoleType.Member)
     {
       GroupId = groupId;
       UserId = userId;
@@ -17,7 +17,7 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public GroupUser(int groupId, int userId, string role)
+    public GroupUser(int groupId, int userId, string role = GroupUserRoleType.Member)
     {
       GroupId = groupId;
       UserId = userId;
@@ -44,25 +44,28 @@ namespace Skelvy.Domain.Entities
                                      Role != GroupUserRoleType.Admin ||
                                      Role != GroupUserRoleType.Privileged;
 
-    public string GetInheritedRole()
-    {
-      switch (Role)
-      {
-        case GroupUserRoleType.Owner:
-        case GroupUserRoleType.Admin:
-          return GroupUserRoleType.Admin;
-        case GroupUserRoleType.Privileged:
-          return GroupUserRoleType.Member;
-        default:
-          throw new DomainException($"Entity {nameof(GroupUser)}(Id = {Id}) does not have permission to inherit role");
-      }
-    }
-
-    public bool CanRemoveUserFromGroup(GroupUser removeGroupUser, Meeting meeting)
+    public bool CanRemoveUserFromGroup(GroupUser groupUser, Meeting meeting)
     {
       return meeting.IsPrivate &&
              (Role == GroupUserRoleType.Owner || Role == GroupUserRoleType.Admin) &&
-             removeGroupUser.Role != GroupUserRoleType.Owner;
+             groupUser.Role != GroupUserRoleType.Owner;
+    }
+
+    public bool CanUpdateRole(GroupUser groupUser, string role)
+    {
+      return (Role == GroupUserRoleType.Owner ||
+             (Role == GroupUserRoleType.Admin && role != GroupUserRoleType.Owner)) &&
+             groupUser.Role != GroupUserRoleType.Owner;
+    }
+
+    public void UpdateRole(string role)
+    {
+      Role = role == GroupUserRoleType.Admin || role == GroupUserRoleType.Privileged || role == GroupUserRoleType.Member
+        ? role
+        : throw new DomainException(
+          $"'Role' must be {GroupUserRoleType.Admin} / {GroupUserRoleType.Privileged} / {GroupUserRoleType.Member} for entity {nameof(GroupUser)}(Id = {Id}).");
+
+      ModifiedAt = DateTimeOffset.UtcNow;
     }
 
     public void Leave()

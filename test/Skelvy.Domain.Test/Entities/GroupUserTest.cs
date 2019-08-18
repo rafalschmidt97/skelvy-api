@@ -8,9 +8,28 @@ namespace Skelvy.Domain.Test.Entities
   public class GroupUserTest
   {
     [Fact]
+    public void ShouldUpdateRole()
+    {
+      var entity = new GroupUser(1, 1, 1);
+      entity.UpdateRole(GroupUserRoleType.Admin);
+
+      Assert.Equal(entity.Role, GroupUserRoleType.Admin);
+      Assert.NotNull(entity.ModifiedAt);
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionWithUpdateRole()
+    {
+      var entity = new GroupUser(1, 1, 1);
+
+      Assert.Throws<DomainException>(() =>
+          entity.UpdateRole("Example"));
+    }
+
+    [Fact]
     public void ShouldBeLeft()
     {
-      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
+      var entity = new GroupUser(1, 1, 1);
       entity.Leave();
 
       Assert.True(entity.IsRemoved);
@@ -21,7 +40,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithLeft()
     {
-      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
+      var entity = new GroupUser(1, 1, 1);
       entity.Leave();
 
       Assert.Throws<DomainException>(() =>
@@ -31,7 +50,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldBeAborted()
     {
-      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
+      var entity = new GroupUser(1, 1, 1);
       entity.Abort();
 
       Assert.True(entity.IsRemoved);
@@ -42,7 +61,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithAborted()
     {
-      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
+      var entity = new GroupUser(1, 1, 1);
       entity.Abort();
 
       Assert.Throws<DomainException>(() =>
@@ -52,7 +71,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldBeRemoved()
     {
-      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
+      var entity = new GroupUser(1, 1, 1);
       entity.Remove();
 
       Assert.True(entity.IsRemoved);
@@ -63,7 +82,7 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldThrowExceptionWithRemoved()
     {
-      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
+      var entity = new GroupUser(1, 1, 1);
       entity.Remove();
 
       Assert.Throws<DomainException>(() =>
