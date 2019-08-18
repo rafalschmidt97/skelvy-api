@@ -1,13 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.AddMeeting;
-using Skelvy.Application.Meetings.Commands.AddMeetingRequest;
 using Skelvy.Application.Meetings.Commands.AddUserToMeeting;
-using Skelvy.Application.Meetings.Commands.ConnectMeetingRequest;
 using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeeting;
-using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
 using Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting;
 using Skelvy.Application.Meetings.Commands.UpdateMeeting;
 using Skelvy.Application.Meetings.Queries;
@@ -24,7 +21,7 @@ namespace Skelvy.WebAPI.Controllers
       await Mediator.Send(request);
     }
 
-    [HttpPost("{id}")]
+    [HttpPut("{id}")]
     public async Task UpdateSelfMeeting(int id, UpdateMeetingCommand request)
     {
       request.MeetingId = id;
@@ -46,7 +43,13 @@ namespace Skelvy.WebAPI.Controllers
       await Mediator.Send(new JoinMeetingCommand(UserId, id));
     }
 
-    [HttpPost("{id}/add")]
+    [HttpPost("{id}/leave")]
+    public async Task LeaveSelf(int id)
+    {
+      await Mediator.Send(new LeaveMeetingCommand(id, UserId));
+    }
+
+    [HttpPost("{id}/users")]
     public async Task AddSelfUserToMeeting(int id, AddUserToMeetingCommand request)
     {
       request.UserId = UserId;
@@ -54,39 +57,10 @@ namespace Skelvy.WebAPI.Controllers
       await Mediator.Send(request);
     }
 
-    [HttpDelete("{id}/remove")]
-    public async Task RemoveSelfUserFromMeeting(int id, RemoveUserFromMeetingCommand request)
+    [HttpDelete("{id}/users/{userId}")]
+    public async Task RemoveSelfUserFromMeeting(int id, int userId)
     {
-      request.UserId = UserId;
-      request.MeetingId = id;
-      await Mediator.Send(request);
-    }
-
-    [HttpPost("{id}/leave")]
-    public async Task LeaveSelf(int id)
-    {
-      await Mediator.Send(new LeaveMeetingCommand(id, UserId));
-    }
-
-    [HttpPost("self/requests")]
-    public async Task SearchSelfRequest(AddMeetingRequestCommand request)
-    {
-      request.UserId = UserId;
-      await Mediator.Send(request);
-    }
-
-    [HttpPost("self/requests/{id}/connect")]
-    public async Task ConnectSelfMeetingRequest(int id, ConnectMeetingRequestCommand request)
-    {
-      request.UserId = UserId;
-      request.MeetingRequestId = id;
-      await Mediator.Send(request);
-    }
-
-    [HttpDelete("self/requests/{id}")]
-    public async Task RemoveSelfRequest(int id)
-    {
-      await Mediator.Send(new RemoveMeetingRequestCommand(id, UserId));
+      await Mediator.Send(new RemoveUserFromMeetingCommand(UserId, id, userId));
     }
 
     [HttpGet("self/suggestions")]
