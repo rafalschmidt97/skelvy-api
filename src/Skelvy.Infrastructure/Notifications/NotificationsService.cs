@@ -67,6 +67,15 @@ namespace Skelvy.Infrastructure.Notifications
         async offline => await _pushService.BroadcastUserLeftMeeting(notification, offline));
     }
 
+    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification)
+    {
+      await _socketService.BroadcastUserRemovedFromMeeting(notification);
+
+      await BroadcastActionToOffline(
+        notification.UsersId,
+        async offline => await _pushService.BroadcastUserRemovedFromMeeting(notification, offline));
+    }
+
     public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification)
     {
       await _socketService.BroadcastUserLeftGroup(notification);

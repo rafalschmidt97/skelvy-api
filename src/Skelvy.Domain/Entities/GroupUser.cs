@@ -58,6 +58,13 @@ namespace Skelvy.Domain.Entities
       }
     }
 
+    public bool CanRemoveUserFromGroup(GroupUser removeGroupUser, Meeting meeting)
+    {
+      return meeting.IsPrivate &&
+             (Role == GroupUserRoleType.Owner || Role == GroupUserRoleType.Admin) &&
+             removeGroupUser.Role != GroupUserRoleType.Owner;
+    }
+
     public void Leave()
     {
       if (!IsRemoved)
@@ -78,6 +85,20 @@ namespace Skelvy.Domain.Entities
       {
         IsRemoved = true;
         RemovedReason = GroupUserRemovedReasonType.Aborted;
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"Entity {nameof(GroupUser)}(Id = {Id}) is already left.");
+      }
+    }
+
+    public void Remove()
+    {
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        RemovedReason = GroupUserRemovedReasonType.Removed;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else

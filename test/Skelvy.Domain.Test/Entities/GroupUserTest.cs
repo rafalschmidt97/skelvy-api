@@ -48,5 +48,26 @@ namespace Skelvy.Domain.Test.Entities
       Assert.Throws<DomainException>(() =>
         entity.Abort());
     }
+
+    [Fact]
+    public void ShouldBeRemoved()
+    {
+      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
+      entity.Remove();
+
+      Assert.True(entity.IsRemoved);
+      Assert.Equal(entity.RemovedReason, GroupUserRemovedReasonType.Removed);
+      Assert.NotNull(entity.ModifiedAt);
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionWithRemoved()
+    {
+      var entity = new GroupUser(1, 1, 1, GroupUserRoleType.Member);
+      entity.Remove();
+
+      Assert.Throws<DomainException>(() =>
+        entity.Remove());
+    }
   }
 }

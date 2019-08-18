@@ -8,6 +8,7 @@ using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
+using Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting;
 using Skelvy.Application.Meetings.Commands.UpdateMeeting;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
@@ -47,6 +48,14 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPost("{id}/add")]
     public async Task AddSelfUserToMeeting(int id, AddUserToMeetingCommand request)
+    {
+      request.UserId = UserId;
+      request.MeetingId = id;
+      await Mediator.Send(request);
+    }
+
+    [HttpDelete("{id}/remove")]
+    public async Task RemoveSelfUserFromMeeting(int id, RemoveUserFromMeetingCommand request)
     {
       request.UserId = UserId;
       request.MeetingId = id;

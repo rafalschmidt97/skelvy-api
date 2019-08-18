@@ -133,7 +133,25 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserLeftMeeting",
           RedirectTo = "meeting",
-          Data = notification,
+          Data = new { notification.UserId },
+        });
+    }
+
+    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_REMOVED_FROM_MEETING",
+        },
+        NotificationType.Regular,
+        new SocketNotificationData
+        {
+          Action = "UserRemovedFromMeeting",
+          RedirectTo = "meeting",
+          Data = new { notification.UserId, notification.RemovedUserId },
         });
     }
 
@@ -151,7 +169,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserLeftGroup",
           RedirectTo = "group",
-          Data = notification,
+          Data = new { notification.UserId },
         });
     }
 
@@ -169,7 +187,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
-          Data = notification,
         });
     }
 
@@ -187,7 +204,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "GroupAborted",
           RedirectTo = "group",
-          Data = notification,
         });
     }
 

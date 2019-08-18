@@ -114,6 +114,23 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification, IList<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_REMOVED_FROM_MEETING",
+        },
+        new PushNotificationData
+        {
+          Action = "UserRemovedFromMeeting",
+          RedirectTo = "meeting",
+          Data = new { notification.UserId, notification.RemovedUserId },
+        });
+    }
+
     public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification, IList<int> usersId)
     {
       await SendNotification(
@@ -144,7 +161,6 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
-          Data = new { notification.UserId },
         });
     }
 
@@ -161,7 +177,6 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "GroupAborted",
           RedirectTo = "group",
-          Data = new { notification.UserId },
         });
     }
 
