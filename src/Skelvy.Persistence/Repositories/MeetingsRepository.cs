@@ -69,6 +69,25 @@ namespace Skelvy.Persistence.Repositories
         .FirstOrDefaultAsync(x => x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved);
     }
 
+    public async Task<Meeting> FindOneWithGroupUsersByMeetingId(int meetingId)
+    {
+      var meeting = await Context.Meetings
+        .Include(x => x.Group)
+        .FirstOrDefaultAsync(x => x.Id == meetingId && !x.IsRemoved);
+
+      if (meeting != null)
+      {
+        var groupUsers = await Context.GroupUsers
+          .Include(x => x.MeetingRequest)
+          .Where(x => x.GroupId == meeting.GroupId && !x.IsRemoved)
+          .ToListAsync();
+
+        meeting.Group.Users = groupUsers;
+      }
+
+      return meeting;
+    }
+
     public async Task<IList<Meeting>> FindAllAfterOrEqualDate(DateTimeOffset maxDate)
     {
       return await Context.Meetings

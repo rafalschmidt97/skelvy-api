@@ -24,6 +24,15 @@ namespace Skelvy.Persistence.Repositories
       return user != null;
     }
 
+    public async Task<bool> ExistsOneByUserIdAndGroupIdAndRole(int userId, int groupId, string role)
+    {
+      var user = await Context.GroupUsers
+        .Include(x => x.Group)
+        .FirstOrDefaultAsync(x => x.UserId == userId && x.GroupId == groupId && x.Role == role && !x.IsRemoved && !x.Group.IsRemoved);
+
+      return user != null;
+    }
+
     public async Task<GroupUser> FindOneByUserIdAndGroupId(int userId, int groupId)
     {
       return await Context.GroupUsers
@@ -117,6 +126,12 @@ namespace Skelvy.Persistence.Repositories
     public async Task Update(GroupUser groupUser)
     {
       Context.GroupUsers.Update(groupUser);
+      await SaveChanges();
+    }
+
+    public async Task UpdateRange(IList<GroupUser> groupUsers)
+    {
+      Context.GroupUsers.UpdateRange(groupUsers);
       await SaveChanges();
     }
 
