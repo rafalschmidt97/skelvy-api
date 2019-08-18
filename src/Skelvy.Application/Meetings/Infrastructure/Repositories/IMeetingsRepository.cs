@@ -10,6 +10,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   {
     Task<bool> ExistsOne(int id);
     Task<bool> ExistsOneByGroupId(int groupId);
+    Task<int> CountOwnMeetingsByUserId(int userId);
     Task<Meeting> FindOne(int id);
     Task<IList<Meeting>> FindAllWithActivityByUserId(int userId);
     Task<Meeting> FindOneByGroupId(int groupId);

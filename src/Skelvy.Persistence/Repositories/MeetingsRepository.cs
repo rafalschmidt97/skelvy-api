@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 using Skelvy.Domain.Extensions;
 
 namespace Skelvy.Persistence.Repositories
@@ -26,6 +27,16 @@ namespace Skelvy.Persistence.Repositories
     {
       return await Context.Meetings
         .AnyAsync(x => x.GroupId == groupId && !x.IsRemoved);
+    }
+
+    public async Task<int> CountOwnMeetingsByUserId(int userId)
+    {
+      var ownGroupUsers = await Context.GroupUsers
+        .Where(x => x.UserId == userId && !x.IsRemoved && x.Role == GroupUserRoleType.Owner)
+        .ToListAsync();
+
+      return await Context.Meetings
+        .CountAsync(x => ownGroupUsers.Any(y => x.GroupId == y.GroupId) && !x.IsRemoved);
     }
 
     public async Task<Meeting> FindOne(int id)

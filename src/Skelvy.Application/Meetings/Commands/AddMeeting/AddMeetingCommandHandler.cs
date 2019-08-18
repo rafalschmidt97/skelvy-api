@@ -42,19 +42,28 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
 
       using (var transaction = _groupUsersRepository.BeginTransaction())
       {
-        var meeting = await CreateNewMeeting(request);
-        await AddUserToMeeting(meeting, request);
+        var group = new Group();
+        await _groupsRepository.Add(group);
+
+        var meeting = new Meeting(
+          request.Date,
+          request.Latitude,
+          request.Longitude,
+          request.Size,
+          true,
+          true,
+          group.Id,
+          request.ActivityId);
+
+        await _meetingsRepository.Add(meeting);
+
+        var groupUser = new GroupUser(meeting.GroupId, request.UserId, GroupUserRoleType.Owner);
+        await _groupUsersRepository.Add(groupUser);
 
         transaction.Commit();
 
         return _mapper.Map<MeetingDto>(meeting);
       }
-    }
-
-    private async Task AddUserToMeeting(Meeting meeting, AddMeetingCommand request)
-    {
-      var groupUser = new GroupUser(meeting.GroupId, request.UserId, GroupUserRoleType.Owner);
-      await _groupUsersRepository.Add(groupUser);
     }
 
     private async Task ValidateData(AddMeetingCommand request)
@@ -72,26 +81,14 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
       {
         throw new NotFoundException(nameof(Activity), request.ActivityId);
       }
-    }
 
-    private async Task<Meeting> CreateNewMeeting(AddMeetingCommand request)
-    {
-      var group = new Group();
-      await _groupsRepository.Add(group);
+      var ownMeetingsCount = await _meetingsRepository.CountOwnMeetingsByUserId(request.UserId);
 
-      var meeting = new Meeting(
-        request.Date,
-        request.Latitude,
-        request.Longitude,
-        request.Size,
-        true,
-        true,
-        group.Id,
-        request.ActivityId);
-
-      await _meetingsRepository.Add(meeting);
-
-      return meeting;
+      if (ownMeetingsCount >= 3)
+      {
+        throw new ConflictException($"{nameof(User)}(Id = {request.UserId}) has already {ownMeetingsCount} {nameof(Meeting)}s. " +
+                                    $"You can have up to 3 {nameof(Meeting)} simultaneity. Remove one first.");
+      }
     }
   }
 }
