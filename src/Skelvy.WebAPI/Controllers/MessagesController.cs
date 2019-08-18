@@ -9,15 +9,15 @@ namespace Skelvy.WebAPI.Controllers
 {
   public class MessagesController : BaseController
   {
-    [HttpGet("self")]
-    public async Task<IList<MessageDto>> FindBeforeSelf([FromQuery] FindMessagesQuery request)
+    [HttpGet]
+    public async Task<IList<MessageDto>> Find([FromQuery] FindMessagesQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
     }
 
-    [HttpPost("self")]
-    public async Task<IList<MessageDto>> AddSelf(AddMessageCommand request)
+    [HttpPost]
+    public async Task<IList<MessageDto>> Add(AddMessageCommand request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);

@@ -9,14 +9,14 @@ namespace Skelvy.WebAPI.Controllers
   public class RequestsController : BaseController
   {
     [HttpPost]
-    public async Task AddSelfRequest(AddMeetingRequestCommand request)
+    public async Task Add(AddMeetingRequestCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);
     }
 
     [HttpPost("{id}/connect")]
-    public async Task ConnectSelfMeetingRequest(int id, ConnectMeetingRequestCommand request)
+    public async Task Connect(int id, ConnectMeetingRequestCommand request)
     {
       request.UserId = UserId;
       request.MeetingRequestId = id;
@@ -24,7 +24,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpDelete("{id}")]
-    public async Task RemoveSelfRequest(int id)
+    public async Task Remove(int id)
     {
       await Mediator.Send(new RemoveMeetingRequestCommand(id, UserId));
     }

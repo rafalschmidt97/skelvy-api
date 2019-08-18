@@ -66,7 +66,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpGet("self/sync")]
-    public async Task<SyncModel> FindAllSelfGroups([FromQuery] SyncQuery request)
+    public async Task<SyncModel> SyncSelf([FromQuery] SyncQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);

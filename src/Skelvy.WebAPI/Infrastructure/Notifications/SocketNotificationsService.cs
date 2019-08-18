@@ -84,20 +84,20 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification)
     {
       await SendNotification(
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "GROUP",
-          BodyLocKey = "USER_JOINED_GROUP",
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_JOINED_MEETING",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
-          Action = "UserJoinedGroup",
-          RedirectTo = "group",
+          Action = "UserJoinedMeeting",
+          RedirectTo = "meeting",
           Data = new { notification.UserId },
         });
     }

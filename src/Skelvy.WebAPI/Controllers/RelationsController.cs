@@ -40,7 +40,7 @@ namespace Skelvy.WebAPI.Controllers
       await Mediator.Send(request);
     }
 
-    [HttpDelete("relations/self/friends/{userId}")]
+    [HttpDelete("self/friends/{userId}")]
     public async Task RemoveSelfFriend(int userId)
     {
       await Mediator.Send(new RemoveFriendCommand(UserId, userId));

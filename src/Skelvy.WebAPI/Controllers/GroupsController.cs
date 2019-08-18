@@ -7,7 +7,7 @@ namespace Skelvy.WebAPI.Controllers
   public class GroupsController : BaseController
   {
     [HttpPost("{id}/leave")]
-    public async Task LeaveSelf(int id)
+    public async Task Leave(int id)
     {
       await Mediator.Send(new LeaveGroupCommand(id, UserId));
     }

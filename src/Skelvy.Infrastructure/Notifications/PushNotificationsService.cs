@@ -64,19 +64,19 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification, IEnumerable<int> usersId)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "GROUP",
-          BodyLocKey = "USER_JOINED_GROUP",
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_JOINED_MEETING",
         },
         new PushNotificationData
         {
-          Action = "UserJoinedGroup",
-          RedirectTo = "group",
+          Action = "UserJoinedMeeting",
+          RedirectTo = "meeting",
           Data = new { notification.UserId },
         });
     }

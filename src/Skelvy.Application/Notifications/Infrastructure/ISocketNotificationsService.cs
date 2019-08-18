@@ -9,7 +9,7 @@ namespace Skelvy.Application.Notifications.Infrastructure
   public interface ISocketNotificationsService
   {
     Task BroadcastUserSentMessage(UserSentMessageNotification notification);
-    Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification);
+    Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification);
     Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification);
     Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification);
     Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification);

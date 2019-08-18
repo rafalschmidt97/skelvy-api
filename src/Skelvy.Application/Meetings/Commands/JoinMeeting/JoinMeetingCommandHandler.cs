@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Events.UserJoinedGroup;
+using Skelvy.Application.Meetings.Events.UserJoinedMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -35,7 +35,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
 
       var groupUser = new GroupUser(meeting.GroupId, request.UserId, GroupUserRoleType.Member);
       await _groupUsersRepository.Add(groupUser);
-      await _mediator.Publish(new UserJoinedGroupEvent(groupUser.UserId, groupUser.GroupId));
+      await _mediator.Publish(new UserJoinedMeetingEvent(groupUser.UserId, groupUser.GroupId));
 
       return Unit.Value;
     }

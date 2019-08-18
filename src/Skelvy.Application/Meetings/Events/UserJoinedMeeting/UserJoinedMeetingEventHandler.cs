@@ -6,14 +6,14 @@ using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 
-namespace Skelvy.Application.Meetings.Events.UserJoinedGroup
+namespace Skelvy.Application.Meetings.Events.UserJoinedMeeting
 {
-  public class UserJoinedGroupEventHandler : EventHandler<UserJoinedGroupEvent>
+  public class UserJoinedMeetingEventHandler : EventHandler<UserJoinedMeetingEvent>
   {
     private readonly INotificationsService _notifications;
     private readonly IGroupUsersRepository _groupUsersRepository;
 
-    public UserJoinedGroupEventHandler(
+    public UserJoinedMeetingEventHandler(
       INotificationsService notifications,
       IGroupUsersRepository groupUsersRepository)
     {
@@ -21,11 +21,11 @@ namespace Skelvy.Application.Meetings.Events.UserJoinedGroup
       _groupUsersRepository = groupUsersRepository;
     }
 
-    public override async Task<Unit> Handle(UserJoinedGroupEvent request)
+    public override async Task<Unit> Handle(UserJoinedMeetingEvent request)
     {
       var groupUsers = await _groupUsersRepository.FindAllByGroupId(request.GroupId);
       var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserJoinedGroup(new UserJoinedGroupNotification(request.UserId, broadcastUsersId));
+      await _notifications.BroadcastUserJoinedMeeting(new UserJoinedMeetingNotification(request.UserId, broadcastUsersId));
 
       return Unit.Value;
     }

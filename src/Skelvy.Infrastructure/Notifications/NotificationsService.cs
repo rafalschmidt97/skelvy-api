@@ -40,13 +40,13 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification)
     {
-      await _socketService.BroadcastUserJoinedGroup(notification);
+      await _socketService.BroadcastUserJoinedMeeting(notification);
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async offline => await _pushService.BroadcastUserJoinedGroup(notification, offline));
+        async offline => await _pushService.BroadcastUserJoinedMeeting(notification, offline));
     }
 
     public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification)
