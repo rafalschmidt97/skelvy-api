@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.Domain.Extensions;
 
 namespace Skelvy.Persistence.Repositories
@@ -95,8 +96,20 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<IList<Meeting>> FindAllNonHiddenCloseWithUsersDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
+    public async Task<IList<Meeting>> FindAllNonHiddenCloseWithUsersDetailsByUserIdAndLocationFilterBlocked(int userId, double latitude, double longitude)
     {
+      var blockedUsers = await Context.Relations
+        .Where(x => (x.UserId == userId || x.RelatedUserId == userId) && x.Type == RelationType.Blocked)
+        .ToListAsync();
+
+      var filterBlockedUsersId = blockedUsers.Select(x => x.UserId == userId ? x.RelatedUserId : x.UserId).ToList();
+
+      var filterGroupUsers = await Context.GroupUsers
+        .Where(x => filterBlockedUsersId.Any(y => y == x.UserId) && x.Role == GroupUserRoleType.Owner)
+        .ToListAsync();
+
+      var filterBlockedGroupsId = filterGroupUsers.Select(x => x.GroupId).ToList();
+
       var user = await Context.Users
         .Include(x => x.Profile)
         .FirstOrDefaultAsync(x => x.Id == userId && !x.IsRemoved);
@@ -112,7 +125,8 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Activity)
         .Where(x => !x.IsRemoved &&
                     !x.IsHidden &&
-                    x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size)
+                    x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size &&
+                    filterBlockedGroupsId.All(y => x.GroupId != y))
         .ToListAsync();
 
       if (meetings.Any())

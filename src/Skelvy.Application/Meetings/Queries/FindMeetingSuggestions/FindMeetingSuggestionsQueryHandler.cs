@@ -36,10 +36,10 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingSuggestions
       }
 
       var requests = await _requestsRepository
-        .FindAllCloseWithUserDetailsByUserIdAndLocation(request.UserId, request.Latitude, request.Longitude);
+        .FindAllCloseWithUserDetailsByUserIdAndLocationFilterBlocked(request.UserId, request.Latitude, request.Longitude);
 
       var meetings = await _meetingsRepository
-        .FindAllNonHiddenCloseWithUsersDetailsByUserIdAndLocation(request.UserId, request.Latitude, request.Longitude);
+        .FindAllNonHiddenCloseWithUsersDetailsByUserIdAndLocationFilterBlocked(request.UserId, request.Latitude, request.Longitude);
 
       return await _mapper.Map(requests, meetings, request.Language);
     }

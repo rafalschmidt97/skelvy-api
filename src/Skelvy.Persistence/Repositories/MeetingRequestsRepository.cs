@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums.Users;
 using Skelvy.Domain.Extensions;
 
 namespace Skelvy.Persistence.Repositories
@@ -77,8 +78,14 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.Id == requestId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Found);
     }
 
-    public async Task<IList<MeetingRequest>> FindAllCloseWithUserDetailsByUserIdAndLocation(int userId, double latitude, double longitude)
+    public async Task<IList<MeetingRequest>> FindAllCloseWithUserDetailsByUserIdAndLocationFilterBlocked(int userId, double latitude, double longitude)
     {
+      var blockedUsers = await Context.Relations
+        .Where(x => (x.UserId == userId || x.RelatedUserId == userId) && x.Type == RelationType.Blocked)
+        .ToListAsync();
+
+      var filterBlockedUsersId = blockedUsers.Select(x => x.UserId == userId ? x.RelatedUserId : x.UserId).ToList();
+
       var user = await Context.Users
         .Include(x => x.Profile)
         .FirstOrDefaultAsync(x => x.Id == userId && !x.IsRemoved);
@@ -89,6 +96,7 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Activities)
         .ThenInclude(x => x.Activity)
         .Where(x => x.UserId != userId &&
+                    filterBlockedUsersId.All(y => x.UserId != y) &&
                     !x.IsRemoved &&
                     x.Status == MeetingRequestStatusType.Searching)
         .ToListAsync();
