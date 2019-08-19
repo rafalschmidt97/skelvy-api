@@ -85,6 +85,15 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
           $"Request {nameof(FriendRequest)}(RequestId = {request.RequestId}) not belong to {nameof(User)}(Id = {request.UserId}).");
       }
 
+      var existsBlockedRelation = await _relationsRepository
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(friendRequest.InvitedUserId, friendRequest.InvitingUserId, RelationType.Blocked);
+
+      if (existsBlockedRelation)
+      {
+        throw new ConflictException(
+          $"Entity {nameof(User)}(UserId={friendRequest.InvitedUserId}) is blocked/blocking {nameof(User)}(UserId={friendRequest.InvitingUserId}).");
+      }
+
       return friendRequest;
     }
   }

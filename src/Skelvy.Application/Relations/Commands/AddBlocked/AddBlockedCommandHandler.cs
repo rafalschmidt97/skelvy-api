@@ -49,7 +49,7 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
       }
 
       var relationExists = await _relationsRepository
-        .ExistsByUserIdAndRelatedUserIdAndType(request.UserId, request.RelatedUserId, RelationType.Blocked);
+        .ExistsOneByUserIdAndRelatedUserIdAndType(request.UserId, request.RelatedUserId, RelationType.Blocked);
 
       if (relationExists)
       {

@@ -39,7 +39,7 @@ namespace Skelvy.Persistence.Repositories
         .FirstOrDefaultAsync(r => r.Id == requestId && !r.IsRemoved);
     }
 
-    public async Task<bool> ExistsByInvitingIdAndInvitedId(int invitingUserId, int invitedUserId)
+    public async Task<bool> ExistsOneByInvitingIdAndInvitedIdTwoWay(int invitingUserId, int invitedUserId)
     {
       return await Context.FriendRequests.AnyAsync(
         x => ((x.InvitingUserId == invitingUserId && x.InvitedUserId == invitedUserId) ||

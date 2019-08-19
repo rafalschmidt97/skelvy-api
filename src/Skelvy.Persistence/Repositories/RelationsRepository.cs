@@ -20,6 +20,13 @@ namespace Skelvy.Persistence.Repositories
         x.UserId == userId && x.RelatedUserId == relatedUserId && x.Type == type && !x.IsRemoved);
     }
 
+    public async Task<Relation> FindOneByUserIdAndRelatedUserIdTwoWay(int userId, int relatedUserId)
+    {
+      return await Context.Relations.Where(x =>
+        (x.UserId == userId && x.RelatedUserId == relatedUserId && !x.IsRemoved) ||
+        (x.UserId == relatedUserId && x.RelatedUserId == userId && !x.IsRemoved)).FirstOrDefaultAsync();
+    }
+
     public async Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type)
     {
       return await Context.Relations.Where(x =>
@@ -53,7 +60,7 @@ namespace Skelvy.Persistence.Repositories
       return relations;
     }
 
-    public async Task<bool> ExistsByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type)
+    public async Task<bool> ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type)
     {
       return await Context.Relations.AnyAsync(
         x => ((x.UserId == userId && x.RelatedUserId == relatedUserId) ||
@@ -62,7 +69,7 @@ namespace Skelvy.Persistence.Repositories
              !x.IsRemoved);
     }
 
-    public async Task<bool> ExistsByUserIdAndRelatedUserIdAndType(int userId, int relatedUserId, string type)
+    public async Task<bool> ExistsOneByUserIdAndRelatedUserIdAndType(int userId, int relatedUserId, string type)
     {
       return await Context.Relations.AnyAsync(
         x => x.UserId == userId && x.RelatedUserId == relatedUserId && x.Type == type && !x.IsRemoved);

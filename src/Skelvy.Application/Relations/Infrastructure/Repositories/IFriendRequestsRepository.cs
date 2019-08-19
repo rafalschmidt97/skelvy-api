@@ -9,7 +9,7 @@ namespace Skelvy.Application.Relations.Infrastructure.Repositories
   {
     Task<IList<FriendRequest>> FindAllWithInvitingDetailsByUserId(int userId);
     Task<FriendRequest> FindOneByRequestId(int requestId);
-    Task<bool> ExistsByInvitingIdAndInvitedId(int invitingUserId, int invitedUserId);
+    Task<bool> ExistsOneByInvitingIdAndInvitedIdTwoWay(int invitingUserId, int invitedUserId);
     Task<IList<FriendRequest>> FindAllWithRemovedByUsersId(List<int> usersId);
     Task Add(FriendRequest friendsRequest);
     Task Update(FriendRequest request);

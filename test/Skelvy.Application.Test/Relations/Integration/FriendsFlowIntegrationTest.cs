@@ -149,7 +149,7 @@ namespace Skelvy.Application.Test.Relations.Integration
 
     private async Task<bool> UserOneAndUserTwoShouldHaveNoRelation()
     {
-      var relationExists = await _relationsRepository.ExistsByUserIdAndRelatedUserIdAndTypeTwoWay(UserOneId, UserTwoId, RelationType.Friend);
+      var relationExists = await _relationsRepository.ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(UserOneId, UserTwoId, RelationType.Friend);
       return !relationExists;
     }
   }

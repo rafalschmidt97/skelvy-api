@@ -77,6 +77,21 @@ namespace Skelvy.Application.Test.Relations.Commands
     }
 
     [Fact]
+    public async Task ShouldThrowExceptionWithBlockedUser()
+    {
+      var request = new InviteFriendCommand(2, 4);
+      var dbContext = InitializedDbContext();
+      var handler = new InviteFriendCommandHandler(
+        new RelationsRepository(dbContext),
+        new FriendRequestsRepository(dbContext),
+        new UsersRepository(dbContext),
+        _mediator.Object);
+
+      await Assert.ThrowsAsync<ConflictException>(() =>
+        handler.Handle(request));
+    }
+
+    [Fact]
     public async Task ShouldThrowExceptionWithExistingRequestCreated()
     {
       var request = new InviteFriendCommand(1, 2);
