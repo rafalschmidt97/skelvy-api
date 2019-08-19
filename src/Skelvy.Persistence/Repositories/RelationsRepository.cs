@@ -22,9 +22,16 @@ namespace Skelvy.Persistence.Repositories
 
     public async Task<Relation> FindOneByUserIdAndRelatedUserIdTwoWay(int userId, int relatedUserId)
     {
+      return await Context.Relations.FirstOrDefaultAsync(x =>
+        (x.UserId == userId && x.RelatedUserId == relatedUserId && !x.IsRemoved) ||
+        (x.UserId == relatedUserId && x.RelatedUserId == userId && !x.IsRemoved));
+    }
+
+    public async Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdTwoWay(int userId, int relatedUserId)
+    {
       return await Context.Relations.Where(x =>
         (x.UserId == userId && x.RelatedUserId == relatedUserId && !x.IsRemoved) ||
-        (x.UserId == relatedUserId && x.RelatedUserId == userId && !x.IsRemoved)).FirstOrDefaultAsync();
+        (x.UserId == relatedUserId && x.RelatedUserId == userId && !x.IsRemoved)).ToListAsync();
     }
 
     public async Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type)

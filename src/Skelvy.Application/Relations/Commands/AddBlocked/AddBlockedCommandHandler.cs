@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
@@ -24,15 +26,27 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
 
     public override async Task<Unit> Handle(AddBlockedCommand request)
     {
-      await ValidateData(request);
+      var relations = await ValidateData(request);
 
-      var relation = new Relation(request.UserId, request.RelatedUserId, RelationType.Blocked);
-      await _relationsRepository.Add(relation);
+      using (var transaction = _relationsRepository.BeginTransaction())
+      {
+        foreach (var relation in relations)
+        {
+          relation.Abort();
+        }
+
+        await _relationsRepository.UpdateRange(relations);
+
+        var blockerRelation = new Relation(request.UserId, request.RelatedUserId, RelationType.Blocked);
+        await _relationsRepository.Add(blockerRelation);
+
+        transaction.Commit();
+      }
 
       return Unit.Value;
     }
 
-    private async Task ValidateData(AddBlockedCommand request)
+    private async Task<IList<Relation>> ValidateData(AddBlockedCommand request)
     {
       var userExists = await _usersRepository.ExistsOne(request.UserId);
 
@@ -48,14 +62,16 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
         throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.RelatedUserId}) not found.");
       }
 
-      var relationExists = await _relationsRepository
-        .ExistsOneByUserIdAndRelatedUserIdAndType(request.UserId, request.RelatedUserId, RelationType.Blocked);
+      var relations = await _relationsRepository
+        .FindAllByUserIdAndRelatedUserIdTwoWay(request.UserId, request.RelatedUserId);
 
-      if (relationExists)
+      if (relations.Any(x => x.Type == RelationType.Blocked))
       {
         throw new ConflictException(
           $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.RelatedUserId}) already exists.");
       }
+
+      return relations;
     }
   }
 }

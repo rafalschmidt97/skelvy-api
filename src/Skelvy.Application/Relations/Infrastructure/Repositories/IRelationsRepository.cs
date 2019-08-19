@@ -9,6 +9,7 @@ namespace Skelvy.Application.Relations.Infrastructure.Repositories
   {
     Task<Relation> FindOneByUserIdAndRelatedUserIdAndType(int userId, int relatedUserId, string type);
     Task<Relation> FindOneByUserIdAndRelatedUserIdTwoWay(int userId, int relatedUserId);
+    Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdTwoWay(int userId, int relatedUserId);
     Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type);
     Task<IList<Relation>> FindPageUsersWithRelatedDetailsByUserIdAndType(int userId, string relationType, int page, int pageSize = 10);
     Task<bool> ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type);
