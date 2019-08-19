@@ -56,11 +56,11 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
 
       if (!relatedUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.InvitedUserId}) not found.");
       }
 
       var relationExists = await _relationsRepository
-        .ExistsByUserIdAndRelatedUserIdAndType(request.UserId, request.InvitedUserId, RelationType.Friend);
+        .ExistsByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitedUserId, RelationType.Friend);
 
       if (relationExists)
       {

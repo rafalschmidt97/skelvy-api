@@ -14,7 +14,13 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
-    public async Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdAndType(int userId, int relatedUserId, string type)
+    public async Task<Relation> FindOneByUserIdAndRelatedUserIdAndType(int userId, int relatedUserId, string type)
+    {
+      return await Context.Relations.FirstOrDefaultAsync(x =>
+        x.UserId == userId && x.RelatedUserId == relatedUserId && x.Type == type && !x.IsRemoved);
+    }
+
+    public async Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type)
     {
       return await Context.Relations.Where(x =>
         (x.UserId == userId && x.RelatedUserId == relatedUserId && !x.IsRemoved && x.Type == type) ||
@@ -47,12 +53,19 @@ namespace Skelvy.Persistence.Repositories
       return relations;
     }
 
+    public async Task<bool> ExistsByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type)
+    {
+      return await Context.Relations.AnyAsync(
+        x => ((x.UserId == userId && x.RelatedUserId == relatedUserId) ||
+              (x.UserId == relatedUserId && x.RelatedUserId == userId)) &&
+             x.Type == type &&
+             !x.IsRemoved);
+    }
+
     public async Task<bool> ExistsByUserIdAndRelatedUserIdAndType(int userId, int relatedUserId, string type)
     {
       return await Context.Relations.AnyAsync(
-        x => ((x.UserId == userId && x.RelatedUserId == relatedUserId) || (x.UserId == relatedUserId && x.RelatedUserId == userId)) &&
-             !x.IsRemoved &&
-             x.Type == type);
+        x => x.UserId == userId && x.RelatedUserId == relatedUserId && x.Type == type && !x.IsRemoved);
     }
 
     public async Task<IList<Relation>> FindAllWithRemovedByUsersId(List<int> usersId)
@@ -60,6 +73,12 @@ namespace Skelvy.Persistence.Repositories
       return await Context.Relations
         .Where(x => usersId.Any(y => y == x.UserId || y == x.RelatedUserId))
         .ToListAsync();
+    }
+
+    public async Task Add(Relation relation)
+    {
+      await Context.Relations.AddAsync(relation);
+      await Context.SaveChangesAsync();
     }
 
     public async Task AddRange(IList<Relation> relations)

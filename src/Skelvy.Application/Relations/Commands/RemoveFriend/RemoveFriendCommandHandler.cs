@@ -48,7 +48,7 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
       }
 
       var friendRelations = await _relationsRepository
-        .FindAllByUserIdAndRelatedUserIdAndType(request.UserId, request.RemovedUserId, RelationType.Friend);
+        .FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.RemovedUserId, RelationType.Friend);
 
       if (!friendRelations.Any())
       {

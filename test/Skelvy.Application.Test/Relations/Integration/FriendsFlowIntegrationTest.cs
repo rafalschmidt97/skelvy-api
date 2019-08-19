@@ -103,7 +103,7 @@ namespace Skelvy.Application.Test.Relations.Integration
 
     private async Task<bool> UserOneAndUserTwoHaveAFriendsRelation()
     {
-      var relations = await _relationsRepository.FindAllByUserIdAndRelatedUserIdAndType(UserOneId, UserTwoId, RelationType.Friend);
+      var relations = await _relationsRepository.FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(UserOneId, UserTwoId, RelationType.Friend);
 
       return relations.Count == 2 && relations.All(r => r.Type == RelationType.Friend);
     }
@@ -149,7 +149,7 @@ namespace Skelvy.Application.Test.Relations.Integration
 
     private async Task<bool> UserOneAndUserTwoShouldHaveNoRelation()
     {
-      var relationExists = await _relationsRepository.ExistsByUserIdAndRelatedUserIdAndType(UserOneId, UserTwoId, RelationType.Friend);
+      var relationExists = await _relationsRepository.ExistsByUserIdAndRelatedUserIdAndTypeTwoWay(UserOneId, UserTwoId, RelationType.Friend);
       return !relationExists;
     }
   }
