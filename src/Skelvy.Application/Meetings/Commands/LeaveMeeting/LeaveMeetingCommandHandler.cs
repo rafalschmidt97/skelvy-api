@@ -7,6 +7,7 @@ using Skelvy.Application.Meetings.Events.UserLeftMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Meetings;
 
 namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 {
@@ -101,6 +102,23 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
           }
 
           meetingAborted = true;
+        }
+        else
+        {
+          if (groupUserDetails.Role == GroupUserRoleType.Owner || groupUserDetails.Role == GroupUserRoleType.Admin)
+          {
+            var otherUsers = groupUsers.Where(x => x.UserId != request.UserId).ToList();
+
+            if (!otherUsers.Any(x => x.Role == GroupUserRoleType.Owner || x.Role == GroupUserRoleType.Admin))
+            {
+              foreach (var otherUser in otherUsers)
+              {
+                otherUser.UpdateRole(GroupUserRoleType.Admin);
+              }
+
+              await _groupUsersRepository.UpdateRange(otherUsers);
+            }
+          }
         }
 
         transaction.Commit();
