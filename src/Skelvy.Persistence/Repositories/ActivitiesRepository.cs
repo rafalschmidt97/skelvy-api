@@ -14,6 +14,16 @@ namespace Skelvy.Persistence.Repositories
     {
     }
 
+    public async Task<bool> ExistsOne(int id)
+    {
+      return await Context.Activities.AnyAsync(x => x.Id == id);
+    }
+
+    public async Task<Activity> FindOne(int id)
+    {
+      return await Context.Activities.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
     public async Task<IList<Activity>> FindAll()
     {
       return await Context.Activities.OrderBy(x => x.Id).ToListAsync();

@@ -30,6 +30,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
 
       RuleFor(x => x.Latitude).NotEmpty();
       RuleFor(x => x.Longitude).NotEmpty();
+      RuleFor(x => x.Description).MaximumLength(500);
 
       RuleFor(x => x.Activities).NotEmpty();
       RuleForEach(x => x.Activities).SetValidator(new AddMeetingRequestActivityValidator());

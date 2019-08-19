@@ -64,19 +64,19 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification, IEnumerable<int> usersId)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "GROUP",
-          BodyLocKey = "USER_JOINED_GROUP",
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_JOINED_MEETING",
         },
         new PushNotificationData
         {
-          Action = "UserJoinedGroup",
-          RedirectTo = "group",
+          Action = "UserJoinedMeeting",
+          RedirectTo = "meeting",
           Data = new { notification.UserId },
         });
     }
@@ -114,6 +114,40 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification, IList<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_REMOVED_FROM_MEETING",
+        },
+        new PushNotificationData
+        {
+          Action = "UserRemovedFromMeeting",
+          RedirectTo = "meeting",
+          Data = new { notification.UserId, notification.RemovedUserId },
+        });
+    }
+
+    public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification, IList<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "GROUP",
+          BodyLocKey = "USER_LEFT_GROUP",
+        },
+        new PushNotificationData
+        {
+          Action = "UserLeftGroup",
+          RedirectTo = "group",
+          Data = new { notification.UserId },
+        });
+    }
+
     public async Task BroadcastMeetingAborted(MeetingAbortedNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
@@ -127,7 +161,6 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
-          Data = new { notification.UserId },
         });
     }
 
@@ -144,7 +177,6 @@ namespace Skelvy.Infrastructure.Notifications
         {
           Action = "GroupAborted",
           RedirectTo = "group",
-          Data = new { notification.UserId },
         });
     }
 

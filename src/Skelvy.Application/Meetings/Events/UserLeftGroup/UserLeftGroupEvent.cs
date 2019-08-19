@@ -1,10 +1,10 @@
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Events.UserJoinedGroup
+namespace Skelvy.Application.Meetings.Events.UserLeftGroup
 {
-  public class UserJoinedGroupEvent : IEvent
+  public class UserLeftGroupEvent : IEvent
   {
-    public UserJoinedGroupEvent(int userId, int groupId)
+    public UserLeftGroupEvent(int userId, int groupId)
     {
       UserId = userId;
       GroupId = groupId;

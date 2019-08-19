@@ -43,10 +43,7 @@ namespace Skelvy.Domain.Entities
         : throw new DomainException(
           $"'Gender' must be {GenderType.Male} / {GenderType.Female} / {GenderType.Other} for entity {nameof(Profile)}(Id = {Id}).");
 
-      if (description != null)
-      {
-        Description = description.Trim();
-      }
+      Description = description?.Trim();
 
       ModifiedAt = DateTimeOffset.UtcNow;
     }

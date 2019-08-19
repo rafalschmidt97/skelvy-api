@@ -25,7 +25,9 @@ namespace Skelvy.Application.Meetings.Events.UserLeftMeeting
     {
       var groupUsers = await _groupUsersRepository.FindAllByGroupId(request.GroupId);
       var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastUserLeftMeeting(new UserLeftMeetingNotification(request.UserId, broadcastUsersId));
+
+      await _notifications.BroadcastUserLeftMeeting(
+        new UserLeftMeetingNotification(request.UserId, request.GroupId, request.MeetingId, broadcastUsersId));
 
       return Unit.Value;
     }

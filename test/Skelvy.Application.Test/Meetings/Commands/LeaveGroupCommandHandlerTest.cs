@@ -18,13 +18,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     }
 
     [Fact]
-    public async Task ShouldNotThrowException()
+    public async Task ShouldLeaveGroup()
     {
       var request = new LeaveGroupCommand(2, 1);
       var dbContext = InitializedDbContext();
       var handler = new LeaveGroupCommandHandler(
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         _mediator.Object);
 
@@ -39,6 +40,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new LeaveGroupCommandHandler(
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         _mediator.Object);
 
@@ -47,13 +49,14 @@ namespace Skelvy.Application.Test.Meetings.Commands
     }
 
     [Fact]
-    public async Task ShouldThrowExceptionWithExistingFoundRequest()
+    public async Task ShouldThrowExceptionWithExistingMeeting()
     {
       var request = new LeaveGroupCommand(1, 2);
       var dbContext = InitializedDbContext();
       var handler = new LeaveGroupCommandHandler(
         new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
+        new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
         _mediator.Object);
 

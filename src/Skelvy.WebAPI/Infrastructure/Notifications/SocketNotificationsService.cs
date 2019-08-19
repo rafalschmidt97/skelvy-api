@@ -84,20 +84,20 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification)
     {
       await SendNotification(
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "GROUP",
-          BodyLocKey = "USER_JOINED_GROUP",
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_JOINED_MEETING",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
-          Action = "UserJoinedGroup",
-          RedirectTo = "group",
+          Action = "UserJoinedMeeting",
+          RedirectTo = "meeting",
           Data = new { notification.UserId },
         });
     }
@@ -133,7 +133,43 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserLeftMeeting",
           RedirectTo = "meeting",
-          Data = notification,
+          Data = new { notification.UserId },
+        });
+    }
+
+    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_REMOVED_FROM_MEETING",
+        },
+        NotificationType.Regular,
+        new SocketNotificationData
+        {
+          Action = "UserRemovedFromMeeting",
+          RedirectTo = "meeting",
+          Data = new { notification.UserId, notification.RemovedUserId },
+        });
+    }
+
+    public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "GROUP",
+          BodyLocKey = "USER_LEFT_GROUP",
+        },
+        NotificationType.Regular,
+        new SocketNotificationData
+        {
+          Action = "UserLeftGroup",
+          RedirectTo = "group",
+          Data = new { notification.UserId },
         });
     }
 
@@ -151,7 +187,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
-          Data = notification,
         });
     }
 
@@ -169,7 +204,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "GroupAborted",
           RedirectTo = "group",
-          Data = notification,
         });
     }
 

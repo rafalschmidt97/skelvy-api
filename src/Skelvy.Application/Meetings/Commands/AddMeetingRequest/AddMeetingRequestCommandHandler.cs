@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
+using AutoMapper;
 using Skelvy.Application.Activities.Infrastructure.Repositories;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Common.Extensions;
@@ -12,26 +13,29 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
 {
-  public class AddMeetingRequestCommandHandler : CommandHandler<AddMeetingRequestCommand>
+  public class AddMeetingRequestCommandHandler : CommandHandlerData<AddMeetingRequestCommand, MeetingRequestDto>
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IActivitiesRepository _activitiesRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
     private readonly IMeetingRequestActivityRepository _meetingRequestActivityRepository;
+    private readonly IMapper _mapper;
 
     public AddMeetingRequestCommandHandler(
       IUsersRepository usersRepository,
       IActivitiesRepository activitiesRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
-      IMeetingRequestActivityRepository meetingRequestActivityRepository)
+      IMeetingRequestActivityRepository meetingRequestActivityRepository,
+      IMapper mapper)
     {
       _usersRepository = usersRepository;
       _activitiesRepository = activitiesRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
       _meetingRequestActivityRepository = meetingRequestActivityRepository;
+      _mapper = mapper;
     }
 
-    public override async Task<Unit> Handle(AddMeetingRequestCommand request)
+    public override async Task<MeetingRequestDto> Handle(AddMeetingRequestCommand request)
     {
       await ValidateData(request);
 
@@ -44,6 +48,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
           request.MaxAge,
           request.Latitude,
           request.Longitude,
+          request.Description,
           request.UserId);
 
         await _meetingRequestsRepository.Add(meetingRequest);
@@ -51,9 +56,9 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
         PrepareActivities(request.Activities, meetingRequest).ForEach(x => meetingRequest.Activities.Add(x));
         await _meetingRequestActivityRepository.AddRange(meetingRequest.Activities);
         transaction.Commit();
-      }
 
-      return Unit.Value;
+        return _mapper.Map<MeetingRequestDto>(meetingRequest);
+      }
     }
 
     private async Task ValidateData(AddMeetingRequestCommand request)

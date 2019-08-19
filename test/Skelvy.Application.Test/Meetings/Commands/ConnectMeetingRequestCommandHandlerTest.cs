@@ -57,9 +57,9 @@ namespace Skelvy.Application.Test.Meetings.Commands
     }
 
     [Fact]
-    public async Task ShouldThrowExceptionWithSelfRequest()
+    public async Task ShouldThrowExceptionWithInvalidMeetingRequest()
     {
-      var request = new ConnectMeetingRequestCommand(1, 1, DateTimeOffset.UtcNow.AddDays(1), 1);
+      var request = new ConnectMeetingRequestCommand(2, 100, DateTimeOffset.UtcNow.AddDays(1), 1);
       var dbContext = InitializedDbContext();
       var handler = new ConnectMeetingRequestCommandHandler(
         new UsersRepository(dbContext),
@@ -75,9 +75,9 @@ namespace Skelvy.Application.Test.Meetings.Commands
     }
 
     [Fact]
-    public async Task ShouldThrowExceptionWithInvalidMeetingRequest()
+    public async Task ShouldThrowExceptionWithSelfRequest()
     {
-      var request = new ConnectMeetingRequestCommand(2, 100, DateTimeOffset.UtcNow.AddDays(1), 1);
+      var request = new ConnectMeetingRequestCommand(1, 1, DateTimeOffset.UtcNow.AddDays(1), 1);
       var dbContext = InitializedDbContext();
       var handler = new ConnectMeetingRequestCommandHandler(
         new UsersRepository(dbContext),
@@ -88,7 +88,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         _mediator.Object,
         _logger.Object);
 
-      await Assert.ThrowsAsync<NotFoundException>(() =>
+      await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));
     }
 

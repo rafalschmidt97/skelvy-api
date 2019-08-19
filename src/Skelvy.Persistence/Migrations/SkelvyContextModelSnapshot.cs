@@ -25,9 +25,17 @@ namespace Skelvy.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Distance");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<int>("Size");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.HasKey("Id");
 
@@ -133,6 +141,10 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(15);
+
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
@@ -142,6 +154,8 @@ namespace Skelvy.Persistence.Migrations
                     b.HasIndex("IsRemoved");
 
                     b.HasIndex("MeetingRequestId");
+
+                    b.HasIndex("Role");
 
                     b.HasIndex("UserId");
 
@@ -162,6 +176,10 @@ namespace Skelvy.Persistence.Migrations
 
                     b.Property<int>("GroupId");
 
+                    b.Property<bool>("IsHidden");
+
+                    b.Property<bool>("IsPrivate");
+
                     b.Property<bool>("IsRemoved");
 
                     b.Property<double>("Latitude");
@@ -174,6 +192,8 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
 
+                    b.Property<int>("Size");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityId");
@@ -182,11 +202,17 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasIndex("GroupId");
 
+                    b.HasIndex("IsHidden");
+
+                    b.HasIndex("IsPrivate");
+
                     b.HasIndex("IsRemoved");
 
                     b.HasIndex("Latitude");
 
                     b.HasIndex("Longitude");
+
+                    b.HasIndex("Size");
 
                     b.ToTable("Meetings");
                 });
@@ -198,6 +224,9 @@ namespace Skelvy.Persistence.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("CreatedAt");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500);
 
                     b.Property<bool>("IsRemoved");
 

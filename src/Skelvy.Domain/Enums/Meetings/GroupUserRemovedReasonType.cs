@@ -4,5 +4,6 @@ namespace Skelvy.Domain.Enums.Meetings
   {
     public const string Left = "left";
     public const string Aborted = "aborted";
+    public const string Removed = "removed";
   }
 }

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Events.UserJoinedGroup;
+using Skelvy.Application.Meetings.Events.UserJoinedMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -30,6 +30,17 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
 
     public override async Task<Unit> Handle(JoinMeetingCommand request)
     {
+      var meeting = await ValidateData(request);
+
+      var groupUser = new GroupUser(meeting.GroupId, request.UserId);
+      await _groupUsersRepository.Add(groupUser);
+      await _mediator.Publish(new UserJoinedMeetingEvent(groupUser.UserId, groupUser.GroupId));
+
+      return Unit.Value;
+    }
+
+    private async Task<Meeting> ValidateData(JoinMeetingCommand request)
+    {
       var existsUser = await _usersRepository.ExistsOne(request.UserId);
 
       if (!existsUser)
@@ -38,18 +49,22 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       }
 
       var meeting = await _meetingsRepository
-        .FindOneNotBelongingByMeetingIdAndUserId(request.MeetingId, request.UserId);
+        .FindOneNonHiddenAndNonFullByMeetingIdAndUserId(request.MeetingId, request.UserId);
 
       if (meeting == null)
       {
         throw new NotFoundException(nameof(Meeting), request.MeetingId);
       }
 
-      var groupUser = new GroupUser(meeting.GroupId, request.UserId);
-      await _groupUsersRepository.Add(groupUser);
-      await _mediator.Publish(new UserJoinedGroupEvent(groupUser.UserId, groupUser.GroupId));
+      var existsGroupUser = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.UserId, meeting.GroupId);
 
-      return Unit.Value;
+      if (existsGroupUser)
+      {
+        throw new ConflictException(
+          $"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) already joined.");
+      }
+
+      return meeting;
     }
   }
 }

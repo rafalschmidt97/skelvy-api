@@ -24,6 +24,22 @@ namespace Skelvy.Persistence.Repositories
       return user != null;
     }
 
+    public async Task<bool> ExistsOneByUserIdAndGroupIdAndRole(int userId, int groupId, string role)
+    {
+      var user = await Context.GroupUsers
+        .Include(x => x.Group)
+        .FirstOrDefaultAsync(x => x.UserId == userId && x.GroupId == groupId && x.Role == role && !x.IsRemoved && !x.Group.IsRemoved);
+
+      return user != null;
+    }
+
+    public async Task<GroupUser> FindOneByUserIdAndGroupId(int userId, int groupId)
+    {
+      return await Context.GroupUsers
+        .Include(x => x.Group)
+        .FirstOrDefaultAsync(x => x.UserId == userId && x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved);
+    }
+
     public async Task<bool> ExistsOneByMeetingRequestId(int requestId)
     {
       var user = await Context.GroupUsers
@@ -56,7 +72,7 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<IList<GroupUser>> FindAllWithRequestByGroupId(int groupId)
+    public async Task<IList<GroupUser>> FindAllWithGroupAndRequestByGroupId(int groupId)
     {
       return await Context.GroupUsers
         .Include(x => x.Group)
@@ -95,14 +111,6 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
-    public async Task<IList<GroupUser>> FindAllWithGroupByGroupId(int groupId)
-    {
-      return await Context.GroupUsers
-        .Include(x => x.Group)
-        .Where(x => x.GroupId == groupId && !x.IsRemoved && !x.Group.IsRemoved)
-        .ToListAsync();
-    }
-
     public async Task Add(GroupUser groupUser)
     {
       await Context.GroupUsers.AddAsync(groupUser);
@@ -118,6 +126,12 @@ namespace Skelvy.Persistence.Repositories
     public async Task Update(GroupUser groupUser)
     {
       Context.GroupUsers.Update(groupUser);
+      await SaveChanges();
+    }
+
+    public async Task UpdateRange(IList<GroupUser> groupUsers)
+    {
+      Context.GroupUsers.UpdateRange(groupUsers);
       await SaveChanges();
     }
 

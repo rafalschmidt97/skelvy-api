@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Skelvy.Application.Meetings.Infrastructure.Notifications
 {
-  public class UserJoinedGroupNotification
+  public class UserJoinedMeetingNotification
   {
-    public UserJoinedGroupNotification(int userId, IEnumerable<int> usersId)
+    public UserJoinedMeetingNotification(int userId, IEnumerable<int> usersId)
     {
       UserId = userId;
       UsersId = usersId;

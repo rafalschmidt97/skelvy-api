@@ -237,7 +237,7 @@ namespace Skelvy.Persistence
 
       var meetings = new[]
       {
-        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, groups[0].Id, activities[0].Id),
+        new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, activities[0].Size, false, false, groups[0].Id, activities[0].Id),
       };
 
       context.Meetings.AddRange(meetings);
@@ -245,10 +245,10 @@ namespace Skelvy.Persistence
 
       var groupUsers = new[]
       {
-        new GroupUser(groups[0].Id, users[1].Id, requests[0].Id),
-        new GroupUser(groups[0].Id, users[2].Id, requests[1].Id),
-        new GroupUser(groups[1].Id, users[0].Id),
-        new GroupUser(groups[1].Id, users[3].Id),
+        new GroupUser(groups[0].Id, users[1].Id, requests[0].Id, GroupUserRoleType.Owner),
+        new GroupUser(groups[0].Id, users[2].Id, requests[1].Id, GroupUserRoleType.Admin),
+        new GroupUser(groups[1].Id, users[0].Id, GroupUserRoleType.Admin),
+        new GroupUser(groups[1].Id, users[3].Id, GroupUserRoleType.Admin),
       };
 
       context.GroupUsers.AddRange(groupUsers);

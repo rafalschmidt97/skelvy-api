@@ -73,7 +73,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new GroupUsersRepository(dbContext),
         _mediator.Object);
 
-      await Assert.ThrowsAsync<NotFoundException>(() =>
+      await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));
     }
 

@@ -40,13 +40,13 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
-    public async Task BroadcastUserJoinedGroup(UserJoinedGroupNotification notification)
+    public async Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification)
     {
-      await _socketService.BroadcastUserJoinedGroup(notification);
+      await _socketService.BroadcastUserJoinedMeeting(notification);
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async offline => await _pushService.BroadcastUserJoinedGroup(notification, offline));
+        async offline => await _pushService.BroadcastUserJoinedMeeting(notification, offline));
     }
 
     public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification)
@@ -65,6 +65,24 @@ namespace Skelvy.Infrastructure.Notifications
       await BroadcastActionToOffline(
         notification.UsersId,
         async offline => await _pushService.BroadcastUserLeftMeeting(notification, offline));
+    }
+
+    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification)
+    {
+      await _socketService.BroadcastUserRemovedFromMeeting(notification);
+
+      await BroadcastActionToOffline(
+        notification.UsersId,
+        async offline => await _pushService.BroadcastUserRemovedFromMeeting(notification, offline));
+    }
+
+    public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification)
+    {
+      await _socketService.BroadcastUserLeftGroup(notification);
+
+      await BroadcastActionToOffline(
+        notification.UsersId,
+        async offline => await _pushService.BroadcastUserLeftGroup(notification, offline));
     }
 
     public async Task BroadcastMeetingAborted(MeetingAbortedNotification notification)
