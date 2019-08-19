@@ -10,7 +10,7 @@ namespace Skelvy.Application.Test.Users.Queries
   public class FindUsersQueryHandlerTest : RequestTestBase
   {
     [Fact]
-    public async Task ShouldReturnUsers()
+    public async Task ShouldReturnUsersWithBlocked()
     {
       var request = new FindUsersQuery(2, "user", 1);
       var dbContext = InitializedDbContext();
@@ -23,12 +23,13 @@ namespace Skelvy.Application.Test.Users.Queries
 
       Assert.All(result, x => Assert.IsType<UserWithRelationTypeDto>(x));
       Assert.NotEmpty(result);
+      Assert.Contains(result, x => x.Id == 4);
     }
 
     [Fact]
-    public async Task ShouldReturnEmpty()
+    public async Task ShouldReturnUsersWithoutBlocked()
     {
-      var request = new FindUsersQuery(2, "example", 1);
+      var request = new FindUsersQuery(4, "user", 1);
       var dbContext = InitializedDbContext();
 
       var handler = new FindUsersQueryHandler(
@@ -38,7 +39,8 @@ namespace Skelvy.Application.Test.Users.Queries
       var result = await handler.Handle(request);
 
       Assert.All(result, x => Assert.IsType<UserWithRelationTypeDto>(x));
-      Assert.Empty(result);
+      Assert.NotEmpty(result);
+      Assert.DoesNotContain(result, x => x.Id == 2);
     }
 
     [Fact]
