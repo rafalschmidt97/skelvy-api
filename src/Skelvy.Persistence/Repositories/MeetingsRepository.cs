@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Meetings;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 using Skelvy.Domain.Extensions;
 
 namespace Skelvy.Persistence.Repositories

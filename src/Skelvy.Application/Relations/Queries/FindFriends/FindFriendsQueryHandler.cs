@@ -7,7 +7,7 @@ using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Application.Users.Queries;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.Application.Relations.Queries.FindFriends
 {

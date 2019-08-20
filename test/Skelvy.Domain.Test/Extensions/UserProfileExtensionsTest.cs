@@ -1,6 +1,6 @@
 using System;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 using Skelvy.Domain.Extensions;
 using Xunit;
 

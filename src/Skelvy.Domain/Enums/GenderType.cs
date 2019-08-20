@@ -1,4 +1,4 @@
-namespace Skelvy.Domain.Enums.Users
+namespace Skelvy.Domain.Enums
 {
   public static class GenderType
   {

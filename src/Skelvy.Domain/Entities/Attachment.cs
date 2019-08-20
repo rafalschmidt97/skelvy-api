@@ -1,5 +1,5 @@
 using System;
-using Skelvy.Domain.Entities.Base;
+using Skelvy.Domain.Entities.Core;
 
 namespace Skelvy.Domain.Entities
 {

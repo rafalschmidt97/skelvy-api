@@ -1,4 +1,4 @@
-namespace Skelvy.Domain.Enums.Activities
+namespace Skelvy.Domain.Enums
 {
   public static class ActivityType
   {

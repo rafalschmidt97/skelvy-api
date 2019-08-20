@@ -1,5 +1,5 @@
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums;
 using Skelvy.Domain.Exceptions;
 using Xunit;
 

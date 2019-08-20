@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Skelvy.Application.Users.Commands.UpdateProfile;
 using Skelvy.Common.Exceptions;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 

@@ -8,7 +8,7 @@ using FluentEmail.Smtp;
 using Microsoft.Extensions.Configuration;
 using Skelvy.Application.Notifications.Infrastructure;
 using Skelvy.Application.Users.Infrastructure.Notifications;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.WebAPI.Infrastructure.Notifications
 {

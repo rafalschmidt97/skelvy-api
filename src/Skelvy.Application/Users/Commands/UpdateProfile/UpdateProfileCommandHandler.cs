@@ -7,7 +7,7 @@ using Skelvy.Application.Uploads.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Attachments;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.Application.Users.Commands.UpdateProfile
 {

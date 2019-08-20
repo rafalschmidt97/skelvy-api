@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Skelvy.Application.Auth.Commands.SignInWithFacebook;
 using Skelvy.Application.Core.Pipes;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 using Xunit;
 
 namespace Skelvy.Application.Test.Core.Pipes

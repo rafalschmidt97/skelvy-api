@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.Application.Maps.Queries.ReverseLocations
 {

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole;
 using Skelvy.Common.Exceptions;
-using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 

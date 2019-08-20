@@ -11,7 +11,7 @@ using Skelvy.Application.Auth.Infrastructure.Facebook;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 using Skelvy.Persistence;
 using Skelvy.Persistence.Repositories;
 using Xunit;

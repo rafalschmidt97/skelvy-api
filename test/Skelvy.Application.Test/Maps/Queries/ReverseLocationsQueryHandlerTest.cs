@@ -5,7 +5,7 @@ using Moq;
 using Skelvy.Application.Core.Cache;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 using Skelvy.Application.Maps.Queries.ReverseLocations;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 using Xunit;
 
 namespace Skelvy.Application.Test.Maps.Queries

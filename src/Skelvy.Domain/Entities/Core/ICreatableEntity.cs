@@ -1,6 +1,6 @@
 using System;
 
-namespace Skelvy.Domain.Entities.Base
+namespace Skelvy.Domain.Entities.Core
 {
   public interface ICreatableEntity
   {

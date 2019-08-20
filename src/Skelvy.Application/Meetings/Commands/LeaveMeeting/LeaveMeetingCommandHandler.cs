@@ -8,7 +8,7 @@ using Skelvy.Application.Meetings.Events.UserLeftMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
 {

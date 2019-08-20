@@ -2,10 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Activities;
-using Skelvy.Domain.Enums.Attachments;
-using Skelvy.Domain.Enums.Meetings;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.Persistence
 {

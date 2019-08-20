@@ -1,4 +1,4 @@
-namespace Skelvy.Domain.Enums.Meetings
+namespace Skelvy.Domain.Enums
 {
   public static class GroupUserRemovedReasonType
   {

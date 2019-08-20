@@ -1,4 +1,4 @@
-namespace Skelvy.Domain.Enums.Attachments
+namespace Skelvy.Domain.Enums
 {
   public static class AttachmentType
   {

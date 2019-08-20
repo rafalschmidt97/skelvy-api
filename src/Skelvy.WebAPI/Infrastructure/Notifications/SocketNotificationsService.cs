@@ -7,7 +7,7 @@ using Skelvy.Application.Notifications;
 using Skelvy.Application.Notifications.Infrastructure;
 using Skelvy.Application.Relations.Infrastructure.Notifications;
 using Skelvy.Application.Users.Infrastructure.Notifications;
-using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.WebAPI.Infrastructure.Notifications
 {

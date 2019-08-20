@@ -5,7 +5,7 @@ using Moq;
 using Skelvy.Application.Messages.Commands.AddMessage;
 using Skelvy.Application.Messages.Queries;
 using Skelvy.Common.Exceptions;
-using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 

@@ -12,7 +12,7 @@ using Skelvy.Application.Users.Queries.FindSelfUser;
 using Skelvy.Application.Users.Queries.FindUser;
 using Skelvy.Application.Users.Queries.FIndUsers;
 using Skelvy.Application.Users.Queries.Sync;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI.Controllers

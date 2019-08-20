@@ -4,7 +4,7 @@ using Skelvy.Application.Meetings.Commands.AddMeeting;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
-using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums;
 using Skelvy.Persistence;
 using Skelvy.Persistence.Repositories;
 using Xunit;

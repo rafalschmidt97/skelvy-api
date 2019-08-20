@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Skelvy.Domain.Entities.Base;
-using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Entities.Core;
+using Skelvy.Domain.Enums;
 using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities

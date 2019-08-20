@@ -1,5 +1,5 @@
 using FluentValidation;
-using Skelvy.Domain.Enums.Users;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
 {

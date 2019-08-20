@@ -1,5 +1,5 @@
 using FluentValidation;
-using Skelvy.Domain.Enums.Meetings;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.Application.Messages.Commands.AddMessage
 {
