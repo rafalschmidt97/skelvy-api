@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Skelvy.Application.Groups.Infrastructure.Notifications;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
 using Skelvy.Application.Messages.Infrastructure.Notifications;
 using Skelvy.Application.Notifications.Infrastructure;

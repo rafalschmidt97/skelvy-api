@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Skelvy.Application.Core.Persistence;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Meetings.Infrastructure.Repositories
+namespace Skelvy.Application.Groups.Infrastructure.Repositories
 {
   public interface IGroupUsersRepository : IBaseRepository
   {

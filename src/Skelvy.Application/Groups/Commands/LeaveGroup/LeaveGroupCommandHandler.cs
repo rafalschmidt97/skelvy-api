@@ -2,13 +2,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Events.GroupAborted;
-using Skelvy.Application.Meetings.Events.UserLeftGroup;
+using Skelvy.Application.Groups.Events.GroupAborted;
+using Skelvy.Application.Groups.Events.UserLeftGroup;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
 
-namespace Skelvy.Application.Meetings.Commands.LeaveGroup
+namespace Skelvy.Application.Groups.Commands.LeaveGroup
 {
   public class LeaveGroupCommandHandler : CommandHandler<LeaveGroupCommand>
   {

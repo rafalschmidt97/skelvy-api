@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Skelvy.Application.Meetings.Commands.LeaveGroup;
+using Skelvy.Application.Groups.Commands.LeaveGroup;
 
 namespace Skelvy.WebAPI.Controllers
 {

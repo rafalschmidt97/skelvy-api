@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Activities.Infrastructure.Repositories;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;

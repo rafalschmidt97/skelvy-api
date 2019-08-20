@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Messages.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;

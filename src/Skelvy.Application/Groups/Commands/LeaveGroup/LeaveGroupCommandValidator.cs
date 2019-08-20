@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Skelvy.Application.Meetings.Commands.LeaveGroup
+namespace Skelvy.Application.Groups.Commands.LeaveGroup
 {
   public class LeaveGroupCommandValidator : AbstractValidator<LeaveGroupCommand>
   {

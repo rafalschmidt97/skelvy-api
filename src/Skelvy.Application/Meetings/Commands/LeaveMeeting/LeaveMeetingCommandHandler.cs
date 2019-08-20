@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Events.MeetingAborted;
 using Skelvy.Application.Meetings.Events.UserLeftMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;

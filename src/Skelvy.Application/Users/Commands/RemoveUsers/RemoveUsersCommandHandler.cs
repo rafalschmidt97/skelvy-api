@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Messages.Infrastructure.Repositories;
 using Skelvy.Application.Relations.Infrastructure.Repositories;

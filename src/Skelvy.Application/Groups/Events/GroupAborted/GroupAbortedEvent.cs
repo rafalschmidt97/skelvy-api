@@ -1,7 +1,7 @@
 using System;
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Events.GroupAborted
+namespace Skelvy.Application.Groups.Events.GroupAborted
 {
   public class GroupAbortedEvent : IEvent
   {

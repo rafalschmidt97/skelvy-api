@@ -2,11 +2,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Notifications;
-using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Groups.Infrastructure.Notifications;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 
-namespace Skelvy.Application.Meetings.Events.UserLeftGroup
+namespace Skelvy.Application.Groups.Events.UserLeftGroup
 {
   public class UserLeftGroupEventHandler : EventHandler<UserLeftGroupEvent>
   {

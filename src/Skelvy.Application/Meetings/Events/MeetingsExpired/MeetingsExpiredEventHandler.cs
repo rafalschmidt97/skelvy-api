@@ -2,8 +2,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Infrastructure.Notifications;
-using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Notifications;
 
 namespace Skelvy.Application.Meetings.Events.MeetingsExpired

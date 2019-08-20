@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Messages.Events.MessageSent;
 using Skelvy.Application.Messages.Infrastructure.Repositories;
 using Skelvy.Application.Messages.Queries;

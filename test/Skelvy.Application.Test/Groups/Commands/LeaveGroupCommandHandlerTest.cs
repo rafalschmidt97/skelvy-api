@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using MediatR;
 using Moq;
-using Skelvy.Application.Meetings.Commands.LeaveGroup;
+using Skelvy.Application.Groups.Commands.LeaveGroup;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 
-namespace Skelvy.Application.Test.Meetings.Commands
+namespace Skelvy.Application.Test.Groups.Commands
 {
   public class LeaveGroupCommandHandlerTest : DatabaseRequestTestBase
   {

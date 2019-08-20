@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Skelvy.Application.Meetings.Infrastructure.Notifications
+namespace Skelvy.Application.Groups.Infrastructure.Notifications
 {
   public class UserLeftGroupNotification
   {

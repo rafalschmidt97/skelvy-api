@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Repositories

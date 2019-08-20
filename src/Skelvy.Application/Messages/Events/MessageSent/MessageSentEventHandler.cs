@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Messages.Infrastructure.Notifications;
 using Skelvy.Application.Notifications;
 using Skelvy.Application.Users.Infrastructure.Repositories;

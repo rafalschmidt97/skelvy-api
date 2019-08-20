@@ -1,6 +1,6 @@
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Events.UserLeftGroup
+namespace Skelvy.Application.Groups.Events.UserLeftGroup
 {
   public class UserLeftGroupEvent : IEvent
   {

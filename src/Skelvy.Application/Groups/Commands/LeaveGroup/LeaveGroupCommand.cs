@@ -1,6 +1,6 @@
 using Skelvy.Application.Core.Bus;
 
-namespace Skelvy.Application.Meetings.Commands.LeaveGroup
+namespace Skelvy.Application.Groups.Commands.LeaveGroup
 {
   public class LeaveGroupCommand : ICommand
   {
