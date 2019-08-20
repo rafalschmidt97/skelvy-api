@@ -61,7 +61,7 @@ namespace Skelvy.Application.Meetings.Commands.AddUserToMeeting
       }
 
       var existsFriendRelation = await _relationsRepository
-        .ExistsByUserIdAndRelatedUserIdAndType(request.UserId, request.AddedUserId, RelationType.Friend);
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.AddedUserId, RelationType.Friend);
 
       if (!existsFriendRelation)
       {

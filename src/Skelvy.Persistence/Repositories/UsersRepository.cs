@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums.Users;
 
 namespace Skelvy.Persistence.Repositories
 {
@@ -105,12 +106,19 @@ namespace Skelvy.Persistence.Repositories
       return users;
     }
 
-    public async Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLike(int userId, string userName, int page, int pageSize = 10)
+    public async Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(int userId, string userName, int page, int pageSize = 10)
     {
+      var blockedByUsers = await Context.Relations
+        .Where(x => x.RelatedUserId == userId && x.Type == RelationType.Blocked)
+        .Select(x => x.UserId)
+        .ToListAsync();
+
       var skip = (page - 1) * pageSize;
       var users = await Context.Users
         .Include(x => x.Profile)
-        .Where(x => x.Id != userId && EF.Functions.Like(x.Name, "%" + userName + "%"))
+        .Where(x => x.Id != userId &&
+                    blockedByUsers.All(y => y != x.Id) &&
+                    EF.Functions.Like(x.Name, "%" + userName + "%"))
         .Select(x => new UserWithRelationType
         {
           Id = x.Id,
@@ -131,7 +139,10 @@ namespace Skelvy.Persistence.Repositories
         var relation = await Context.Relations
           .FirstOrDefaultAsync(x => x.UserId == userId && x.RelatedUserId == user.Id);
 
-        user.RelationType = relation?.Type;
+        if (relation != null)
+        {
+          user.RelationType = relation.Type;
+        }
       }
 
       return users;

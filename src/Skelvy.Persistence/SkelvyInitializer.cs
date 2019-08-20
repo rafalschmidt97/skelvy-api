@@ -137,6 +137,7 @@ namespace Skelvy.Persistence
       {
         new Relation(2, 3, RelationType.Friend),
         new Relation(3, 2, RelationType.Friend),
+        new Relation(2, 4, RelationType.Blocked),
       };
 
       context.Relations.AddRange(relations);

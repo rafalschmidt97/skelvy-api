@@ -29,7 +29,7 @@ namespace Skelvy.Application.Users.Queries.FIndUsers
       }
 
       var users = await _usersRepository
-        .FindPageWithRelationTypeByUserIdAndNameLike(request.UserId, request.UserName, request.Page);
+        .FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(request.UserId, request.UserName, request.Page);
 
       return _mapper.Map<IList<UserWithRelationTypeDto>>(users);
     }

@@ -56,20 +56,29 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
 
       if (!relatedUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.InvitedUserId}) not found.");
       }
 
-      var relationExists = await _relationsRepository
-        .ExistsByUserIdAndRelatedUserIdAndType(request.UserId, request.InvitedUserId, RelationType.Friend);
+      var existsFriendRelation = await _relationsRepository
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitedUserId, RelationType.Friend);
 
-      if (relationExists)
+      if (existsFriendRelation)
       {
         throw new ConflictException(
           $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.InvitedUserId}) already exists.");
       }
 
+      var existsBlockedRelation = await _relationsRepository
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitedUserId, RelationType.Blocked);
+
+      if (existsBlockedRelation)
+      {
+        throw new ConflictException(
+          $"Entity {nameof(User)}(UserId={request.UserId}) is blocked/blocking {nameof(User)}(UserId={request.InvitedUserId}).");
+      }
+
       var requestExists = await _friendRequestsRepository
-        .ExistsByInvitingIdAndInvitedId(request.UserId, request.InvitedUserId);
+        .ExistsOneByInvitingIdAndInvitedIdTwoWay(request.UserId, request.InvitedUserId);
 
       if (requestExists)
       {
