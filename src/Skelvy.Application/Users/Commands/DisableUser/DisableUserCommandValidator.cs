@@ -6,7 +6,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
   {
     public DisableUserCommandValidator()
     {
-      RuleFor(x => x.Id).NotEmpty();
+      RuleFor(x => x.UserId).NotEmpty();
       RuleFor(x => x.Reason).NotEmpty();
     }
   }

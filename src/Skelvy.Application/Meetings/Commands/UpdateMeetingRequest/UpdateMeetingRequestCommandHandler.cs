@@ -53,7 +53,7 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeetingRequest
       if (meetingRequest.UserId != request.UserId)
       {
         throw new ForbiddenException(
-          $"Entity {nameof(MeetingRequest)}(Id = {request.RequestId}) does not belong to {nameof(User)}(Id = {request.UserId}");
+          $"{nameof(MeetingRequest)}({request.RequestId}) does not belong to {nameof(User)}({request.UserId}");
       }
 
       var activities = await _activitiesRepository.FindAll();

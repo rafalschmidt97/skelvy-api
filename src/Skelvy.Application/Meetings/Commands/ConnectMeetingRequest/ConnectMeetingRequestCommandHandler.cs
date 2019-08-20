@@ -84,17 +84,17 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
 
       if (connectingMeetingRequest.UserId == request.UserId)
       {
-        throw new ConflictException($"{nameof(MeetingRequest)}(Id = {request.MeetingRequestId} must be be non self");
+        throw new ConflictException($"{nameof(MeetingRequest)}({request.MeetingRequestId} must be be non self.");
       }
 
       if (connectingMeetingRequest.Activities.All(x => x.ActivityId != request.ActivityId))
       {
-        throw new BadRequestException("Activity must be selected from request preferences");
+        throw new BadRequestException("Activity must be selected from request preferences.");
       }
 
       if (request.Date < connectingMeetingRequest.MinDate || request.Date > connectingMeetingRequest.MaxDate)
       {
-        throw new BadRequestException("Date must be between request preferences");
+        throw new BadRequestException("Date must be between request preferences.");
       }
 
       return (user, connectingMeetingRequest);

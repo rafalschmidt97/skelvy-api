@@ -57,28 +57,28 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeeting
 
       if (!userExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException(nameof(User), request.UserId);
       }
 
       var relatedUserExists = await _usersRepository.ExistsOne(request.InvitingUserId);
 
       if (!relatedUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.InvitingUserId}) not found.");
+        throw new NotFoundException(nameof(User), request.InvitingUserId);
       }
 
       var meeting = await _meetingsRepository.FindOne(request.MeetingId);
 
       if (meeting == null)
       {
-        throw new NotFoundException($"Entity {nameof(Meeting)}(MeetingId = {request.MeetingId}) not found.");
+        throw new NotFoundException(nameof(Meeting), request.MeetingId);
       }
 
       var groupUserExists = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.InvitingUserId, meeting.GroupId);
 
       if (groupUserExists)
       {
-        throw new ConflictException($"Entity {nameof(GroupUser)}(UserId = {request.InvitingUserId}) already exists.");
+        throw new ConflictException($"{nameof(GroupUser)}(UserId = {request.InvitingUserId}) already exists.");
       }
 
       var existsMeetingInvitation = await _meetingInvitationsRepository
@@ -87,7 +87,7 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeeting
       if (existsMeetingInvitation)
       {
         throw new ConflictException(
-          $"Entity {nameof(MeetingInvitation)}(InvitedUserId={request.InvitingUserId}, MeetingId={request.MeetingId}) already exists.");
+          $"{nameof(MeetingInvitation)}(InvitedUserId={request.InvitingUserId}, MeetingId={request.MeetingId}) already exists.");
       }
 
       var existsFriendRelation = await _relationsRepository
@@ -104,7 +104,7 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeeting
       if (existsBlockedRelation)
       {
         throw new ConflictException(
-          $"Entity {nameof(User)}(UserId={request.UserId}) is blocked/blocking {nameof(User)}(UserId={request.InvitingUserId}).");
+          $"{nameof(User)}({request.UserId}) is blocked/blocking {nameof(User)}({request.InvitingUserId}).");
       }
     }
   }

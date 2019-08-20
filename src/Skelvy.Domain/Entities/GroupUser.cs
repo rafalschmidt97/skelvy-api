@@ -63,7 +63,7 @@ namespace Skelvy.Domain.Entities
       Role = role == GroupUserRoleType.Admin || role == GroupUserRoleType.Privileged || role == GroupUserRoleType.Member
         ? role
         : throw new DomainException(
-          $"'Role' must be {GroupUserRoleType.Admin} / {GroupUserRoleType.Privileged} / {GroupUserRoleType.Member} for entity {nameof(GroupUser)}(Id = {Id}).");
+          $"'Role' must be {GroupUserRoleType.Admin} / {GroupUserRoleType.Privileged} / {GroupUserRoleType.Member} for {nameof(GroupUser)}({Id}).");
 
       ModifiedAt = DateTimeOffset.UtcNow;
     }
@@ -78,7 +78,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(GroupUser)}(Id = {Id}) is already left.");
+        throw new DomainException($"{nameof(GroupUser)}({Id}) is already left.");
       }
     }
 
@@ -92,7 +92,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(GroupUser)}(Id = {Id}) is already left.");
+        throw new DomainException($"{nameof(GroupUser)}({Id}) is already aborted.");
       }
     }
 
@@ -106,7 +106,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(GroupUser)}(Id = {Id}) is already left.");
+        throw new DomainException($"{nameof(GroupUser)}({Id}) is already removed.");
       }
     }
   }

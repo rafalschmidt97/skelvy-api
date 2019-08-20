@@ -128,12 +128,12 @@ namespace Skelvy.Infrastructure.Auth.Tokens
 
       if (user.IsRemoved)
       {
-        throw new UnauthorizedException("User is in safety retention window for deletion");
+        throw new UnauthorizedException($"{nameof(User)}({user.Id}) is in safety retention window for deletion.");
       }
 
       if (user.IsDisabled)
       {
-        throw new UnauthorizedException("User is disabled");
+        throw new UnauthorizedException($"{nameof(User)}({user.Id}) has been disabled.");
       }
     }
   }

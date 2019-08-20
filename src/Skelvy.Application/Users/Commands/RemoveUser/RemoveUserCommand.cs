@@ -4,11 +4,11 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
 {
   public class RemoveUserCommand : ICommand
   {
-    public RemoveUserCommand(int id)
+    public RemoveUserCommand(int userId)
     {
-      Id = id;
+      UserId = userId;
     }
 
-    public int Id { get; set; }
+    public int UserId { get; set; }
   }
 }

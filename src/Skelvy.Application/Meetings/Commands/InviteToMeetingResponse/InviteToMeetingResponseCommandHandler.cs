@@ -67,7 +67,7 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeetingResponse
 
       if (!userExists)
       {
-        throw new NotFoundException($"Entity {nameof(Profile)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"{nameof(Profile)}(UserId = {request.UserId}) not found.");
       }
 
       var meetingInvitation = await _meetingInvitationsRepository.FindOneByRequestId(request.InvitationId);
@@ -80,14 +80,14 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeetingResponse
       if (meetingInvitation.InvitedUserId != request.UserId)
       {
         throw new ConflictException(
-          $"Request {nameof(MeetingInvitation)}(RequestId = {request.InvitationId}) not belong to {nameof(User)}(Id = {request.UserId}).");
+          $"{nameof(MeetingInvitation)}(RequestId = {request.InvitationId}) not belong to {nameof(User)}(Id = {request.UserId}).");
       }
 
       var meeting = await _meetingsRepository.FindOne(meetingInvitation.MeetingId);
 
       if (meeting == null)
       {
-        throw new NotFoundException($"Entity {nameof(Meeting)}(MeetingId = {meetingInvitation.MeetingId}) not found.");
+        throw new NotFoundException(nameof(Meeting), meetingInvitation.MeetingId);
       }
 
       return (meeting, meetingInvitation);

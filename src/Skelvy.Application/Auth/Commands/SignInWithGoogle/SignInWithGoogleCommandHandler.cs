@@ -71,7 +71,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
           {
             if (email.Length > 50)
             {
-              throw new UnauthorizedException($"Entity {nameof(User)}(GoogleId = {verified.UserId}, Email = {email}) has too long email");
+              throw new UnauthorizedException($"{nameof(User)}(GoogleId = {verified.UserId}, Email = {email}) has too long email.");
             }
 
             user = new User(email, "user." + verified.UserId, request.Language);
@@ -144,12 +144,12 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
     {
       if (user.IsRemoved)
       {
-        throw new UnauthorizedException("User is in safety retention window for deletion");
+        throw new UnauthorizedException($"{nameof(User)}({user.Id}) is in safety retention window for deletion.");
       }
 
       if (user.IsDisabled)
       {
-        throw new UnauthorizedException("User is disabled");
+        throw new UnauthorizedException($"{nameof(User)}({user.Id}) has been disabled.");
       }
     }
   }

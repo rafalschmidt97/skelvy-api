@@ -42,11 +42,11 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
 
     public override async Task<Unit> Handle(RemoveUserCommand request)
     {
-      var user = await _usersRepository.FindOne(request.Id);
+      var user = await _usersRepository.FindOne(request.UserId);
 
       if (user == null)
       {
-        throw new NotFoundException(nameof(User), request.Id);
+        throw new NotFoundException(nameof(User), request.UserId);
       }
 
       await LeaveMeetings(user);

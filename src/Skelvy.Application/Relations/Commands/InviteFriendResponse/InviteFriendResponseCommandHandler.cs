@@ -69,7 +69,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
 
       if (!userExists)
       {
-        throw new NotFoundException($"Entity {nameof(Profile)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"{nameof(Profile)}(UserId = {request.UserId}) not found.");
       }
 
       var friendRequest = await _friendRequestsRepository.FindOneByRequestId(request.RequestId);
@@ -82,7 +82,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
       if (friendRequest.InvitedUserId != request.UserId)
       {
         throw new ConflictException(
-          $"Request {nameof(FriendRequest)}(RequestId = {request.RequestId}) not belong to {nameof(User)}(Id = {request.UserId}).");
+          $"{nameof(FriendRequest)}({request.RequestId}) does not belong to {nameof(User)}({request.UserId}).");
       }
 
       var existsBlockedRelation = await _relationsRepository
@@ -91,7 +91,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
       if (existsBlockedRelation)
       {
         throw new ConflictException(
-          $"Entity {nameof(User)}(UserId={friendRequest.InvitedUserId}) is blocked/blocking {nameof(User)}(UserId={friendRequest.InvitingUserId}).");
+          $"{nameof(User)}({friendRequest.InvitedUserId}) is blocked/blocking {nameof(User)}({friendRequest.InvitingUserId}).");
       }
 
       return friendRequest;

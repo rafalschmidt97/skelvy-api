@@ -46,7 +46,7 @@ namespace Skelvy.Application.Relations.Commands.RemoveBlocked
       if (blockedRelation == null)
       {
         throw new NotFoundException(
-          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.BlockedUserId}) not found.");
+          $"{nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.BlockedUserId}) not found.");
       }
 
       return blockedRelation;

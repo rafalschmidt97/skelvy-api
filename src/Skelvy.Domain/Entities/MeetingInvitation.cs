@@ -40,7 +40,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingInvitation)}(Id = {Id}) is already accepted.");
+        throw new DomainException($"{nameof(MeetingInvitation)}({Id}) is already accepted.");
       }
     }
 
@@ -54,7 +54,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingInvitation)}(Id = {Id}) is already denied.");
+        throw new DomainException($"{nameof(MeetingInvitation)}({Id}) is already denied.");
       }
     }
 
@@ -68,7 +68,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingInvitation)}(Id = {Id}) is already aborted.");
+        throw new DomainException($"{nameof(MeetingInvitation)}({Id}) is already aborted.");
       }
     }
   }

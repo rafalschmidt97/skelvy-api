@@ -33,7 +33,7 @@ namespace Skelvy.Application.Users.Commands.UpdateProfile
 
       if (profile == null)
       {
-        throw new NotFoundException(nameof(Profile), request.UserId);
+        throw new NotFoundException($"{nameof(Profile)}(UserId = {request.UserId}) not found.");
       }
 
       using (var transaction = _profilesRepository.BeginTransaction())

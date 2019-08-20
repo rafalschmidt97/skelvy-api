@@ -31,7 +31,7 @@ namespace Skelvy.Application.Messages.Queries.FindMessages
 
       if (!existsUser)
       {
-        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {request.GroupId}) not found.");
+        throw new NotFoundException($"{nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {request.GroupId}) not found.");
       }
 
       var messagesBefore = await _messagesRepository.FindPageBeforeByGroupId(request.GroupId, request.BeforeDate);

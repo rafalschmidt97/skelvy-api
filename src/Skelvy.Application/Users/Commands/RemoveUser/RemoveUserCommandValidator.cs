@@ -6,7 +6,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
   {
     public RemoveUserCommandValidator()
     {
-      RuleFor(x => x.Id).NotEmpty();
+      RuleFor(x => x.UserId).NotEmpty();
     }
   }
 }

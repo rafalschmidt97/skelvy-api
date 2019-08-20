@@ -44,7 +44,7 @@ namespace Skelvy.Application.Messages.Commands.AddMessage
 
       if (!groupUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {request.GroupId}) not found.");
+        throw new NotFoundException($"{nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {request.GroupId}) not found.");
       }
 
       var messages = new List<Message>();

@@ -35,7 +35,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(Relation)}(Id = {Id}) is already aborted.");
+        throw new DomainException($"{nameof(Relation)}({Id}) is already aborted.");
       }
     }
   }

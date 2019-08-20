@@ -53,7 +53,7 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
       if (!friendRelations.Any())
       {
         throw new NotFoundException(
-          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.FriendUserId}) not found.");
+          $"{nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.FriendUserId}) not found.");
       }
 
       return friendRelations;

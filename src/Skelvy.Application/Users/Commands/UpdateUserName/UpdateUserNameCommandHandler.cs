@@ -29,7 +29,7 @@ namespace Skelvy.Application.Users.Commands.UpdateUserName
 
       if (existsUserName)
       {
-        throw new ConflictException($"Entity {nameof(User)}(Name = {request.Name}) exists.");
+        throw new ConflictException($"{nameof(User)}(Name = {request.Name}) already exists.");
       }
 
       user.UpdateName(request.Name);

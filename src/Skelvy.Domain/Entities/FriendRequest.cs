@@ -37,7 +37,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(FriendRequest)}(Id = {Id}) is already accepted.");
+        throw new DomainException($"{nameof(FriendRequest)}({Id}) is already accepted.");
       }
     }
 
@@ -51,7 +51,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(FriendRequest)}(Id = {Id}) is already denied.");
+        throw new DomainException($"{nameof(FriendRequest)}({Id}) is already denied.");
       }
     }
   }

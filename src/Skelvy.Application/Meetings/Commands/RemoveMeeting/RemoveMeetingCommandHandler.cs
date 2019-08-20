@@ -90,7 +90,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
 
       if (meeting == null)
       {
-        throw new NotFoundException($"Entity {nameof(MeetingRequest)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException($"{nameof(MeetingRequest)}(UserId = {request.UserId}) not found.");
       }
 
       var userExists = await _groupUsersRepository
@@ -99,7 +99,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
       if (!userExists)
       {
         throw new NotFoundException(
-          $"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}, Role = {GroupUserRoleType.Owner}) not found.");
+          $"{nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}, Role = {GroupUserRoleType.Owner}) not found.");
       }
 
       return meeting;

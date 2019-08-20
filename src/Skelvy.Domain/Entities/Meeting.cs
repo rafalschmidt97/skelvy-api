@@ -42,7 +42,7 @@ namespace Skelvy.Domain.Entities
     {
       Date = date >= DateTimeOffset.UtcNow.AddDays(-1)
         ? date
-        : throw new DomainException("'Date' must show the future.");
+        : throw new DomainException($"'Date' must show the future for {nameof(Meeting)}({Id}).");
 
       Latitude = latitude;
       Longitude = longitude;
@@ -63,7 +63,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(Meeting)}(Id = {Id}) is already aborted.");
+        throw new DomainException($"{nameof(Meeting)}({Id}) is already aborted.");
       }
     }
 
@@ -77,7 +77,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(Meeting)}(Id = {Id}) is already expired.");
+        throw new DomainException($"{nameof(Meeting)}({Id}) is already expired.");
       }
     }
   }

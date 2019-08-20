@@ -6,7 +6,7 @@ namespace Skelvy.Application.Users.Queries.FindUser
   {
     public FindUserQueryValidator()
     {
-      RuleFor(x => x.Id).NotEmpty();
+      RuleFor(x => x.UserId).NotEmpty();
     }
   }
 }

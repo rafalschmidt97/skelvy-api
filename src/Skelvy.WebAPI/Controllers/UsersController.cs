@@ -83,7 +83,7 @@ namespace Skelvy.WebAPI.Controllers
     [AuthorizeRole(RoleType.Admin)]
     public async Task Disable(int id, DisableUserCommand request)
     {
-      request.Id = id;
+      request.UserId = id;
       await Mediator.Send(request);
     }
   }

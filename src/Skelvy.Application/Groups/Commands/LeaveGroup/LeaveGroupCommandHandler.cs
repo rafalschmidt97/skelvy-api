@@ -100,7 +100,7 @@ namespace Skelvy.Application.Groups.Commands.LeaveGroup
 
       if (existsMeeting)
       {
-        throw new ConflictException($"Entity {nameof(GroupUser)}(UserId = {request.UserId} is associated with meeting.");
+        throw new ConflictException($"{nameof(GroupUser)}(UserId = {request.UserId} is associated with meeting.");
       }
     }
   }

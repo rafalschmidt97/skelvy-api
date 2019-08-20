@@ -39,7 +39,7 @@ namespace Skelvy.Domain.Entities
       else
       {
         throw new DomainException(
-          $"Entity {nameof(Message)}(Id = {Id}) is not {MessageActionType.Seen} or type is not {MessageType.Action}.");
+          $"{nameof(Message)}({Id}) is not {MessageActionType.Seen} or type is not {MessageType.Action}.");
       }
     }
   }

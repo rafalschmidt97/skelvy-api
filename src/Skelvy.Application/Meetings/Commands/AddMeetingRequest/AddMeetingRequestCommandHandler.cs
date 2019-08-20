@@ -82,7 +82,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
 
       if (meetingRequestCount >= 3)
       {
-        throw new ConflictException($"{nameof(User)}(Id = {request.UserId}) has already {meetingRequestCount} {nameof(MeetingRequest)}s. " +
+        throw new ConflictException($"{nameof(User)}({request.UserId}) has already {meetingRequestCount} {nameof(MeetingRequest)}s. " +
                                              $"You can have up to 3 {nameof(MeetingRequest)} simultaneity. Remove one first.");
       }
     }

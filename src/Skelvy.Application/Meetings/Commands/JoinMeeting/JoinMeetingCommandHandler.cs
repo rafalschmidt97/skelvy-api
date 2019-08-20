@@ -62,7 +62,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
       if (existsGroupUser)
       {
         throw new ConflictException(
-          $"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) already joined.");
+          $"{nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) already joined.");
       }
 
       return meeting;

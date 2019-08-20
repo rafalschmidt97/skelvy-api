@@ -52,14 +52,14 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
 
       if (!userExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException(nameof(User), request.UserId);
       }
 
       var relatedUserExists = await _usersRepository.ExistsOne(request.BlockingUserId);
 
       if (!relatedUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.BlockingUserId}) not found.");
+        throw new NotFoundException(nameof(User), request.BlockingUserId);
       }
 
       var relations = await _relationsRepository
@@ -68,7 +68,7 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
       if (relations.Any(x => x.Type == RelationType.Blocked))
       {
         throw new ConflictException(
-          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.BlockingUserId}) already exists.");
+          $"{nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.BlockingUserId}) already exists.");
       }
 
       return relations;

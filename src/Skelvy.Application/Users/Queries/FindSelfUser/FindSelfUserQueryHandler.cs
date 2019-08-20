@@ -20,11 +20,11 @@ namespace Skelvy.Application.Users.Queries.FindSelfUser
 
     public override async Task<SelfUserDto> Handle(FindSelfUserQuery request)
     {
-      var user = await _repository.FindOneWithDetails(request.Id);
+      var user = await _repository.FindOneWithDetails(request.UserId);
 
       if (user == null)
       {
-        throw new NotFoundException(nameof(User), request.Id);
+        throw new NotFoundException(nameof(User), request.UserId);
       }
 
       return _mapper.Map<SelfUserDto>(user);

@@ -31,17 +31,17 @@ namespace Skelvy.Domain.Entities
     {
       Name = name != null
         ? name.Trim()
-        : throw new DomainException($"'Name' must not be null for entity {nameof(Profile)}(Id = {Id}).");
+        : throw new DomainException($"'Name' must not be empty for {nameof(Profile)}({Id}).");
 
       Birthday = birthday <= DateTimeOffset.UtcNow.AddYears(-18)
         ? birthday
         : throw new DomainException(
-          $"'Birthday' must show the age of majority for entity {nameof(Profile)}(Id = {Id}).");
+          $"'Birthday' must show the age of majority for {nameof(Profile)}({Id}).");
 
       Gender = gender == GenderType.Male || gender == GenderType.Female || gender == GenderType.Other
         ? gender
         : throw new DomainException(
-          $"'Gender' must be {GenderType.Male} / {GenderType.Female} / {GenderType.Other} for entity {nameof(Profile)}(Id = {Id}).");
+          $"'Gender' must be {GenderType.Male} / {GenderType.Female} / {GenderType.Other} for {nameof(Profile)}({Id}).");
 
       Description = description?.Trim();
 

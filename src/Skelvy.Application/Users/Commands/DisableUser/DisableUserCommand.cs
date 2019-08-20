@@ -4,13 +4,13 @@ namespace Skelvy.Application.Users.Commands.DisableUser
 {
   public class DisableUserCommand : ICommand
   {
-    public DisableUserCommand(int id, string reason)
+    public DisableUserCommand(int userId, string reason)
     {
-      Id = id;
+      UserId = userId;
       Reason = reason;
     }
 
-    public int Id { get; set; }
+    public int UserId { get; set; }
     public string Reason { get; set; }
   }
 }

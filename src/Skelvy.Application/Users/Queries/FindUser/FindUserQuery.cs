@@ -4,11 +4,11 @@ namespace Skelvy.Application.Users.Queries.FindUser
 {
   public class FindUserQuery : IQuery<UserDto>
   {
-    public FindUserQuery(int id)
+    public FindUserQuery(int userId)
     {
-      Id = id;
+      UserId = userId;
     }
 
-    public int Id { get; set; }
+    public int UserId { get; set; }
   }
 }

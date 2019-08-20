@@ -41,16 +41,16 @@ namespace Skelvy.Application.Users.Commands.DisableUser
 
     public override async Task<Unit> Handle(DisableUserCommand request)
     {
-      var user = await _usersRepository.FindOne(request.Id);
+      var user = await _usersRepository.FindOne(request.UserId);
 
       if (user == null)
       {
-        throw new NotFoundException(nameof(User), request.Id);
+        throw new NotFoundException(nameof(User), request.UserId);
       }
 
       if (user.IsDisabled)
       {
-        throw new ConflictException($"Entity {nameof(User)}(Id = {request.Id}) is already disabled.");
+        throw new ConflictException($"{nameof(User)}({request.UserId}) is already disabled.");
       }
 
       await LeaveMeetings(user);

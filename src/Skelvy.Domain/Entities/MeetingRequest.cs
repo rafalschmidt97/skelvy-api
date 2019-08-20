@@ -54,23 +54,23 @@ namespace Skelvy.Domain.Entities
       MinDate = minDate >= DateTimeOffset.UtcNow.AddDays(-1)
         ? minDate
         : throw new DomainException(
-          $"'MinDate' must show the future for entity {nameof(MeetingRequest)}(Id = {Id}).");
+          $"'MinDate' must show the future for {nameof(MeetingRequest)}({Id}).");
 
       MaxDate = maxDate >= minDate
         ? maxDate
         : throw new DomainException(
-          $"'MaxDate' must be after 'MinDate' for entity {nameof(MeetingRequest)}(Id = {Id}).");
+          $"'MaxDate' must be after 'MinDate' for {nameof(MeetingRequest)}({Id}).");
 
       MinAge = minAge >= 18
         ? minAge
         : throw new DomainException(
-          $"'MinAge' must show the age of majority for entity {nameof(MeetingRequest)}(Id = {Id}).");
+          $"'MinAge' must show the age of majority for {nameof(MeetingRequest)}({Id}).");
 
       MaxAge = maxAge >= minAge && maxAge - minAge >= 5 && maxAge <= 55
         ? maxAge
         : throw new DomainException(
           "'MaxAge' must be bigger than 'MinAge' and age difference must be more or equal to 5 years and " +
-          $"'MaxAge' must be less or equal 55. for entity {nameof(MeetingRequest)}(Id = {Id}).");
+          $"'MaxAge' must be less or equal 55 for  {nameof(MeetingRequest)}({Id}).");
 
       Latitude = latitude;
       Longitude = longitude;
@@ -90,12 +90,12 @@ namespace Skelvy.Domain.Entities
         }
         else
         {
-          throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already marked as searching.");
+          throw new DomainException($"{nameof(MeetingRequest)}({Id}) is already marked as searching.");
         }
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already removed.");
+        throw new DomainException($"{nameof(MeetingRequest)}({Id}) is already removed.");
       }
     }
 
@@ -110,12 +110,12 @@ namespace Skelvy.Domain.Entities
         }
         else
         {
-          throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already marked as found.");
+          throw new DomainException($"{nameof(MeetingRequest)}({Id}) is already marked as found.");
         }
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already removed.");
+        throw new DomainException($"{nameof(MeetingRequest)}({Id}) is already removed.");
       }
     }
 
@@ -129,7 +129,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already aborted.");
+        throw new DomainException($"{nameof(MeetingRequest)}({Id}) is already aborted.");
       }
     }
 
@@ -143,7 +143,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(MeetingRequest)}(Id = {Id}) is already expired.");
+        throw new DomainException($"{nameof(MeetingRequest)}({Id}) is already expired.");
       }
     }
   }

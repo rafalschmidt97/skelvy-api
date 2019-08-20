@@ -49,14 +49,14 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
 
       if (!userExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.UserId}) not found.");
+        throw new NotFoundException(nameof(User), request.UserId);
       }
 
       var relatedUserExists = await _usersRepository.ExistsOne(request.InvitingUserId);
 
       if (!relatedUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.InvitingUserId}) not found.");
+        throw new NotFoundException(nameof(User), request.InvitingUserId);
       }
 
       var existsFriendRelation = await _relationsRepository
@@ -65,7 +65,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
       if (existsFriendRelation)
       {
         throw new ConflictException(
-          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.InvitingUserId}) already exists.");
+          $"{nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.InvitingUserId}) already exists.");
       }
 
       var existsBlockedRelation = await _relationsRepository
@@ -74,7 +74,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
       if (existsBlockedRelation)
       {
         throw new ConflictException(
-          $"Entity {nameof(User)}(UserId={request.UserId}) is blocked/blocking {nameof(User)}(UserId={request.InvitingUserId}).");
+          $"{nameof(User)}({request.UserId}) is blocked/blocking {nameof(User)}({request.InvitingUserId}).");
       }
 
       var requestExists = await _friendRequestsRepository
@@ -83,7 +83,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
       if (requestExists)
       {
         throw new ConflictException(
-          $"Entity {nameof(FriendRequest)}(InvitingUserId={request.UserId}, InvitedUserId={request.InvitingUserId}) already exists.");
+          $"{nameof(FriendRequest)}(InvitingUserId={request.UserId}, InvitedUserId={request.InvitingUserId}) already exists.");
       }
     }
   }

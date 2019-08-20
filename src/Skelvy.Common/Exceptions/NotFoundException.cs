@@ -5,7 +5,7 @@ namespace Skelvy.Common.Exceptions
   public class NotFoundException : CustomException
   {
     public NotFoundException(string name, object key)
-      : base(HttpStatusCode.NotFound, $"Entity {name}({key}) not found.")
+      : base(HttpStatusCode.NotFound, $"{name}({key}) not found.")
     {
     }
 

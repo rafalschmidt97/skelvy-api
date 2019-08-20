@@ -32,7 +32,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(Meeting)}(Id = {Id}) is already aborted.");
+        throw new DomainException($"{nameof(Meeting)}({Id}) is already aborted.");
       }
     }
 
@@ -46,7 +46,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(Meeting)}(Id = {Id}) is already expired.");
+        throw new DomainException($"{nameof(Meeting)}({Id}) is already expired.");
       }
     }
   }

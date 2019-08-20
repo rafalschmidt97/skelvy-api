@@ -51,13 +51,13 @@ namespace Skelvy.Domain.Entities
       if (FacebookId == null)
       {
         FacebookId = facebookId ??
-                     throw new DomainException($"'FacebookId' must not be null for entity {nameof(User)}(Id = {Id}).");
+                     throw new DomainException($"'FacebookId' must not be empty for {nameof(User)}({Id}).");
 
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
-        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) has already connected facebook account.");
+        throw new DomainException($"{nameof(User)}({Id}) has already connected Facebook account.");
       }
     }
 
@@ -66,13 +66,13 @@ namespace Skelvy.Domain.Entities
       if (GoogleId == null)
       {
         GoogleId = googleId ?? throw new DomainException(
-                     $"'GoogleId' must not be null for entity {nameof(User)}(Id = {Id}).");
+                     $"'GoogleId' must not be empty for {nameof(User)}({Id}).");
 
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
-        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) has already connected google account.");
+        throw new DomainException($"{nameof(User)}({Id}) has already connected Google account.");
       }
     }
 
@@ -81,7 +81,7 @@ namespace Skelvy.Domain.Entities
       Language = language == LanguageType.EN || language == LanguageType.PL
         ? language
         : throw new DomainException(
-          $"'Language' must be {LanguageType.PL} or {LanguageType.EN} for entity {nameof(Entities.Profile)}(Id = {Id}).");
+          $"'Language' must be {LanguageType.PL} or {LanguageType.EN} for {nameof(Profile)}({Id}).");
 
       ModifiedAt = DateTimeOffset.UtcNow;
     }
@@ -102,7 +102,7 @@ namespace Skelvy.Domain.Entities
       }
       else
       {
-        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) is already removed.");
+        throw new DomainException($"{nameof(User)}({Id}) is already removed.");
       }
     }
 
@@ -113,13 +113,13 @@ namespace Skelvy.Domain.Entities
         IsDisabled = true;
         DisabledReason =
           reason ?? throw new DomainException(
-            $"'DisabledReason' must not be null for entity {nameof(User)}(Id = {Id}).");
+            $"'DisabledReason' must not be empty for {nameof(User)}({Id}).");
 
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
-        throw new DomainException($"Entity {nameof(User)}(Id = {Id}) is already disabled.");
+        throw new DomainException($"{nameof(User)}({Id}) is already disabled.");
       }
     }
   }

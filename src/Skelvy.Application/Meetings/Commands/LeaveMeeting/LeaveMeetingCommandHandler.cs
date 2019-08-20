@@ -138,7 +138,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
           else
           {
             throw new InternalServerErrorException(
-              $"Entity {nameof(GroupUser)}(UserId = {groupUserDetails.UserId}) has modified date null after leaving");
+              $"{nameof(GroupUser)}(UserId = {groupUserDetails.UserId}) has modified date null after leaving.");
           }
         }
       }

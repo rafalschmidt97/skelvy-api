@@ -44,19 +44,19 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole
 
       if (groupUser == null)
       {
-        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) not found.");
+        throw new NotFoundException($"{nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) not found.");
       }
 
       var removedGroupUser = await _groupUsersRepository.FindOneByUserIdAndGroupId(request.UpdatedUserId, meeting.GroupId);
 
       if (removedGroupUser == null)
       {
-        throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) not found.");
+        throw new NotFoundException($"{nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) not found.");
       }
 
       if (!groupUser.CanUpdateRole(removedGroupUser, request.Role))
       {
-        throw new ForbiddenException($"Entity {nameof(GroupUser)}(Id = {groupUser.Id}) does not have permission to update user role");
+        throw new ForbiddenException($"{nameof(GroupUser)}({groupUser.Id}) does not have permission to update user role.");
       }
 
       return removedGroupUser;
