@@ -25,6 +25,7 @@ namespace Skelvy.Persistence
     public DbSet<Attachment> Attachments { get; private set; }
     public DbSet<Relation> Relations { get; private set; }
     public DbSet<FriendRequest> FriendRequests { get; private set; }
+    public DbSet<MeetingInvitation> MeetingInvitations { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

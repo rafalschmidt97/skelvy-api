@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.AddMeeting;
-using Skelvy.Application.Meetings.Commands.AddUserToMeeting;
+using Skelvy.Application.Meetings.Commands.InviteToMeeting;
+using Skelvy.Application.Meetings.Commands.InviteToMeetingResponse;
 using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeeting;
@@ -9,6 +11,7 @@ using Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting;
 using Skelvy.Application.Meetings.Commands.UpdateMeeting;
 using Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole;
 using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Meetings.Queries.FindMeetingInvitations;
 using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
 
 namespace Skelvy.WebAPI.Controllers
@@ -50,14 +53,6 @@ namespace Skelvy.WebAPI.Controllers
       await Mediator.Send(new LeaveMeetingCommand(id, UserId));
     }
 
-    [HttpPost("{id}/users")]
-    public async Task AddUser(int id, AddUserToMeetingCommand request)
-    {
-      request.UserId = UserId;
-      request.MeetingId = id;
-      await Mediator.Send(request);
-    }
-
     [HttpDelete("{id}/users/{userId}")]
     public async Task RemoveUser(int id, int userId)
     {
@@ -78,6 +73,26 @@ namespace Skelvy.WebAPI.Controllers
     {
       request.UserId = UserId;
       return await Mediator.Send(request);
+    }
+
+    [HttpGet("self/invitations")]
+    public async Task<IList<MeetingInvitationDto>> FindAllSelfInvitations()
+    {
+      return await Mediator.Send(new FindMeetingInvitationsQuery(UserId));
+    }
+
+    [HttpPost("self/invite")]
+    public async Task Invite(InviteToMeetingCommand request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
+    }
+
+    [HttpPost("self/respond")]
+    public async Task RespondInvite(InviteToMeetingResponseCommand request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
     }
   }
 }

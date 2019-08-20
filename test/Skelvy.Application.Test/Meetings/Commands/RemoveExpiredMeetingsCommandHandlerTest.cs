@@ -25,6 +25,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
         new MeetingsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
+        new MeetingInvitationsRepository(dbContext),
         _mediator.Object);
 
       await handler.Handle(request);

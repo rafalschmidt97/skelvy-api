@@ -44,6 +44,7 @@ namespace Skelvy.Domain.Entities
     public IList<Message> Messages { get; set; }
     public IList<Relation> Relations { get; set; }
     public IList<FriendRequest> FriendsRequests { get; set; }
+    public IList<MeetingInvitation> MeetingInvitations { get; set; }
 
     public void RegisterFacebook(string facebookId)
     {
