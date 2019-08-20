@@ -4,13 +4,13 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
 {
   public class RemoveFriendCommand : ICommand
   {
-    public RemoveFriendCommand(int userId, int removedUserId)
+    public RemoveFriendCommand(int userId, int friendUserId)
     {
       UserId = userId;
-      RemovedUserId = removedUserId;
+      FriendUserId = friendUserId;
     }
 
     public int UserId { get; set; }
-    public int RemovedUserId { get; set; }
+    public int FriendUserId { get; set; }
   }
 }

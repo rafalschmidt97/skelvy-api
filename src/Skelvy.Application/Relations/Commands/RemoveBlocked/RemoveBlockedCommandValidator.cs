@@ -7,7 +7,9 @@ namespace Skelvy.Application.Relations.Commands.RemoveBlocked
     public RemoveBlockedCommandValidator()
     {
       RuleFor(x => x.UserId).NotEmpty();
-      RuleFor(x => x.RelatedUserId).NotEmpty();
+      RuleFor(x => x.BlockedUserId).NotEmpty()
+        .Unless(x => x.UserId != x.BlockedUserId)
+        .WithMessage("'BlockedUserId' must be different than 'UserId'");
     }
   }
 }

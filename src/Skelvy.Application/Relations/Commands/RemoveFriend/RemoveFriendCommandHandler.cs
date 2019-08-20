@@ -48,12 +48,12 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
       }
 
       var friendRelations = await _relationsRepository
-        .FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.RemovedUserId, RelationType.Friend);
+        .FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.FriendUserId, RelationType.Friend);
 
       if (!friendRelations.Any())
       {
         throw new NotFoundException(
-          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.RemovedUserId}) not found.");
+          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.FriendUserId}) not found.");
       }
 
       return friendRelations;

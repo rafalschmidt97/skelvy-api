@@ -4,13 +4,13 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
 {
   public class InviteFriendCommand : ICommand
   {
-    public InviteFriendCommand(int userId, int invitedUserId)
+    public InviteFriendCommand(int userId, int invitingUserId)
     {
       UserId = userId;
-      InvitedUserId = invitedUserId;
+      InvitingUserId = invitingUserId;
     }
 
     public int UserId { get; set; }
-    public int InvitedUserId { get; set; }
+    public int InvitingUserId { get; set; }
   }
 }

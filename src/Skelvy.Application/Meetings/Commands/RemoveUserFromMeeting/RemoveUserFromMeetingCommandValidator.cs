@@ -8,7 +8,9 @@ namespace Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting
     {
       RuleFor(x => x.UserId).NotEmpty();
       RuleFor(x => x.MeetingId).NotEmpty();
-      RuleFor(x => x.RemovedUserId).NotEmpty();
+      RuleFor(x => x.RemovingUserId).NotEmpty()
+        .Unless(x => x.UserId != x.RemovingUserId)
+        .WithMessage("'RemovingUserId' must be different than 'UserId'");
     }
   }
 }

@@ -41,7 +41,7 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeeting
     {
       await ValidateData(request);
 
-      var meetingInvitation = new MeetingInvitation(request.UserId, request.InvitedUserId, request.MeetingId);
+      var meetingInvitation = new MeetingInvitation(request.UserId, request.InvitingUserId, request.MeetingId);
 
       await _meetingInvitationsRepository.Add(meetingInvitation);
 
@@ -60,11 +60,11 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeeting
         throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.UserId}) not found.");
       }
 
-      var relatedUserExists = await _usersRepository.ExistsOne(request.InvitedUserId);
+      var relatedUserExists = await _usersRepository.ExistsOne(request.InvitingUserId);
 
       if (!relatedUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.InvitedUserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.InvitingUserId}) not found.");
       }
 
       var meeting = await _meetingsRepository.FindOne(request.MeetingId);
@@ -74,37 +74,37 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeeting
         throw new NotFoundException($"Entity {nameof(Meeting)}(MeetingId = {request.MeetingId}) not found.");
       }
 
-      var groupUserExists = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.InvitedUserId, meeting.GroupId);
+      var groupUserExists = await _groupUsersRepository.ExistsOneByUserIdAndGroupId(request.InvitingUserId, meeting.GroupId);
 
       if (groupUserExists)
       {
-        throw new ConflictException($"Entity {nameof(GroupUser)}(UserId = {request.InvitedUserId}) already exists.");
+        throw new ConflictException($"Entity {nameof(GroupUser)}(UserId = {request.InvitingUserId}) already exists.");
       }
 
       var existsMeetingInvitation = await _meetingInvitationsRepository
-        .ExistsOneByInvitedUserIdAndMeetingId(request.InvitedUserId, request.MeetingId);
+        .ExistsOneByInvitedUserIdAndMeetingId(request.InvitingUserId, request.MeetingId);
 
       if (existsMeetingInvitation)
       {
         throw new ConflictException(
-          $"Entity {nameof(MeetingInvitation)}(InvitedUserId={request.InvitedUserId}, MeetingId={request.MeetingId}) already exists.");
+          $"Entity {nameof(MeetingInvitation)}(InvitedUserId={request.InvitingUserId}, MeetingId={request.MeetingId}) already exists.");
       }
 
       var existsFriendRelation = await _relationsRepository
-        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitedUserId, RelationType.Friend);
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitingUserId, RelationType.Friend);
 
       if (!existsFriendRelation)
       {
-        throw new NotFoundException(nameof(Relation), request.InvitedUserId);
+        throw new NotFoundException(nameof(Relation), request.InvitingUserId);
       }
 
       var existsBlockedRelation = await _relationsRepository
-        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitedUserId, RelationType.Blocked);
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitingUserId, RelationType.Blocked);
 
       if (existsBlockedRelation)
       {
         throw new ConflictException(
-          $"Entity {nameof(User)}(UserId={request.UserId}) is blocked/blocking {nameof(User)}(UserId={request.InvitedUserId}).");
+          $"Entity {nameof(User)}(UserId={request.UserId}) is blocked/blocking {nameof(User)}(UserId={request.InvitingUserId}).");
       }
     }
   }

@@ -54,7 +54,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting
         throw new NotFoundException($"Entity {nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) not found.");
       }
 
-      var removedGroupUser = await _groupUsersRepository.FindOneByUserIdAndGroupId(request.RemovedUserId, meeting.GroupId);
+      var removedGroupUser = await _groupUsersRepository.FindOneByUserIdAndGroupId(request.RemovingUserId, meeting.GroupId);
 
       if (removedGroupUser == null)
       {

@@ -4,13 +4,13 @@ namespace Skelvy.Application.Relations.Commands.RemoveBlocked
 {
   public class RemoveBlockedCommand : ICommand
   {
-    public RemoveBlockedCommand(int userId, int relatedUserId)
+    public RemoveBlockedCommand(int userId, int blockedUserId)
     {
       UserId = userId;
-      RelatedUserId = relatedUserId;
+      BlockedUserId = blockedUserId;
     }
 
     public int UserId { get; set; }
-    public int RelatedUserId { get; set; }
+    public int BlockedUserId { get; set; }
   }
 }

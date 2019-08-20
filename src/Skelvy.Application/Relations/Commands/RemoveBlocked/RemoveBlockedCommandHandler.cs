@@ -41,12 +41,12 @@ namespace Skelvy.Application.Relations.Commands.RemoveBlocked
       }
 
       var blockedRelation = await _relationsRepository
-        .FindOneByUserIdAndRelatedUserIdAndType(request.UserId, request.RelatedUserId, RelationType.Blocked);
+        .FindOneByUserIdAndRelatedUserIdAndType(request.UserId, request.BlockedUserId, RelationType.Blocked);
 
       if (blockedRelation == null)
       {
         throw new NotFoundException(
-          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.RelatedUserId}) not found.");
+          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.BlockedUserId}) not found.");
       }
 
       return blockedRelation;

@@ -37,7 +37,7 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
 
         await _relationsRepository.UpdateRange(relations);
 
-        var blockerRelation = new Relation(request.UserId, request.RelatedUserId, RelationType.Blocked);
+        var blockerRelation = new Relation(request.UserId, request.BlockingUserId, RelationType.Blocked);
         await _relationsRepository.Add(blockerRelation);
 
         transaction.Commit();
@@ -55,20 +55,20 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
         throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.UserId}) not found.");
       }
 
-      var relatedUserExists = await _usersRepository.ExistsOne(request.RelatedUserId);
+      var relatedUserExists = await _usersRepository.ExistsOne(request.BlockingUserId);
 
       if (!relatedUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.RelatedUserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.BlockingUserId}) not found.");
       }
 
       var relations = await _relationsRepository
-        .FindAllByUserIdAndRelatedUserIdTwoWay(request.UserId, request.RelatedUserId);
+        .FindAllByUserIdAndRelatedUserIdTwoWay(request.UserId, request.BlockingUserId);
 
       if (relations.Any(x => x.Type == RelationType.Blocked))
       {
         throw new ConflictException(
-          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.RelatedUserId}) already exists.");
+          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.BlockingUserId}) already exists.");
       }
 
       return relations;

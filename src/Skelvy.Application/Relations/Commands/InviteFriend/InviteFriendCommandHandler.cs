@@ -33,7 +33,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
     {
       await ValidateData(request);
 
-      var friendRequest = new FriendRequest(request.UserId, request.InvitedUserId);
+      var friendRequest = new FriendRequest(request.UserId, request.InvitingUserId);
 
       await _friendRequestsRepository.Add(friendRequest);
 
@@ -52,38 +52,38 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
         throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.UserId}) not found.");
       }
 
-      var relatedUserExists = await _usersRepository.ExistsOne(request.InvitedUserId);
+      var relatedUserExists = await _usersRepository.ExistsOne(request.InvitingUserId);
 
       if (!relatedUserExists)
       {
-        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.InvitedUserId}) not found.");
+        throw new NotFoundException($"Entity {nameof(User)}(UserId = {request.InvitingUserId}) not found.");
       }
 
       var existsFriendRelation = await _relationsRepository
-        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitedUserId, RelationType.Friend);
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitingUserId, RelationType.Friend);
 
       if (existsFriendRelation)
       {
         throw new ConflictException(
-          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.InvitedUserId}) already exists.");
+          $"Entity {nameof(Relation)}(UserId={request.UserId}, RelatedUserId={request.InvitingUserId}) already exists.");
       }
 
       var existsBlockedRelation = await _relationsRepository
-        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitedUserId, RelationType.Blocked);
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(request.UserId, request.InvitingUserId, RelationType.Blocked);
 
       if (existsBlockedRelation)
       {
         throw new ConflictException(
-          $"Entity {nameof(User)}(UserId={request.UserId}) is blocked/blocking {nameof(User)}(UserId={request.InvitedUserId}).");
+          $"Entity {nameof(User)}(UserId={request.UserId}) is blocked/blocking {nameof(User)}(UserId={request.InvitingUserId}).");
       }
 
       var requestExists = await _friendRequestsRepository
-        .ExistsOneByInvitingIdAndInvitedIdTwoWay(request.UserId, request.InvitedUserId);
+        .ExistsOneByInvitingIdAndInvitedIdTwoWay(request.UserId, request.InvitingUserId);
 
       if (requestExists)
       {
         throw new ConflictException(
-          $"Entity {nameof(FriendRequest)}(InvitingUserId={request.UserId}, InvitedUserId={request.InvitedUserId}) already exists.");
+          $"Entity {nameof(FriendRequest)}(InvitingUserId={request.UserId}, InvitedUserId={request.InvitingUserId}) already exists.");
       }
     }
   }
