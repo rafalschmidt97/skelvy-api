@@ -156,6 +156,24 @@ namespace Skelvy.Infrastructure.Notifications
         async offline => await _pushService.BroadcastUserRespondedFriendRequest(notification, offline));
     }
 
+    public async Task BroadcastUserSentMeetingInvitation(UserSentMeetingInvitationNotification notification)
+    {
+      await _socketService.BroadcastUserSentMeetingInvitation(notification);
+
+      await BroadcastActionToOffline(
+        notification.UsersId,
+        async offline => await _pushService.BroadcastUserSentMeetingInvitation(notification, offline));
+    }
+
+    public async Task BroadcastUserRespondedMeetingInvitation(UserRespondedMeetingInvitationNotification notification)
+    {
+      await _socketService.BroadcastUserRespondedMeetingInvitation(notification);
+
+      await BroadcastActionToOffline(
+        notification.UsersId,
+        async offline => await _pushService.BroadcastUserRespondedMeetingInvitation(notification, offline));
+    }
+
     public static bool IsConnected(int userId)
     {
       return Connections.Any(x => x.UserId == userId);

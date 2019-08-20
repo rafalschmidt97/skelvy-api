@@ -20,5 +20,7 @@ namespace Skelvy.Application.Notifications.Infrastructure
     Task BroadcastMeetingExpired(MeetingExpiredNotification notification, IEnumerable<int> usersId);
     Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification, IEnumerable<int> usersId);
     Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification, IEnumerable<int> usersId);
+    Task BroadcastUserSentMeetingInvitation(UserSentMeetingInvitationNotification notification, IEnumerable<int> usersId);
+    Task BroadcastUserRespondedMeetingInvitation(UserRespondedMeetingInvitationNotification notification, IEnumerable<int> usersId);
   }
 }

@@ -307,6 +307,40 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastUserSentMeetingInvitation(UserSentMeetingInvitationNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "NEW_MEETING_INVITATION",
+        },
+        NotificationType.Regular,
+        new SocketNotificationData
+        {
+          Action = "UserSentMeetingInvitation",
+          RedirectTo = "meeting",
+        });
+    }
+
+    public async Task BroadcastUserRespondedMeetingInvitation(UserRespondedMeetingInvitationNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = notification.IsAccepted ? "MEETING_INVITATION_ACCEPTED" : "MEETING_INVITATION_DENIED",
+        },
+        NotificationType.Regular,
+        new SocketNotificationData
+        {
+          Action = "UserRespondedMeetingInvitation",
+          RedirectTo = "meeting",
+        });
+    }
+
     private async Task SendNotification(
       IEnumerable<int> usersId,
       SocketNotificationContent notification,

@@ -247,6 +247,38 @@ namespace Skelvy.Infrastructure.Notifications
       }
     }
 
+    public async Task BroadcastUserSentMeetingInvitation(UserSentMeetingInvitationNotification notification, IEnumerable<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "NEW_MEETING_INVITATION",
+        },
+        new PushNotificationData
+        {
+          Action = "UserSentMeetingInvitation",
+          RedirectTo = "meeting",
+        });
+    }
+
+    public async Task BroadcastUserRespondedMeetingInvitation(UserRespondedMeetingInvitationNotification notification, IEnumerable<int> usersId)
+    {
+      await SendNotification(
+          usersId,
+          new PushNotificationContent
+          {
+            TitleLocKey = "MEETING",
+            BodyLocKey = notification.IsAccepted ? "MEETING_INVITATION_ACCEPTED" : "MEETING_INVITATION_DENIED",
+          },
+          new PushNotificationData
+          {
+            Action = "UserRespondedMeetingInvitation",
+            RedirectTo = "meeting",
+          });
+    }
+
     private async Task SendNotification(IEnumerable<int> usersId, PushNotificationContent notification, PushNotificationData data = null)
     {
       foreach (var userId in usersId)

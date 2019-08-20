@@ -24,6 +24,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     private readonly IAttachmentsRepository _attachmentsRepository;
     private readonly IRelationsRepository _relationsRepository;
     private readonly IFriendRequestsRepository _friendRequestsRepository;
+    private readonly IMeetingInvitationsRepository _invitationsRepository;
 
     public RemoveUsersCommandHandler(
       IUsersRepository usersRepository,
@@ -36,7 +37,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       IMessagesRepository messagesRepository,
       IAttachmentsRepository attachmentsRepository,
       IRelationsRepository relationsRepository,
-      IFriendRequestsRepository friendRequestsRepository)
+      IFriendRequestsRepository friendRequestsRepository,
+      IMeetingInvitationsRepository invitationsRepository)
     {
       _usersRepository = usersRepository;
       _rolesRepository = rolesRepository;
@@ -49,6 +51,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       _attachmentsRepository = attachmentsRepository;
       _relationsRepository = relationsRepository;
       _friendRequestsRepository = friendRequestsRepository;
+      _invitationsRepository = invitationsRepository;
     }
 
     public override async Task<Unit> Handle(RemoveUsersCommand request)
@@ -85,6 +88,9 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
         await _relationsRepository.RemoveRange(relationsToRemove);
         var friendRequestsToRemove = await _friendRequestsRepository.FindAllWithRemovedByUsersId(usersId);
         await _friendRequestsRepository.RemoveRange(friendRequestsToRemove);
+
+        var meetingInvitationsToRemove = await _invitationsRepository.FindAllWithRemovedByUsersId(usersId);
+        await _invitationsRepository.RemoveRange(meetingInvitationsToRemove);
 
         var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
         await _rolesRepository.RemoveRange(userRolesToRemove);

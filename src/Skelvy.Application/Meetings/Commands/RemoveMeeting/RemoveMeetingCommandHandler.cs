@@ -15,6 +15,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
+    private readonly IMeetingInvitationsRepository _meetingInvitationsRepository;
     private readonly IMediator _mediator;
 
     public RemoveMeetingCommandHandler(
@@ -22,12 +23,14 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
       IGroupUsersRepository groupUsersRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
+      IMeetingInvitationsRepository meetingInvitationsRepository,
       IMediator mediator)
     {
       _groupsRepository = groupsRepository;
       _groupUsersRepository = groupUsersRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
+      _meetingInvitationsRepository = meetingInvitationsRepository;
       _mediator = mediator;
     }
 
@@ -58,6 +61,15 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
         }
 
         await _groupUsersRepository.UpdateRange(meeting.Group.Users);
+
+        var invitations = await _meetingInvitationsRepository.FindAllByMeetingId(meeting.Id);
+
+        foreach (var invitation in invitations)
+        {
+          invitation.Abort();
+        }
+
+        await _meetingInvitationsRepository.UpdateRange(invitations);
 
         transaction.Commit();
 
