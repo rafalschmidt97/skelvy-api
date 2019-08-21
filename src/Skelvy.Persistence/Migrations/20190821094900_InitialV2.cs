@@ -17,7 +17,7 @@ namespace Skelvy.Persistence.Migrations
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Type = table.Column<string>(maxLength: 15, nullable: false),
                     Size = table.Column<int>(nullable: false),
-                    Distance = table.Column<int>(nullable: false)
+                    Distance = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -32,7 +32,7 @@ namespace Skelvy.Persistence.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Type = table.Column<string>(maxLength: 15, nullable: false),
                     Url = table.Column<string>(maxLength: 2048, nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(nullable: false)
+                    CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -48,7 +48,7 @@ namespace Skelvy.Persistence.Migrations
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true)
+                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                 },
                 constraints: table =>
                 {
@@ -71,7 +71,7 @@ namespace Skelvy.Persistence.Migrations
                     IsRemoved = table.Column<bool>(nullable: false),
                     ForgottenAt = table.Column<DateTimeOffset>(nullable: true),
                     IsDisabled = table.Column<bool>(nullable: false),
-                    DisabledReason = table.Column<string>(maxLength: 1024, nullable: true)
+                    DisabledReason = table.Column<string>(maxLength: 1024, nullable: true),
                 },
                 constraints: table =>
                 {
@@ -95,7 +95,7 @@ namespace Skelvy.Persistence.Migrations
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true)
+                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                 },
                 constraints: table =>
                 {
@@ -125,7 +125,7 @@ namespace Skelvy.Persistence.Migrations
                     Status = table.Column<string>(maxLength: 15, nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
-                    IsRemoved = table.Column<bool>(nullable: false)
+                    IsRemoved = table.Column<bool>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -162,7 +162,7 @@ namespace Skelvy.Persistence.Migrations
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true)
+                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                 },
                 constraints: table =>
                 {
@@ -187,7 +187,7 @@ namespace Skelvy.Persistence.Migrations
                     AttachmentId = table.Column<int>(nullable: true),
                     Action = table.Column<string>(maxLength: 15, nullable: true),
                     UserId = table.Column<int>(nullable: false),
-                    GroupId = table.Column<int>(nullable: false)
+                    GroupId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -223,7 +223,7 @@ namespace Skelvy.Persistence.Migrations
                     Gender = table.Column<string>(maxLength: 15, nullable: false),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -247,7 +247,7 @@ namespace Skelvy.Persistence.Migrations
                     Type = table.Column<string>(maxLength: 15, nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
-                    IsRemoved = table.Column<bool>(nullable: false)
+                    IsRemoved = table.Column<bool>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -273,7 +273,7 @@ namespace Skelvy.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 15, nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -298,7 +298,7 @@ namespace Skelvy.Persistence.Migrations
                     Status = table.Column<string>(maxLength: 15, nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
-                    IsRemoved = table.Column<bool>(nullable: false)
+                    IsRemoved = table.Column<bool>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -336,7 +336,7 @@ namespace Skelvy.Persistence.Migrations
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
-                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true)
+                    RemovedReason = table.Column<string>(maxLength: 15, nullable: true),
                 },
                 constraints: table =>
                 {
@@ -366,7 +366,7 @@ namespace Skelvy.Persistence.Migrations
                 columns: table => new
                 {
                     MeetingRequestId = table.Column<int>(nullable: false),
-                    ActivityId = table.Column<int>(nullable: false)
+                    ActivityId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -393,7 +393,7 @@ namespace Skelvy.Persistence.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AttachmentId = table.Column<int>(nullable: false),
                     Order = table.Column<int>(nullable: false),
-                    ProfileId = table.Column<int>(nullable: false)
+                    ProfileId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
