@@ -53,18 +53,13 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      using (var transaction = _usersRepository.BeginTransaction())
-      {
-        await LeaveMeetings(user);
-        await RemoveFriendInvitations(user);
+      await LeaveMeetings(user);
+      await RemoveFriendInvitations(user);
 
-        user.Remove(DateTimeOffset.UtcNow.AddMonths(3));
-        await _usersRepository.Update(user);
+      user.Remove(DateTimeOffset.UtcNow.AddMonths(3));
+      await _usersRepository.Update(user);
 
-        transaction.Commit();
-
-        await _mediator.Publish(new UserRemovedEvent(user.Id, user.Email, user.Language));
-      }
+      await _mediator.Publish(new UserRemovedEvent(user.Id, user.Email, user.Language));
 
       return Unit.Value;
     }

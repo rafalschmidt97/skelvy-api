@@ -57,18 +57,13 @@ namespace Skelvy.Application.Users.Commands.DisableUser
         throw new ConflictException($"{nameof(User)}({request.UserId}) is already disabled.");
       }
 
-      using (var transaction = _usersRepository.BeginTransaction())
-      {
-        await LeaveMeetings(user);
-        await RemoveFriendInvitations(user);
+      await LeaveMeetings(user);
+      await RemoveFriendInvitations(user);
 
-        user.Disable(request.Reason);
-        await _usersRepository.Update(user);
+      user.Disable(request.Reason);
+      await _usersRepository.Update(user);
 
-        transaction.Commit();
-
-        await _mediator.Publish(new UserDisabledEvent(user.Id, request.Reason, user.Email, user.Language));
-      }
+      await _mediator.Publish(new UserDisabledEvent(user.Id, request.Reason, user.Email, user.Language));
 
       return Unit.Value;
     }
