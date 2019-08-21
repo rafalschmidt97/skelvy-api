@@ -540,7 +540,7 @@ namespace Skelvy.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Skelvy.Domain.Entities.User", "InvitingUser")
-                        .WithMany("FriendsRequests")
+                        .WithMany("FriendInvitations")
                         .HasForeignKey("InvitingUserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

@@ -10,8 +10,8 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20190817183758_AddGroupUserRole")]
-    partial class AddGroupUserRole
+    [Migration("20190821094900_InitialV2")]
+    partial class InitialV2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,7 +68,7 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("Attachments");
                 });
 
-            modelBuilder.Entity("Skelvy.Domain.Entities.FriendRequest", b =>
+            modelBuilder.Entity("Skelvy.Domain.Entities.FriendInvitation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,7 +97,7 @@ namespace Skelvy.Persistence.Migrations
 
                     b.HasIndex("IsRemoved");
 
-                    b.ToTable("FriendRequests");
+                    b.ToTable("FriendInvitations");
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.Group", b =>
@@ -217,6 +217,42 @@ namespace Skelvy.Persistence.Migrations
                     b.HasIndex("Size");
 
                     b.ToTable("Meetings");
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.MeetingInvitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreatedAt");
+
+                    b.Property<int>("InvitedUserId");
+
+                    b.Property<int>("InvitingUserId");
+
+                    b.Property<bool>("IsRemoved");
+
+                    b.Property<int>("MeetingId");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvitedUserId");
+
+                    b.HasIndex("InvitingUserId");
+
+                    b.HasIndex("IsRemoved");
+
+                    b.HasIndex("MeetingId");
+
+                    b.ToTable("MeetingInvitations");
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequest", b =>
@@ -498,7 +534,7 @@ namespace Skelvy.Persistence.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("Skelvy.Domain.Entities.FriendRequest", b =>
+            modelBuilder.Entity("Skelvy.Domain.Entities.FriendInvitation", b =>
                 {
                     b.HasOne("Skelvy.Domain.Entities.User", "InvitedUser")
                         .WithMany()
@@ -506,7 +542,7 @@ namespace Skelvy.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Skelvy.Domain.Entities.User", "InvitingUser")
-                        .WithMany("FriendsRequests")
+                        .WithMany("FriendInvitations")
                         .HasForeignKey("InvitingUserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -540,6 +576,24 @@ namespace Skelvy.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Skelvy.Domain.Entities.MeetingInvitation", b =>
+                {
+                    b.HasOne("Skelvy.Domain.Entities.User", "InvitedUser")
+                        .WithMany()
+                        .HasForeignKey("InvitedUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Skelvy.Domain.Entities.User", "InvitingUser")
+                        .WithMany("MeetingInvitations")
+                        .HasForeignKey("InvitingUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Skelvy.Domain.Entities.Meeting", "Meeting")
+                        .WithMany()
+                        .HasForeignKey("MeetingId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Skelvy.Domain.Entities.MeetingRequest", b =>

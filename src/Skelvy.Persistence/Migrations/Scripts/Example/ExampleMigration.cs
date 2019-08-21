@@ -8,12 +8,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace Skelvy.Persistence.Migrations.Scripts.DrinkTypesInsteadOfDrinks
 {
-  public class DrinkTypesInsteadOfDrinksMigration : IMigration
+  public class ExampleMigration : IMigration
   {
     private const string ConnectionStringName = "SKELVY_SQL_CONNECTION";
     private readonly string _connectionString;
 
-    public DrinkTypesInsteadOfDrinksMigration(IConfiguration configuration)
+    public ExampleMigration(IConfiguration configuration)
     {
       _connectionString = configuration[ConnectionStringName];
     }

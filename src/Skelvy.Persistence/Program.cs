@@ -8,7 +8,7 @@ namespace Skelvy.Persistence
   {
     public static void Main()
     {
-      var migration = new DrinkTypesInsteadOfDrinksMigration(GetConfiguration());
+      var migration = new ExampleMigration(GetConfiguration());
       migration.Migrate().Wait();
     }
 
