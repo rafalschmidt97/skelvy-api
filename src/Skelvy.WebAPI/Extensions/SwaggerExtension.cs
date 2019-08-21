@@ -58,7 +58,7 @@ namespace Skelvy.WebAPI.Extensions
       var info = new Info
       {
         Title = $"Skelvy API {description.ApiVersion}",
-        Description = "Mobile app for meetings over your favorite drinks 🚀",
+        Description = "Mobile app for meetings over your favorite activities 🚀",
         Version = description.ApiVersion.ToString(),
       };
 
