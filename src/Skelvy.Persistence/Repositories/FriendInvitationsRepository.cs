@@ -7,16 +7,16 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Repositories
 {
-  public class FriendRequestsRepository : BaseRepository, IFriendRequestsRepository
+  public class FriendInvitationsRepository : BaseRepository, IFriendInvitationsRepository
   {
-    public FriendRequestsRepository(SkelvyContext context)
+    public FriendInvitationsRepository(SkelvyContext context)
       : base(context)
     {
     }
 
-    public async Task<IList<FriendRequest>> FindAllWithInvitingDetailsByUserId(int userId)
+    public async Task<IList<FriendInvitation>> FindAllWithInvitingDetailsByUserId(int userId)
     {
-      var requests = await Context.FriendRequests
+      var requests = await Context.FriendInvitations
         .Include(x => x.InvitingUser)
         .ThenInclude(x => x.Profile)
         .Where(r => r.InvitedUserId == userId && !r.IsRemoved)
@@ -33,42 +33,42 @@ namespace Skelvy.Persistence.Repositories
       return requests;
     }
 
-    public async Task<FriendRequest> FindOneByRequestId(int requestId)
+    public async Task<FriendInvitation> FindOneByRequestId(int requestId)
     {
-      return await Context.FriendRequests
+      return await Context.FriendInvitations
         .FirstOrDefaultAsync(r => r.Id == requestId && !r.IsRemoved);
     }
 
     public async Task<bool> ExistsOneByInvitingIdAndInvitedIdTwoWay(int invitingUserId, int invitedUserId)
     {
-      return await Context.FriendRequests.AnyAsync(
+      return await Context.FriendInvitations.AnyAsync(
         x => ((x.InvitingUserId == invitingUserId && x.InvitedUserId == invitedUserId) ||
               (x.InvitingUserId == invitedUserId && x.InvitedUserId == invitingUserId)) &&
              !x.IsRemoved);
     }
 
-    public async Task<IList<FriendRequest>> FindAllWithRemovedByUsersId(List<int> usersId)
+    public async Task<IList<FriendInvitation>> FindAllWithRemovedByUsersId(List<int> usersId)
     {
-      return await Context.FriendRequests
+      return await Context.FriendInvitations
         .Where(x => usersId.Any(y => y == x.InvitedUserId || y == x.InvitingUserId))
         .ToListAsync();
     }
 
-    public async Task Add(FriendRequest friendsRequest)
+    public async Task Add(FriendInvitation invitations)
     {
-      await Context.FriendRequests.AddAsync(friendsRequest);
+      await Context.FriendInvitations.AddAsync(invitations);
       await Context.SaveChangesAsync();
     }
 
-    public async Task Update(FriendRequest request)
+    public async Task Update(FriendInvitation invitation)
     {
-      Context.FriendRequests.Update(request);
+      Context.FriendInvitations.Update(invitation);
       await Context.SaveChangesAsync();
     }
 
-    public async Task RemoveRange(IList<FriendRequest> friendRequests)
+    public async Task RemoveRange(IList<FriendInvitation> invitations)
     {
-      Context.FriendRequests.RemoveRange(friendRequests);
+      Context.FriendInvitations.RemoveRange(invitations);
       await Context.SaveChangesAsync();
     }
   }

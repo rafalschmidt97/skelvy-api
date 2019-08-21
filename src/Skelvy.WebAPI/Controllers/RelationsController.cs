@@ -8,7 +8,7 @@ using Skelvy.Application.Relations.Commands.RemoveBlocked;
 using Skelvy.Application.Relations.Commands.RemoveFriend;
 using Skelvy.Application.Relations.Queries;
 using Skelvy.Application.Relations.Queries.FindBlocked;
-using Skelvy.Application.Relations.Queries.FindFriendRequests;
+using Skelvy.Application.Relations.Queries.FindFriendInvitations;
 using Skelvy.Application.Relations.Queries.FindFriends;
 using Skelvy.Application.Users.Queries;
 
@@ -23,10 +23,10 @@ namespace Skelvy.WebAPI.Controllers
       return await Mediator.Send(request);
     }
 
-    [HttpGet("self/friends/requests")]
-    public async Task<IList<FriendRequestDto>> FindAllSelfFriendRequests()
+    [HttpGet("self/friends/invitations")]
+    public async Task<IList<FriendInvitationsDto>> FindAllSelfFriendInvitations()
     {
-      return await Mediator.Send(new FindFriendRequestsQuery(UserId));
+      return await Mediator.Send(new FindFriendInvitationsQuery(UserId));
     }
 
     [HttpPost("self/friends/invite")]
@@ -37,7 +37,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpPost("self/friends/respond")]
-    public async Task RespondSelfFriendRequest(InviteFriendResponseCommand request)
+    public async Task RespondSelfFriendInvitation(InviteFriendResponseCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);

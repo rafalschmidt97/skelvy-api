@@ -213,23 +213,23 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification, IEnumerable<int> usersId)
+    public async Task BroadcastUserSentFriendInvitation(UserSentFriendInvitationNotification notification, IEnumerable<int> usersId)
     {
       await SendNotification(
         usersId,
         new PushNotificationContent
         {
           TitleLocKey = "FRIENDS",
-          BodyLocKey = "NEW_FRIEND_REQUEST",
+          BodyLocKey = "NEW_FRIEND_INVITATION",
         },
         new PushNotificationData
         {
-          Action = "UserSentFriendRequest",
+          Action = "UserSentFriendInvitation",
           RedirectTo = "friends",
         });
     }
 
-    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification, IEnumerable<int> usersId)
+    public async Task BroadcastUserRespondedFriendInvitation(UserRespondedFriendInvitationNotification notification, IEnumerable<int> usersId)
     {
       if (notification.IsAccepted)
       {
@@ -238,11 +238,11 @@ namespace Skelvy.Infrastructure.Notifications
           new PushNotificationContent
           {
             TitleLocKey = "FRIENDS",
-            BodyLocKey = "FRIEND_REQUEST_ACCEPTED",
+            BodyLocKey = "FRIEND_INVITATION_ACCEPTED",
           },
           new PushNotificationData
           {
-            Action = "UserRespondedFriendRequest",
+            Action = "UserRespondedFriendInvitation",
             RedirectTo = "friends",
           });
       }

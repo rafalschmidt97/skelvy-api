@@ -24,7 +24,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -38,7 +38,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -53,7 +53,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -68,7 +68,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -83,7 +83,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -98,7 +98,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -113,7 +113,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 

@@ -5,23 +5,23 @@ using Xunit;
 
 namespace Skelvy.Domain.Test.Entities
 {
-  public class FriendRequestTest
+  public class FriendInvitationTest
   {
     [Fact]
     public void ShouldBeAccepted()
     {
-      var entity = new FriendRequest(1, 2);
+      var entity = new FriendInvitation(1, 2);
       entity.Accept();
 
       Assert.True(entity.IsRemoved);
       Assert.NotNull(entity.ModifiedAt);
-      Assert.Equal(entity.Status, FriendRequestStatusType.Accepted);
+      Assert.Equal(entity.Status, FriendInvitationStatusType.Accepted);
     }
 
     [Fact]
     public void ShouldThrowExceptionWithAccepted()
     {
-      var entity = new FriendRequest(1, 2);
+      var entity = new FriendInvitation(1, 2);
       entity.Accept();
 
       Assert.Throws<DomainException>(() =>
@@ -31,18 +31,18 @@ namespace Skelvy.Domain.Test.Entities
     [Fact]
     public void ShouldBeDenied()
     {
-      var entity = new FriendRequest(1, 2);
+      var entity = new FriendInvitation(1, 2);
       entity.Deny();
 
       Assert.True(entity.IsRemoved);
       Assert.NotNull(entity.ModifiedAt);
-      Assert.Equal(entity.Status, FriendRequestStatusType.Denied);
+      Assert.Equal(entity.Status, FriendInvitationStatusType.Denied);
     }
 
     [Fact]
     public void ShouldThrowExceptionWithDenied()
     {
-      var entity = new FriendRequest(1, 2);
+      var entity = new FriendInvitation(1, 2);
       entity.Deny();
 
       Assert.Throws<DomainException>(() =>

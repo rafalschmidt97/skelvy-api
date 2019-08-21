@@ -24,7 +24,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     private readonly IMessagesRepository _messagesRepository;
     private readonly IAttachmentsRepository _attachmentsRepository;
     private readonly IRelationsRepository _relationsRepository;
-    private readonly IFriendRequestsRepository _friendRequestsRepository;
+    private readonly IFriendInvitationsRepository _friendInvitationsRepository;
     private readonly IMeetingInvitationsRepository _invitationsRepository;
 
     public RemoveUsersCommandHandler(
@@ -38,7 +38,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       IMessagesRepository messagesRepository,
       IAttachmentsRepository attachmentsRepository,
       IRelationsRepository relationsRepository,
-      IFriendRequestsRepository friendRequestsRepository,
+      IFriendInvitationsRepository friendInvitationsRepository,
       IMeetingInvitationsRepository invitationsRepository)
     {
       _usersRepository = usersRepository;
@@ -51,7 +51,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
       _messagesRepository = messagesRepository;
       _attachmentsRepository = attachmentsRepository;
       _relationsRepository = relationsRepository;
-      _friendRequestsRepository = friendRequestsRepository;
+      _friendInvitationsRepository = friendInvitationsRepository;
       _invitationsRepository = invitationsRepository;
     }
 
@@ -87,8 +87,8 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
 
         var relationsToRemove = await _relationsRepository.FindAllWithRemovedByUsersId(usersId);
         await _relationsRepository.RemoveRange(relationsToRemove);
-        var friendRequestsToRemove = await _friendRequestsRepository.FindAllWithRemovedByUsersId(usersId);
-        await _friendRequestsRepository.RemoveRange(friendRequestsToRemove);
+        var friendInvitationsToRemove = await _friendInvitationsRepository.FindAllWithRemovedByUsersId(usersId);
+        await _friendInvitationsRepository.RemoveRange(friendInvitationsToRemove);
 
         var meetingInvitationsToRemove = await _invitationsRepository.FindAllWithRemovedByUsersId(usersId);
         await _invitationsRepository.RemoveRange(meetingInvitationsToRemove);

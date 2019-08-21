@@ -4,9 +4,9 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence.Configurations
 {
-  public class FriendRequestConfiguration : IEntityTypeConfiguration<FriendRequest>
+  public class FriendInvitationConfiguration : IEntityTypeConfiguration<FriendInvitation>
   {
-    public void Configure(EntityTypeBuilder<FriendRequest> builder)
+    public void Configure(EntityTypeBuilder<FriendInvitation> builder)
     {
       builder.HasOne(x => x.InvitingUser).WithMany(x => x.FriendsRequests).OnDelete(DeleteBehavior.Restrict);
 

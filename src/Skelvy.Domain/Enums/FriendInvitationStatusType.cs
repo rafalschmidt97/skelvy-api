@@ -1,6 +1,6 @@
 namespace Skelvy.Domain.Enums
 {
-  public static class FriendRequestStatusType
+  public static class FriendInvitationStatusType
   {
     public const string Pending = "pending";
     public const string Accepted = "accepted";

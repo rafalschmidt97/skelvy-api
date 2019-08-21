@@ -3,9 +3,9 @@ using Skelvy.Application.Users.Queries;
 
 namespace Skelvy.Application.Relations.Queries
 {
-  public class FriendRequestDto
+  public class FriendInvitationsDto
   {
-    public FriendRequestDto(int id, UserDto invitingUser, DateTimeOffset createdAt)
+    public FriendInvitationsDto(int id, UserDto invitingUser, DateTimeOffset createdAt)
     {
       Id = id;
       InvitingUser = invitingUser;

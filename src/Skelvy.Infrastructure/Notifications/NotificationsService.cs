@@ -139,22 +139,22 @@ namespace Skelvy.Infrastructure.Notifications
       await _emailService.BroadcastUserDisabled(notification);
     }
 
-    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification)
+    public async Task BroadcastUserSentFriendInvitation(UserSentFriendInvitationNotification notification)
     {
-      await _socketService.BroadcastUserSentFriendRequest(notification);
+      await _socketService.BroadcastUserSentFriendInvitation(notification);
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async offline => await _pushService.BroadcastUserSentFriendRequest(notification, offline));
+        async offline => await _pushService.BroadcastUserSentFriendInvitation(notification, offline));
     }
 
-    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification)
+    public async Task BroadcastUserRespondedFriendInvitation(UserRespondedFriendInvitationNotification notification)
     {
-      await _socketService.BroadcastUserRespondedFriendRequest(notification);
+      await _socketService.BroadcastUserRespondedFriendInvitation(notification);
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async offline => await _pushService.BroadcastUserRespondedFriendRequest(notification, offline));
+        async offline => await _pushService.BroadcastUserRespondedFriendInvitation(notification, offline));
     }
 
     public async Task BroadcastUserSentMeetingInvitation(UserSentMeetingInvitationNotification notification)

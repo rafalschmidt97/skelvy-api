@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Relations.Events.UserSentFriendRequest;
+using Skelvy.Application.Relations.Events.UserSentFriendInvitation;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -13,18 +13,18 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
   public class InviteFriendCommandHandler : CommandHandler<InviteFriendCommand>
   {
     private readonly IRelationsRepository _relationsRepository;
-    private readonly IFriendRequestsRepository _friendRequestsRepository;
+    private readonly IFriendInvitationsRepository _friendInvitationsRepository;
     private readonly IUsersRepository _usersRepository;
     private readonly IMediator _mediator;
 
     public InviteFriendCommandHandler(
       IRelationsRepository relationsRepository,
-      IFriendRequestsRepository friendRequestsRepository,
+      IFriendInvitationsRepository friendInvitationsRepository,
       IUsersRepository usersRepository,
       IMediator mediator)
     {
       _relationsRepository = relationsRepository;
-      _friendRequestsRepository = friendRequestsRepository;
+      _friendInvitationsRepository = friendInvitationsRepository;
       _usersRepository = usersRepository;
       _mediator = mediator;
     }
@@ -33,12 +33,12 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
     {
       await ValidateData(request);
 
-      var friendRequest = new FriendRequest(request.UserId, request.InvitingUserId);
+      var invitation = new FriendInvitation(request.UserId, request.InvitingUserId);
 
-      await _friendRequestsRepository.Add(friendRequest);
+      await _friendInvitationsRepository.Add(invitation);
 
       await _mediator.Publish(
-        new UserSentFriendRequestEvent(friendRequest.Id, friendRequest.InvitingUserId, friendRequest.InvitedUserId));
+        new UserSentFriendInvitationEvent(invitation.Id, invitation.InvitingUserId, invitation.InvitedUserId));
 
       return Unit.Value;
     }
@@ -77,13 +77,13 @@ namespace Skelvy.Application.Relations.Commands.InviteFriend
           $"{nameof(User)}({request.UserId}) is blocked/blocking {nameof(User)}({request.InvitingUserId}).");
       }
 
-      var requestExists = await _friendRequestsRepository
+      var requestExists = await _friendInvitationsRepository
         .ExistsOneByInvitingIdAndInvitedIdTwoWay(request.UserId, request.InvitingUserId);
 
       if (requestExists)
       {
         throw new ConflictException(
-          $"{nameof(FriendRequest)}(InvitingUserId={request.UserId}, InvitedUserId={request.InvitingUserId}) already exists.");
+          $"{nameof(FriendInvitation)}(InvitingUserId={request.UserId}, InvitedUserId={request.InvitingUserId}) already exists.");
       }
     }
   }

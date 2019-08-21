@@ -7,7 +7,7 @@ using Skelvy.Application.Relations.Commands.InviteFriend;
 using Skelvy.Application.Relations.Commands.InviteFriendResponse;
 using Skelvy.Application.Relations.Commands.RemoveFriend;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
-using Skelvy.Application.Relations.Queries.FindFriendRequests;
+using Skelvy.Application.Relations.Queries.FindFriendInvitations;
 using Skelvy.Application.Relations.Queries.FindFriends;
 using Skelvy.Domain.Enums;
 using Skelvy.Persistence;
@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Relations.Integration
     private const int UserTwoId = 2;
 
     private readonly RelationsRepository _relationsRepository;
-    private readonly IFriendRequestsRepository _friendRequestsRepository;
+    private readonly IFriendInvitationsRepository _friendInvitationsRepository;
     private readonly UsersRepository _usersRepository;
     private readonly Mock<IMediator> _mediator;
 
@@ -31,7 +31,7 @@ namespace Skelvy.Application.Test.Relations.Integration
     {
       var context = TestDbContext();
       _relationsRepository = new RelationsRepository(context);
-      _friendRequestsRepository = new FriendRequestsRepository(context);
+      _friendInvitationsRepository = new FriendInvitationsRepository(context);
       _usersRepository = new UsersRepository(context);
       _mediator = new Mock<IMediator>();
     }
@@ -62,16 +62,16 @@ namespace Skelvy.Application.Test.Relations.Integration
     {
       var command = new InviteFriendCommand(UserOneId, UserTwoId);
       var handler =
-        new InviteFriendCommandHandler(_relationsRepository, _friendRequestsRepository, _usersRepository, _mediator.Object);
+        new InviteFriendCommandHandler(_relationsRepository, _friendInvitationsRepository, _usersRepository, _mediator.Object);
 
       await handler.Handle(command);
     }
 
     private async Task<bool> UserTwoShouldHaveInviteFromUserOne()
     {
-      var query = new FindFriendRequestsQuery(UserTwoId);
+      var query = new FindFriendInvitationsQuery(UserTwoId);
       var handler =
-        new FindFriendRequestsQueryHandler(_friendRequestsRepository, _usersRepository, Mapper());
+        new FindFriendInvitationsQueryHandler(_friendInvitationsRepository, _usersRepository, Mapper());
 
       var invites = await handler.Handle(query);
 
@@ -80,24 +80,24 @@ namespace Skelvy.Application.Test.Relations.Integration
 
     private async Task UserTwoAcceptsInviteFromUserOne()
     {
-      var invitation = _friendRequestsRepository.FindAllWithInvitingDetailsByUserId(UserTwoId).Result.FirstOrDefault();
+      var invitation = _friendInvitationsRepository.FindAllWithInvitingDetailsByUserId(UserTwoId).Result.FirstOrDefault();
 
       var userFriendsRequestResponseCommand =
         new InviteFriendResponseCommand(UserTwoId, invitation.Id, true);
       var userFriendsRequestResponseCommandHandler =
-        new InviteFriendResponseCommandHandler(_relationsRepository, _friendRequestsRepository, _usersRepository, _mediator.Object);
+        new InviteFriendResponseCommandHandler(_relationsRepository, _friendInvitationsRepository, _usersRepository, _mediator.Object);
 
       await userFriendsRequestResponseCommandHandler.Handle(userFriendsRequestResponseCommand);
     }
 
     private async Task<bool> InviteRemovedAfterAccepting()
     {
-      var query = new FindFriendRequestsQuery(UserTwoId);
+      var query = new FindFriendInvitationsQuery(UserTwoId);
       var handler =
-        new FindFriendRequestsQueryHandler(_friendRequestsRepository, _usersRepository, Mapper());
+        new FindFriendInvitationsQueryHandler(_friendInvitationsRepository, _usersRepository, Mapper());
 
       var invites = await handler.Handle(query);
-      var invitesInDatabase = await _friendRequestsRepository.FindAllWithInvitingDetailsByUserId(UserTwoId);
+      var invitesInDatabase = await _friendInvitationsRepository.FindAllWithInvitingDetailsByUserId(UserTwoId);
       return !invites.Any() && !invitesInDatabase.Any();
     }
 

@@ -12,7 +12,7 @@ namespace Skelvy.Persistence
     {
       SeedUsers(context);
       SeedProfiles(context);
-      SeedFriendRequests(context);
+      SeedFriendInvitations(context);
       SeedRelations(context);
       SeedActivities(context);
       SeedMeetingRequests(context);
@@ -107,19 +107,19 @@ namespace Skelvy.Persistence
       context.SaveChanges();
     }
 
-    public static void SeedFriendRequests(SkelvyContext context)
+    public static void SeedFriendInvitations(SkelvyContext context)
     {
-      if (context.FriendRequests.Any())
+      if (context.FriendInvitations.Any())
       {
         return;
       }
 
-      var friendRequests = new[]
+      var invitations = new[]
       {
-        new FriendRequest(1, 2),
+        new FriendInvitation(1, 2),
       };
 
-      context.FriendRequests.AddRange(friendRequests);
+      context.FriendInvitations.AddRange(invitations);
       context.SaveChanges();
     }
 

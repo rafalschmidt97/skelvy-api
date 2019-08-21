@@ -23,7 +23,7 @@ namespace Skelvy.Application.Test.Users.Commands
         new MessagesRepository(dbContext),
         new AttachmentsRepository(dbContext),
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new MeetingInvitationsRepository(dbContext));
 
       await handler.Handle(request);

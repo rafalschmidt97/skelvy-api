@@ -274,36 +274,36 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserSentFriendRequest(UserSentFriendRequestNotification notification)
+    public async Task BroadcastUserSentFriendInvitation(UserSentFriendInvitationNotification notification)
     {
       await SendNotification(
         notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "FRIENDS",
-          BodyLocKey = "NEW_FRIEND_REQUEST",
+          BodyLocKey = "NEW_FRIEND_INVITATION",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
-          Action = "UserSentFriendRequest",
+          Action = "UserSentFriendInvitation",
           RedirectTo = "friends",
         });
     }
 
-    public async Task BroadcastUserRespondedFriendRequest(UserRespondedFriendRequestNotification notification)
+    public async Task BroadcastUserRespondedFriendInvitation(UserRespondedFriendInvitationNotification notification)
     {
       await SendNotification(
         notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "FRIENDS",
-          BodyLocKey = notification.IsAccepted ? "FRIEND_REQUEST_ACCEPTED" : "FRIEND_REQUEST_DENIED",
+          BodyLocKey = notification.IsAccepted ? "FRIEND_INVITATION_ACCEPTED" : "FRIEND_INVITATION_DENIED",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
-          Action = "UserRespondedFriendRequest",
+          Action = "UserRespondedFriendInvitation",
           RedirectTo = "friends",
         });
     }

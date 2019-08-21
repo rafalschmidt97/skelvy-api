@@ -5,14 +5,14 @@ using Skelvy.Domain.Exceptions;
 
 namespace Skelvy.Domain.Entities
 {
-  public class FriendRequest : ICreatableEntity, IModifiableEntity, IRemovableEntity
+  public class FriendInvitation : ICreatableEntity, IModifiableEntity, IRemovableEntity
   {
-    public FriendRequest(int invitingUserId, int invitedUserId)
+    public FriendInvitation(int invitingUserId, int invitedUserId)
     {
       InvitingUserId = invitingUserId;
       InvitedUserId = invitedUserId;
 
-      Status = FriendRequestStatusType.Pending;
+      Status = FriendInvitationStatusType.Pending;
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
@@ -32,12 +32,12 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        Status = FriendRequestStatusType.Accepted;
+        Status = FriendInvitationStatusType.Accepted;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
-        throw new DomainException($"{nameof(FriendRequest)}({Id}) is already accepted.");
+        throw new DomainException($"{nameof(FriendInvitation)}({Id}) is already accepted.");
       }
     }
 
@@ -46,12 +46,12 @@ namespace Skelvy.Domain.Entities
       if (!IsRemoved)
       {
         IsRemoved = true;
-        Status = FriendRequestStatusType.Denied;
+        Status = FriendInvitationStatusType.Denied;
         ModifiedAt = DateTimeOffset.UtcNow;
       }
       else
       {
-        throw new DomainException($"{nameof(FriendRequest)}({Id}) is already denied.");
+        throw new DomainException($"{nameof(FriendInvitation)}({Id}) is already denied.");
       }
     }
   }

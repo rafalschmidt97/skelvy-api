@@ -2,16 +2,16 @@ using System.Collections.Generic;
 
 namespace Skelvy.Application.Relations.Infrastructure.Notifications
 {
-  public class UserRespondedFriendRequestNotification
+  public class UserRespondedFriendInvitationNotification
   {
-    public UserRespondedFriendRequestNotification(int requestId, bool isAccepted, IEnumerable<int> usersId)
+    public UserRespondedFriendInvitationNotification(int invitationId, bool isAccepted, IEnumerable<int> usersId)
     {
-      RequestId = requestId;
+      InvitationId = invitationId;
       IsAccepted = isAccepted;
       UsersId = usersId;
     }
 
-    public int RequestId { get; private set; }
+    public int InvitationId { get; private set; }
     public bool IsAccepted { get; private set; }
     public IEnumerable<int> UsersId { get; private set; }
   }

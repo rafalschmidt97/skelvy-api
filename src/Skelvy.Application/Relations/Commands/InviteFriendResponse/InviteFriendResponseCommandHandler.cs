@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
-using Skelvy.Application.Relations.Events.UserRespondedFriendRequest;
+using Skelvy.Application.Relations.Events.UserRespondedFriendInvitation;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -14,56 +14,56 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
   public class InviteFriendResponseCommandHandler : CommandHandler<InviteFriendResponseCommand>
   {
     private readonly IRelationsRepository _relationsRepository;
-    private readonly IFriendRequestsRepository _friendRequestsRepository;
+    private readonly IFriendInvitationsRepository _friendInvitationsRepository;
     private readonly IUsersRepository _usersRepository;
     private readonly IMediator _mediator;
 
     public InviteFriendResponseCommandHandler(
       IRelationsRepository relationsRepository,
-      IFriendRequestsRepository friendRequestsRepository,
+      IFriendInvitationsRepository friendInvitationsRepository,
       IUsersRepository usersRepository,
       IMediator mediator)
     {
       _relationsRepository = relationsRepository;
-      _friendRequestsRepository = friendRequestsRepository;
+      _friendInvitationsRepository = friendInvitationsRepository;
       _usersRepository = usersRepository;
       _mediator = mediator;
     }
 
     public override async Task<Unit> Handle(InviteFriendResponseCommand request)
     {
-      var friendRequest = await ValidateData(request);
+      var invitation = await ValidateData(request);
 
       using (var transaction = _relationsRepository.BeginTransaction())
       {
         if (request.IsAccepted)
         {
-          friendRequest.Accept();
+          invitation.Accept();
         }
         else
         {
-          friendRequest.Deny();
+          invitation.Deny();
         }
 
         var relations = new List<Relation>
         {
-          new Relation(friendRequest.InvitingUserId, friendRequest.InvitedUserId, RelationType.Friend),
-          new Relation(friendRequest.InvitedUserId, friendRequest.InvitingUserId, RelationType.Friend),
+          new Relation(invitation.InvitingUserId, invitation.InvitedUserId, RelationType.Friend),
+          new Relation(invitation.InvitedUserId, invitation.InvitingUserId, RelationType.Friend),
         };
 
-        await _friendRequestsRepository.Update(friendRequest);
+        await _friendInvitationsRepository.Update(invitation);
         await _relationsRepository.AddRange(relations);
 
         transaction.Commit();
 
         await _mediator.Publish(
-          new UserRespondedFriendRequestEvent(friendRequest.Id, request.IsAccepted, friendRequest.InvitingUserId, friendRequest.InvitedUserId));
+          new UserRespondedFriendInvitationEvent(invitation.Id, request.IsAccepted, invitation.InvitingUserId, invitation.InvitedUserId));
       }
 
       return Unit.Value;
     }
 
-    private async Task<FriendRequest> ValidateData(InviteFriendResponseCommand request)
+    private async Task<FriendInvitation> ValidateData(InviteFriendResponseCommand request)
     {
       var userExists = await _usersRepository.ExistsOne(request.UserId);
 
@@ -72,29 +72,29 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
         throw new NotFoundException($"{nameof(Profile)}(UserId = {request.UserId}) not found.");
       }
 
-      var friendRequest = await _friendRequestsRepository.FindOneByRequestId(request.RequestId);
+      var invitation = await _friendInvitationsRepository.FindOneByRequestId(request.RequestId);
 
-      if (friendRequest == null)
+      if (invitation == null)
       {
-        throw new NotFoundException(nameof(FriendRequest), request.RequestId);
+        throw new NotFoundException(nameof(FriendInvitation), request.RequestId);
       }
 
-      if (friendRequest.InvitedUserId != request.UserId)
+      if (invitation.InvitedUserId != request.UserId)
       {
         throw new ConflictException(
-          $"{nameof(FriendRequest)}({request.RequestId}) does not belong to {nameof(User)}({request.UserId}).");
+          $"{nameof(FriendInvitation)}({request.RequestId}) does not belong to {nameof(User)}({request.UserId}).");
       }
 
       var existsBlockedRelation = await _relationsRepository
-        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(friendRequest.InvitedUserId, friendRequest.InvitingUserId, RelationType.Blocked);
+        .ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(invitation.InvitedUserId, invitation.InvitingUserId, RelationType.Blocked);
 
       if (existsBlockedRelation)
       {
         throw new ConflictException(
-          $"{nameof(User)}({friendRequest.InvitedUserId}) is blocked/blocking {nameof(User)}({friendRequest.InvitingUserId}).");
+          $"{nameof(User)}({invitation.InvitedUserId}) is blocked/blocking {nameof(User)}({invitation.InvitingUserId}).");
       }
 
-      return friendRequest;
+      return invitation;
     }
   }
 }

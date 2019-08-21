@@ -27,7 +27,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendResponseCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -41,7 +41,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendResponseCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -55,7 +55,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendResponseCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -70,7 +70,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendResponseCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -85,7 +85,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new InviteFriendResponseCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
@@ -100,7 +100,7 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = TestDbContextWithBlockedUser();
       var handler = new InviteFriendResponseCommandHandler(
         new RelationsRepository(dbContext),
-        new FriendRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         new UsersRepository(dbContext),
         _mediator.Object);
 
