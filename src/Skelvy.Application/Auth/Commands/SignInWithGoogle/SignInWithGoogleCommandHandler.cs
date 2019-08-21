@@ -57,7 +57,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
 
         if (email == null)
         {
-          user = new User("user." + verified.UserId, request.Language);
+          user = new User($"{(string)details.name.givenName}.{verified.UserId}", request.Language);
           user.RegisterGoogle(verified.UserId);
           await CreateUserWithProfile(user, details);
 
@@ -74,7 +74,7 @@ namespace Skelvy.Application.Auth.Commands.SignInWithGoogle
               throw new UnauthorizedException($"{nameof(User)}(GoogleId = {verified.UserId}, Email = {email}) has too long email.");
             }
 
-            user = new User(email, "user." + verified.UserId, request.Language);
+            user = new User(email, $"{(string)details.name.givenName}.{verified.UserId}", request.Language);
             user.RegisterGoogle(verified.UserId);
             await CreateUserWithProfile(user, details);
 
