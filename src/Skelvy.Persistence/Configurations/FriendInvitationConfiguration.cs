@@ -8,7 +8,7 @@ namespace Skelvy.Persistence.Configurations
   {
     public void Configure(EntityTypeBuilder<FriendInvitation> builder)
     {
-      builder.HasOne(x => x.InvitingUser).WithMany(x => x.FriendsRequests).OnDelete(DeleteBehavior.Restrict);
+      builder.HasOne(x => x.InvitingUser).WithMany(x => x.FriendInvitations).OnDelete(DeleteBehavior.Restrict);
 
       builder.HasIndex(e => e.IsRemoved);
 

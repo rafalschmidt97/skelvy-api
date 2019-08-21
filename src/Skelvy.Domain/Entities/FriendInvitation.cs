@@ -54,5 +54,19 @@ namespace Skelvy.Domain.Entities
         throw new DomainException($"{nameof(FriendInvitation)}({Id}) is already denied.");
       }
     }
+
+    public void Abort()
+    {
+      if (!IsRemoved)
+      {
+        IsRemoved = true;
+        Status = FriendInvitationStatusType.Aborted;
+        ModifiedAt = DateTimeOffset.UtcNow;
+      }
+      else
+      {
+        throw new DomainException($"{nameof(FriendInvitation)}({Id}) is already aborted.");
+      }
+    }
   }
 }

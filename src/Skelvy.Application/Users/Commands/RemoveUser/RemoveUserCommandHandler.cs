@@ -8,6 +8,7 @@ using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Events.MeetingAborted;
 using Skelvy.Application.Meetings.Events.UserLeftMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Users.Events.UserRemoved;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -22,6 +23,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
+    private readonly IFriendInvitationsRepository _friendInvitationsRepository;
     private readonly IMediator _mediator;
 
     public RemoveUserCommandHandler(
@@ -30,6 +32,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
       IGroupUsersRepository groupUsersRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
+      IFriendInvitationsRepository friendInvitationsRepository,
       IMediator mediator)
     {
       _usersRepository = usersRepository;
@@ -37,6 +40,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
       _groupUsersRepository = groupUsersRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
+      _friendInvitationsRepository = friendInvitationsRepository;
       _mediator = mediator;
     }
 
@@ -49,12 +53,19 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      await LeaveMeetings(user);
-      user.Remove(DateTimeOffset.UtcNow.AddMonths(3));
+      using (var transaction = _usersRepository.BeginTransaction())
+      {
+        await LeaveMeetings(user);
+        await RemoveFriendInvitations(user);
 
-      await _usersRepository.Update(user);
+        user.Remove(DateTimeOffset.UtcNow.AddMonths(3));
+        await _usersRepository.Update(user);
 
-      await _mediator.Publish(new UserRemovedEvent(user.Id, user.Email, user.Language));
+        transaction.Commit();
+
+        await _mediator.Publish(new UserRemovedEvent(user.Id, user.Email, user.Language));
+      }
+
       return Unit.Value;
     }
 
@@ -142,6 +153,21 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
             }
           }
         }
+      }
+    }
+
+    private async Task RemoveFriendInvitations(User user)
+    {
+      var invitations = await _friendInvitationsRepository.FindAllWithByUserId(user.Id);
+
+      if (invitations.Any())
+      {
+        foreach (var invitation in invitations)
+        {
+          invitation.Abort();
+        }
+
+        await _friendInvitationsRepository.UpdateRange(invitations);
       }
     }
   }

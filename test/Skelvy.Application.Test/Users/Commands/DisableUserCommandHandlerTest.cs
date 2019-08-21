@@ -28,6 +28,7 @@ namespace Skelvy.Application.Test.Users.Commands
         new GroupUsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         _mediator.Object);
 
       await handler.Handle(request);
@@ -44,6 +45,7 @@ namespace Skelvy.Application.Test.Users.Commands
         new GroupUsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         _mediator.Object);
 
       await handler.Handle(request);
@@ -60,6 +62,7 @@ namespace Skelvy.Application.Test.Users.Commands
         new GroupUsersRepository(dbContext),
         new MeetingsRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>

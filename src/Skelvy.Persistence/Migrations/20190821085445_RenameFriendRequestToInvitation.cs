@@ -22,7 +22,7 @@ namespace Skelvy.Persistence.Migrations
                     Status = table.Column<string>(maxLength: 15, nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
-                    IsRemoved = table.Column<bool>(nullable: false)
+                    IsRemoved = table.Column<bool>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -73,7 +73,7 @@ namespace Skelvy.Persistence.Migrations
                     InvitingUserId = table.Column<int>(nullable: false),
                     IsRemoved = table.Column<bool>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
-                    Status = table.Column<string>(maxLength: 15, nullable: false)
+                    Status = table.Column<string>(maxLength: 15, nullable: false),
                 },
                 constraints: table =>
                 {

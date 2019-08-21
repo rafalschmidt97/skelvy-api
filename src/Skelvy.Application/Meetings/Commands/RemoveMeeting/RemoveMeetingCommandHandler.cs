@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore.Internal;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Events.MeetingAborted;
@@ -65,12 +66,15 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
 
         var invitations = await _meetingInvitationsRepository.FindAllByMeetingId(meeting.Id);
 
-        foreach (var invitation in invitations)
+        if (invitations.Any())
         {
-          invitation.Abort();
-        }
+          foreach (var invitation in invitations)
+          {
+            invitation.Abort();
+          }
 
-        await _meetingInvitationsRepository.UpdateRange(invitations);
+          await _meetingInvitationsRepository.UpdateRange(invitations);
+        }
 
         transaction.Commit();
 

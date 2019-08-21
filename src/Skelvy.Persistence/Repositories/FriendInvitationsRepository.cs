@@ -47,6 +47,13 @@ namespace Skelvy.Persistence.Repositories
              !x.IsRemoved);
     }
 
+    public async Task<IList<FriendInvitation>> FindAllWithByUserId(int userId)
+    {
+      return await Context.FriendInvitations
+        .Where(x => (x.InvitedUserId == userId || x.InvitingUserId == userId) && !x.IsRemoved)
+        .ToListAsync();
+    }
+
     public async Task<IList<FriendInvitation>> FindAllWithRemovedByUsersId(List<int> usersId)
     {
       return await Context.FriendInvitations
@@ -63,6 +70,12 @@ namespace Skelvy.Persistence.Repositories
     public async Task Update(FriendInvitation invitation)
     {
       Context.FriendInvitations.Update(invitation);
+      await Context.SaveChangesAsync();
+    }
+
+    public async Task UpdateRange(IList<FriendInvitation> invitations)
+    {
+      Context.FriendInvitations.UpdateRange(invitations);
       await Context.SaveChangesAsync();
     }
 

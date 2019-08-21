@@ -7,6 +7,7 @@ using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Events.MeetingAborted;
 using Skelvy.Application.Meetings.Events.UserLeftMeeting;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
+using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Users.Events.UserDisabled;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -21,6 +22,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IMeetingRequestsRepository _meetingRequestsRepository;
+    private readonly IFriendInvitationsRepository _friendInvitationsRepository;
     private readonly IMediator _mediator;
 
     public DisableUserCommandHandler(
@@ -29,6 +31,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
       IGroupUsersRepository groupUsersRepository,
       IMeetingsRepository meetingsRepository,
       IMeetingRequestsRepository meetingRequestsRepository,
+      IFriendInvitationsRepository friendInvitationsRepository,
       IMediator mediator)
     {
       _usersRepository = usersRepository;
@@ -36,6 +39,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
       _groupUsersRepository = groupUsersRepository;
       _meetingsRepository = meetingsRepository;
       _meetingRequestsRepository = meetingRequestsRepository;
+      _friendInvitationsRepository = friendInvitationsRepository;
       _mediator = mediator;
     }
 
@@ -53,12 +57,19 @@ namespace Skelvy.Application.Users.Commands.DisableUser
         throw new ConflictException($"{nameof(User)}({request.UserId}) is already disabled.");
       }
 
-      await LeaveMeetings(user);
-      user.Disable(request.Reason);
+      using (var transaction = _usersRepository.BeginTransaction())
+      {
+        await LeaveMeetings(user);
+        await RemoveFriendInvitations(user);
 
-      await _usersRepository.Update(user);
+        user.Disable(request.Reason);
+        await _usersRepository.Update(user);
 
-      await _mediator.Publish(new UserDisabledEvent(user.Id, request.Reason, user.Email, user.Language));
+        transaction.Commit();
+
+        await _mediator.Publish(new UserDisabledEvent(user.Id, request.Reason, user.Email, user.Language));
+      }
+
       return Unit.Value;
     }
 
@@ -146,6 +157,21 @@ namespace Skelvy.Application.Users.Commands.DisableUser
             }
           }
         }
+      }
+    }
+
+    private async Task RemoveFriendInvitations(User user)
+    {
+      var invitations = await _friendInvitationsRepository.FindAllWithByUserId(user.Id);
+
+      if (invitations.Any())
+      {
+        foreach (var invitation in invitations)
+        {
+          invitation.Abort();
+        }
+
+        await _friendInvitationsRepository.UpdateRange(invitations);
       }
     }
   }
