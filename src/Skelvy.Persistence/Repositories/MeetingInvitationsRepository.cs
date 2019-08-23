@@ -20,23 +20,32 @@ namespace Skelvy.Persistence.Repositories
         .AnyAsync(x => x.InvitedUserId == invitedUserId && x.MeetingId == meetingId && !x.IsRemoved);
     }
 
-    public async Task<IList<MeetingInvitation>> FindAllWithInvitingDetailsByUserId(int userId)
+    public async Task<IList<MeetingInvitation>> FindAllWithActivityAndUsersDetailsByUserId(int userId)
     {
-      var requests = await Context.MeetingInvitations
-        .Include(x => x.InvitingUser)
+      var meetingInvitations = await Context.MeetingInvitations
+        .Include(x => x.Meeting)
+        .ThenInclude(x => x.Group)
+        .ThenInclude(x => x.Users)
+        .ThenInclude(x => x.User)
         .ThenInclude(x => x.Profile)
-        .Where(r => r.InvitedUserId == userId && !r.IsRemoved)
+        .Where(x => x.InvitedUserId == userId && !x.IsRemoved)
         .ToListAsync();
 
-      foreach (var request in requests)
+      foreach (var meetingInvitation in meetingInvitations)
       {
-        request.InvitingUser.Profile.Photos = await Context.ProfilePhotos
-          .Where(x => x.ProfileId == request.InvitingUser.Profile.Id)
-          .OrderBy(x => x.Order)
-          .ToListAsync();
+        foreach (var groupUser in meetingInvitation.Meeting.Group.Users)
+        {
+          var userPhotos = await Context.ProfilePhotos
+            .Include(x => x.Attachment)
+            .Where(x => x.ProfileId == groupUser.User.Profile.Id)
+            .OrderBy(x => x.Order)
+            .ToListAsync();
+
+          groupUser.User.Profile.Photos = userPhotos;
+        }
       }
 
-      return requests;
+      return meetingInvitations;
     }
 
     public async Task<IList<MeetingInvitation>> FindAllByMeetingId(int meetingId)

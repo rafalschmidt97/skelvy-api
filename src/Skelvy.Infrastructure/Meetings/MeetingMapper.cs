@@ -62,6 +62,26 @@ namespace Skelvy.Infrastructure.Meetings
       return requestsDto;
     }
 
+    public async Task<MeetingInvitationDto> Map(MeetingInvitation meetingInvitation, string language)
+    {
+      var meetingInvitationDto = _mapper.Map<MeetingInvitationDto>(meetingInvitation);
+      meetingInvitationDto.Meeting.City = await GetCity(meetingInvitation.Meeting.Latitude, meetingInvitation.Meeting.Longitude, language);
+      return meetingInvitationDto;
+    }
+
+    public async Task<IList<MeetingInvitationDto>> Map(IList<MeetingInvitation> meetingInvitations, string language)
+    {
+      var meetingInvitationsDto = new List<MeetingInvitationDto>();
+
+      foreach (var meetingInvitation in meetingInvitations)
+      {
+        var meetingInvitationDto = await Map(meetingInvitation, language);
+        meetingInvitationsDto.Add(meetingInvitationDto);
+      }
+
+      return meetingInvitationsDto;
+    }
+
     public async Task<MeetingSuggestionsModel> Map(IList<MeetingRequest> requests, IList<Meeting> meetings, string language)
     {
       var requestsDto = _mapper.Map<IList<MeetingRequestWithUserDto>>(requests);

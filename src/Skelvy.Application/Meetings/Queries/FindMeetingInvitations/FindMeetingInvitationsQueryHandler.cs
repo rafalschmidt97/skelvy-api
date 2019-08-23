@@ -34,8 +34,8 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingInvitations
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var friendRequests = await _meetingInvitationsRepository.FindAllWithInvitingDetailsByUserId(request.UserId);
-      return _mapper.Map<IList<MeetingInvitationDto>>(friendRequests);
+      var meetingInvitations = await _meetingInvitationsRepository.FindAllWithActivityAndUsersDetailsByUserId(request.UserId);
+      return _mapper.Map<IList<MeetingInvitationDto>>(meetingInvitations);
     }
   }
 }

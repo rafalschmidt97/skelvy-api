@@ -29,6 +29,8 @@ namespace Skelvy.Application.Test.Users.Queries
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
         new GroupsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
+        new MeetingInvitationsRepository(dbContext),
         _mapper.Object,
         Mapper());
 
@@ -47,6 +49,8 @@ namespace Skelvy.Application.Test.Users.Queries
         new MeetingRequestsRepository(dbContext),
         new MeetingsRepository(dbContext),
         new GroupsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
+        new MeetingInvitationsRepository(dbContext),
         _mapper.Object,
         Mapper());
 
