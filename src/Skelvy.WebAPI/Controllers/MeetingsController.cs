@@ -12,12 +12,20 @@ using Skelvy.Application.Meetings.Commands.UpdateMeeting;
 using Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingInvitations;
+using Skelvy.Application.Meetings.Queries.FindMeetings;
 using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
 
 namespace Skelvy.WebAPI.Controllers
 {
   public class MeetingsController : BaseController
   {
+    [HttpGet("self")]
+    public async Task FindSelf([FromQuery] FindMeetingsQuery request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
+    }
+
     [HttpPost]
     public async Task Add(AddMeetingCommand request)
     {
