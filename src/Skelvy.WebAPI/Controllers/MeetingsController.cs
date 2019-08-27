@@ -20,10 +20,10 @@ namespace Skelvy.WebAPI.Controllers
   public class MeetingsController : BaseController
   {
     [HttpGet("self")]
-    public async Task FindSelf([FromQuery] FindMeetingsQuery request)
+    public async Task<MeetingModel> FindSelf([FromQuery] FindMeetingsQuery request)
     {
       request.UserId = UserId;
-      await Mediator.Send(request);
+      return await Mediator.Send(request);
     }
 
     [HttpPost]

@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Meetings.Commands.AddMeetingRequest;
 using Skelvy.Application.Meetings.Commands.ConnectMeetingRequest;
 using Skelvy.Application.Meetings.Commands.RemoveMeetingRequest;
+using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeetingRequests;
 
 namespace Skelvy.WebAPI.Controllers
@@ -10,10 +12,10 @@ namespace Skelvy.WebAPI.Controllers
   public class RequestsController : BaseController
   {
     [HttpGet("self")]
-    public async Task FindSelf([FromQuery] FindMeetingRequestsQuery request)
+    public async Task<IList<MeetingRequestDto>> FindSelf([FromQuery] FindMeetingRequestsQuery request)
     {
       request.UserId = UserId;
-      await Mediator.Send(request);
+      return await Mediator.Send(request);
     }
 
     [HttpPost]
