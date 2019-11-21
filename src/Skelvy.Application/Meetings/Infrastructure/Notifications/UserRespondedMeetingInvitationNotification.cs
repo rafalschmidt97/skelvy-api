@@ -4,14 +4,14 @@ namespace Skelvy.Application.Meetings.Infrastructure.Notifications
 {
   public class UserRespondedMeetingInvitationNotification
   {
-    public UserRespondedMeetingInvitationNotification(int requestId, bool isAccepted, IEnumerable<int> usersId)
+    public UserRespondedMeetingInvitationNotification(int invitationId, bool isAccepted, IEnumerable<int> usersId)
     {
-      RequestId = requestId;
+      InvitationId = invitationId;
       IsAccepted = isAccepted;
       UsersId = usersId;
     }
 
-    public int RequestId { get; private set; }
+    public int InvitationId { get; private set; }
     public bool IsAccepted { get; private set; }
     public IEnumerable<int> UsersId { get; private set; }
   }

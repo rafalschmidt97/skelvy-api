@@ -35,7 +35,7 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
 
       var groupUser = new GroupUser(meeting.GroupId, request.UserId);
       await _groupUsersRepository.Add(groupUser);
-      await _mediator.Publish(new UserJoinedMeetingEvent(groupUser.UserId, groupUser.GroupId));
+      await _mediator.Publish(new UserJoinedMeetingEvent(groupUser.UserId, groupUser.Role, meeting.Id, groupUser.GroupId));
 
       return Unit.Value;
     }

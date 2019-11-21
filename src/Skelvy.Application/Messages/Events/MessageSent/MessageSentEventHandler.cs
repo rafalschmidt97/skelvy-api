@@ -35,6 +35,7 @@ namespace Skelvy.Application.Messages.Events.MessageSent
       await _notifications.BroadcastUserSentMessage(
         new UserSentMessageNotification(
           request.Type,
+          request.GroupId,
           new UserSentMessageNotificationDto(
             request.Message.MessageId,
             request.Message.Type,

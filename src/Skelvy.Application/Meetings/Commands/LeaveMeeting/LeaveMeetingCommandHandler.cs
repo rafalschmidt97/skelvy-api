@@ -133,7 +133,7 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
           if (groupUserDetails.ModifiedAt != null)
           {
             await _mediator.Publish(
-              new MeetingAbortedEvent(groupUserDetails.UserId, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
+              new MeetingAbortedEvent(groupUserDetails.UserId, meeting.Id, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
           }
           else
           {

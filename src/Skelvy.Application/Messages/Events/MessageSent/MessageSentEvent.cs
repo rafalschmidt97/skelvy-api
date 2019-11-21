@@ -7,14 +7,16 @@ namespace Skelvy.Application.Messages.Events.MessageSent
 {
   public class MessageSentEvent : IEvent
   {
-    public MessageSentEvent(string type, MessageSentEventDto message, IList<MessageDto> messages)
+    public MessageSentEvent(string type, int groupId, MessageSentEventDto message, IList<MessageDto> messages)
     {
       Type = type;
+      GroupId = groupId;
       Message = message;
       Messages = messages;
     }
 
     public string Type { get; private set; }
+    public int GroupId { get; private set; }
     public MessageSentEventDto Message { get; private set; }
     public IList<MessageDto> Messages { get; private set; }
   }

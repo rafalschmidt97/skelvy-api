@@ -12,5 +12,6 @@ namespace Skelvy.Application.Meetings.Events.UserFoundMeeting
 
     public int UserId { get; private set; }
     public int MeetingId { get; private set; }
+    public int GroupId { get; private set; }
   }
 }

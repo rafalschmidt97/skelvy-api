@@ -21,7 +21,7 @@ namespace Skelvy.Application.Meetings.Events.UserRespondedMeetingInvitation
       var usersId = new List<int> { request.InvitedUserId, request.InvitingUserId };
 
       await _notifications.BroadcastUserRespondedMeetingInvitation(
-        new UserRespondedMeetingInvitationNotification(request.RequestId, request.IsAccepted, usersId));
+        new UserRespondedMeetingInvitationNotification(request.InvitationId, request.IsAccepted, usersId));
 
       return Unit.Value;
     }

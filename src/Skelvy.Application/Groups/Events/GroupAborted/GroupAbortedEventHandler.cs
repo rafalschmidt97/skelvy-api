@@ -27,7 +27,7 @@ namespace Skelvy.Application.Groups.Events.GroupAborted
         .FindAllWithRemovedAfterOrEqualAbortedAtByGroupId(request.GroupId, request.UserLeftAt);
 
       var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
-      await _notifications.BroadcastGroupAborted(new GroupAbortedNotification(request.UserId, broadcastUsersId));
+      await _notifications.BroadcastGroupAborted(new GroupAbortedNotification(request.GroupId, request.UserId, broadcastUsersId));
 
       return Unit.Value;
     }

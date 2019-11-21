@@ -6,15 +6,17 @@ namespace Skelvy.Application.Messages.Infrastructure.Notifications
 {
   public class UserSentMessageNotification
   {
-    public UserSentMessageNotification(string type, UserSentMessageNotificationDto message, IList<MessageDto> messages, IList<int> usersId)
+    public UserSentMessageNotification(string type, int groupId, UserSentMessageNotificationDto message, IList<MessageDto> messages, IList<int> usersId)
     {
       Type = type;
+      GroupId = groupId;
       Message = message;
       Messages = messages;
       UsersId = usersId;
     }
 
     public string Type { get; private set; }
+    public int GroupId { get; private set; }
     public UserSentMessageNotificationDto Message { get; private set; }
     public IList<MessageDto> Messages { get; private set; }
     public IList<int> UsersId { get; private set; }

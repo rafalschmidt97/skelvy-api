@@ -26,7 +26,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         Action = "UserSentMessage",
         RedirectTo = "chat",
-        Data = notification.Messages,
+        Data = new { notification.Messages, notification.GroupId },
       };
 
       if (notification.Message.Type == MessageType.Response)
@@ -99,7 +99,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserJoinedMeeting",
           RedirectTo = "meeting",
-          Data = new { notification.UserId },
+          Data = new { notification.UserId, notification.GroupId, notification.MeetingId, notification.UserRole },
         });
     }
 
@@ -117,6 +117,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserFoundMeeting",
           RedirectTo = "meeting",
+          Data = new { notification.GroupId, notification.MeetingId },
         });
     }
 
@@ -134,7 +135,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserLeftMeeting",
           RedirectTo = "meeting",
-          Data = new { notification.UserId },
+          Data = new { notification.UserId, notification.GroupId, notification.MeetingId },
         });
     }
 
@@ -152,7 +153,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserRemovedFromMeeting",
           RedirectTo = "meeting",
-          Data = new { notification.UserId, notification.RemovedUserId },
+          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
         });
     }
 
@@ -170,7 +171,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserLeftGroup",
           RedirectTo = "group",
-          Data = new { notification.UserId },
+          Data = new { notification.UserId, notification.GroupId },
         });
     }
 
@@ -188,6 +189,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "MeetingAborted",
           RedirectTo = "meeting",
+          Data = new { notification.GroupId, notification.MeetingId },
         });
     }
 
@@ -205,6 +207,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "GroupAborted",
           RedirectTo = "group",
+          Data = new { notification.GroupId },
         });
     }
 
@@ -222,6 +225,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "MeetingRequestExpired",
           RedirectTo = "meeting",
+          Data = new { notification.RequestId },
         });
     }
 
@@ -239,6 +243,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "MeetingExpired",
           RedirectTo = "meeting",
+          Data = new { notification.MeetingId },
         });
     }
 
@@ -288,6 +293,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserSentFriendInvitation",
           RedirectTo = "friends",
+          Data = new { notification.InvitationId },
         });
     }
 
@@ -305,6 +311,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserRespondedFriendInvitation",
           RedirectTo = "friends",
+          Data = new { notification.InvitationId, notification.IsAccepted },
         });
     }
 
@@ -322,6 +329,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserSentMeetingInvitation",
           RedirectTo = "meeting",
+          Data = new { notification.InvitationId },
         });
     }
 
@@ -339,6 +347,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserRespondedMeetingInvitation",
           RedirectTo = "meeting",
+          Data = new { notification.InvitationId, notification.IsAccepted },
         });
     }
 

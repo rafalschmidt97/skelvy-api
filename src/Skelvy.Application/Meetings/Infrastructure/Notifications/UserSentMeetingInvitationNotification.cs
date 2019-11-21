@@ -6,11 +6,11 @@ namespace Skelvy.Application.Meetings.Infrastructure.Notifications
   {
     public UserSentMeetingInvitationNotification(int requestId, IEnumerable<int> usersId)
     {
-      RequestId = requestId;
+      InvitationId = requestId;
       UsersId = usersId;
     }
 
-    public int RequestId { get; private set; }
+    public int InvitationId { get; private set; }
     public IEnumerable<int> UsersId { get; private set; }
   }
 }

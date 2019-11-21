@@ -81,7 +81,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
         if (meeting.ModifiedAt != null)
         {
           await _mediator.Publish(
-            new MeetingAbortedEvent(request.UserId, meeting.GroupId, meeting.ModifiedAt.Value));
+            new MeetingAbortedEvent(request.UserId, meeting.Id, meeting.GroupId, meeting.ModifiedAt.Value));
         }
       }
 
