@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,6 +13,7 @@ using Skelvy.Application.Auth.Infrastructure.Tokens;
 using Skelvy.Application.Core.Cache;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
+using Skelvy.Common.Extensions;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Infrastructure.Auth.Tokens
@@ -67,7 +67,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
         claims.Add(new Claim(ClaimTypes.Email, user.Email));
       }
 
-      claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
+      user.Roles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role.Name)));
       return GenerateAccessToken(DateTimeOffset.UtcNow.AddMinutes(5).UtcDateTime, claims);
     }
 
