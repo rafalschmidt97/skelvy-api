@@ -67,7 +67,8 @@ namespace Skelvy.Infrastructure.Auth.Tokens
         claims.Add(new Claim(ClaimTypes.Email, user.Email));
       }
 
-      user.Roles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role.Name)));
+      user.Roles?.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role.Name)));
+
       return GenerateAccessToken(DateTimeOffset.UtcNow.AddMinutes(5).UtcDateTime, claims);
     }
 
