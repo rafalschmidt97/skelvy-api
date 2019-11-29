@@ -61,7 +61,7 @@ namespace Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting
         throw new NotFoundException($"{nameof(GroupUser)}(UserId = {request.UserId}, GroupId = {meeting.GroupId}) not found.");
       }
 
-      if (!groupUser.CanRemoveUserFromGroup(removedGroupUser, meeting))
+      if (!groupUser.CanRemoveUserFromGroup(removedGroupUser))
       {
         throw new ForbiddenException($"{nameof(GroupUser)}({groupUser.Id}) does not have permission to remove user");
       }

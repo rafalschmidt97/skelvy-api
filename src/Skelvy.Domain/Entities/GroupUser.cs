@@ -44,10 +44,9 @@ namespace Skelvy.Domain.Entities
                                      Role != GroupUserRoleType.Admin ||
                                      Role != GroupUserRoleType.Privileged;
 
-    public bool CanRemoveUserFromGroup(GroupUser groupUser, Meeting meeting)
+    public bool CanRemoveUserFromGroup(GroupUser groupUser)
     {
-      return meeting.IsPrivate &&
-             (Role == GroupUserRoleType.Owner || Role == GroupUserRoleType.Admin) &&
+      return (Role == GroupUserRoleType.Owner || Role == GroupUserRoleType.Admin) &&
              groupUser.Role != GroupUserRoleType.Owner;
     }
 
