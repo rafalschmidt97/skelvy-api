@@ -42,11 +42,9 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpDelete("{id}")]
-    public async Task Remove(int id, RemoveMeetingCommand request)
+    public async Task Remove(int id)
     {
-      request.MeetingId = id;
-      request.UserId = UserId;
-      await Mediator.Send(request);
+      await Mediator.Send(new RemoveMeetingCommand(id, UserId));
     }
 
     [HttpPost("{id}/join")]
