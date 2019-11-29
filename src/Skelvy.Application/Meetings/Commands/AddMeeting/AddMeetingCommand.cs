@@ -6,7 +6,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
 {
   public class AddMeetingCommand : ICommandData<MeetingDto>
   {
-    public AddMeetingCommand(int userId, DateTimeOffset date, double latitude, double longitude, int size, int activityId)
+    public AddMeetingCommand(int userId, DateTimeOffset date, double latitude, double longitude, int size, int activityId, bool isHidden)
     {
       UserId = userId;
       Date = date;
@@ -14,6 +14,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
       Longitude = longitude;
       Size = size;
       ActivityId = activityId;
+      IsHidden = isHidden;
     }
 
     public int UserId { get; set; }
@@ -22,5 +23,6 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
     public double Longitude { get; set; }
     public int Size { get; set; }
     public int ActivityId { get; set; }
+    public bool IsHidden { get; set; }
   }
 }

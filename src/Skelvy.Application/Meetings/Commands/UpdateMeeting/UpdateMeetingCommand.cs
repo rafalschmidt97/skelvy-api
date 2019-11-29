@@ -5,7 +5,7 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
 {
   public class UpdateMeetingCommand : ICommand
   {
-    public UpdateMeetingCommand(int userId, int meetingId, DateTimeOffset date, double latitude, double longitude, int size, int activityId, bool isPrivate, bool isHidden)
+    public UpdateMeetingCommand(int userId, int meetingId, DateTimeOffset date, double latitude, double longitude, int size, int activityId, bool isHidden)
     {
       UserId = userId;
       MeetingId = meetingId;
@@ -14,7 +14,6 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
       Longitude = longitude;
       Size = size;
       ActivityId = activityId;
-      IsPrivate = isPrivate;
       IsHidden = isHidden;
     }
 
@@ -25,7 +24,6 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
     public double Longitude { get; set; }
     public int Size { get; set; }
     public int ActivityId { get; set; }
-    public bool IsPrivate { get; set; }
     public bool IsHidden { get; set; }
   }
 }

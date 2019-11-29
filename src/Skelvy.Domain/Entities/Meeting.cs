@@ -38,7 +38,7 @@ namespace Skelvy.Domain.Entities
     public Group Group { get; set; }
     public Activity Activity { get; set; }
 
-    public void Update(DateTimeOffset date, double latitude, double longitude, int size, bool isPrivate, bool isHidden)
+    public void Update(DateTimeOffset date, double latitude, double longitude, int size, bool isHidden)
     {
       Date = date >= DateTimeOffset.UtcNow.AddDays(-1)
         ? date
@@ -47,7 +47,6 @@ namespace Skelvy.Domain.Entities
       Latitude = latitude;
       Longitude = longitude;
       Size = size;
-      IsPrivate = isPrivate;
       IsHidden = isHidden;
 
       ModifiedAt = DateTimeOffset.UtcNow;

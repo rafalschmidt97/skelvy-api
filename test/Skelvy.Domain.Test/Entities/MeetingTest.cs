@@ -12,9 +12,9 @@ namespace Skelvy.Domain.Test.Entities
     public void ShouldBeUpdated()
     {
       var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 4, false, false, 1, 1);
-      entity.Update(DateTimeOffset.UtcNow.AddDays(1), 2, 2, 6, true, true);
+      entity.Update(DateTimeOffset.UtcNow.AddDays(1), 2, 2, 6, true);
 
-      Assert.True(entity.IsPrivate);
+      Assert.True(entity.IsHidden);
       Assert.NotNull(entity.ModifiedAt);
     }
 
@@ -24,7 +24,7 @@ namespace Skelvy.Domain.Test.Entities
       var entity = new Meeting(DateTimeOffset.UtcNow, 1, 1, 4, false, false, 1, 1);
 
       Assert.Throws<DomainException>(() =>
-        entity.Update(DateTimeOffset.UtcNow.AddDays(-1), 2, 2, 6, true, true));
+        entity.Update(DateTimeOffset.UtcNow.AddDays(-1), 2, 2, 6, true));
     }
 
     [Fact]

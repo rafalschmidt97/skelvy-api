@@ -52,7 +52,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
           request.Longitude,
           request.Size,
           true,
-          true,
+          request.IsHidden,
           group.Id,
           request.ActivityId);
 

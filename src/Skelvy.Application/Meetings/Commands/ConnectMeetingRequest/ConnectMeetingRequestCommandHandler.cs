@@ -112,8 +112,8 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
         meetingRequest.Latitude,
         meetingRequest.Longitude,
         size,
-        true,
-        true,
+        false,
+        false,
         group.Id,
         request.ActivityId);
 
