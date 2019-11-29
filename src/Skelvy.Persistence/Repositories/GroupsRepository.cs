@@ -28,6 +28,8 @@ namespace Skelvy.Persistence.Repositories
         .Where(x => x.Users.Any(y => y.UserId == userId && !y.IsRemoved) && !x.IsRemoved)
         .ToListAsync();
 
+      groups.ForEach(x => x.Users = x.Users.Where(y => !y.IsRemoved).ToList());
+
       foreach (var group in groups)
       {
         foreach (var groupUser in group.Users)
