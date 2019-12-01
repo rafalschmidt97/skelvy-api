@@ -11,6 +11,7 @@ using Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting;
 using Skelvy.Application.Meetings.Commands.UpdateMeeting;
 using Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole;
 using Skelvy.Application.Meetings.Queries;
+using Skelvy.Application.Meetings.Queries.FindMeeting;
 using Skelvy.Application.Meetings.Queries.FindMeetingInvitations;
 using Skelvy.Application.Meetings.Queries.FindMeetings;
 using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
@@ -22,6 +23,14 @@ namespace Skelvy.WebAPI.Controllers
     [HttpGet("self")]
     public async Task<MeetingModel> FindSelf([FromQuery] FindMeetingsQuery request)
     {
+      request.UserId = UserId;
+      return await Mediator.Send(request);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<MeetingDto> Find(int id, [FromQuery] FindMeetingQuery request)
+    {
+      request.MeetingId = id;
       request.UserId = UserId;
       return await Mediator.Send(request);
     }

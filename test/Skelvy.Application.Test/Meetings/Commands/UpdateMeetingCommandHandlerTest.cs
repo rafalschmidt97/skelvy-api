@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using Moq;
 using Skelvy.Application.Meetings.Commands.UpdateMeeting;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence.Repositories;
@@ -9,6 +11,13 @@ namespace Skelvy.Application.Test.Meetings.Commands
 {
   public class UpdateMeetingCommandHandlerTest : RequestTestBase
   {
+    private readonly Mock<IMediator> _mediator;
+
+    public UpdateMeetingCommandHandlerTest()
+    {
+      _mediator = new Mock<IMediator>();
+    }
+
     [Fact]
     public async Task ShouldUpdateRequest()
     {
@@ -17,7 +26,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new UpdateMeetingCommandHandler(
         new MeetingsRepository(dbContext),
         new GroupUsersRepository(dbContext),
-        new ActivitiesRepository(dbContext));
+        new ActivitiesRepository(dbContext),
+        _mediator.Object);
 
       await handler.Handle(request);
     }
@@ -30,7 +40,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new UpdateMeetingCommandHandler(
         new MeetingsRepository(dbContext),
         new GroupUsersRepository(dbContext),
-        new ActivitiesRepository(dbContext));
+        new ActivitiesRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -44,7 +55,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new UpdateMeetingCommandHandler(
         new MeetingsRepository(dbContext),
         new GroupUsersRepository(dbContext),
-        new ActivitiesRepository(dbContext));
+        new ActivitiesRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -58,7 +70,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var handler = new UpdateMeetingCommandHandler(
         new MeetingsRepository(dbContext),
         new GroupUsersRepository(dbContext),
-        new ActivitiesRepository(dbContext));
+        new ActivitiesRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

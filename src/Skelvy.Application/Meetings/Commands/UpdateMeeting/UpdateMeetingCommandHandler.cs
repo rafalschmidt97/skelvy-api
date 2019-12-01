@@ -3,6 +3,7 @@ using MediatR;
 using Skelvy.Application.Activities.Infrastructure.Repositories;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Groups.Infrastructure.Repositories;
+using Skelvy.Application.Meetings.Events.MeetingUpdated;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -14,15 +15,18 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IGroupUsersRepository _groupUsersRepository;
     private readonly IActivitiesRepository _activitiesRepository;
+    private readonly IMediator _mediator;
 
     public UpdateMeetingCommandHandler(
       IMeetingsRepository meetingsRepository,
       IGroupUsersRepository groupUsersRepository,
-      IActivitiesRepository activitiesRepository)
+      IActivitiesRepository activitiesRepository,
+      IMediator mediator)
     {
       _meetingsRepository = meetingsRepository;
       _groupUsersRepository = groupUsersRepository;
       _activitiesRepository = activitiesRepository;
+      _mediator = mediator;
     }
 
     public override async Task<Unit> Handle(UpdateMeetingCommand request)
@@ -31,6 +35,7 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
 
       meeting.Update(request.Date, request.Latitude, request.Longitude, request.Size, request.IsHidden, request.ActivityId);
       await _meetingsRepository.Update(meeting);
+      await _mediator.Publish(new MeetingUpdatedEvent(request.UserId, meeting.Id, meeting.GroupId));
 
       return Unit.Value;
     }

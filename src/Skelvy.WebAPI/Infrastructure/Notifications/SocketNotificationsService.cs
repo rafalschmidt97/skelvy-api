@@ -193,6 +193,24 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastMeetingUpdated(MeetingUpdatedNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "MEETING_UPDATED",
+        },
+        NotificationType.Regular,
+        new SocketNotificationData
+        {
+          Action = "MeetingUpdated",
+          RedirectTo = "meeting",
+          Data = new { notification.GroupId, notification.MeetingId },
+        });
+    }
+
     public async Task BroadcastGroupAborted(GroupAbortedNotification notification)
     {
       await SendNotification(

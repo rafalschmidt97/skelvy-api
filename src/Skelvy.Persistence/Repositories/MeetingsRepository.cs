@@ -55,6 +55,16 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
+    public async Task<Meeting> FindOneWithActivityByMeetingIdAndUserId(int meetingId, int userId)
+    {
+      return await Context.Meetings
+        .Include(x => x.Group)
+        .ThenInclude(y => y.Users)
+        .Include(x => x.Activity)
+        .FirstOrDefaultAsync(x => x.Id == meetingId &&
+                                  x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) && !x.IsRemoved);
+    }
+
     public async Task<Meeting> FindOneByGroupId(int groupId)
     {
       return await Context.Meetings

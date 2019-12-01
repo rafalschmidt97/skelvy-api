@@ -13,6 +13,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
     Task<int> CountOwnMeetingsByUserId(int userId);
     Task<Meeting> FindOne(int id);
     Task<IList<Meeting>> FindAllWithActivityByUserId(int userId);
+    Task<Meeting> FindOneWithActivityByMeetingIdAndUserId(int meetingId, int userId);
     Task<Meeting> FindOneByGroupId(int groupId);
     Task<Meeting> FindOneWithGroupByGroupId(int groupId);
     Task<Meeting> FindOneWithGroupUsersByMeetingId(int meetingId);
