@@ -11,7 +11,7 @@ namespace Skelvy.Application.Notifications.Infrastructure
   {
     Task BroadcastUserSentMessage(UserSentMessageNotification notification, IEnumerable<int> usersId);
     Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification, IEnumerable<int> usersId);
-    Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification, IEnumerable<int> usersId);
+    Task BroadcastUserConnectedToMeeting(UserConnectedToMeetingNotification notification, IEnumerable<int> usersId);
     Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification, IEnumerable<int> usersId);
     Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification, IList<int> usersId);
     Task BroadcastUserLeftGroup(UserLeftGroupNotification notification, IList<int> usersId);

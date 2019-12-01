@@ -50,13 +50,13 @@ namespace Skelvy.Infrastructure.Notifications
         async offline => await _pushService.BroadcastUserJoinedMeeting(notification, offline));
     }
 
-    public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification)
+    public async Task BroadcastUserConnectedToMeeting(UserConnectedToMeetingNotification notification)
     {
-      await _socketService.BroadcastUserFoundMeeting(notification);
+      await _socketService.BroadcastUserConnectedToMeeting(notification);
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async offline => await _pushService.BroadcastUserFoundMeeting(notification, offline));
+        async offline => await _pushService.BroadcastUserConnectedToMeeting(notification, offline));
     }
 
     public async Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification)

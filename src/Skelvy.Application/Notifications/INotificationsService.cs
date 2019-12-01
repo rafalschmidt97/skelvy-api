@@ -11,7 +11,7 @@ namespace Skelvy.Application.Notifications
   {
     Task BroadcastUserSentMessage(UserSentMessageNotification notification);
     Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification);
-    Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification);
+    Task BroadcastUserConnectedToMeeting(UserConnectedToMeetingNotification notification);
     Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification);
     Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification);
     Task BroadcastUserLeftGroup(UserLeftGroupNotification notification);

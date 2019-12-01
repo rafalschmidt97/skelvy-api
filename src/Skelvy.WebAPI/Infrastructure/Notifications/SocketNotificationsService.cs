@@ -103,21 +103,21 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserFoundMeeting(UserFoundMeetingNotification notification)
+    public async Task BroadcastUserConnectedToMeeting(UserConnectedToMeetingNotification notification)
     {
       await SendNotification(
         notification.UsersId,
         new SocketNotificationContent
         {
           TitleLocKey = "MEETING",
-          BodyLocKey = "USER_FOUND_MEETING",
+          BodyLocKey = "USER_CONNECTED_TO_MEETING",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
-          Action = "UserFoundMeeting",
+          Action = "UserConnectedToMeeting",
           RedirectTo = "meeting",
-          Data = new { notification.GroupId, notification.MeetingId },
+          Data = new { notification.GroupId, notification.MeetingId, notification.RequestId },
         });
     }
 
@@ -261,7 +261,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "MeetingExpired",
           RedirectTo = "meeting",
-          Data = new { notification.MeetingId },
+          Data = new { notification.MeetingId, notification.GroupId },
         });
     }
 

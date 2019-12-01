@@ -52,7 +52,7 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
         {
           var meeting = await CreateNewMeeting(user, connectingMeetingRequest, request);
           transaction.Commit();
-          await _mediator.Publish(new UserConnectedToMeetingEvent(connectingMeetingRequest.UserId, meeting.Id, meeting.GroupId));
+          await _mediator.Publish(new UserConnectedToMeetingEvent(connectingMeetingRequest.UserId, connectingMeetingRequest.Id, meeting.Id, meeting.GroupId));
         }
         catch (Exception exception)
         {
