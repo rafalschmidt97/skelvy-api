@@ -95,6 +95,11 @@ namespace Skelvy.Infrastructure.Notifications
         async (offline) => await _pushService.BroadcastMeetingAborted(notification, offline));
     }
 
+    public async Task BroadcastMeetingUpdated(MeetingUpdatedNotification notification)
+    {
+      await _socketService.BroadcastMeetingUpdated(notification);
+    }
+
     public async Task BroadcastGroupAborted(GroupAbortedNotification notification)
     {
       await _socketService.BroadcastGroupAborted(notification);
