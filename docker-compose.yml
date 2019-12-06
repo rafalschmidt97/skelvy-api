@@ -6,7 +6,7 @@ services:
     container_name: "skelvy-mssql"
     image: "mcr.microsoft.com/mssql/server:2017-latest"
     ports:
-      - "1433:1433"
+      - "1435:1433"
     environment:
       SA_PASSWORD: "zaq1@WSX"
       ACCEPT_EULA: "Y"
@@ -16,4 +16,4 @@ services:
     container_name: "skelvy-redis"
     image: "redis:latest"
     ports:
-      - "6379:6379"
+      - "6381:6379"
