@@ -124,7 +124,7 @@ namespace Skelvy.Infrastructure.Auth.Tokens
     {
       if (user == null)
       {
-        throw new UnauthorizedException("User from Refresh Token does not exists");
+        throw new UnauthorizedException("User from Refresh Token does not exist");
       }
 
       if (user.IsRemoved)
