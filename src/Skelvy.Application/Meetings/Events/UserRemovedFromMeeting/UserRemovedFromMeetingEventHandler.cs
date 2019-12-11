@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -24,10 +25,15 @@ namespace Skelvy.Application.Meetings.Events.UserRemovedFromMeeting
     public override async Task<Unit> Handle(UserRemovedFromMeetingEvent request)
     {
       var groupUsers = await _groupUsersRepository.FindAllByGroupId(request.GroupId);
-      var broadcastUsersId = groupUsers.Where(x => x.UserId != request.UserId).Select(x => x.UserId).ToList();
+      var broadcastUsersId = groupUsers
+        .Where(x => x.UserId != request.UserId && x.UserId != request.RemovedUserId).Select(x => x.UserId).ToList();
+      var broadcastRemovedUserId = new List<int> { request.RemovedUserId };
 
       await _notifications.BroadcastUserRemovedFromMeeting(
         new UserRemovedFromMeetingNotification(request.UserId, request.RemovedUserId, request.GroupId, request.MeetingId, broadcastUsersId));
+
+      await _notifications.BroadcastUserSelfRemovedFromMeeting(
+        new UserRemovedFromMeetingNotification(request.UserId, request.RemovedUserId, request.GroupId, request.MeetingId, broadcastRemovedUserId));
 
       return Unit.Value;
     }

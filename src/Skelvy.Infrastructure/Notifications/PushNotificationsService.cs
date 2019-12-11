@@ -133,6 +133,23 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastUserSelfRemovedFromMeeting(UserRemovedFromMeetingNotification notification, IList<int> usersId)
+    {
+      await SendNotification(
+        usersId,
+        new PushNotificationContent
+        {
+          TitleLocKey = "MEETING",
+          BodyLocKey = "USER_SELF_REMOVED_FROM_MEETING",
+        },
+        new PushNotificationData
+        {
+          Action = "UserSelfRemovedFromMeeting",
+          RedirectTo = "meeting",
+          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
+        });
+    }
+
     public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification, IList<int> usersId)
     {
       await SendNotification(
