@@ -92,7 +92,7 @@ namespace Skelvy.Infrastructure.Notifications
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async (offline) => await _pushService.BroadcastMeetingAborted(notification, offline));
+        async offline => await _pushService.BroadcastMeetingAborted(notification, offline));
     }
 
     public async Task BroadcastMeetingUpdated(MeetingUpdatedNotification notification)
