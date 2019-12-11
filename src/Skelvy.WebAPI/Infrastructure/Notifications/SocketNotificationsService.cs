@@ -25,7 +25,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       var data = new SocketNotificationData
       {
         Action = "UserSentMessage",
-        RedirectTo = "chat",
+        RedirectTo = "groups",
         Data = new { notification.Messages, notification.GroupId },
       };
 
@@ -91,14 +91,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_JOINED_MEETING",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserJoinedMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.UserId, notification.GroupId, notification.MeetingId, notification.UserRole },
         });
     }
@@ -109,14 +109,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_CONNECTED_TO_MEETING",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserConnectedToMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.GroupId, notification.MeetingId, notification.RequestId },
         });
     }
@@ -127,14 +127,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_LEFT_MEETING",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserLeftMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.UserId, notification.GroupId, notification.MeetingId },
         });
     }
@@ -145,14 +145,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_REMOVED_FROM_MEETING",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserRemovedFromMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
         });
     }
@@ -163,14 +163,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_SELF_REMOVED_FROM_MEETING",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserSelfRemovedFromMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
         });
     }
@@ -181,14 +181,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "GROUP",
+          TitleLocKey = "GROUPS",
           BodyLocKey = "USER_LEFT_GROUP",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserLeftGroup",
-          RedirectTo = "group",
+          RedirectTo = "groups",
           Data = new { notification.UserId, notification.GroupId },
         });
     }
@@ -199,14 +199,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "MEETING_ABORTED",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "MeetingAborted",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.GroupId, notification.MeetingId },
         });
     }
@@ -217,14 +217,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "MEETING_UPDATED",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "MeetingUpdated",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.GroupId, notification.MeetingId },
         });
     }
@@ -235,14 +235,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "GROUP",
+          TitleLocKey = "GROUPS",
           BodyLocKey = "GROUP_ABORTED",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "GroupAborted",
-          RedirectTo = "group",
+          RedirectTo = "groups",
           Data = new { notification.GroupId },
         });
     }
@@ -260,7 +260,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         new SocketNotificationData
         {
           Action = "MeetingRequestExpired",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.RequestId },
         });
     }
@@ -271,14 +271,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "MEETING_EXPIRED",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "MeetingExpired",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.MeetingId, notification.GroupId },
         });
     }
@@ -357,14 +357,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "NEW_MEETING_INVITATION",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserSentMeetingInvitation",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.InvitationId },
         });
     }
@@ -375,14 +375,14 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = notification.IsAccepted ? "MEETING_INVITATION_ACCEPTED" : "MEETING_INVITATION_DENIED",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
           Action = "UserRespondedMeetingInvitation",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.InvitationId, notification.IsAccepted },
         });
     }

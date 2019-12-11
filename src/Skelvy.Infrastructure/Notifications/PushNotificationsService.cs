@@ -23,7 +23,7 @@ namespace Skelvy.Infrastructure.Notifications
       var data = new PushNotificationData
       {
         Action = "UserSentMessage",
-        RedirectTo = "chat",
+        RedirectTo = "groups",
         Data = new { notification.Messages, notification.GroupId },
       };
 
@@ -71,13 +71,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_JOINED_MEETING",
         },
         new PushNotificationData
         {
           Action = "UserJoinedMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.UserId, notification.GroupId, notification.MeetingId, notification.UserRole },
         });
     }
@@ -88,13 +88,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_CONNECTED_TO_MEETING",
         },
         new PushNotificationData
         {
           Action = "UserConnectedToMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.GroupId, notification.MeetingId, notification.RequestId },
         });
     }
@@ -105,13 +105,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_LEFT_MEETING",
         },
         new PushNotificationData
         {
           Action = "UserLeftMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.UserId, notification.GroupId, notification.MeetingId },
         });
     }
@@ -122,13 +122,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_REMOVED_FROM_MEETING",
         },
         new PushNotificationData
         {
           Action = "UserRemovedFromMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
         });
     }
@@ -139,13 +139,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "USER_SELF_REMOVED_FROM_MEETING",
         },
         new PushNotificationData
         {
           Action = "UserSelfRemovedFromMeeting",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
         });
     }
@@ -156,13 +156,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "GROUP",
+          TitleLocKey = "GROUPS",
           BodyLocKey = "USER_LEFT_GROUP",
         },
         new PushNotificationData
         {
           Action = "UserLeftGroup",
-          RedirectTo = "group",
+          RedirectTo = "groups",
           Data = new { notification.UserId, notification.GroupId },
         });
     }
@@ -173,13 +173,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "MEETING_ABORTED",
         },
         new PushNotificationData
         {
           Action = "MeetingAborted",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.GroupId, notification.MeetingId },
         });
     }
@@ -190,13 +190,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "GROUP",
+          TitleLocKey = "GROUPS",
           BodyLocKey = "GROUP_ABORTED",
         },
         new PushNotificationData
         {
           Action = "GroupAborted",
-          RedirectTo = "group",
+          RedirectTo = "groups",
           Data = new { notification.GroupId },
         });
     }
@@ -213,7 +213,7 @@ namespace Skelvy.Infrastructure.Notifications
         new PushNotificationData
         {
           Action = "MeetingRequestExpired",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.RequestId },
         });
     }
@@ -224,13 +224,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "MEETING_EXPIRED",
         },
         new PushNotificationData
         {
           Action = "MeetingExpired",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.MeetingId, notification.GroupId },
         });
     }
@@ -278,13 +278,13 @@ namespace Skelvy.Infrastructure.Notifications
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETING",
+          TitleLocKey = "MEETINGS",
           BodyLocKey = "NEW_MEETING_INVITATION",
         },
         new PushNotificationData
         {
           Action = "UserSentMeetingInvitation",
-          RedirectTo = "meeting",
+          RedirectTo = "meetings",
           Data = new { notification.InvitationId },
         });
     }
@@ -295,13 +295,13 @@ namespace Skelvy.Infrastructure.Notifications
           usersId,
           new PushNotificationContent
           {
-            TitleLocKey = "MEETING",
+            TitleLocKey = "MEETINGS",
             BodyLocKey = notification.IsAccepted ? "MEETING_INVITATION_ACCEPTED" : "MEETING_INVITATION_DENIED",
           },
           new PushNotificationData
           {
             Action = "UserRespondedMeetingInvitation",
-            RedirectTo = "meeting",
+            RedirectTo = "meetings",
             Data = new { notification.InvitationId, notification.IsAccepted },
           });
     }
