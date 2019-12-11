@@ -58,7 +58,7 @@ namespace Skelvy.Application.Groups.Commands.LeaveGroup
 
         var groupAborted = false;
 
-        if (groupUsers.Count == 1)
+        if (groupUsers.Count == 2)
         {
           var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
 
