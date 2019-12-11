@@ -18,7 +18,7 @@ namespace Skelvy.Application.Relations.Events.UserRespondedFriendInvitation
 
     public override async Task<Unit> Handle(UserRespondedFriendInvitationEvent invitation)
     {
-      var usersId = new List<int> { invitation.InvitedUserId, invitation.InvitingUserId };
+      var usersId = new List<int> { invitation.InvitingUserId };
 
       await _notifications.BroadcastUserRespondedFriendInvitation(
         new UserRespondedFriendInvitationNotification(invitation.InvitationId, invitation.IsAccepted, usersId));

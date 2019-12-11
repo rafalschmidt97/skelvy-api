@@ -18,7 +18,7 @@ namespace Skelvy.Application.Meetings.Events.UserRespondedMeetingInvitation
 
     public override async Task<Unit> Handle(UserRespondedMeetingInvitationEvent request)
     {
-      var usersId = new List<int> { request.InvitedUserId, request.InvitingUserId };
+      var usersId = new List<int> { request.InvitingUserId };
 
       await _notifications.BroadcastUserRespondedMeetingInvitation(
         new UserRespondedMeetingInvitationNotification(request.InvitationId, request.IsAccepted, usersId));
