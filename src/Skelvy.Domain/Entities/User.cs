@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Skelvy.Domain.Entities.Core;
 using Skelvy.Domain.Enums;
 using Skelvy.Domain.Exceptions;
@@ -88,13 +89,13 @@ namespace Skelvy.Domain.Entities
 
     public void UpdateName(string name)
     {
-      Name = name;
+      Name = name.Trim().ToLower(CultureInfo.CurrentCulture);
       ModifiedAt = DateTimeOffset.UtcNow;
     }
 
     public void UpdateEmail(string email)
     {
-      Email = email;
+      Email = email.Trim().ToLower(CultureInfo.CurrentCulture);
       ModifiedAt = DateTimeOffset.UtcNow;
     }
 
