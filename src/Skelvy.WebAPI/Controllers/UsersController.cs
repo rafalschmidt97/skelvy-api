@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.UpdateProfile;
+using Skelvy.Application.Users.Commands.UpdateUserEmail;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
 using Skelvy.Application.Users.Commands.UpdateUserName;
 using Skelvy.Application.Users.Queries;
@@ -53,6 +54,13 @@ namespace Skelvy.WebAPI.Controllers
 
     [HttpPatch("self/name")]
     public async Task UpdateSelfName(UpdateUserNameCommand request)
+    {
+      request.UserId = UserId;
+      await Mediator.Send(request);
+    }
+
+    [HttpPatch("self/email")]
+    public async Task UpdateSelfEmail(UpdateUserEmailCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);

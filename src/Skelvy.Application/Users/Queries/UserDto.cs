@@ -10,6 +10,7 @@ namespace Skelvy.Application.Users.Queries
   public class UserDto : ICustomMapping
   {
     public int Id { get; set; }
+    public string Name { get; set; }
     public ProfileDto Profile { get; set; }
 
     public void CreateMappings(AutoMapperProfile configuration)
@@ -57,6 +58,8 @@ namespace Skelvy.Application.Users.Queries
   public class SelfUserDto
   {
     public int Id { get; set; }
+    public string Email { get; set; }
+    public string Name { get; set; }
     public SelfProfileDto Profile { get; set; }
   }
 

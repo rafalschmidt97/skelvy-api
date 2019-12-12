@@ -78,6 +78,16 @@ namespace Skelvy.Domain.Test.Entities
     }
 
     [Fact]
+    public void ShouldHasUpdatedEmail()
+    {
+      var entity = new User("example@gmail.com", "user.example", LanguageType.EN);
+      entity.UpdateEmail("tester@gmail.com");
+
+      Assert.Equal("tester@gmail.com", entity.Email);
+      Assert.NotNull(entity.ModifiedAt);
+    }
+
+    [Fact]
     public void ShouldBeRemoved()
     {
       var entity = new User("example@gmail.com", "user.example", LanguageType.EN);

@@ -92,6 +92,12 @@ namespace Skelvy.Domain.Entities
       ModifiedAt = DateTimeOffset.UtcNow;
     }
 
+    public void UpdateEmail(string email)
+    {
+      Email = email;
+      ModifiedAt = DateTimeOffset.UtcNow;
+    }
+
     public void Remove(DateTimeOffset forgottenAt)
     {
       if (!IsRemoved)
