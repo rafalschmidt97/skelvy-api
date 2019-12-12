@@ -65,6 +65,7 @@ namespace Skelvy.Application.Meetings.Queries
   {
     public int Id { get; set; }
     public string Role { get; set; }
+    public string Name { get; set; }
     public ProfileDto Profile { get; set; }
 
     public void CreateMappings(AutoMapperProfile configuration)
@@ -76,6 +77,9 @@ namespace Skelvy.Application.Meetings.Queries
         .ForMember(
           destination => destination.Role,
           options => options.MapFrom(x => x.Role))
+        .ForMember(
+          destination => destination.Name,
+          options => options.MapFrom(x => x.User.Name))
         .ForMember(
           destination => destination.Profile,
           options => options.MapFrom(x => x.User.Profile));
