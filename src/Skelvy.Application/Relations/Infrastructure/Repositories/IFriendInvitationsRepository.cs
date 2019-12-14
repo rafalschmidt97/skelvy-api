@@ -8,7 +8,7 @@ namespace Skelvy.Application.Relations.Infrastructure.Repositories
   public interface IFriendInvitationsRepository : IBaseRepository
   {
     Task<IList<FriendInvitation>> FindAllWithInvitingDetailsByUserId(int userId);
-    Task<FriendInvitation> FindOneByRequestId(int requestId);
+    Task<FriendInvitation> FindOneByInvitationId(int invitationId);
     Task<bool> ExistsOneByInvitingIdAndInvitedIdTwoWay(int invitingUserId, int invitedUserId);
     Task<IList<FriendInvitation>> FindAllWithByUserId(int userId);
     Task<IList<FriendInvitation>> FindAllWithRemovedByUsersId(List<int> usersId);

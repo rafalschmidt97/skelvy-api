@@ -342,7 +342,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           TitleLocKey = "FRIENDS",
           BodyLocKey = notification.IsAccepted ? "FRIEND_INVITATION_ACCEPTED" : "FRIEND_INVITATION_DENIED",
         },
-        NotificationType.Regular,
+        notification.IsAccepted ? NotificationType.Regular : NotificationType.NoPush,
         new SocketNotificationData
         {
           Action = "UserRespondedFriendInvitation",

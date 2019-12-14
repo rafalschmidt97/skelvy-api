@@ -72,17 +72,17 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
         throw new NotFoundException($"{nameof(Profile)}(UserId = {request.UserId}) not found.");
       }
 
-      var invitation = await _friendInvitationsRepository.FindOneByRequestId(request.RequestId);
+      var invitation = await _friendInvitationsRepository.FindOneByInvitationId(request.InvitationId);
 
       if (invitation == null)
       {
-        throw new NotFoundException(nameof(FriendInvitation), request.RequestId);
+        throw new NotFoundException(nameof(FriendInvitation), request.InvitationId);
       }
 
       if (invitation.InvitedUserId != request.UserId)
       {
         throw new ConflictException(
-          $"{nameof(FriendInvitation)}({request.RequestId}) does not belong to {nameof(User)}({request.UserId}).");
+          $"{nameof(FriendInvitation)}({request.InvitationId}) does not belong to {nameof(User)}({request.UserId}).");
       }
 
       var existsBlockedRelation = await _relationsRepository

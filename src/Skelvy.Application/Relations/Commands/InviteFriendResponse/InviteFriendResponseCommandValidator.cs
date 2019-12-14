@@ -7,7 +7,7 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
     public InviteFriendResponseCommandValidator()
     {
       RuleFor(x => x.UserId).NotEmpty();
-      RuleFor(x => x.RequestId).NotEmpty();
+      RuleFor(x => x.InvitationId).NotEmpty();
     }
   }
 }
