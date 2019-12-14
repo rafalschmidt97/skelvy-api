@@ -25,6 +25,7 @@ namespace Skelvy.Persistence.Repositories
       foreach (var request in requests)
       {
         request.InvitingUser.Profile.Photos = await Context.ProfilePhotos
+          .Include(x => x.Attachment)
           .Where(x => x.ProfileId == request.InvitingUser.Profile.Id)
           .OrderBy(x => x.Order)
           .ToListAsync();
