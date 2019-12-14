@@ -20,6 +20,9 @@ namespace Skelvy.Application.Users.Queries
           destination => destination.Id,
           options => options.MapFrom(x => x.RelatedUserId))
         .ForMember(
+          destination => destination.Name,
+          options => options.MapFrom(x => x.RelatedUser.Name))
+        .ForMember(
           destination => destination.Profile,
           options => options.MapFrom(x => x.RelatedUser.Profile));
     }
