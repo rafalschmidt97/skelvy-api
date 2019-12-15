@@ -128,7 +128,7 @@ namespace Skelvy.Application.Test.Relations.Integration
       var command =
         new RemoveFriendCommand(UserOneId, UserTwoId);
       var handler =
-        new RemoveFriendCommandHandler(_relationsRepository, _usersRepository);
+        new RemoveFriendCommandHandler(_relationsRepository, _usersRepository, _mediator.Object);
 
       await handler.Handle(command);
     }

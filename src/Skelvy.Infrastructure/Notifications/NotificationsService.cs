@@ -171,6 +171,11 @@ namespace Skelvy.Infrastructure.Notifications
         async offline => await _pushService.BroadcastUserRespondedFriendInvitation(notification, offline));
     }
 
+    public async Task BroadcastFriendRemoved(FriendRemovedNotification notification)
+    {
+      await _socketService.BroadcastFriendRemoved(notification);
+    }
+
     public async Task BroadcastUserSentMeetingInvitation(UserSentMeetingInvitationNotification notification)
     {
       await _socketService.BroadcastUserSentMeetingInvitation(notification);

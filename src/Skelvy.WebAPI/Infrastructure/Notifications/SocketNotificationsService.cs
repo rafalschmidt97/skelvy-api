@@ -351,6 +351,23 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastFriendRemoved(FriendRemovedNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "FRIENDS",
+          BodyLocKey = "FRIEND_REMOVED",
+        },
+        NotificationType.NoPush,
+        new SocketNotificationData
+        {
+          Action = "FriendRemoved",
+          Data = new { notification.RemovingUserId },
+        });
+    }
+
     public async Task BroadcastUserSentMeetingInvitation(UserSentMeetingInvitationNotification notification)
     {
       await SendNotification(

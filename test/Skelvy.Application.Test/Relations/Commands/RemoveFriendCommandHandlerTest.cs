@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using MediatR;
+using Moq;
 using Skelvy.Application.Relations.Commands.RemoveFriend;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence.Repositories;
@@ -8,6 +10,13 @@ namespace Skelvy.Application.Test.Relations.Commands
 {
   public class RemoveFriendCommandHandlerTest : DatabaseRequestTestBase
   {
+    private readonly Mock<IMediator> _mediator;
+
+    public RemoveFriendCommandHandlerTest()
+    {
+      _mediator = new Mock<IMediator>();
+    }
+
     [Fact]
     public async Task ShouldNotThrowException()
     {
@@ -15,7 +24,8 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new RemoveFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new UsersRepository(dbContext));
+        new UsersRepository(dbContext),
+        _mediator.Object);
 
       await handler.Handle(request);
     }
@@ -27,7 +37,8 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new RemoveFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new UsersRepository(dbContext));
+        new UsersRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -40,7 +51,8 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new RemoveFriendCommandHandler(
         new RelationsRepository(dbContext),
-        new UsersRepository(dbContext));
+        new UsersRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));

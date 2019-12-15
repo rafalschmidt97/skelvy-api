@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Relations.Events.FriendRemoved;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -15,13 +16,16 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IRelationsRepository _relationsRepository;
+    private readonly IMediator _mediator;
 
     public RemoveFriendCommandHandler(
       IRelationsRepository relationsRepository,
-      IUsersRepository usersRepository)
+      IUsersRepository usersRepository,
+      IMediator mediator)
     {
       _relationsRepository = relationsRepository;
       _usersRepository = usersRepository;
+      _mediator = mediator;
     }
 
     public override async Task<Unit> Handle(RemoveFriendCommand request)
@@ -34,6 +38,7 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
       }
 
       await _relationsRepository.UpdateRange(friendRelations);
+      await _mediator.Publish(new FriendRemovedEvent(request.UserId, request.FriendUserId));
 
       return Unit.Value;
     }

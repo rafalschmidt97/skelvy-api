@@ -26,6 +26,7 @@ namespace Skelvy.Application.Notifications
     Task BroadcastUserDisabled(UserDisabledNotification notification);
     Task BroadcastUserSentFriendInvitation(UserSentFriendInvitationNotification notification);
     Task BroadcastUserRespondedFriendInvitation(UserRespondedFriendInvitationNotification notification);
+    Task BroadcastFriendRemoved(FriendRemovedNotification notification);
     Task BroadcastUserSentMeetingInvitation(UserSentMeetingInvitationNotification notification);
     Task BroadcastUserRespondedMeetingInvitation(UserRespondedMeetingInvitationNotification notification);
   }
