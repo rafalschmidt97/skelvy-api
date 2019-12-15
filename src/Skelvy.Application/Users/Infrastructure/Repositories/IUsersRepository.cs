@@ -27,6 +27,7 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
   public class UserWithRelationType
   {
     public int Id { get; set; }
+    public string Name { get; set; }
     public Profile Profile { get; set; }
     public string RelationType { get; set; }
   }

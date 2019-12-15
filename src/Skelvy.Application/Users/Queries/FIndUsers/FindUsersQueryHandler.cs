@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Skelvy.Application.Core.Bus;
@@ -28,8 +29,10 @@ namespace Skelvy.Application.Users.Queries.FIndUsers
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var users = await _usersRepository
-        .FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(request.UserId, request.UserName, request.Page);
+      var users = await _usersRepository.FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(
+        request.UserId,
+        request.UserName.Trim().ToLower(CultureInfo.CurrentCulture),
+        request.Page);
 
       return _mapper.Map<IList<UserWithRelationTypeDto>>(users);
     }

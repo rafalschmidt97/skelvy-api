@@ -109,19 +109,20 @@ namespace Skelvy.Persistence.Repositories
     public async Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(int userId, string userName, int page, int pageSize = 10)
     {
       var blockedByUsers = await Context.Relations
-        .Where(x => x.RelatedUserId == userId && x.Type == RelationType.Blocked)
+        .Where(x => x.RelatedUserId == userId && x.Type == RelationType.Blocked && !x.IsRemoved)
         .Select(x => x.UserId)
         .ToListAsync();
 
       var skip = (page - 1) * pageSize;
       var users = await Context.Users
-        .Include(x => x.Profile)
         .Where(x => x.Id != userId &&
                     blockedByUsers.All(y => y != x.Id) &&
-                    EF.Functions.Like(x.Name, "%" + userName + "%"))
+                    EF.Functions.Like(x.Name, "%" + userName + "%") &&
+                    !x.IsRemoved)
         .Select(x => new UserWithRelationType
         {
           Id = x.Id,
+          Name = x.Name,
           Profile = x.Profile,
         })
         .OrderBy(x => x.Id)
@@ -132,16 +133,29 @@ namespace Skelvy.Persistence.Repositories
       foreach (var user in users)
       {
         user.Profile.Photos = await Context.ProfilePhotos
+          .Include(x => x.Attachment)
           .Where(x => x.ProfileId == user.Profile.Id)
           .OrderBy(x => x.Order)
           .ToListAsync();
 
         var relation = await Context.Relations
-          .FirstOrDefaultAsync(x => x.UserId == userId && x.RelatedUserId == user.Id);
+          .FirstOrDefaultAsync(x => x.UserId == userId && x.RelatedUserId == user.Id && !x.IsRemoved);
 
         if (relation != null)
         {
           user.RelationType = relation.Type;
+        }
+        else
+        {
+          var existsFriendRequest = await Context.FriendInvitations.AnyAsync(
+            x => ((x.InvitingUserId == userId && x.InvitedUserId == user.Id) ||
+                  (x.InvitingUserId == user.Id && x.InvitedUserId == userId)) &&
+                 !x.IsRemoved);
+
+          if (existsFriendRequest)
+          {
+            user.RelationType = FriendInvitationStatusType.Pending;
+          }
         }
       }
 

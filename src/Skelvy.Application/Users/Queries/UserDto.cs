@@ -78,6 +78,7 @@ namespace Skelvy.Application.Users.Queries
   public class UserWithRelationTypeDto
   {
     public int Id { get; set; }
+    public string Name { get; set; }
     public ProfileDto Profile { get; set; }
     public string RelationType { get; set; }
   }
