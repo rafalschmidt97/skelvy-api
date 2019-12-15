@@ -153,7 +153,7 @@ namespace Skelvy.Persistence
         new Activity("Soft drinks", ActivityType.Party, 4, 15),
         new Activity("Alcoholic drinks", ActivityType.Party, 4, 15),
         new Activity("Board games", ActivityType.Party, 4, 15),
-        new Activity("Running", ActivityType.Sport, 4, 10),
+        new Activity("Jogging", ActivityType.Sport, 4, 10),
         new Activity("Cycling", ActivityType.Sport, 4, 20),
         new Activity("Motorcycling", ActivityType.Sport, 4, 30),
         new Activity("Football", ActivityType.Sport, 12, 15),
