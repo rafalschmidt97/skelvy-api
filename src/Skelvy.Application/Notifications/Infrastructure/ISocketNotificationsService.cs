@@ -18,6 +18,7 @@ namespace Skelvy.Application.Notifications.Infrastructure
     Task BroadcastUserLeftGroup(UserLeftGroupNotification notification);
     Task BroadcastMeetingAborted(MeetingAbortedNotification notification);
     Task BroadcastMeetingUpdated(MeetingUpdatedNotification notification);
+    Task BroadcastMeetingUserRoleUpdated(MeetingUserRoleUpdatedNotification notification);
     Task BroadcastGroupAborted(GroupAbortedNotification notification);
     Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification);
     Task BroadcastMeetingExpired(MeetingExpiredNotification notification);

@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using MediatR;
+using Moq;
 using Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Enums;
@@ -9,6 +11,13 @@ namespace Skelvy.Application.Test.Meetings.Commands
 {
   public class UpdateMeetingUserRoleCommandHandlerTest : RequestTestBase
   {
+    private readonly Mock<IMediator> _mediator;
+
+    public UpdateMeetingUserRoleCommandHandlerTest()
+    {
+      _mediator = new Mock<IMediator>();
+    }
+
     [Fact]
     public async Task ShouldAddToExistingMeeting()
     {
@@ -16,7 +25,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingUserRoleCommandHandler(
         new MeetingsRepository(dbContext),
-        new GroupUsersRepository(dbContext));
+        new GroupUsersRepository(dbContext),
+        _mediator.Object);
 
       await handler.Handle(request);
     }
@@ -28,7 +38,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingUserRoleCommandHandler(
         new MeetingsRepository(dbContext),
-        new GroupUsersRepository(dbContext));
+        new GroupUsersRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -41,7 +52,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingUserRoleCommandHandler(
         new MeetingsRepository(dbContext),
-        new GroupUsersRepository(dbContext));
+        new GroupUsersRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -54,7 +66,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingUserRoleCommandHandler(
         new MeetingsRepository(dbContext),
-        new GroupUsersRepository(dbContext));
+        new GroupUsersRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -67,7 +80,8 @@ namespace Skelvy.Application.Test.Meetings.Commands
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingUserRoleCommandHandler(
         new MeetingsRepository(dbContext),
-        new GroupUsersRepository(dbContext));
+        new GroupUsersRepository(dbContext),
+        _mediator.Object);
 
       await Assert.ThrowsAsync<ForbiddenException>(() =>
         handler.Handle(request));

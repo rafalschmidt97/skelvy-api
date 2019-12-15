@@ -229,6 +229,24 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
+    public async Task BroadcastMeetingUserRoleUpdated(MeetingUserRoleUpdatedNotification notification)
+    {
+      await SendNotification(
+        notification.UsersId,
+        new SocketNotificationContent
+        {
+          TitleLocKey = "MEETINGS",
+          BodyLocKey = "MEETING_USER_ROLE_UPDATED",
+        },
+        NotificationType.Regular,
+        new SocketNotificationData
+        {
+          Action = "MeetingUserRoleUpdated",
+          RedirectTo = "meetings",
+          Data = new { notification.GroupId, notification.MeetingId, notification.UpdatedUserId, notification.Role },
+        });
+    }
+
     public async Task BroadcastGroupAborted(GroupAbortedNotification notification)
     {
       await SendNotification(

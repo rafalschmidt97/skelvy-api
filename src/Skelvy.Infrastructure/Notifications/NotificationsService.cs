@@ -109,6 +109,11 @@ namespace Skelvy.Infrastructure.Notifications
       await _socketService.BroadcastMeetingUpdated(notification);
     }
 
+    public async Task BroadcastMeetingUserRoleUpdated(MeetingUserRoleUpdatedNotification notification)
+    {
+      await _socketService.BroadcastMeetingUserRoleUpdated(notification);
+    }
+
     public async Task BroadcastGroupAborted(GroupAbortedNotification notification)
     {
       await _socketService.BroadcastGroupAborted(notification);

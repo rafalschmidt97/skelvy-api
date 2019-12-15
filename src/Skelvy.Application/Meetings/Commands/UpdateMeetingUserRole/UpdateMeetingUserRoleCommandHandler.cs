@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Groups.Infrastructure.Repositories;
+using Skelvy.Application.Meetings.Events.MeetingUserRoleUpdated;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
@@ -12,13 +13,16 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole
   {
     private readonly IMeetingsRepository _meetingsRepository;
     private readonly IGroupUsersRepository _groupUsersRepository;
+    private readonly IMediator _mediator;
 
     public UpdateMeetingUserRoleCommandHandler(
       IMeetingsRepository meetingsRepository,
-      IGroupUsersRepository groupUsersRepository)
+      IGroupUsersRepository groupUsersRepository,
+      IMediator mediator)
     {
       _meetingsRepository = meetingsRepository;
       _groupUsersRepository = groupUsersRepository;
+      _mediator = mediator;
     }
 
     public override async Task<Unit> Handle(UpdateMeetingUserRoleCommand request)
@@ -27,6 +31,13 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole
 
       groupUser.UpdateRole(request.Role);
       await _groupUsersRepository.Update(groupUser);
+      await _mediator.Publish(
+        new MeetingUserRoleUpdatedEvent(
+          request.UserId,
+          request.MeetingId,
+          groupUser.GroupId,
+          request.UpdatedUserId,
+          request.Role));
 
       return Unit.Value;
     }
