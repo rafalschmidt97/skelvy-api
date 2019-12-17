@@ -418,7 +418,15 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         {
           Action = "UserRespondedMeetingInvitation",
           RedirectTo = "meetings",
-          Data = new { notification.InvitationId, notification.IsAccepted },
+          Data = new
+          {
+            notification.InvitationId,
+            notification.IsAccepted,
+            notification.InvitingUserId,
+            notification.InvitedUserId,
+            notification.MeetingId,
+            notification.GroupId,
+          },
         });
     }
 

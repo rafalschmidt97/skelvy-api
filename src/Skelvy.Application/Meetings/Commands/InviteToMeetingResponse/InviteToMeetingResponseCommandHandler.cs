@@ -55,7 +55,13 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeetingResponse
         transaction.Commit();
 
         await _mediator.Publish(
-          new UserRespondedMeetingInvitationEvent(meetingInvitation.Id, request.IsAccepted, meetingInvitation.InvitingUserId, meetingInvitation.InvitedUserId));
+          new UserRespondedMeetingInvitationEvent(
+            meetingInvitation.Id,
+            request.IsAccepted,
+            meetingInvitation.InvitingUserId,
+            meetingInvitation.InvitedUserId,
+            meeting.Id,
+            meeting.GroupId));
       }
 
       return Unit.Value;
