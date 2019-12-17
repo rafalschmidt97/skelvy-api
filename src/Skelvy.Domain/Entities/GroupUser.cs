@@ -46,14 +46,16 @@ namespace Skelvy.Domain.Entities
 
     public bool CanRemoveUserFromGroup(GroupUser groupUser)
     {
-      return (Role == GroupUserRoleType.Owner || Role == GroupUserRoleType.Admin) &&
+      return (Role == GroupUserRoleType.Owner ||
+              (Role == GroupUserRoleType.Admin && groupUser.Role != GroupUserRoleType.Admin)) &&
              groupUser.Role != GroupUserRoleType.Owner;
     }
 
     public bool CanUpdateRole(GroupUser groupUser, string role)
     {
       return (Role == GroupUserRoleType.Owner ||
-             (Role == GroupUserRoleType.Admin && role != GroupUserRoleType.Owner)) &&
+              (Role == GroupUserRoleType.Admin && role != GroupUserRoleType.Owner) ||
+              (Role == GroupUserRoleType.Admin && role != GroupUserRoleType.Admin)) &&
              groupUser.Role != GroupUserRoleType.Owner;
     }
 
