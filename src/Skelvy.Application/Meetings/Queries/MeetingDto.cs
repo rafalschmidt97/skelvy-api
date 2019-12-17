@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Skelvy.Application.Activities.Queries;
 using Skelvy.Application.Core.Mappers;
 using Skelvy.Application.Messages.Queries;
@@ -40,14 +39,14 @@ namespace Skelvy.Application.Meetings.Queries
     public string City { get; set; }
     public int GroupId { get; set; }
     public ActivityDto Activity { get; set; }
-    public IList<UserDto> Users { get; set; }
+    public IList<GroupUserDto> Users { get; set; }
 
     public void CreateMappings(AutoMapperProfile configuration)
     {
       configuration.CreateMap<Meeting, MeetingWithUsersDto>()
         .ForMember(
           destination => destination.Users,
-          options => options.MapFrom(x => x.Group.Users.Select(y => y.User)))
+          options => options.MapFrom(x => x.Group.Users))
         .ForMember(
           destination => destination.City,
           options => options.Ignore());
