@@ -29,17 +29,18 @@ namespace Skelvy.WebAPI.Controllers
       return await Mediator.Send(new FindFriendInvitationsQuery(UserId));
     }
 
-    [HttpPost("self/friends/invite")]
+    [HttpPost("self/friends/invitations")]
     public async Task InviteSelfFriend(InviteFriendCommand request)
     {
       request.UserId = UserId;
       await Mediator.Send(request);
     }
 
-    [HttpPost("self/friends/respond")]
-    public async Task RespondSelfFriendInvitation(InviteFriendResponseCommand request)
+    [HttpPost("self/friends/invitations/{invitationId}/respond")]
+    public async Task RespondSelfFriendInvitation(int invitationId, InviteFriendResponseCommand request)
     {
       request.UserId = UserId;
+      request.InvitationId = invitationId;
       await Mediator.Send(request);
     }
 
