@@ -3,7 +3,7 @@ using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Queries.FindMeetingInvitations
 {
-  public class FindMeetingInvitationsQuery : IQuery<IList<MeetingInvitationDto>>
+  public class FindMeetingInvitationsQuery : IQuery<IList<SelfMeetingInvitationDto>>
   {
     public FindMeetingInvitationsQuery(int userId)
     {

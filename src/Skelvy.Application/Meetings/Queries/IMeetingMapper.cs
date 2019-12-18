@@ -10,8 +10,8 @@ namespace Skelvy.Application.Meetings.Queries
     Task<IList<MeetingDto>> Map(IList<Meeting> meetings, string language);
     Task<MeetingRequestDto> Map(MeetingRequest meetingRequest, string language);
     Task<IList<MeetingRequestDto>> Map(IList<MeetingRequest> meetingRequests, string language);
-    Task<MeetingInvitationDto> Map(MeetingInvitation meetingInvitation, string language);
-    Task<IList<MeetingInvitationDto>> Map(IList<MeetingInvitation> meetingInvitations, string language);
+    Task<SelfMeetingInvitationDto> Map(MeetingInvitation meetingInvitation, string language);
+    Task<IList<SelfMeetingInvitationDto>> Map(IList<MeetingInvitation> meetingInvitations, string language);
     Task<MeetingSuggestionsModel> Map(IList<MeetingRequest> requests, IList<Meeting> meetings, string language);
   }
 }

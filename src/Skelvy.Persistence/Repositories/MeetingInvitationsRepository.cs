@@ -48,6 +48,28 @@ namespace Skelvy.Persistence.Repositories
       return meetingInvitations;
     }
 
+    public async Task<IList<MeetingInvitation>> FindAllWithInvitedUserDetailsByMeetingId(int meetingId)
+    {
+      var meetingInvitations = await Context.MeetingInvitations
+        .Include(x => x.InvitedUser)
+        .ThenInclude(x => x.Profile)
+        .Where(x => x.MeetingId == meetingId && !x.IsRemoved)
+        .ToListAsync();
+
+      foreach (var meetingInvitation in meetingInvitations)
+      {
+        var userPhotos = await Context.ProfilePhotos
+          .Include(x => x.Attachment)
+          .Where(x => x.ProfileId == meetingInvitation.InvitedUser.Profile.Id)
+          .OrderBy(x => x.Order)
+          .ToListAsync();
+
+        meetingInvitation.InvitedUser.Profile.Photos = userPhotos;
+      }
+
+      return meetingInvitations;
+    }
+
     public async Task<IList<MeetingInvitation>> FindAllByMeetingId(int meetingId)
     {
       return await Context.MeetingInvitations

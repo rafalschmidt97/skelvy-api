@@ -9,6 +9,7 @@ namespace Skelvy.Application.Meetings.Infrastructure.Repositories
   {
     Task<bool> ExistsOneByInvitedUserIdAndMeetingId(int invitedUserId, int meetingId);
     Task<IList<MeetingInvitation>> FindAllWithActivityAndUsersDetailsByUserId(int userId);
+    Task<IList<MeetingInvitation>> FindAllWithInvitedUserDetailsByMeetingId(int meetingId);
     Task<IList<MeetingInvitation>> FindAllByMeetingId(int meetingId);
     Task<MeetingInvitation> FindOneByRequestId(int requestId);
     Task<bool> ExistsOneByInvitingIdAndInvitedIdTwoWay(int invitingUserId, int invitedUserId);

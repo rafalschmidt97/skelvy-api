@@ -24,7 +24,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
 
       var result = await handler.Handle(request);
 
-      Assert.All(result, x => Assert.IsType<MeetingInvitationDto>(x));
+      Assert.All(result, x => Assert.IsType<SelfMeetingInvitationDto>(x));
       Assert.NotEmpty(result);
     }
 
@@ -41,7 +41,7 @@ namespace Skelvy.Application.Test.Meetings.Queries
 
       var result = await handler.Handle(request);
 
-      Assert.All(result, x => Assert.IsType<MeetingInvitationDto>(x));
+      Assert.All(result, x => Assert.IsType<SelfMeetingInvitationDto>(x));
       Assert.Empty(result);
     }
 
