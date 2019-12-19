@@ -19,8 +19,8 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
       RuleFor(x => x.Size).NotEmpty()
         .Must(x => x > 2)
         .WithMessage("'Size' must be bigger than 2.")
-        .Must(x => x < 10)
-        .WithMessage("'Size' must be smaller than 10.");
+        .Must(x => x <= 10)
+        .WithMessage("'Size' must be smaller or equal to 10.");
     }
   }
 }
