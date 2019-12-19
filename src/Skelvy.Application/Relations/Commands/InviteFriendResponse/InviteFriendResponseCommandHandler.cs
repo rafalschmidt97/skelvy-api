@@ -39,21 +39,21 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
         if (request.IsAccepted)
         {
           invitation.Accept();
+
+          var relations = new List<Relation>
+          {
+            new Relation(invitation.InvitingUserId, invitation.InvitedUserId, RelationType.Friend),
+            new Relation(invitation.InvitedUserId, invitation.InvitingUserId, RelationType.Friend),
+          };
+
+          await _relationsRepository.AddRange(relations);
         }
         else
         {
           invitation.Deny();
         }
 
-        var relations = new List<Relation>
-        {
-          new Relation(invitation.InvitingUserId, invitation.InvitedUserId, RelationType.Friend),
-          new Relation(invitation.InvitedUserId, invitation.InvitingUserId, RelationType.Friend),
-        };
-
         await _friendInvitationsRepository.Update(invitation);
-        await _relationsRepository.AddRange(relations);
-
         transaction.Commit();
 
         await _mediator.Publish(

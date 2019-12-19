@@ -41,17 +41,16 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeetingResponse
         if (request.IsAccepted)
         {
           meetingInvitation.Accept();
+
+          var groupUser = new GroupUser(meeting.GroupId, meetingInvitation.InvitedUserId);
+          await _groupUsersRepository.Add(groupUser);
         }
         else
         {
           meetingInvitation.Deny();
         }
 
-        var groupUser = new GroupUser(meeting.GroupId, meetingInvitation.InvitedUserId);
-
         await _meetingInvitationsRepository.Update(meetingInvitation);
-        await _groupUsersRepository.Add(groupUser);
-
         transaction.Commit();
 
         await _mediator.Publish(
