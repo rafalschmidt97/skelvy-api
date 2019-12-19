@@ -28,8 +28,15 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(x => x.Users)
         .ThenInclude(x => x.User)
         .ThenInclude(x => x.Profile)
+        .Include(x => x.Meeting)
+        .ThenInclude(x => x.Activity)
         .Where(x => x.InvitedUserId == userId && !x.IsRemoved)
         .ToListAsync();
+
+      foreach (var meetingInvitation in meetingInvitations)
+      {
+        meetingInvitation.Meeting.Group.Users = meetingInvitation.Meeting.Group.Users.Where(y => !y.IsRemoved).ToList();
+      }
 
       foreach (var meetingInvitation in meetingInvitations)
       {
@@ -53,8 +60,15 @@ namespace Skelvy.Persistence.Repositories
       var meetingInvitations = await Context.MeetingInvitations
         .Include(x => x.InvitedUser)
         .ThenInclude(x => x.Profile)
+        .Include(x => x.Meeting)
+        .ThenInclude(x => x.Activity)
         .Where(x => x.MeetingId == meetingId && !x.IsRemoved)
         .ToListAsync();
+
+      foreach (var meetingInvitation in meetingInvitations)
+      {
+        meetingInvitation.Meeting.Group.Users = meetingInvitation.Meeting.Group.Users.Where(y => !y.IsRemoved).ToList();
+      }
 
       foreach (var meetingInvitation in meetingInvitations)
       {
