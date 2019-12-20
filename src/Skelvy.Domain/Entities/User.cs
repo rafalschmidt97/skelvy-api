@@ -41,6 +41,7 @@ namespace Skelvy.Domain.Entities
 
     public Profile Profile { get; set; }
     public IList<UserRole> Roles { get; set; }
+    public IList<RefreshToken> RefreshTokens { get; set; }
     public IList<MeetingRequest> MeetingRequests { get; set; }
     public IList<Message> Messages { get; set; }
     public IList<Relation> Relations { get; set; }

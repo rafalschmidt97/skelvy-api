@@ -5,12 +5,11 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Skelvy.Application.Auth.Commands;
+using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Auth.Infrastructure.Tokens;
-using Skelvy.Application.Core.Cache;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Common.Extensions;
@@ -22,39 +21,44 @@ namespace Skelvy.Infrastructure.Auth.Tokens
   {
     private readonly IConfiguration _configuration;
     private readonly IUsersRepository _usersRepository;
-    private readonly ICacheService _cache;
-    private readonly IMapper _mapper;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public TokenService(IConfiguration configuration, IUsersRepository usersRepository, ICacheService cache, IMapper mapper)
+    public TokenService(IConfiguration configuration, IUsersRepository usersRepository, IRefreshTokenRepository refreshTokenRepository)
     {
       _configuration = configuration;
       _usersRepository = usersRepository;
-      _cache = cache;
-      _mapper = mapper;
+      _refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task<TokenDto> Generate(User user)
     {
-      var refreshToken = await GetRefreshToken(user);
-      var accessToken = GetAccessToken(user);
+      var refreshToken = await GenerateRefreshTokenFromUser(user);
+      var accessToken = GenerateAccessTokenFromUser(user);
 
       return new TokenDto { AccessToken = accessToken, RefreshToken = refreshToken };
     }
 
     public async Task<TokenDto> Generate(string refreshToken)
     {
-      var user = await UpdateRefreshToken(refreshToken);
-      var accessToken = GetAccessToken(user);
+      var user = await GetUserFromRefreshToken(refreshToken);
+      var accessToken = GenerateAccessTokenFromUser(user);
 
       return new TokenDto { AccessToken = accessToken, RefreshToken = refreshToken };
     }
 
     public async Task Invalidate(string refreshToken)
     {
-      await _cache.RemoveData($"auth:refresh#{refreshToken}");
+      var token = await _refreshTokenRepository.FindOneByToken(refreshToken);
+
+      if (token == null)
+      {
+        throw new UnauthorizedException("Refresh Token does not exist");
+      }
+
+      await _refreshTokenRepository.Remove(token);
     }
 
-    private string GetAccessToken(User user)
+    private string GenerateAccessTokenFromUser(User user)
     {
       var claims = new List<Claim>
       {
@@ -72,26 +76,25 @@ namespace Skelvy.Infrastructure.Auth.Tokens
       return GenerateAccessToken(DateTimeOffset.UtcNow.AddMinutes(5).UtcDateTime, claims);
     }
 
-    private async Task<string> GetRefreshToken(User user)
+    private async Task<string> GenerateRefreshTokenFromUser(User user)
     {
       var refreshToken = GenerateRefreshToken();
-      await _cache.SetData($"auth:refresh#{refreshToken}", TimeSpan.FromDays(30), _mapper.Map<TokenUser>(user));
+      var token = new RefreshToken(DateTimeOffset.UtcNow.AddYears(2), refreshToken, user.Id);
+      await _refreshTokenRepository.Add(token);
       return refreshToken;
     }
 
-    private async Task<User> UpdateRefreshToken(string refreshToken)
+    private async Task<User> GetUserFromRefreshToken(string refreshToken)
     {
-      var key = $"auth:refresh#{refreshToken}";
-      var tokenUser = await _cache.GetData<TokenUser>(key);
+      var token = await _refreshTokenRepository.FindOneByToken(refreshToken);
 
-      if (tokenUser == null)
+      if (token == null)
       {
         throw new UnauthorizedException("Refresh Token has expired");
       }
 
-      var user = await _usersRepository.FindOneWithRoles(tokenUser.Id);
+      var user = await _usersRepository.FindOneWithRoles(token.UserId);
       ValidateUser(user);
-      await _cache.RefreshData(key);
       return user;
     }
 

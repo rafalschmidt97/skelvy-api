@@ -13,6 +13,7 @@ namespace Skelvy.Persistence
 
     public DbSet<User> Users { get; private set; }
     public DbSet<UserRole> UserRoles { get; private set; }
+    public DbSet<RefreshToken> RefreshTokens { get; private set; }
     public DbSet<Profile> Profiles { get; private set; }
     public DbSet<ProfilePhoto> ProfilePhotos { get; private set; }
     public DbSet<Activity> Activities { get; private set; }
