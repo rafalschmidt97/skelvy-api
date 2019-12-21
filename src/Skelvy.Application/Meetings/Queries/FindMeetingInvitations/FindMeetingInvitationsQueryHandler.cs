@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
@@ -13,16 +12,16 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingInvitations
   {
     private readonly IMeetingInvitationsRepository _meetingInvitationsRepository;
     private readonly IUsersRepository _usersRepository;
-    private readonly IMapper _mapper;
+    private readonly IMeetingMapper _meetingMapper;
 
     public FindMeetingInvitationsQueryHandler(
       IMeetingInvitationsRepository meetingInvitationsRepository,
       IUsersRepository usersRepository,
-      IMapper mapper)
+      IMeetingMapper meetingMapper)
     {
       _meetingInvitationsRepository = meetingInvitationsRepository;
       _usersRepository = usersRepository;
-      _mapper = mapper;
+      _meetingMapper = meetingMapper;
     }
 
     public override async Task<IList<SelfMeetingInvitationDto>> Handle(FindMeetingInvitationsQuery request)
@@ -35,7 +34,7 @@ namespace Skelvy.Application.Meetings.Queries.FindMeetingInvitations
       }
 
       var meetingInvitations = await _meetingInvitationsRepository.FindAllWithActivityAndUsersDetailsByUserId(request.UserId);
-      return _mapper.Map<IList<SelfMeetingInvitationDto>>(meetingInvitations);
+      return await _meetingMapper.Map(meetingInvitations, request.Language);
     }
   }
 }

@@ -98,9 +98,10 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpGet("self/invitations")]
-    public async Task<IList<SelfMeetingInvitationDto>> FindAllSelfInvitations()
+    public async Task<IList<SelfMeetingInvitationDto>> FindAllSelfInvitations([FromQuery] FindMeetingInvitationsQuery request)
     {
-      return await Mediator.Send(new FindMeetingInvitationsQuery(UserId));
+      request.UserId = UserId;
+      return await Mediator.Send(request);
     }
 
     [HttpPost("self/invitations")]
