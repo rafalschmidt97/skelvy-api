@@ -16,6 +16,7 @@ namespace Skelvy.Application.Meetings.Queries
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public int Size { get; set; }
+    public string Description { get; set; }
     public bool IsHidden { get; set; }
     public string City { get; set; }
     public int GroupId { get; set; }
@@ -36,6 +37,7 @@ namespace Skelvy.Application.Meetings.Queries
     public DateTimeOffset Date { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public string Description { get; set; }
     public string City { get; set; }
     public int GroupId { get; set; }
     public ActivityDto Activity { get; set; }
@@ -56,6 +58,7 @@ namespace Skelvy.Application.Meetings.Queries
   public class GroupDto
   {
     public int Id { get; set; }
+    public string Name { get; set; }
     public IList<GroupUserDto> Users { get; set; }
     public IList<MessageDto> Messages { get; set; }
   }
