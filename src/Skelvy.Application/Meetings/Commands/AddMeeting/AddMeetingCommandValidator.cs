@@ -21,6 +21,8 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
         .WithMessage("'Size' must be bigger than 2.")
         .Must(x => x <= 10)
         .WithMessage("'Size' must be smaller or equal to 10.");
+
+      RuleFor(x => x.Description).MaximumLength(500);
     }
   }
 }

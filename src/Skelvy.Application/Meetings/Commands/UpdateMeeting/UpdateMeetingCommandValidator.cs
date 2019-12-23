@@ -17,6 +17,7 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
       RuleFor(x => x.Longitude).NotEmpty();
       RuleFor(x => x.Size).NotEmpty();
       RuleFor(x => x.ActivityId).NotEmpty();
+      RuleFor(x => x.Description).MaximumLength(500);
     }
   }
 }

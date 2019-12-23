@@ -33,7 +33,7 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
     {
       var meeting = await ValidateData(request);
 
-      meeting.Update(request.Date, request.Latitude, request.Longitude, request.Size, request.IsHidden, request.ActivityId);
+      meeting.Update(request.Date, request.Latitude, request.Longitude, request.Size, request.Description, request.IsHidden, request.ActivityId);
       await _meetingsRepository.Update(meeting);
       await _mediator.Publish(new MeetingUpdatedEvent(request.UserId, meeting.Id, meeting.GroupId));
 
