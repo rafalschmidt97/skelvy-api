@@ -5,6 +5,7 @@ using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Entities;
+using Skelvy.Domain.Enums;
 
 namespace Skelvy.Application.Relations.Queries.FindRelation
 {
@@ -12,12 +13,14 @@ namespace Skelvy.Application.Relations.Queries.FindRelation
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IRelationsRepository _relationsRepository;
+    private readonly IFriendInvitationsRepository _friendInvitations;
     private readonly IMapper _mapper;
 
-    public FindRelationQueryHandler(IUsersRepository usersRepository, IRelationsRepository relationsRepository, IMapper mapper)
+    public FindRelationQueryHandler(IUsersRepository usersRepository, IRelationsRepository relationsRepository, IFriendInvitationsRepository friendInvitations, IMapper mapper)
     {
       _usersRepository = usersRepository;
       _relationsRepository = relationsRepository;
+      _friendInvitations = friendInvitations;
       _mapper = mapper;
     }
 
@@ -41,7 +44,14 @@ namespace Skelvy.Application.Relations.Queries.FindRelation
 
       if (relation == null)
       {
-        throw new NotFoundException(nameof(Relation), $"(UserId = {request.UserId}, RelatedUserIdd = {request.RelatedUserId})");
+        var invitation = await _friendInvitations.FindOneByInvitingIdAndInvitedIdTwoWay(request.UserId, request.RelatedUserId);
+
+        if (invitation == null)
+        {
+          throw new NotFoundException(nameof(Relation), $"(UserId = {request.UserId}, RelatedUserIdd = {request.RelatedUserId})");
+        }
+
+        relation = new Relation(request.UserId, request.RelatedUserId, FriendInvitationStatusType.Pending);
       }
 
       return _mapper.Map<RelationDto>(relation);

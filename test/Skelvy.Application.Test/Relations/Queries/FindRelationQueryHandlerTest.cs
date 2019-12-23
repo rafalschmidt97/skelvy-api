@@ -17,6 +17,7 @@ namespace Skelvy.Application.Test.Relations.Queries
       var handler = new FindRelationQueryHandler(
         new UsersRepository(dbContext),
         new RelationsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         Mapper());
 
       var result = await handler.Handle(request);
@@ -27,11 +28,12 @@ namespace Skelvy.Application.Test.Relations.Queries
     [Fact]
     public async Task ShouldThrowExceptionWithNotExistingRelation()
     {
-      var request = new FindRelationQuery(2, 1);
+      var request = new FindRelationQuery(3, 1);
       var dbContext = InitializedDbContext();
       var handler = new FindRelationQueryHandler(
         new UsersRepository(dbContext),
         new RelationsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
@@ -46,6 +48,7 @@ namespace Skelvy.Application.Test.Relations.Queries
       var handler = new FindRelationQueryHandler(
         new UsersRepository(dbContext),
         new RelationsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
@@ -60,6 +63,7 @@ namespace Skelvy.Application.Test.Relations.Queries
       var handler = new FindRelationQueryHandler(
         new UsersRepository(dbContext),
         new RelationsRepository(dbContext),
+        new FriendInvitationsRepository(dbContext),
         Mapper());
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
