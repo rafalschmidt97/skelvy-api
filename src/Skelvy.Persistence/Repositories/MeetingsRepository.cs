@@ -35,8 +35,10 @@ namespace Skelvy.Persistence.Repositories
         .Where(x => x.UserId == userId && !x.IsRemoved && x.Role == GroupUserRoleType.Owner)
         .ToListAsync();
 
+      var ownGroupsId = ownGroupUsers.Select(x => x.GroupId);
+
       return await Context.Meetings
-        .CountAsync(x => ownGroupUsers.Any(y => x.GroupId == y.GroupId) && !x.IsRemoved);
+        .CountAsync(x => ownGroupsId.Any(y => y == x.GroupId) && !x.IsRemoved);
     }
 
     public async Task<Meeting> FindOne(int id)
