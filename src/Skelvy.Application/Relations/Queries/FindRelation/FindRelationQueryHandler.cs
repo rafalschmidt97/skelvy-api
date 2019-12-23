@@ -51,7 +51,7 @@ namespace Skelvy.Application.Relations.Queries.FindRelation
           throw new NotFoundException(nameof(Relation), $"(UserId = {request.UserId}, RelatedUserIdd = {request.RelatedUserId})");
         }
 
-        relation = new Relation(request.UserId, request.RelatedUserId, FriendInvitationStatusType.Pending);
+        relation = new Relation(invitation.InvitingUserId, invitation.InvitedUserId, FriendInvitationStatusType.Pending);
       }
 
       return _mapper.Map<RelationDto>(relation);
