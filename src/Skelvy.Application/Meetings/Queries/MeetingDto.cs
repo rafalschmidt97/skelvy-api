@@ -38,6 +38,7 @@ namespace Skelvy.Application.Meetings.Queries
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string Description { get; set; }
+    public string Name { get; set; }
     public string City { get; set; }
     public int GroupId { get; set; }
     public ActivityDto Activity { get; set; }
@@ -46,6 +47,9 @@ namespace Skelvy.Application.Meetings.Queries
     public void CreateMappings(AutoMapperProfile configuration)
     {
       configuration.CreateMap<Meeting, MeetingWithUsersDto>()
+        .ForMember(
+          destination => destination.Name,
+          options => options.MapFrom(x => x.Group.Name))
         .ForMember(
           destination => destination.Users,
           options => options.MapFrom(x => x.Group.Users))
