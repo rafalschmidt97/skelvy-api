@@ -26,9 +26,13 @@ namespace Skelvy.Application.Meetings.Events.MeetingsExpired
       foreach (var meetingId in request.MeetingsId)
       {
         var groupUsers = await _groupUsersRepository.FindAllWithExpiredByGroupId(meetingId);
-        var groupId = groupUsers.Select(x => x.GroupId).First();
-        var broadcastUsersId = groupUsers.Select(x => x.UserId).ToList();
-        await _notifications.BroadcastMeetingExpired(new MeetingExpiredNotification(meetingId, groupId, broadcastUsersId));
+
+        if (groupUsers.Count > 0)
+        {
+          var groupId = groupUsers.Select(x => x.GroupId).First();
+          var broadcastUsersId = groupUsers.Select(x => x.UserId).ToList();
+          await _notifications.BroadcastMeetingExpired(new MeetingExpiredNotification(meetingId, groupId, broadcastUsersId));
+        }
       }
 
       return Unit.Value;
