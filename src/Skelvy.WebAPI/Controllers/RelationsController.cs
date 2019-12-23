@@ -10,12 +10,19 @@ using Skelvy.Application.Relations.Queries;
 using Skelvy.Application.Relations.Queries.FindBlocked;
 using Skelvy.Application.Relations.Queries.FindFriendInvitations;
 using Skelvy.Application.Relations.Queries.FindFriends;
+using Skelvy.Application.Relations.Queries.FindRelation;
 using Skelvy.Application.Users.Queries;
 
 namespace Skelvy.WebAPI.Controllers
 {
   public class RelationsController : BaseController
   {
+    [HttpGet("self/check/{relatedUserId}")]
+    public async Task<RelationDto> CheckRelation(int relatedUserId)
+    {
+      return await Mediator.Send(new FindRelationQuery(UserId, relatedUserId));
+    }
+
     [HttpGet("self/friends")]
     public async Task<IList<UserDto>> FindPageSelfFriends([FromQuery] FindFriendsQuery request)
     {
