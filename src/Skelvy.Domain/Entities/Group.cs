@@ -13,7 +13,14 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
+    public Group(string name)
+    {
+      Name = name;
+      CreatedAt = DateTimeOffset.UtcNow;
+    }
+
     public int Id { get; set; }
+    public string Name { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? ModifiedAt { get; set; }
     public bool IsRemoved { get; set; }

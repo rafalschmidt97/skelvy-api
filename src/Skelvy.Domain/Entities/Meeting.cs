@@ -21,11 +21,18 @@ namespace Skelvy.Domain.Entities
       CreatedAt = DateTimeOffset.UtcNow;
     }
 
+    public Meeting(DateTimeOffset date, double latitude, double longitude, int size, string description, bool isPrivate, bool isHidden, int groupId, int activityId)
+      : this(date, latitude, longitude, size, isPrivate, isHidden, groupId, activityId)
+    {
+      Description = description;
+    }
+
     public int Id { get; set; }
     public DateTimeOffset Date { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public int Size { get; set; }
+    public string Description { get; set; }
     public bool IsPrivate { get; set; }
     public bool IsHidden { get; set; }
     public int GroupId { get; set; }

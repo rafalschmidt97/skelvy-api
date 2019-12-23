@@ -51,6 +51,7 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
           request.Latitude,
           request.Longitude,
           request.Size,
+          request.Description,
           true,
           request.IsHidden,
           group.Id,
