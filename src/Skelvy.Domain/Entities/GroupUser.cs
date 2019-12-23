@@ -59,6 +59,11 @@ namespace Skelvy.Domain.Entities
              groupUser.Role != GroupUserRoleType.Owner;
     }
 
+    public bool CanUpdateGroup()
+    {
+      return Role == GroupUserRoleType.Owner || Role == GroupUserRoleType.Admin;
+    }
+
     public void UpdateRole(string role)
     {
       Role = role == GroupUserRoleType.Admin || role == GroupUserRoleType.Privileged || role == GroupUserRoleType.Member

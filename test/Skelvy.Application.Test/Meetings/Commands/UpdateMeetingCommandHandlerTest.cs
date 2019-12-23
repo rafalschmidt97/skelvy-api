@@ -21,7 +21,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldUpdateRequest()
     {
-      var request = new UpdateMeetingCommand(2, 1, DateTimeOffset.UtcNow, 1, 1, 4, 1, false);
+      var request = new UpdateMeetingCommand(2, 1, DateTimeOffset.UtcNow, 1, 1, 4, null, 1, false);
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingCommandHandler(
         new MeetingsRepository(dbContext),
@@ -35,7 +35,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithInvalidUser()
     {
-      var request = new UpdateMeetingCommand(100, 1, DateTimeOffset.UtcNow, 1, 1, 4, 1, false);
+      var request = new UpdateMeetingCommand(100, 1, DateTimeOffset.UtcNow, 1, 1, 4, null, 1, false);
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingCommandHandler(
         new MeetingsRepository(dbContext),
@@ -50,7 +50,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithInvalidMeeting()
     {
-      var request = new UpdateMeetingCommand(2, 100, DateTimeOffset.UtcNow, 1, 1, 4, 1, false);
+      var request = new UpdateMeetingCommand(2, 100, DateTimeOffset.UtcNow, 1, 1, 4, null, 1, false);
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingCommandHandler(
         new MeetingsRepository(dbContext),
@@ -65,7 +65,7 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithInvalidActivity()
     {
-      var request = new UpdateMeetingCommand(2, 1, DateTimeOffset.UtcNow, 1, 1, 4, 100, false);
+      var request = new UpdateMeetingCommand(2, 1, DateTimeOffset.UtcNow, 1, 1, 4, null, 100, false);
       var dbContext = InitializedDbContext();
       var handler = new UpdateMeetingCommandHandler(
         new MeetingsRepository(dbContext),

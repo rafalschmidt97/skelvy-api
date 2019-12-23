@@ -56,5 +56,11 @@ namespace Skelvy.Domain.Entities
         throw new DomainException($"{nameof(Meeting)}({Id}) is already expired.");
       }
     }
+
+    public void Update(string name)
+    {
+      Name = name?.Trim();
+      ModifiedAt = DateTimeOffset.UtcNow;
+    }
   }
 }
