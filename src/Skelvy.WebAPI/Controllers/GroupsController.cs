@@ -10,11 +10,9 @@ namespace Skelvy.WebAPI.Controllers
   public class GroupsController : BaseController
   {
     [HttpGet("{id}")]
-    public async Task<GroupDto> Find(int id, [FromQuery] FindGroupQuery request)
+    public async Task<GroupDto> Find(int id)
     {
-      request.GroupId = id;
-      request.UserId = UserId;
-      return await Mediator.Send(request);
+      return await Mediator.Send(new FindGroupQuery(id, UserId));
     }
 
     [HttpPost("{id}/leave")]

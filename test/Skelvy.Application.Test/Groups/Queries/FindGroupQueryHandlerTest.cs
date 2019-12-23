@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Skelvy.Application.Groups.Queries.FindGroup;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Common.Exceptions;
-using Skelvy.Domain.Enums;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 
@@ -13,7 +12,7 @@ namespace Skelvy.Application.Test.Groups.Queries
     [Fact]
     public async Task ShouldReturnMeetingsWithGroups()
     {
-      var request = new FindGroupQuery(2, 1, LanguageType.EN);
+      var request = new FindGroupQuery(2, 1);
       var dbContext = InitializedDbContext();
       var handler = new FindGroupQueryHandler(
         new UsersRepository(dbContext),
@@ -28,7 +27,7 @@ namespace Skelvy.Application.Test.Groups.Queries
     [Fact]
     public async Task ShouldThrowExceptionWithNotExistingUser()
     {
-      var request = new FindGroupQuery(2, 1, LanguageType.EN);
+      var request = new FindGroupQuery(2, 1);
       var dbContext = DbContext();
       var handler = new FindGroupQueryHandler(
         new UsersRepository(dbContext),
