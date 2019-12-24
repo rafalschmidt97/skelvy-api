@@ -44,6 +44,7 @@ namespace Skelvy.Persistence.Repositories
         }
 
         var messages = await Context.Messages
+          .Include(x => x.Attachment)
           .Where(x => x.GroupId == group.Id)
           .OrderByDescending(p => p.Date)
           .Take(messagesPageSize)
@@ -80,6 +81,7 @@ namespace Skelvy.Persistence.Repositories
         }
 
         var messages = await Context.Messages
+          .Include(x => x.Attachment)
           .Where(x => x.GroupId == group.Id)
           .OrderByDescending(p => p.Date)
           .Take(messagesPageSize)
