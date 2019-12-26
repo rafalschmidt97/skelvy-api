@@ -26,6 +26,7 @@ namespace Skelvy.Application.Relations.Commands.RemoveBlocked
     {
       var blockedRelation = await ValidateData(request);
 
+      blockedRelation.Abort();
       await _relationsRepository.Update(blockedRelation);
 
       return Unit.Value;
