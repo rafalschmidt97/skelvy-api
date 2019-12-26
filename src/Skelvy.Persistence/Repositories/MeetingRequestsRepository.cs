@@ -80,7 +80,7 @@ namespace Skelvy.Persistence.Repositories
     public async Task<IList<MeetingRequest>> FindAllCloseWithUserDetailsByUserIdAndLocationFilterBlocked(int userId, double latitude, double longitude)
     {
       var blockedUsers = await Context.Relations
-        .Where(x => (x.UserId == userId || x.RelatedUserId == userId) && x.Type == RelationType.Blocked)
+        .Where(x => (x.UserId == userId || x.RelatedUserId == userId) && x.Type == RelationType.Blocked && !x.IsRemoved)
         .ToListAsync();
 
       var filterBlockedUsersId = blockedUsers.Select(x => x.UserId == userId ? x.RelatedUserId : x.UserId).ToList();
