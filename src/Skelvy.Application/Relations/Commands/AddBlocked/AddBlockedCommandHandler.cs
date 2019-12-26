@@ -15,18 +15,23 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
   {
     private readonly IRelationsRepository _relationsRepository;
     private readonly IUsersRepository _usersRepository;
+    private readonly IFriendInvitationsRepository _friendInvitationsRepository;
 
     public AddBlockedCommandHandler(
       IRelationsRepository relationsRepository,
-      IUsersRepository usersRepository)
+      IUsersRepository usersRepository,
+      IFriendInvitationsRepository friendInvitationsRepository)
     {
       _relationsRepository = relationsRepository;
       _usersRepository = usersRepository;
+      _friendInvitationsRepository = friendInvitationsRepository;
     }
 
     public override async Task<Unit> Handle(AddBlockedCommand request)
     {
       var relations = await ValidateData(request);
+      var friendInvitation = await _friendInvitationsRepository
+        .FindOneByInvitingIdAndInvitedIdTwoWay(request.UserId, request.BlockingUserId);
 
       using (var transaction = _relationsRepository.BeginTransaction())
       {
@@ -36,6 +41,12 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
         }
 
         await _relationsRepository.UpdateRange(relations);
+
+        if (friendInvitation != null)
+        {
+          friendInvitation.Abort();
+          await _friendInvitationsRepository.Update(friendInvitation);
+        }
 
         var blockerRelation = new Relation(request.UserId, request.BlockingUserId, RelationType.Blocked);
         await _relationsRepository.Add(blockerRelation);

@@ -157,7 +157,7 @@ namespace Skelvy.Application.Users.Commands.DisableUser
 
     private async Task RemoveFriendInvitations(User user)
     {
-      var invitations = await _friendInvitationsRepository.FindAllWithByUserId(user.Id);
+      var invitations = await _friendInvitationsRepository.FindAllByUserId(user.Id);
 
       if (invitations.Any())
       {

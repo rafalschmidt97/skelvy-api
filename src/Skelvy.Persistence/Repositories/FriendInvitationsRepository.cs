@@ -56,7 +56,7 @@ namespace Skelvy.Persistence.Repositories
              !x.IsRemoved);
     }
 
-    public async Task<IList<FriendInvitation>> FindAllWithByUserId(int userId)
+    public async Task<IList<FriendInvitation>> FindAllByUserId(int userId)
     {
       return await Context.FriendInvitations
         .Where(x => (x.InvitedUserId == userId || x.InvitingUserId == userId) && !x.IsRemoved)

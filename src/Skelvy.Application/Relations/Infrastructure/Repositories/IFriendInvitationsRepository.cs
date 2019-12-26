@@ -11,7 +11,7 @@ namespace Skelvy.Application.Relations.Infrastructure.Repositories
     Task<FriendInvitation> FindOneByInvitationId(int invitationId);
     Task<FriendInvitation> FindOneByInvitingIdAndInvitedIdTwoWay(int invitingUserId, int invitedUserId);
     Task<bool> ExistsOneByInvitingIdAndInvitedIdTwoWay(int invitingUserId, int invitedUserId);
-    Task<IList<FriendInvitation>> FindAllWithByUserId(int userId);
+    Task<IList<FriendInvitation>> FindAllByUserId(int userId);
     Task<IList<FriendInvitation>> FindAllWithRemovedByUsersId(List<int> usersId);
     Task Add(FriendInvitation invitations);
     Task Update(FriendInvitation invitation);

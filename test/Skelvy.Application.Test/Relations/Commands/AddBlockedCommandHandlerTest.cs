@@ -15,7 +15,8 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new AddBlockedCommandHandler(
         new RelationsRepository(dbContext),
-        new UsersRepository(dbContext));
+        new UsersRepository(dbContext),
+        new FriendInvitationsRepository(dbContext));
 
       await handler.Handle(request);
     }
@@ -27,7 +28,8 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new AddBlockedCommandHandler(
         new RelationsRepository(dbContext),
-        new UsersRepository(dbContext));
+        new UsersRepository(dbContext),
+        new FriendInvitationsRepository(dbContext));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -40,7 +42,8 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new AddBlockedCommandHandler(
         new RelationsRepository(dbContext),
-        new UsersRepository(dbContext));
+        new UsersRepository(dbContext),
+        new FriendInvitationsRepository(dbContext));
 
       await Assert.ThrowsAsync<NotFoundException>(() =>
         handler.Handle(request));
@@ -53,7 +56,8 @@ namespace Skelvy.Application.Test.Relations.Commands
       var dbContext = InitializedDbContext();
       var handler = new AddBlockedCommandHandler(
         new RelationsRepository(dbContext),
-        new UsersRepository(dbContext));
+        new UsersRepository(dbContext),
+        new FriendInvitationsRepository(dbContext));
 
       await Assert.ThrowsAsync<ConflictException>(() =>
         handler.Handle(request));
