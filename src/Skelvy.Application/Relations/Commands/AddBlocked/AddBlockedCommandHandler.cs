@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Skelvy.Application.Core.Bus;
+using Skelvy.Application.Relations.Events.FriendRemoved;
 using Skelvy.Application.Relations.Infrastructure.Repositories;
 using Skelvy.Application.Users.Infrastructure.Repositories;
 using Skelvy.Common.Exceptions;
@@ -16,15 +17,18 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
     private readonly IRelationsRepository _relationsRepository;
     private readonly IUsersRepository _usersRepository;
     private readonly IFriendInvitationsRepository _friendInvitationsRepository;
+    private readonly IMediator _mediator;
 
     public AddBlockedCommandHandler(
       IRelationsRepository relationsRepository,
       IUsersRepository usersRepository,
-      IFriendInvitationsRepository friendInvitationsRepository)
+      IFriendInvitationsRepository friendInvitationsRepository,
+      IMediator mediator)
     {
       _relationsRepository = relationsRepository;
       _usersRepository = usersRepository;
       _friendInvitationsRepository = friendInvitationsRepository;
+      _mediator = mediator;
     }
 
     public override async Task<Unit> Handle(AddBlockedCommand request)
@@ -52,6 +56,14 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
         await _relationsRepository.Add(blockerRelation);
 
         transaction.Commit();
+
+        var friendRelationUser = relations.FirstOrDefault(x =>
+          x.UserId == request.UserId && x.RelatedUserId == request.BlockingUserId && x.Type == RelationType.Friend);
+
+        if (friendRelationUser != null)
+        {
+          await _mediator.Publish(new FriendRemovedEvent(request.UserId, request.BlockingUserId));
+        }
       }
 
       return Unit.Value;
