@@ -10,8 +10,8 @@ using Skelvy.Persistence;
 namespace Skelvy.Persistence.Migrations
 {
     [DbContext(typeof(SkelvyContext))]
-    [Migration("20191220135401_AddRefreshToken")]
-    partial class AddRefreshToken
+    [Migration("20191228024423_InitialV2")]
+    partial class InitialV2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -113,6 +113,9 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("Name")
+                        .HasMaxLength(50);
+
                     b.Property<string>("RemovedReason")
                         .HasMaxLength(15);
 
@@ -175,6 +178,9 @@ namespace Skelvy.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreatedAt");
 
                     b.Property<DateTimeOffset>("Date");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500);
 
                     b.Property<int>("GroupId");
 

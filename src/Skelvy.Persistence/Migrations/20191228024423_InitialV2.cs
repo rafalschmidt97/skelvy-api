@@ -45,6 +45,7 @@ namespace Skelvy.Persistence.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 50, nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedAt = table.Column<DateTimeOffset>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false),
@@ -88,6 +89,7 @@ namespace Skelvy.Persistence.Migrations
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
                     Size = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
                     IsPrivate = table.Column<bool>(nullable: false),
                     IsHidden = table.Column<bool>(nullable: false),
                     GroupId = table.Column<int>(nullable: false),
@@ -230,6 +232,28 @@ namespace Skelvy.Persistence.Migrations
                     table.PrimaryKey("PK_Profiles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Profiles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    IssuedAt = table.Column<DateTimeOffset>(nullable: false),
+                    ExpiredAt = table.Column<DateTimeOffset>(nullable: false),
+                    Token = table.Column<string>(maxLength: 50, nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -630,6 +654,21 @@ namespace Skelvy.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_ExpiredAt",
+                table: "RefreshTokens",
+                column: "ExpiredAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_Token",
+                table: "RefreshTokens",
+                column: "Token");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Relations_IsRemoved",
                 table: "Relations",
                 column: "IsRemoved");
@@ -701,6 +740,9 @@ namespace Skelvy.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProfilePhotos");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "Relations");
