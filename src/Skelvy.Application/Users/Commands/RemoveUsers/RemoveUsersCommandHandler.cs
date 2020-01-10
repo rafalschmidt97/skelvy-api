@@ -81,15 +81,14 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
         var profilePhotosToRemove = await _profilePhotosRepository.FindAllWithRemovedByProfilesId(profilesId);
         var attachmentsId = profilePhotosToRemove.Select(y => y.AttachmentId).ToList();
         var attachmentsToRemove = await _attachmentsRepository.FindAllByAttachmentsId(attachmentsId);
-        await _attachmentsRepository.RemoveRange(attachmentsToRemove);
         await _profilePhotosRepository.RemoveRange(profilePhotosToRemove);
+        await _attachmentsRepository.RemoveRange(attachmentsToRemove);
         await _profilesRepository.RemoveRange(profilesToRemove);
 
         var relationsToRemove = await _relationsRepository.FindAllWithRemovedByUsersId(usersId);
         await _relationsRepository.RemoveRange(relationsToRemove);
         var friendInvitationsToRemove = await _friendInvitationsRepository.FindAllWithRemovedByUsersId(usersId);
         await _friendInvitationsRepository.RemoveRange(friendInvitationsToRemove);
-
         var meetingInvitationsToRemove = await _invitationsRepository.FindAllWithRemovedByUsersId(usersId);
         await _invitationsRepository.RemoveRange(meetingInvitationsToRemove);
 
