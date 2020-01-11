@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Skelvy.Application.Auth.Infrastructure.Repositories;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Infrastructure.Repositories;
@@ -16,6 +17,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IUserRolesRepository _rolesRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IProfilesRepository _profilesRepository;
     private readonly IProfilePhotosRepository _profilePhotosRepository;
     private readonly IMeetingRequestsRepository _requestsRepository;
@@ -30,6 +32,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     public RemoveUsersCommandHandler(
       IUsersRepository usersRepository,
       IUserRolesRepository rolesRepository,
+      IRefreshTokenRepository refreshTokenRepository,
       IProfilesRepository profilesRepository,
       IProfilePhotosRepository profilePhotosRepository,
       IMeetingRequestsRepository requestsRepository,
@@ -43,6 +46,7 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
     {
       _usersRepository = usersRepository;
       _rolesRepository = rolesRepository;
+      _refreshTokenRepository = refreshTokenRepository;
       _profilesRepository = profilesRepository;
       _profilePhotosRepository = profilePhotosRepository;
       _requestsRepository = requestsRepository;
@@ -91,6 +95,9 @@ namespace Skelvy.Application.Users.Commands.RemoveUsers
         await _friendInvitationsRepository.RemoveRange(friendInvitationsToRemove);
         var meetingInvitationsToRemove = await _invitationsRepository.FindAllWithRemovedByUsersId(usersId);
         await _invitationsRepository.RemoveRange(meetingInvitationsToRemove);
+
+        var refreshTokensToRemove = await _refreshTokenRepository.FindAllByUsersId(usersId);
+        await _refreshTokenRepository.RemoveRange(refreshTokensToRemove);
 
         var userRolesToRemove = await _rolesRepository.FindAllByUsersId(usersId);
         await _rolesRepository.RemoveRange(userRolesToRemove);

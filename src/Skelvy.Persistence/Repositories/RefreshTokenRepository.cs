@@ -27,6 +27,13 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
     }
 
+    public async Task<IList<RefreshToken>> FindAllByUsersId(List<int> usersId)
+    {
+      return await Context.RefreshTokens
+        .Where(x => usersId.Any(y => y == x.UserId))
+        .ToListAsync();
+    }
+
     public async Task Add(RefreshToken refreshToken)
     {
       await Context.RefreshTokens.AddAsync(refreshToken);

@@ -15,6 +15,7 @@ namespace Skelvy.Application.Test.Users.Commands
       var handler = new RemoveUsersCommandHandler(
         new UsersRepository(dbContext),
         new UserRolesRepository(dbContext),
+        new RefreshTokenRepository(dbContext),
         new ProfilesRepository(dbContext),
         new ProfilePhotosRepository(dbContext),
         new MeetingRequestsRepository(dbContext),
