@@ -80,10 +80,9 @@ namespace Skelvy.Domain.Entities
 
     public void UpdateLanguage(string language)
     {
-      Language = language == LanguageType.EN || language == LanguageType.PL
+      Language = LanguageType.Check(language)
         ? language
-        : throw new DomainException(
-          $"'Language' must be {LanguageType.PL} or {LanguageType.EN} for {nameof(Profile)}({Id}).");
+        : throw new DomainException(LanguageType.CheckFailedResponse());
 
       ModifiedAt = DateTimeOffset.UtcNow;
     }

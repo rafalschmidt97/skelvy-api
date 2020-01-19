@@ -28,7 +28,12 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       var message = new EmailMessage(
         notification.Email,
         notification.Language,
-        new EmailMessageSubject("Your account has been created", "Twoje konto zostało utworzone"),
+        LanguageType.Switch(
+          notification.Language,
+          "Your account has been created",
+          "Twoje konto zostało utworzone",
+          "Dein Account wurde erstellt",
+          "Tu cuenta ha sido creada"),
         "Created");
 
       await SendEmail(message);
@@ -39,7 +44,12 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       var message = new EmailMessage(
         notification.Email,
         notification.Language,
-        new EmailMessageSubject("Your account has been deleted", "Twoje konto zostało usunięte"),
+        LanguageType.Switch(
+          notification.Language,
+          "Your account has been deleted",
+          "Twoje konto zostało usunięte",
+          "Dein Account wurde gelöscht",
+          "Tu cuenta ha sido eliminada"),
         "Removed");
 
       await SendEmail(message);
@@ -53,7 +63,12 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       var message = new EmailMessage(
         notification.Email,
         notification.Language,
-        new EmailMessageSubject("Your account has been disabled", "Twoje konto zostało zablokowane"),
+        LanguageType.Switch(
+          notification.Language,
+          "Your account has been disabled",
+          "Twoje konto zostało zablokowane",
+          "Dein Account wurde blockiert",
+          "Tu cuenta ha sido desactivada"),
         "Disabled",
         model);
 
@@ -68,7 +83,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       {
         From = new MailAddress(_configuration["SKELVY_EMAIL_USERNAME"], _configuration["SKELVY_EMAIL_NAME"]),
         To = { message.To },
-        Subject = GeSubject(message),
+        Subject = message.TranslatedSubject,
         Body = body,
         IsBodyHtml = true,
       };
@@ -94,11 +109,6 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       var template = await reader.ReadToEndAsync();
 
       return await _templateRenderer.ParseAsync(template, message.Model);
-    }
-
-    private static string GeSubject(EmailMessage message)
-    {
-      return message.Language == LanguageType.PL ? message.Subject.PL : message.Subject.EN;
     }
   }
 }
