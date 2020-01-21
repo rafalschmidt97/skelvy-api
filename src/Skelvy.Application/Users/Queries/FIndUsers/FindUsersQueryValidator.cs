@@ -8,7 +8,6 @@ namespace Skelvy.Application.Users.Queries.FIndUsers
     {
       RuleFor(x => x.UserId).NotEmpty();
       RuleFor(x => x.UserName).NotEmpty().MinimumLength(3).MaximumLength(50);
-      RuleFor(x => x.Page).NotEmpty();
     }
   }
 }

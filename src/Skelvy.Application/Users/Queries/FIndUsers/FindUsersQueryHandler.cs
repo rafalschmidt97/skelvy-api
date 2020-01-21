@@ -31,8 +31,7 @@ namespace Skelvy.Application.Users.Queries.FIndUsers
 
       var users = await _usersRepository.FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(
         request.UserId,
-        request.UserName.Trim().ToLower(CultureInfo.CurrentCulture),
-        request.Page);
+        request.UserName.Trim().ToLower(CultureInfo.CurrentCulture));
 
       return _mapper.Map<IList<UserWithRelationTypeDto>>(users);
     }

@@ -106,14 +106,13 @@ namespace Skelvy.Persistence.Repositories
       return users;
     }
 
-    public async Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(int userId, string userName, int page, int pageSize = 10)
+    public async Task<IList<UserWithRelationType>> FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(int userId, string userName, int pageSize = 10)
     {
       var blockedByUsers = await Context.Relations
         .Where(x => x.RelatedUserId == userId && x.Type == RelationType.Blocked && !x.IsRemoved)
         .Select(x => x.UserId)
         .ToListAsync();
 
-      var skip = (page - 1) * pageSize;
       var users = await Context.Users
         .Where(x => x.Id != userId &&
                     blockedByUsers.All(y => y != x.Id) &&
@@ -126,7 +125,6 @@ namespace Skelvy.Persistence.Repositories
           Profile = x.Profile,
         })
         .OrderBy(x => x.Id)
-        .Skip(skip)
         .Take(pageSize)
         .ToListAsync();
 

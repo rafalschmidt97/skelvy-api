@@ -12,7 +12,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldReturnUsersWithBlocked()
     {
-      var request = new FindUsersQuery(2, "user", 1);
+      var request = new FindUsersQuery(2, "user");
       var dbContext = InitializedDbContext();
 
       var handler = new FindUsersQueryHandler(
@@ -29,7 +29,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldReturnUsersWithoutBlocked()
     {
-      var request = new FindUsersQuery(4, "user", 1);
+      var request = new FindUsersQuery(4, "user");
       var dbContext = InitializedDbContext();
 
       var handler = new FindUsersQueryHandler(
@@ -46,7 +46,7 @@ namespace Skelvy.Application.Test.Users.Queries
     [Fact]
     public async Task ShouldThrowException()
     {
-      var request = new FindUsersQuery(2, "user", 1);
+      var request = new FindUsersQuery(2, "user");
       var dbContext = DbContext();
 
       var handler = new FindUsersQueryHandler(
