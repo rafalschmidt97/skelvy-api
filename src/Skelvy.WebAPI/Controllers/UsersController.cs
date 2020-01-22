@@ -33,7 +33,7 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpGet]
-    public async Task<IList<UserWithRelationTypeDto>> FindAll([FromQuery] FindUsersQuery request)
+    public async Task<IList<UserDto>> FindAll([FromQuery] FindUsersQuery request)
     {
       request.UserId = UserId;
       return await Mediator.Send(request);

@@ -9,7 +9,7 @@ using Skelvy.Domain.Entities;
 
 namespace Skelvy.Application.Users.Queries.FIndUsers
 {
-  public class FindUsersQueryHandler : QueryHandler<FindUsersQuery, IList<UserWithRelationTypeDto>>
+  public class FindUsersQueryHandler : QueryHandler<FindUsersQuery, IList<UserDto>>
   {
     private readonly IUsersRepository _usersRepository;
     private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ namespace Skelvy.Application.Users.Queries.FIndUsers
       _mapper = mapper;
     }
 
-    public override async Task<IList<UserWithRelationTypeDto>> Handle(FindUsersQuery request)
+    public override async Task<IList<UserDto>> Handle(FindUsersQuery request)
     {
       var userExists = await _usersRepository.ExistsOne(request.UserId);
 
@@ -29,11 +29,11 @@ namespace Skelvy.Application.Users.Queries.FIndUsers
         throw new NotFoundException(nameof(User), request.UserId);
       }
 
-      var users = await _usersRepository.FindPageWithRelationTypeByUserIdAndNameLikeFilterBlocked(
+      var users = await _usersRepository.FindPageByUserIdAndNameLikeFilterBlocked(
         request.UserId,
         request.UserName.Trim().ToLower(CultureInfo.CurrentCulture));
 
-      return _mapper.Map<IList<UserWithRelationTypeDto>>(users);
+      return _mapper.Map<IList<UserDto>>(users);
     }
   }
 }

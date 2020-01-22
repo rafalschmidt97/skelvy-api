@@ -21,7 +21,7 @@ namespace Skelvy.Application.Test.Users.Queries
 
       var result = await handler.Handle(request);
 
-      Assert.All(result, x => Assert.IsType<UserWithRelationTypeDto>(x));
+      Assert.All(result, x => Assert.IsType<UserDto>(x));
       Assert.NotEmpty(result);
       Assert.Contains(result, x => x.Id == 4);
     }
@@ -38,7 +38,7 @@ namespace Skelvy.Application.Test.Users.Queries
 
       var result = await handler.Handle(request);
 
-      Assert.All(result, x => Assert.IsType<UserWithRelationTypeDto>(x));
+      Assert.All(result, x => Assert.IsType<UserDto>(x));
       Assert.NotEmpty(result);
       Assert.DoesNotContain(result, x => x.Id == 2);
     }

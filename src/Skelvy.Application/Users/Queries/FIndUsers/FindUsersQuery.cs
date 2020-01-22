@@ -3,7 +3,7 @@ using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Queries.FIndUsers
 {
-  public class FindUsersQuery : IQuery<IList<UserWithRelationTypeDto>>
+  public class FindUsersQuery : IQuery<IList<UserDto>>
   {
     public FindUsersQuery(int userId, string userName)
     {

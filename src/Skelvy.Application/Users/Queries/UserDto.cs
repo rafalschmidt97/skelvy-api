@@ -74,12 +74,4 @@ namespace Skelvy.Application.Users.Queries
     public string Description { get; set; }
     public IList<ProfilePhotoDto> Photos { get; set; }
   }
-
-  public class UserWithRelationTypeDto
-  {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public ProfileDto Profile { get; set; }
-    public string RelationType { get; set; }
-  }
 }
