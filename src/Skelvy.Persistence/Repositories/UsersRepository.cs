@@ -114,6 +114,7 @@ namespace Skelvy.Persistence.Repositories
         .ToListAsync();
 
       var users = await Context.Users
+        .Include(x => x.Profile)
         .Where(x => x.Id != userId &&
                     blockedByUsers.All(y => y != x.Id) &&
                     EF.Functions.Like(x.Name, "%" + userName + "%") &&
