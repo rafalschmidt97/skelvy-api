@@ -12,6 +12,7 @@ namespace Skelvy.Application.Relations.Infrastructure.Repositories
     Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdTwoWay(int userId, int relatedUserId);
     Task<IList<Relation>> FindAllByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type);
     Task<IList<Relation>> FindPageUsersWithRelatedDetailsByUserIdAndType(int userId, string relationType, int page, int pageSize = 10);
+    Task<IList<Relation>> FindPageUsersWithRelatedDetailsByUserIdAndTypeExcludeList(int userId, string relationType, List<int> usersToExclude, int page = 10, int pageSize = 10);
     Task<bool> ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type);
     Task<bool> ExistsOneByUserIdAndRelatedUserIdAndType(int userId, int relatedUserId, string type);
     Task<IList<Relation>> FindAllWithRemovedByUsersId(List<int> usersId);

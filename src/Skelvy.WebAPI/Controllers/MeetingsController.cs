@@ -13,9 +13,10 @@ using Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
 using Skelvy.Application.Meetings.Queries.FindMeetingInvitations;
-using Skelvy.Application.Meetings.Queries.FindMeetingInvitationsDetails;
 using Skelvy.Application.Meetings.Queries.FindMeetings;
 using Skelvy.Application.Meetings.Queries.FindMeetingSuggestions;
+using Skelvy.Application.Meetings.Queries.FindUsersToInviteToMeeting;
+using Skelvy.Application.Users.Queries;
 
 namespace Skelvy.WebAPI.Controllers
 {
@@ -92,9 +93,11 @@ namespace Skelvy.WebAPI.Controllers
     }
 
     [HttpGet("{meetingId}/invitations")]
-    public async Task<IList<MeetingInvitationDto>> FindAllInvitations(int meetingId)
+    public async Task<IList<UserDto>> FindUsersToInvite(int meetingId, [FromQuery] FindUsersToInviteToMeetingQuery request)
     {
-      return await Mediator.Send(new FindMeetingInvitationsDetailsQuery(meetingId, UserId));
+      request.MeetingId = meetingId;
+      request.UserId = UserId;
+      return await Mediator.Send(request);
     }
 
     [HttpGet("self/invitations")]

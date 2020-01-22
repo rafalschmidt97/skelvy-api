@@ -67,6 +67,32 @@ namespace Skelvy.Persistence.Repositories
       return relations;
     }
 
+    public async Task<IList<Relation>> FindPageUsersWithRelatedDetailsByUserIdAndTypeExcludeList(int userId, string relationType, List<int> usersToExclude, int page = 10, int pageSize = 10)
+    {
+      var skip = (page - 1) * pageSize;
+      var relations = await Context.Relations
+        .Include(x => x.RelatedUser)
+        .ThenInclude(x => x.Profile)
+        .Where(x => x.UserId == userId && usersToExclude.All(y => y != x.RelatedUserId) && x.Type == relationType && !x.IsRemoved)
+        .OrderBy(x => x.Id)
+        .Skip(skip)
+        .Take(pageSize)
+        .ToListAsync();
+
+      foreach (var relation in relations)
+      {
+        var userPhotos = await Context.ProfilePhotos
+          .Include(x => x.Attachment)
+          .Where(x => x.ProfileId == relation.RelatedUser.Profile.Id)
+          .OrderBy(x => x.Order)
+          .ToListAsync();
+
+        relation.RelatedUser.Profile.Photos = userPhotos;
+      }
+
+      return relations;
+    }
+
     public async Task<bool> ExistsOneByUserIdAndRelatedUserIdAndTypeTwoWay(int userId, int relatedUserId, string type)
     {
       return await Context.Relations.AnyAsync(
