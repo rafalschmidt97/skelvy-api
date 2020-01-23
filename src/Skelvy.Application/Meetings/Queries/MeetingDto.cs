@@ -65,6 +65,7 @@ namespace Skelvy.Application.Meetings.Queries
     public string Name { get; set; }
     public IList<GroupUserDto> Users { get; set; }
     public IList<MessageDto> Messages { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
   }
 
   public class GroupUserDto : ICustomMapping
