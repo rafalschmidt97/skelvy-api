@@ -31,6 +31,7 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Meeting)
         .ThenInclude(x => x.Activity)
         .Where(x => x.InvitedUserId == userId && !x.IsRemoved)
+        .OrderBy(x => x.CreatedAt)
         .ToListAsync();
 
       foreach (var meetingInvitation in meetingInvitations)

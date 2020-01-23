@@ -20,6 +20,7 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.InvitingUser)
         .ThenInclude(x => x.Profile)
         .Where(r => r.InvitedUserId == userId && !r.IsRemoved)
+        .OrderBy(x => x.CreatedAt)
         .ToListAsync();
 
       foreach (var request in requests)

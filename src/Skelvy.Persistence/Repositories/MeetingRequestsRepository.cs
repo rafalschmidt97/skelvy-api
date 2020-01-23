@@ -48,6 +48,7 @@ namespace Skelvy.Persistence.Repositories
         .Include(x => x.Activities)
         .ThenInclude(x => x.Activity)
         .Where(x => x.UserId == userId && !x.IsRemoved && x.Status == MeetingRequestStatusType.Searching)
+        .OrderBy(x => x.MinDate)
         .ToListAsync();
     }
 
@@ -98,6 +99,7 @@ namespace Skelvy.Persistence.Repositories
                     filterBlockedUsersId.All(y => x.UserId != y) &&
                     !x.IsRemoved &&
                     x.Status == MeetingRequestStatusType.Searching)
+        .OrderBy(x => x.MinAge)
         .ToListAsync();
 
       if (requests.Any())

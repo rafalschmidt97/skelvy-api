@@ -54,6 +54,7 @@ namespace Skelvy.Persistence.Repositories
         .ThenInclude(y => y.Users)
         .Include(x => x.Activity)
         .Where(x => x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) && !x.IsRemoved)
+        .OrderBy(x => x.Date)
         .ToListAsync();
     }
 
@@ -139,6 +140,7 @@ namespace Skelvy.Persistence.Repositories
                     x.Group.Users.Count(y => !y.IsRemoved) < x.Activity.Size &&
                     !x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
                     filterBlockedGroupsId.All(y => x.GroupId != y))
+        .OrderBy(x => x.Date)
         .ToListAsync();
 
       if (meetings.Any())
