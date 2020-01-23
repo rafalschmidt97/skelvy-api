@@ -72,7 +72,7 @@ namespace Skelvy.Application.Messages.Commands.AddMessage
     {
       var message = new Message(request.Type, DateTimeOffset.UtcNow, null, null, request.Action, request.UserId, request.GroupId);
       await _mediator.Publish(new MessageSentEvent(
-        NotificationType.SilentPush,
+        NotificationType.NoPush,
         message.GroupId,
         new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, null, message.Action, message.UserId, message.GroupId),
         _mapper.Map<IList<MessageDto>>(new List<Message> { message })));
@@ -97,7 +97,7 @@ namespace Skelvy.Application.Messages.Commands.AddMessage
 
         transaction.Commit();
         await _mediator.Publish(new MessageSentEvent(
-          NotificationType.SilentPush,
+          NotificationType.NoPush,
           message.GroupId,
           new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, null, message.Action, message.UserId, message.GroupId),
           _mapper.Map<IList<MessageDto>>(new List<Message> { message })));
