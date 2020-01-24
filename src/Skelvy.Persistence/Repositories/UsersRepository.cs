@@ -135,6 +135,13 @@ namespace Skelvy.Persistence.Repositories
       return users;
     }
 
+    public async Task<IList<User>> FindAllBetweenId(int minId, int maxId)
+    {
+      return await Context.Users
+        .Where(x => x.Id >= minId && x.Id <= maxId && !x.IsRemoved)
+        .ToListAsync();
+    }
+
     public async Task Add(User user)
     {
       await Context.Users.AddAsync(user);

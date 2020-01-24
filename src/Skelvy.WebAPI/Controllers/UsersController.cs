@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Skelvy.Application.Users.Commands.DisableUser;
 using Skelvy.Application.Users.Commands.RemoveUser;
 using Skelvy.Application.Users.Commands.SendEmailToUser;
+using Skelvy.Application.Users.Commands.SendEmailToUsers;
 using Skelvy.Application.Users.Commands.UpdateProfile;
 using Skelvy.Application.Users.Commands.UpdateUserEmail;
 using Skelvy.Application.Users.Commands.UpdateUserLanguage;
@@ -96,10 +97,19 @@ namespace Skelvy.WebAPI.Controllers
       await Mediator.Send(request);
     }
 
-    [HttpPost("send-email")]
+    [HttpPost("send/single")]
     [AuthorizeRole(RoleType.Admin)]
-    public async Task SendEmail(SendEmailToUserCommand command)
+    public async Task SendSingleEmail(SendEmailToUserCommand command)
     {
+      await Mediator.Send(command);
+    }
+
+    [HttpPost("send/page")]
+    [AuthorizeRole(RoleType.Admin)]
+    public async Task SendPageEmail([FromQuery] int minId, [FromQuery] int maxId, SendEmailToUsersCommand command)
+    {
+      command.MinId = minId;
+      command.MaxId = maxId;
       await Mediator.Send(command);
     }
   }

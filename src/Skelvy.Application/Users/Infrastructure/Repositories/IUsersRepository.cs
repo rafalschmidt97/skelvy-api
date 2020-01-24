@@ -19,6 +19,7 @@ namespace Skelvy.Application.Users.Infrastructure.Repositories
     Task<IList<User>> FindAllRemovedAfterForgottenAtByDate(DateTimeOffset maxDate);
     Task<IList<User>> FindAllWithDetailsByUsersId(IEnumerable<int> usersId);
     Task<IList<User>> FindPageByUserIdAndNameLikeFilterBlocked(int userId, string userName, int pageSize = 10);
+    Task<IList<User>> FindAllBetweenId(int minId, int maxId);
     Task Add(User user);
     Task Update(User user);
     Task RemoveRange(IList<User> users);
