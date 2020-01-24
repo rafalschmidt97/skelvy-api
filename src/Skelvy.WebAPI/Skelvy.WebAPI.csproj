@@ -10,9 +10,9 @@
   <ItemGroup>
     <PackageReference Include="Coravel" Version="2.4.1" />
     <PackageReference Include="Destructurama.Attributed" Version="2.0.0" />
-    <PackageReference Include="FluentEmail.Core" Version="2.5.1" />
-    <PackageReference Include="FluentEmail.Razor" Version="2.5.2" />
-    <PackageReference Include="FluentEmail.Smtp" Version="2.5.2" />
+    <PackageReference Include="FluentEmail.Core" Version="2.7.0" />
+    <PackageReference Include="FluentEmail.Razor" Version="2.7.0" />
+    <PackageReference Include="FluentEmail.Smtp" Version="2.7.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.0" />
@@ -38,5 +38,17 @@
   <ItemGroup>
     <Folder Include="Logs" />
     <Folder Include="wwwroot" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\de_old\Created.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\de_old\Disabled.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\de_old\Removed.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\pl_old\Created.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\pl_old\Disabled.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\pl_old\Removed.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\es_old\Created.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\es_old\Disabled.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\es_old\Removed.cshtml" />
   </ItemGroup>
 </Project>
