@@ -4,15 +4,15 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>skelvy</UserSecretsId>
-    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish> 
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Coravel" Version="2.4.1" />
     <PackageReference Include="Destructurama.Attributed" Version="2.0.0" />
-    <PackageReference Include="FluentEmail.Core" Version="2.5.1" />
-    <PackageReference Include="FluentEmail.Razor" Version="2.5.2" />
-    <PackageReference Include="FluentEmail.Smtp" Version="2.5.2" />
+    <PackageReference Include="FluentEmail.Core" Version="2.7.0" />
+    <PackageReference Include="FluentEmail.Razor" Version="2.7.0" />
+    <PackageReference Include="FluentEmail.Smtp" Version="2.7.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.0" />
@@ -38,5 +38,6 @@
   <ItemGroup>
     <Folder Include="Logs" />
     <Folder Include="wwwroot" />
+    <EmbeddedResource Include="Views\**\*.cshtml" />
   </ItemGroup>
 </Project>

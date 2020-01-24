@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Threading.Tasks;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Smtp;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Skelvy.Application.Notifications.Infrastructure;
 using Skelvy.Application.Users.Infrastructure.Notifications;
+using Skelvy.Common.Exceptions;
 using Skelvy.Domain.Enums;
 
 namespace Skelvy.WebAPI.Infrastructure.Notifications
@@ -79,6 +81,21 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
       await SendEmail(message);
     }
 
+    public async Task BroadcastCustomMessage(CustomEmailNotification notification)
+    {
+      dynamic model = new ExpandoObject();
+      model.Message = notification.Message;
+
+      var message = new EmailMessage(
+        notification.To,
+        notification.Language,
+        notification.Subject,
+        "Custom",
+        model);
+
+      await SendEmail(message);
+    }
+
     private async Task SendEmail(EmailMessage message)
     {
       try
@@ -112,14 +129,22 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     private async Task<string> GetHtmlBody(EmailMessage message)
     {
-      var path = message.Language != null ?
-        $"Views/{message.Language}/{message.TemplateName}.cshtml" :
-        $"Views/en/{message.TemplateName}.cshtml";
-
-      var reader = new StreamReader(File.OpenRead(path));
-      var template = await reader.ReadToEndAsync();
-
+      var path = $"Skelvy.WebAPI.Views.{message.Language}.{message.TemplateName}.cshtml";
+      var template = GetResourceAsString(GetType().GetTypeInfo().Assembly, path);
       return await _templateRenderer.ParseAsync(template, message.Model);
+    }
+
+    private static string GetResourceAsString(Assembly assembly, string path)
+    {
+      string result;
+
+      using (var stream = assembly.GetManifestResourceStream(path))
+      using (var reader = new StreamReader(stream ?? throw new InternalServerErrorException("Could not resolve email template")))
+      {
+        result = reader.ReadToEnd();
+      }
+
+      return result;
     }
   }
 }

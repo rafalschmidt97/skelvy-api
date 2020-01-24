@@ -8,5 +8,6 @@ namespace Skelvy.Application.Notifications.Infrastructure
     Task BroadcastUserCreated(UserCreatedNotification notification);
     Task BroadcastUserRemoved(UserRemovedNotification notification);
     Task BroadcastUserDisabled(UserDisabledNotification notification);
+    Task BroadcastCustomMessage(CustomEmailNotification notification);
   }
 }
