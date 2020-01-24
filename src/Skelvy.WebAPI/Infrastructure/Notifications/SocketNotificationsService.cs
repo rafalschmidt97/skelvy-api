@@ -236,7 +236,7 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         new SocketNotificationContent
         {
           TitleLocKey = "GROUPS",
-          BodyLocKey = "GROUPS_UPDATED",
+          BodyLocKey = "GROUP_UPDATED",
         },
         NotificationType.Regular,
         new SocketNotificationData
