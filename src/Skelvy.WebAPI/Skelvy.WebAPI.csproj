@@ -4,6 +4,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>skelvy</UserSecretsId>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish> 
   </PropertyGroup>
 
