@@ -39,7 +39,11 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           "Your account has been created",
           "Twoje konto zostało utworzone",
           "Dein Account wurde erstellt",
-          "Tu cuenta ha sido creada"),
+          "Tu cuenta ha sido creada",
+          "Votre compte a été créé",
+          "Il tuo account è stato creato",
+          "Ваша учетная запись успешно создана",
+          "Sinun tilisi on luotu"),
         "Created");
 
       await SendEmail(message);
@@ -55,7 +59,11 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           "Your account has been deleted",
           "Twoje konto zostało usunięte",
           "Dein Account wurde gelöscht",
-          "Tu cuenta ha sido eliminada"),
+          "Tu cuenta ha sido eliminada",
+          "Votre compte a été supprimé",
+          "Il tuo account è stato cancellato",
+          "Ваша учетная запись удалена",
+          "Tilisi on poistettu"),
         "Removed");
 
       await SendEmail(message);
@@ -74,7 +82,11 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           "Your account has been disabled",
           "Twoje konto zostało zablokowane",
           "Dein Account wurde blockiert",
-          "Tu cuenta ha sido desactivada"),
+          "Tu cuenta ha sido desactivada",
+          "Votre compte a été désactivé",
+          "Il tuo account è stato disattivato",
+          "Ваша учетная запись заблокирована",
+          "Tilisi on poistettu käytöstä"),
         "Disabled",
         model);
 
