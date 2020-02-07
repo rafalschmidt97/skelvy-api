@@ -15,7 +15,12 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
 
       RuleFor(x => x.Latitude).NotEmpty();
       RuleFor(x => x.Longitude).NotEmpty();
-      RuleFor(x => x.Size).NotEmpty();
+      RuleFor(x => x.Size).NotEmpty()
+        .Must(x => x >= 2)
+        .WithMessage("'Size' must be bigger than 2.")
+        .Must(x => x <= 10)
+        .WithMessage("'Size' must be smaller or equal to 10.");
+
       RuleFor(x => x.ActivityId).NotEmpty();
       RuleFor(x => x.Description).MaximumLength(500);
     }
