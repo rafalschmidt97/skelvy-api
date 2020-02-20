@@ -139,7 +139,8 @@ namespace Skelvy.Persistence.Repositories
                     !x.IsHidden &&
                     x.Group.Users.Count(y => !y.IsRemoved) < x.Size &&
                     !x.Group.Users.Any(y => y.UserId == userId && !y.IsRemoved) &&
-                    filterBlockedGroupsId.All(y => x.GroupId != y))
+                    filterBlockedGroupsId.All(y => x.GroupId != y) &&
+                    x.Activity.Type != ActivityType.Restricted)
         .OrderBy(x => x.Date)
         .ToListAsync();
 

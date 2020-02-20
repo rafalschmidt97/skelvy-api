@@ -10,5 +10,6 @@ namespace Skelvy.Application.Activities.Infrastructure.Repositories
     Task<bool> ExistsOne(int id);
     Task<Activity> FindOne(int id);
     Task<IList<Activity>> FindAll();
+    Task<IList<Activity>> FindAllWithoutRestricted();
   }
 }

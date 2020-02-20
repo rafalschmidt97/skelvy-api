@@ -19,7 +19,13 @@ namespace Skelvy.Application.Activities.Queries.FindActivities
 
     public override async Task<IList<ActivityDto>> Handle(FindActivitiesQuery request)
     {
-      var activities = await _repository.FindAll();
+      if (request.Restricted)
+      {
+        var allActivities = await _repository.FindAll();
+        return _mapper.Map<IList<ActivityDto>>(allActivities);
+      }
+
+      var activities = await _repository.FindAllWithoutRestricted();
       return _mapper.Map<IList<ActivityDto>>(activities);
     }
   }

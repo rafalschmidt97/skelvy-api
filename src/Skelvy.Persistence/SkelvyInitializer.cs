@@ -161,6 +161,9 @@ namespace Skelvy.Persistence
         new Activity("Volleyball", ActivityType.Sport, 12, 15),
         new Activity("Tennis", ActivityType.Sport, 2, 15),
         new Activity("Squash", ActivityType.Sport, 2, 15),
+        new Activity("Jazz", ActivityType.Restricted, 4, 15),
+        new Activity("Gambszmit", ActivityType.Restricted, 4, 15),
+        new Activity("Other activity", ActivityType.Other, 4, 15),
       };
 
       context.Activities.AddRange(activities);

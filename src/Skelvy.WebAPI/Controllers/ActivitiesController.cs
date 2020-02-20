@@ -9,9 +9,9 @@ namespace Skelvy.WebAPI.Controllers
   public class ActivitiesController : BaseController
   {
     [HttpGet]
-    public async Task<IList<ActivityDto>> FindAll()
+    public async Task<IList<ActivityDto>> FindAll([FromQuery] FindActivitiesQuery request)
     {
-      return await Mediator.Send(new FindActivitiesQuery());
+      return await Mediator.Send(request);
     }
   }
 }
