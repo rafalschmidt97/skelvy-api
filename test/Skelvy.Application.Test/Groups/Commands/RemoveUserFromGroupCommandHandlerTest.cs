@@ -2,19 +2,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Moq;
-using Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting;
+using Skelvy.Application.Groups.Commands.RemoveUserFromGroup;
 using Skelvy.Common.Exceptions;
 using Skelvy.Persistence;
 using Skelvy.Persistence.Repositories;
 using Xunit;
 
-namespace Skelvy.Application.Test.Meetings.Commands
+namespace Skelvy.Application.Test.Groups.Commands
 {
-  public class RemoveUserFromMeetingCommandHandlerTest : RequestTestBase
+  public class RemoveUserFromGroupCommandHandlerTest : RequestTestBase
   {
     private readonly Mock<IMediator> _mediator;
 
-    public RemoveUserFromMeetingCommandHandlerTest()
+    public RemoveUserFromGroupCommandHandlerTest()
     {
       _mediator = new Mock<IMediator>();
     }
@@ -22,10 +22,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldAddToExistingMeeting()
     {
-      var request = new RemoveUserFromMeetingCommand(2, 1, 3);
+      var request = new RemoveUserFromGroupCommand(2, 1, 3);
       var dbContext = TestDbContextWithPrivateMeeting();
-      var handler = new RemoveUserFromMeetingCommandHandler(
-        new MeetingsRepository(dbContext),
+      var handler = new RemoveUserFromGroupCommandHandler(
+        new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object);
 
@@ -35,10 +35,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithInvalidMeeting()
     {
-      var request = new RemoveUserFromMeetingCommand(2, 100, 3);
+      var request = new RemoveUserFromGroupCommand(2, 100, 3);
       var dbContext = TestDbContextWithPrivateMeeting();
-      var handler = new RemoveUserFromMeetingCommandHandler(
-        new MeetingsRepository(dbContext),
+      var handler = new RemoveUserFromGroupCommandHandler(
+        new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object);
 
@@ -49,10 +49,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithInvalidUser()
     {
-      var request = new RemoveUserFromMeetingCommand(100, 1, 3);
+      var request = new RemoveUserFromGroupCommand(100, 1, 3);
       var dbContext = TestDbContextWithPrivateMeeting();
-      var handler = new RemoveUserFromMeetingCommandHandler(
-        new MeetingsRepository(dbContext),
+      var handler = new RemoveUserFromGroupCommandHandler(
+        new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object);
 
@@ -63,10 +63,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithInvalidAddedUser()
     {
-      var request = new RemoveUserFromMeetingCommand(2, 1, 100);
+      var request = new RemoveUserFromGroupCommand(2, 1, 100);
       var dbContext = TestDbContextWithPrivateMeeting();
-      var handler = new RemoveUserFromMeetingCommandHandler(
-        new MeetingsRepository(dbContext),
+      var handler = new RemoveUserFromGroupCommandHandler(
+        new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object);
 
@@ -77,10 +77,10 @@ namespace Skelvy.Application.Test.Meetings.Commands
     [Fact]
     public async Task ShouldThrowExceptionWithoutPermission()
     {
-      var request = new RemoveUserFromMeetingCommand(3, 1, 2);
+      var request = new RemoveUserFromGroupCommand(3, 1, 2);
       var dbContext = TestDbContextWithPrivateMeeting();
-      var handler = new RemoveUserFromMeetingCommandHandler(
-        new MeetingsRepository(dbContext),
+      var handler = new RemoveUserFromGroupCommandHandler(
+        new GroupsRepository(dbContext),
         new GroupUsersRepository(dbContext),
         _mediator.Object);
 

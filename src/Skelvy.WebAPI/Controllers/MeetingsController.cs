@@ -7,9 +7,7 @@ using Skelvy.Application.Meetings.Commands.InviteToMeetingResponse;
 using Skelvy.Application.Meetings.Commands.JoinMeeting;
 using Skelvy.Application.Meetings.Commands.LeaveMeeting;
 using Skelvy.Application.Meetings.Commands.RemoveMeeting;
-using Skelvy.Application.Meetings.Commands.RemoveUserFromMeeting;
 using Skelvy.Application.Meetings.Commands.UpdateMeeting;
-using Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole;
 using Skelvy.Application.Meetings.Queries;
 using Skelvy.Application.Meetings.Queries.FindMeeting;
 using Skelvy.Application.Meetings.Queries.FindMeetingInvitations;
@@ -68,21 +66,6 @@ namespace Skelvy.WebAPI.Controllers
     public async Task Leave(int id)
     {
       await Mediator.Send(new LeaveMeetingCommand(id, UserId));
-    }
-
-    [HttpDelete("{id}/users/{userId}")]
-    public async Task RemoveUser(int id, int userId)
-    {
-      await Mediator.Send(new RemoveUserFromMeetingCommand(UserId, id, userId));
-    }
-
-    [HttpPatch("{id}/users/{userId}/role")]
-    public async Task UpdateUserRole(int id, int userId, UpdateMeetingUserRoleCommand request)
-    {
-      request.UserId = UserId;
-      request.MeetingId = id;
-      request.UpdatedUserId = userId;
-      await Mediator.Send(request);
     }
 
     [HttpGet("self/suggestions")]

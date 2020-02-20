@@ -139,39 +139,39 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification)
+    public async Task BroadcastUserRemovedFromGroup(UserRemovedFromGroupNotification notification)
     {
       await SendNotification(
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETINGS",
-          BodyLocKey = "USER_REMOVED_FROM_MEETING",
+          TitleLocKey = "GROUPS",
+          BodyLocKey = "USER_REMOVED_FROM_GROUP",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
-          Action = "UserRemovedFromMeeting",
-          RedirectTo = "meetings",
-          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
+          Action = "UserRemovedFromGroup",
+          RedirectTo = "groups",
+          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId },
         });
     }
 
-    public async Task BroadcastUserSelfRemovedFromMeeting(UserRemovedFromMeetingNotification notification)
+    public async Task BroadcastUserSelfRemovedFromGroup(UserRemovedFromGroupNotification notification)
     {
       await SendNotification(
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETINGS",
-          BodyLocKey = "USER_SELF_REMOVED_FROM_MEETING",
+          TitleLocKey = "GROUPS",
+          BodyLocKey = "USER_SELF_REMOVED_FROM_GROUP",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
-          Action = "UserSelfRemovedFromMeeting",
+          Action = "UserSelfRemovedFromGroup",
           RedirectTo = "meetings",
-          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
+          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId },
         });
     }
 
@@ -247,21 +247,21 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastMeetingUserRoleUpdated(MeetingUserRoleUpdatedNotification notification)
+    public async Task BroadcastGroupUserRoleUpdated(GroupUserRoleUpdatedNotification notification)
     {
       await SendNotification(
         notification.UsersId,
         new SocketNotificationContent
         {
-          TitleLocKey = "MEETINGS",
-          BodyLocKey = "MEETING_USER_ROLE_UPDATED",
+          TitleLocKey = "GROUPS",
+          BodyLocKey = "GROUP_USER_ROLE_UPDATED",
         },
         NotificationType.Regular,
         new SocketNotificationData
         {
-          Action = "MeetingUserRoleUpdated",
-          RedirectTo = "meetings",
-          Data = new { notification.GroupId, notification.MeetingId, notification.UpdatedUserId, notification.Role },
+          Action = "GroupUserRoleUpdated",
+          RedirectTo = "groups",
+          Data = new { notification.GroupId, notification.UpdatedUserId, notification.Role },
         });
     }
 

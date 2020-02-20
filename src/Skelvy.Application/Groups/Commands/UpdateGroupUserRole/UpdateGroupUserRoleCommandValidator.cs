@@ -1,14 +1,14 @@
 using FluentValidation;
 using Skelvy.Domain.Enums;
 
-namespace Skelvy.Application.Meetings.Commands.UpdateMeetingUserRole
+namespace Skelvy.Application.Groups.Commands.UpdateGroupUserRole
 {
-  public class UpdateMeetingUserRoleCommandValidator : AbstractValidator<UpdateMeetingUserRoleCommand>
+  public class UpdateGroupUserRoleCommandValidator : AbstractValidator<UpdateGroupUserRoleCommand>
   {
-    public UpdateMeetingUserRoleCommandValidator()
+    public UpdateGroupUserRoleCommandValidator()
     {
       RuleFor(x => x.UserId).NotEmpty();
-      RuleFor(x => x.MeetingId).NotEmpty();
+      RuleFor(x => x.GroupId).NotEmpty();
       RuleFor(x => x.UpdatedUserId).NotEmpty();
       RuleFor(x => x.Role).NotEmpty().MaximumLength(15)
         .Must(x => x == GroupUserRoleType.Admin || x == GroupUserRoleType.Privileged || x == GroupUserRoleType.Member)

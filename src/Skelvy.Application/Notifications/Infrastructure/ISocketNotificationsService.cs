@@ -13,13 +13,13 @@ namespace Skelvy.Application.Notifications.Infrastructure
     Task BroadcastUserJoinedMeeting(UserJoinedMeetingNotification notification);
     Task BroadcastUserConnectedToMeeting(UserConnectedToMeetingNotification notification);
     Task BroadcastUserLeftMeeting(UserLeftMeetingNotification notification);
-    Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification);
-    Task BroadcastUserSelfRemovedFromMeeting(UserRemovedFromMeetingNotification notification);
+    Task BroadcastUserRemovedFromGroup(UserRemovedFromGroupNotification notification);
+    Task BroadcastUserSelfRemovedFromGroup(UserRemovedFromGroupNotification notification);
     Task BroadcastUserLeftGroup(UserLeftGroupNotification notification);
     Task BroadcastMeetingAborted(MeetingAbortedNotification notification);
     Task BroadcastMeetingUpdated(MeetingUpdatedNotification notification);
     Task BroadcastGroupUpdated(GroupUpdatedNotification notification);
-    Task BroadcastMeetingUserRoleUpdated(MeetingUserRoleUpdatedNotification notification);
+    Task BroadcastGroupUserRoleUpdated(GroupUserRoleUpdatedNotification notification);
     Task BroadcastGroupAborted(GroupAbortedNotification notification);
     Task BroadcastMeetingRequestExpired(MeetingRequestExpiredNotification notification);
     Task BroadcastMeetingExpired(MeetingExpiredNotification notification);

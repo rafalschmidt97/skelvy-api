@@ -116,37 +116,37 @@ namespace Skelvy.Infrastructure.Notifications
         });
     }
 
-    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification, IList<int> usersId)
+    public async Task BroadcastUserRemovedFromGroup(UserRemovedFromGroupNotification notification, IList<int> usersId)
     {
       await SendNotification(
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETINGS",
-          BodyLocKey = "USER_REMOVED_FROM_MEETING",
+          TitleLocKey = "GROUPS",
+          BodyLocKey = "USER_REMOVED_FROM_GROUP",
         },
         new PushNotificationData
         {
-          Action = "UserRemovedFromMeeting",
-          RedirectTo = "meetings",
-          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
+          Action = "UserRemovedFromGroup",
+          RedirectTo = "groups",
+          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId },
         });
     }
 
-    public async Task BroadcastUserSelfRemovedFromMeeting(UserRemovedFromMeetingNotification notification, IList<int> usersId)
+    public async Task BroadcastUserSelfRemovedFromGroup(UserRemovedFromGroupNotification notification, IList<int> usersId)
     {
       await SendNotification(
         usersId,
         new PushNotificationContent
         {
-          TitleLocKey = "MEETINGS",
-          BodyLocKey = "USER_SELF_REMOVED_FROM_MEETING",
+          TitleLocKey = "GROUPS",
+          BodyLocKey = "USER_SELF_REMOVED_FROM_GROUP",
         },
         new PushNotificationData
         {
-          Action = "UserSelfRemovedFromMeeting",
-          RedirectTo = "meetings",
-          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId, notification.MeetingId },
+          Action = "UserSelfRemovedFromGroup",
+          RedirectTo = "groups",
+          Data = new { notification.UserId, notification.RemovedUserId, notification.GroupId },
         });
     }
 

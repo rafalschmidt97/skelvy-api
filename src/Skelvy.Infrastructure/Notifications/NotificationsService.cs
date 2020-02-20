@@ -68,22 +68,22 @@ namespace Skelvy.Infrastructure.Notifications
         async offline => await _pushService.BroadcastUserLeftMeeting(notification, offline));
     }
 
-    public async Task BroadcastUserRemovedFromMeeting(UserRemovedFromMeetingNotification notification)
+    public async Task BroadcastUserRemovedFromGroup(UserRemovedFromGroupNotification notification)
     {
-      await _socketService.BroadcastUserRemovedFromMeeting(notification);
+      await _socketService.BroadcastUserRemovedFromGroup(notification);
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async offline => await _pushService.BroadcastUserRemovedFromMeeting(notification, offline));
+        async offline => await _pushService.BroadcastUserRemovedFromGroup(notification, offline));
     }
 
-    public async Task BroadcastUserSelfRemovedFromMeeting(UserRemovedFromMeetingNotification notification)
+    public async Task BroadcastUserSelfRemovedFromGroup(UserRemovedFromGroupNotification notification)
     {
-      await _socketService.BroadcastUserSelfRemovedFromMeeting(notification);
+      await _socketService.BroadcastUserSelfRemovedFromGroup(notification);
 
       await BroadcastActionToOffline(
         notification.UsersId,
-        async offline => await _pushService.BroadcastUserSelfRemovedFromMeeting(notification, offline));
+        async offline => await _pushService.BroadcastUserSelfRemovedFromGroup(notification, offline));
     }
 
     public async Task BroadcastUserLeftGroup(UserLeftGroupNotification notification)
@@ -114,9 +114,9 @@ namespace Skelvy.Infrastructure.Notifications
       await _socketService.BroadcastGroupUpdated(notification);
     }
 
-    public async Task BroadcastMeetingUserRoleUpdated(MeetingUserRoleUpdatedNotification notification)
+    public async Task BroadcastGroupUserRoleUpdated(GroupUserRoleUpdatedNotification notification)
     {
-      await _socketService.BroadcastMeetingUserRoleUpdated(notification);
+      await _socketService.BroadcastGroupUserRoleUpdated(notification);
     }
 
     public async Task BroadcastGroupAborted(GroupAbortedNotification notification)
