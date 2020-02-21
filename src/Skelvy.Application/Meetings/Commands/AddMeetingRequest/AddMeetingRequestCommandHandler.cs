@@ -39,26 +39,24 @@ namespace Skelvy.Application.Meetings.Commands.AddMeetingRequest
     {
       await ValidateData(request);
 
-      using (var transaction = _meetingRequestsRepository.BeginTransaction())
-      {
-        var meetingRequest = new MeetingRequest(
-          request.MinDate,
-          request.MaxDate,
-          request.MinAge,
-          request.MaxAge,
-          request.Latitude,
-          request.Longitude,
-          request.Description,
-          request.UserId);
+      await using var transaction = _meetingRequestsRepository.BeginTransaction();
+      var meetingRequest = new MeetingRequest(
+        request.MinDate,
+        request.MaxDate,
+        request.MinAge,
+        request.MaxAge,
+        request.Latitude,
+        request.Longitude,
+        request.Description,
+        request.UserId);
 
-        await _meetingRequestsRepository.Add(meetingRequest);
-        meetingRequest.Activities = new List<MeetingRequestActivity>();
-        PrepareActivities(request.Activities, meetingRequest).ForEach(x => meetingRequest.Activities.Add(x));
-        await _meetingRequestActivityRepository.AddRange(meetingRequest.Activities);
-        transaction.Commit();
+      await _meetingRequestsRepository.Add(meetingRequest);
+      meetingRequest.Activities = new List<MeetingRequestActivity>();
+      PrepareActivities(request.Activities, meetingRequest).ForEach(x => meetingRequest.Activities.Add(x));
+      await _meetingRequestActivityRepository.AddRange(meetingRequest.Activities);
+      transaction.Commit();
 
-        return _mapper.Map<MeetingRequestDto>(meetingRequest);
-      }
+      return _mapper.Map<MeetingRequestDto>(meetingRequest);
     }
 
     private async Task ValidateData(AddMeetingRequestCommand request)

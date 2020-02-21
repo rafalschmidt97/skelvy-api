@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Skelvy.WebAPI.Extensions;
+using Skelvy.WebAPI.Hubs;
 using Skelvy.WebAPI.Infrastructure.Notifications;
 
 namespace Skelvy.WebAPI
@@ -35,19 +37,26 @@ namespace Skelvy.WebAPI
       services.AddCustomMvc();
     }
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider, SignalRBackplane backplane)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, SignalRBackplane backplane)
     {
       if (env.IsDevelopment())
       {
         app.UseCustomSwagger(provider);
       }
 
+      app.UseRouting();
+
       app.UseHealthChecks("/");
       app.UseSchedulers();
       app.UseCustomCors();
       app.UseAuth();
-      app.UseSocket();
       app.UseCustomMvc();
+
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapHub<UsersHub>("/users");
+        endpoints.MapControllers();
+      });
 
       backplane.Start();
     }

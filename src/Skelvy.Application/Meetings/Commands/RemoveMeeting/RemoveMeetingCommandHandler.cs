@@ -1,6 +1,6 @@
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore.Internal;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Groups.Infrastructure.Repositories;
 using Skelvy.Application.Meetings.Events.MeetingAborted;
@@ -40,49 +40,47 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
     {
       var meeting = await ValidateData(request);
 
-      using (var transaction = _meetingsRepository.BeginTransaction())
+      await using var transaction = _meetingsRepository.BeginTransaction();
+      meeting.Abort();
+      await _meetingsRepository.Update(meeting);
+      meeting.Group.Abort();
+      await _groupsRepository.Update(meeting.Group);
+      foreach (var groupUser in meeting.Group.Users)
       {
-        meeting.Abort();
-        await _meetingsRepository.Update(meeting);
-        meeting.Group.Abort();
-        await _groupsRepository.Update(meeting.Group);
-        foreach (var groupUser in meeting.Group.Users)
+        groupUser.Abort();
+
+        if (groupUser.MeetingRequestId != null)
         {
-          groupUser.Abort();
+          var meetingRequest = await _meetingRequestsRepository.FindOne(groupUser.MeetingRequestId.Value);
 
-          if (groupUser.MeetingRequestId != null)
+          if (meetingRequest != null)
           {
-            var meetingRequest = await _meetingRequestsRepository.FindOne(groupUser.MeetingRequestId.Value);
-
-            if (meetingRequest != null)
-            {
-              meetingRequest.Abort();
-              await _meetingRequestsRepository.Update(meetingRequest);
-            }
+            meetingRequest.Abort();
+            await _meetingRequestsRepository.Update(meetingRequest);
           }
         }
+      }
 
-        await _groupUsersRepository.UpdateRange(meeting.Group.Users);
+      await _groupUsersRepository.UpdateRange(meeting.Group.Users);
 
-        var invitations = await _meetingInvitationsRepository.FindAllByMeetingId(meeting.Id);
+      var invitations = await _meetingInvitationsRepository.FindAllByMeetingId(meeting.Id);
 
-        if (invitations.Any())
+      if (invitations.Any())
+      {
+        foreach (var invitation in invitations)
         {
-          foreach (var invitation in invitations)
-          {
-            invitation.Abort();
-          }
-
-          await _meetingInvitationsRepository.UpdateRange(invitations);
+          invitation.Abort();
         }
 
-        transaction.Commit();
+        await _meetingInvitationsRepository.UpdateRange(invitations);
+      }
 
-        if (meeting.ModifiedAt != null)
-        {
-          await _mediator.Publish(
-            new MeetingAbortedEvent(request.UserId, meeting.Id, meeting.GroupId, meeting.ModifiedAt.Value));
-        }
+      transaction.Commit();
+
+      if (meeting.ModifiedAt != null)
+      {
+        await _mediator.Publish(
+          new MeetingAbortedEvent(request.UserId, meeting.Id, meeting.GroupId, meeting.ModifiedAt.Value));
       }
 
       return Unit.Value;

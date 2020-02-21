@@ -36,32 +36,30 @@ namespace Skelvy.Application.Meetings.Commands.InviteToMeetingResponse
     {
       var (meeting, meetingInvitation) = await ValidateData(request);
 
-      using (var transaction = _meetingInvitationsRepository.BeginTransaction())
+      await using var transaction = _meetingInvitationsRepository.BeginTransaction();
+      if (request.IsAccepted)
       {
-        if (request.IsAccepted)
-        {
-          meetingInvitation.Accept();
+        meetingInvitation.Accept();
 
-          var groupUser = new GroupUser(meeting.GroupId, meetingInvitation.InvitedUserId);
-          await _groupUsersRepository.Add(groupUser);
-        }
-        else
-        {
-          meetingInvitation.Deny();
-        }
-
-        await _meetingInvitationsRepository.Update(meetingInvitation);
-        transaction.Commit();
-
-        await _mediator.Publish(
-          new UserRespondedMeetingInvitationEvent(
-            meetingInvitation.Id,
-            request.IsAccepted,
-            meetingInvitation.InvitingUserId,
-            meetingInvitation.InvitedUserId,
-            meeting.Id,
-            meeting.GroupId));
+        var groupUser = new GroupUser(meeting.GroupId, meetingInvitation.InvitedUserId);
+        await _groupUsersRepository.Add(groupUser);
       }
+      else
+      {
+        meetingInvitation.Deny();
+      }
+
+      await _meetingInvitationsRepository.Update(meetingInvitation);
+      transaction.Commit();
+
+      await _mediator.Publish(
+        new UserRespondedMeetingInvitationEvent(
+          meetingInvitation.Id,
+          request.IsAccepted,
+          meetingInvitation.InvitingUserId,
+          meetingInvitation.InvitedUserId,
+          meeting.Id,
+          meeting.GroupId));
 
       return Unit.Value;
     }

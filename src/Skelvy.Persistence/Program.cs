@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
-using Skelvy.Persistence.Migrations.Scripts.DrinkTypesInsteadOfDrinks;
+using Skelvy.Persistence.ManualMigrations.Example;
 
 namespace Skelvy.Persistence
 {

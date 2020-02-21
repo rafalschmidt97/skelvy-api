@@ -19,7 +19,7 @@ namespace Skelvy.WebAPI.Extensions
               .RequireAuthenticatedUser()
               .Build()));
         })
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+        .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
         .AddMvcOptions(options =>
         {
           options.ModelMetadataDetailsProviders.Clear();
@@ -38,7 +38,6 @@ namespace Skelvy.WebAPI.Extensions
     public static void UseCustomMvc(this IApplicationBuilder app)
     {
       app.UseStaticFiles();
-      app.UseMvc();
     }
   }
 }

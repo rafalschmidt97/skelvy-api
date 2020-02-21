@@ -36,13 +36,11 @@ namespace Skelvy.Application.Users.Commands.UpdateProfile
         throw new NotFoundException($"{nameof(Profile)}(UserId = {request.UserId}) not found.");
       }
 
-      using (var transaction = _profilesRepository.BeginTransaction())
-      {
-        profile.Update(request.Name, request.Birthday, request.Gender, request.Description);
-        await _profilesRepository.Update(profile);
-        await UpdatePhotos(profile, request.Photos);
-        transaction.Commit();
-      }
+      await using var transaction = _profilesRepository.BeginTransaction();
+      profile.Update(request.Name, request.Birthday, request.Gender, request.Description);
+      await _profilesRepository.Update(profile);
+      await UpdatePhotos(profile, request.Photos);
+      transaction.Commit();
 
       return Unit.Value;
     }

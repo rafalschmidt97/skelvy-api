@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.OpenApi.Models;
 
 namespace Skelvy.WebAPI.Extensions
 {
@@ -21,21 +18,33 @@ namespace Skelvy.WebAPI.Extensions
           configuration.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
         }
 
-        var tokenName = "Access Token";
-
-        configuration.AddSecurityDefinition(tokenName, new ApiKeyScheme
+        configuration.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-          In = "header",
+          Description =
+            "Enter 'Bearer' [space] and then your token in the text input.",
           Name = "Authorization",
-          Type = "apiKey",
+          In = ParameterLocation.Header,
+          Type = SecuritySchemeType.ApiKey,
+          Scheme = "Bearer",
         });
 
-        configuration.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+        configuration.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
-          { tokenName, Array.Empty<string>() },
+          {
+            new OpenApiSecurityScheme
+            {
+              Reference = new OpenApiReference
+              {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer",
+              },
+              Scheme = "oauth2",
+              Name = "Bearer",
+              In = ParameterLocation.Header,
+            },
+            new List<string>()
+          },
         });
-
-        configuration.OperationFilter<SwaggerDefaultValues>();
       });
     }
 
@@ -53,9 +62,9 @@ namespace Skelvy.WebAPI.Extensions
       });
     }
 
-    private static Info CreateInfoForApiVersion(ApiVersionDescription description)
+    private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
     {
-      var info = new Info
+      var info = new OpenApiInfo
       {
         Title = $"Skelvy API {description.ApiVersion}",
         Description = "Mobile app for meetings over your favorite activities 🚀",
@@ -68,38 +77,6 @@ namespace Skelvy.WebAPI.Extensions
       }
 
       return info;
-    }
-  }
-
-  public class SwaggerDefaultValues : IOperationFilter
-  {
-    public void Apply(Operation operation, OperationFilterContext context)
-    {
-      var apiDescription = context.ApiDescription;
-
-      operation.Deprecated = apiDescription.IsDeprecated();
-
-      if (operation.Parameters == null)
-      {
-        return;
-      }
-
-      foreach (var parameter in operation.Parameters.OfType<NonBodyParameter>())
-      {
-        var description = apiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
-
-        if (parameter.Description == null)
-        {
-          parameter.Description = description.ModelMetadata?.Description;
-        }
-
-        if (parameter.Default == null)
-        {
-          parameter.Default = description.DefaultValue;
-        }
-
-        parameter.Required |= description.IsRequired;
-      }
     }
   }
 }
