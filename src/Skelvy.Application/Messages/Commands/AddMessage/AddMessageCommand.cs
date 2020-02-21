@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Messages.Queries;
 
@@ -14,6 +15,11 @@ namespace Skelvy.Application.Messages.Commands.AddMessage
       Action = action;
       UserId = userId;
       GroupId = groupId;
+    }
+
+    [JsonConstructor]
+    public AddMessageCommand()
+    {
     }
 
     public string Type { get; set; }

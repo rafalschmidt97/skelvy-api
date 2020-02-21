@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Commands.UpdateUserEmail
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Users.Commands.UpdateUserEmail
     {
       UserId = userId;
       Email = email;
+    }
+
+    [JsonConstructor]
+    public UpdateUserEmailCommand()
+    {
     }
 
     public int UserId { get; set; }

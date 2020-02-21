@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Activities.Queries.FindActivities
@@ -10,7 +11,8 @@ namespace Skelvy.Application.Activities.Queries.FindActivities
       Restricted = restricted;
     }
 
-    public FindActivitiesQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public FindActivitiesQuery()
     {
     }
 

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Relations.Commands.RemoveFriend
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Relations.Commands.RemoveFriend
     {
       UserId = userId;
       FriendUserId = friendUserId;
+    }
+
+    [JsonConstructor]
+    public RemoveFriendCommand()
+    {
     }
 
     public int UserId { get; set; }

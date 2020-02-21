@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Domain.Enums;
 
@@ -11,7 +12,8 @@ namespace Skelvy.Application.Users.Commands.UpdateUserLanguage
       Language = language;
     }
 
-    public UpdateUserLanguageCommand() // required for FromBody attribute to allow default values
+    [JsonConstructor]
+    public UpdateUserLanguageCommand()
     {
     }
 

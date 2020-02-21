@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Commands.SendEmailToUser
@@ -10,6 +11,11 @@ namespace Skelvy.Application.Users.Commands.SendEmailToUser
       Subject = subject;
       Language = language;
       Message = message;
+    }
+
+    [JsonConstructor]
+    public SendEmailToUserCommand()
+    {
     }
 
     public string To { get; set; }

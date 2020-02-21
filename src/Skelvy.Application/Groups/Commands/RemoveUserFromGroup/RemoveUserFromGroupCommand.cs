@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Groups.Commands.RemoveUserFromGroup
@@ -9,6 +10,11 @@ namespace Skelvy.Application.Groups.Commands.RemoveUserFromGroup
       UserId = userId;
       GroupId = groupId;
       RemovingUserId = removingUserId;
+    }
+
+    [JsonConstructor]
+    public RemoveUserFromGroupCommand()
+    {
     }
 
     public int UserId { get; set; }

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Groups.Commands.UpdateGroup
@@ -9,6 +10,11 @@ namespace Skelvy.Application.Groups.Commands.UpdateGroup
       UserId = userId;
       GroupId = groupId;
       Name = name;
+    }
+
+    [JsonConstructor]
+    public UpdateGroupCommand()
+    {
     }
 
     public int UserId { get; set; }

@@ -1,18 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Commands.UpdateProfile
 {
   public class UpdateProfileCommand : ICommand
   {
-    public UpdateProfileCommand(
-      int userId,
-      string name,
-      DateTimeOffset birthday,
-      string gender,
-      string description,
-      IList<UpdateProfilePhotos> photos)
+    public UpdateProfileCommand(int userId, string name, DateTimeOffset birthday, string gender, string description, IList<UpdateProfilePhotos> photos)
     {
       UserId = userId;
       Name = name;
@@ -20,6 +15,11 @@ namespace Skelvy.Application.Users.Commands.UpdateProfile
       Gender = gender;
       Description = description;
       Photos = photos;
+    }
+
+    [JsonConstructor]
+    public UpdateProfileCommand()
+    {
     }
 
     public int UserId { get; set; }
@@ -35,6 +35,11 @@ namespace Skelvy.Application.Users.Commands.UpdateProfile
     public UpdateProfilePhotos(string url)
     {
       Url = url;
+    }
+
+    [JsonConstructor]
+    public UpdateProfilePhotos()
+    {
     }
 
     public string Url { get; set; }

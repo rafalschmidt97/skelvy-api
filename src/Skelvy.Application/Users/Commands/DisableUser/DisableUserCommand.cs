@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Commands.DisableUser
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Users.Commands.DisableUser
     {
       UserId = userId;
       Reason = reason;
+    }
+
+    [JsonConstructor]
+    public DisableUserCommand()
+    {
     }
 
     public int UserId { get; set; }

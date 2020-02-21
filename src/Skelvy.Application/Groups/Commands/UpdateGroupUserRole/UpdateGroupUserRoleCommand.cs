@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Groups.Commands.UpdateGroupUserRole
@@ -10,6 +11,11 @@ namespace Skelvy.Application.Groups.Commands.UpdateGroupUserRole
       GroupId = groupId;
       UpdatedUserId = updatedUserId;
       Role = role;
+    }
+
+    [JsonConstructor]
+    public UpdateGroupUserRoleCommand()
+    {
     }
 
     public int UserId { get; set; }

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
@@ -9,6 +10,11 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
       UserId = userId;
       InvitationId = invitationId;
       IsAccepted = isAccepted;
+    }
+
+    [JsonConstructor]
+    public InviteFriendResponseCommand()
+    {
     }
 
     public int UserId { get; set; }

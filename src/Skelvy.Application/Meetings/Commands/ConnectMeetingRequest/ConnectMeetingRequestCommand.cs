@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
@@ -11,6 +12,11 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
       MeetingRequestId = meetingRequestId;
       Date = date;
       ActivityId = activityId;
+    }
+
+    [JsonConstructor]
+    public ConnectMeetingRequestCommand()
+    {
     }
 
     public int UserId { get; set; }

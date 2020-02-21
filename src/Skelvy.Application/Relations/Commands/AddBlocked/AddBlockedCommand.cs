@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Relations.Commands.AddBlocked
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
     {
       UserId = userId;
       BlockingUserId = blockingUserId;
+    }
+
+    [JsonConstructor]
+    public AddBlockedCommand()
+    {
     }
 
     public int UserId { get; set; }

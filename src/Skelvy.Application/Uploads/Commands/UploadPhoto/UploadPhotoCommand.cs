@@ -1,4 +1,5 @@
 using System.IO;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Uploads.Commands.UploadPhoto
@@ -9,6 +10,11 @@ namespace Skelvy.Application.Uploads.Commands.UploadPhoto
     {
       Name = name;
       Data = data;
+    }
+
+    [JsonConstructor]
+    public UploadPhotoCommand()
+    {
     }
 
     public string Name { get; set; }

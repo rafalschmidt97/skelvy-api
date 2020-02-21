@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Commands.UpdateMeetingRequest
@@ -20,6 +21,11 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeetingRequest
       Activities = activities;
     }
 
+    [JsonConstructor]
+    public UpdateMeetingRequestCommand()
+    {
+    }
+
     public int UserId { get; set; }
     public int RequestId { get; set; }
     public DateTimeOffset MinDate { get; set; }
@@ -37,6 +43,11 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeetingRequest
     public UpdateMeetingRequestActivity(int id)
     {
       Id = id;
+    }
+
+    [JsonConstructor]
+    public UpdateMeetingRequestActivity()
+    {
     }
 
     public int Id { get; set; }

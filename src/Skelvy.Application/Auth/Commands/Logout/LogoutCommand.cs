@@ -1,4 +1,5 @@
 using Destructurama.Attributed;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Auth.Commands.Logout
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Auth.Commands.Logout
     public LogoutCommand(string refreshToken)
     {
       RefreshToken = refreshToken;
+    }
+
+    [JsonConstructor]
+    public LogoutCommand()
+    {
     }
 
     [LogMasked]

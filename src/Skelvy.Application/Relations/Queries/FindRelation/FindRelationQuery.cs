@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Relations.Queries.FindRelation
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Relations.Queries.FindRelation
     {
       UserId = userId;
       RelatedUserId = relatedUserId;
+    }
+
+    [JsonConstructor]
+    public FindRelationQuery()
+    {
     }
 
     public int UserId { get; set; }
