@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -38,13 +37,6 @@ namespace Skelvy.Application.Core.Pipes
       try
       {
         response = await next();
-      }
-      catch (ValidationException exception)
-      {
-        _logger.LogError(
-          "Request Validation Exception: {@Errors}",
-          RequestValidationHelper.GetValidationFailures(exception.Errors));
-        responseException = exception;
       }
       catch (CustomException exception)
       {

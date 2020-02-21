@@ -29,6 +29,9 @@ namespace Skelvy.WebAPI.Filters
       {
         status = HttpStatusCode.BadRequest;
         message = RequestValidationHelper.GetValidationFailures(validationException.Errors);
+        _logger.LogError(
+                  "Request Validation Exception: {@Errors}",
+                  RequestValidationHelper.GetValidationFailures(validationException.Errors));
       }
       else if (context.Exception is CustomException customException)
       {
