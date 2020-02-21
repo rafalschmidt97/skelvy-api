@@ -121,7 +121,7 @@ from the main (upstream) repository:
 
 ## <a name="development"></a> Development Setup
 
-You will need dotnet core version 2.2+:
+You will need dotnet core version 3.1+:
 
 1. After cloning the repo, run:
 
@@ -129,7 +129,7 @@ You will need dotnet core version 2.2+:
 $ dotnet restore
 ```
 
-2. Fill keys (marked as REPLACE_WITH_SECRET) in [secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2) or appsettings
+2. Fill keys (marked as REPLACE_WITH_SECRET) in [secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1) or appsettings
 
 3. In order to prepare your environment run `prepare.sh` shell script:
 
