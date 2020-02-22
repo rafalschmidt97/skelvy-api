@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Meetings.Queries;
 
@@ -9,6 +10,11 @@ namespace Skelvy.Application.Groups.Queries.FindGroup
     {
       GroupId = groupId;
       UserId = userId;
+    }
+
+    [JsonConstructor]
+    public FindGroupQuery()
+    {
     }
 
     public int GroupId { get; set; }

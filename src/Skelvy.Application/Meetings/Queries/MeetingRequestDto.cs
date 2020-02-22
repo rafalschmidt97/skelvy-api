@@ -9,7 +9,7 @@ using AutoMapperProfile = AutoMapper.Profile;
 
 namespace Skelvy.Application.Meetings.Queries
 {
-  public class MeetingRequestDto : ICustomMapping
+  public class MeetingRequestDto : IMapping<MeetingRequest>
   {
     public int Id { get; set; }
     public DateTimeOffset MinDate { get; set; }
@@ -22,9 +22,9 @@ namespace Skelvy.Application.Meetings.Queries
     public string City { get; set; }
     public IList<ActivityDto> Activities { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<MeetingRequest, MeetingRequestDto>()
+      profile.CreateMap<MeetingRequest, MeetingRequestDto>()
         .ForMember(
           destination => destination.Activities,
           options => options.MapFrom(x => x.Activities.Select(y => y.Activity)))
@@ -34,7 +34,7 @@ namespace Skelvy.Application.Meetings.Queries
     }
   }
 
-  public class MeetingRequestWithUserDto : ICustomMapping
+  public class MeetingRequestWithUserDto : IMapping<MeetingRequest>
   {
     public int Id { get; set; }
     public DateTimeOffset MinDate { get; set; }
@@ -48,9 +48,9 @@ namespace Skelvy.Application.Meetings.Queries
     public IList<ActivityDto> Activities { get; set; }
     public UserDto User { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<MeetingRequest, MeetingRequestWithUserDto>()
+      profile.CreateMap<MeetingRequest, MeetingRequestWithUserDto>()
         .ForMember(
           destination => destination.Activities,
           options => options.MapFrom(x => x.Activities.Select(y => y.Activity)))

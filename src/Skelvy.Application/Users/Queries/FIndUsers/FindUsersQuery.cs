@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Queries.FIndUsers
@@ -11,7 +12,8 @@ namespace Skelvy.Application.Users.Queries.FIndUsers
       UserName = userName;
     }
 
-    public FindUsersQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public FindUsersQuery()
     {
     }
 

@@ -7,15 +7,16 @@ using AutoMapperProfile = AutoMapper.Profile;
 
 namespace Skelvy.Application.Users.Queries
 {
-  public class UserDto : ICustomMapping
+  public class UserDto : IMapping<User>, IMapping<Relation>
   {
     public int Id { get; set; }
     public string Name { get; set; }
     public ProfileDto Profile { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<Relation, UserDto>()
+      profile.CreateMap<User, UserDto>();
+      profile.CreateMap<Relation, UserDto>()
         .ForMember(
           destination => destination.Id,
           options => options.MapFrom(x => x.RelatedUserId))
@@ -28,7 +29,7 @@ namespace Skelvy.Application.Users.Queries
     }
   }
 
-  public class ProfileDto : ICustomMapping
+  public class ProfileDto : IMapping<Profile>
   {
     public string Name { get; set; }
     public int Age { get; set; }
@@ -36,29 +37,29 @@ namespace Skelvy.Application.Users.Queries
     public string Description { get; set; }
     public IList<ProfilePhotoDto> Photos { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<Profile, ProfileDto>()
+      profile.CreateMap<Profile, ProfileDto>()
         .ForMember(
           destination => destination.Age,
           options => options.MapFrom(x => x.Birthday.GetAge()));
     }
   }
 
-  public class ProfilePhotoDto : ICustomMapping
+  public class ProfilePhotoDto : IMapping<ProfilePhoto>
   {
     public string Url { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<ProfilePhoto, ProfilePhotoDto>()
+      profile.CreateMap<ProfilePhoto, ProfilePhotoDto>()
         .ForMember(
           destination => destination.Url,
           options => options.MapFrom(x => x.Attachment.Url));
     }
   }
 
-  public class SelfUserDto
+  public class SelfUserDto : IMapping<User>
   {
     public int Id { get; set; }
     public string Email { get; set; }
@@ -66,7 +67,7 @@ namespace Skelvy.Application.Users.Queries
     public SelfProfileDto Profile { get; set; }
   }
 
-  public class SelfProfileDto
+  public class SelfProfileDto : IMapping<Profile>
   {
     public string Name { get; set; }
     public DateTimeOffset Birthday { get; set; }

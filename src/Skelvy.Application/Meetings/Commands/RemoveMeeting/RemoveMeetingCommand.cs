@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Meetings.Commands.RemoveMeeting
     {
       MeetingId = meetingId;
       UserId = userId;
+    }
+
+    [JsonConstructor]
+    public RemoveMeetingCommand()
+    {
     }
 
     public int MeetingId { get; set; }

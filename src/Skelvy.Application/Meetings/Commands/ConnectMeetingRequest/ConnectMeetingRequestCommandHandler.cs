@@ -46,20 +46,18 @@ namespace Skelvy.Application.Meetings.Commands.ConnectMeetingRequest
     {
       var (user, connectingMeetingRequest) = await ValidateData(request);
 
-      using (var transaction = _groupUsersRepository.BeginTransaction())
+      await using var transaction = _groupUsersRepository.BeginTransaction();
+      try
       {
-        try
-        {
-          var meeting = await CreateNewMeeting(user, connectingMeetingRequest, request);
-          transaction.Commit();
-          await _mediator.Publish(new UserConnectedToMeetingEvent(connectingMeetingRequest.UserId, connectingMeetingRequest.Id, meeting.Id, meeting.GroupId));
-        }
-        catch (Exception exception)
-        {
-          _logger.LogError(
-            $"{nameof(ConnectMeetingRequestCommand)} Exception while CreateNewMeetingRequest/CreateNewMeeting for " +
-            $"User(Id={user.Id}): {exception.Message}");
-        }
+        var meeting = await CreateNewMeeting(user, connectingMeetingRequest, request);
+        transaction.Commit();
+        await _mediator.Publish(new UserConnectedToMeetingEvent(connectingMeetingRequest.UserId, connectingMeetingRequest.Id, meeting.Id, meeting.GroupId));
+      }
+      catch (Exception exception)
+      {
+        _logger.LogError(
+          $"{nameof(ConnectMeetingRequestCommand)} Exception while CreateNewMeetingRequest/CreateNewMeeting for " +
+          $"User(Id={user.Id}): {exception.Message}");
       }
 
       return Unit.Value;

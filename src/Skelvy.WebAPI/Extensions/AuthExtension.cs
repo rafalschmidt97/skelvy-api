@@ -49,6 +49,7 @@ namespace Skelvy.WebAPI.Extensions
     public static void UseAuth(this IApplicationBuilder app)
     {
       app.UseAuthentication();
+      app.UseAuthorization();
     }
   }
 }

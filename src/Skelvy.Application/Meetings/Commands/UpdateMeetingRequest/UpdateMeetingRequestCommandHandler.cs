@@ -30,13 +30,11 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeetingRequest
     {
       var meetingRequest = await ValidateData(request);
 
-      using (var transaction = _meetingRequestsRepository.BeginTransaction())
-      {
-        meetingRequest.Update(request.MinDate, request.MaxDate, request.MinAge, request.MaxAge, request.Latitude, request.Longitude, request.Description);
-        await _meetingRequestsRepository.Update(meetingRequest);
-        await UpdateActivities(meetingRequest, request.Activities);
-        transaction.Commit();
-      }
+      await using var transaction = _meetingRequestsRepository.BeginTransaction();
+      meetingRequest.Update(request.MinDate, request.MaxDate, request.MinAge, request.MaxAge, request.Latitude, request.Longitude, request.Description);
+      await _meetingRequestsRepository.Update(meetingRequest);
+      await UpdateActivities(meetingRequest, request.Activities);
+      transaction.Commit();
 
       return Unit.Value;
     }

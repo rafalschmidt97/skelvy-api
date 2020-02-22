@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Relations.Commands.RemoveBlocked
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Relations.Commands.RemoveBlocked
     {
       UserId = userId;
       BlockedUserId = blockedUserId;
+    }
+
+    [JsonConstructor]
+    public RemoveBlockedCommand()
+    {
     }
 
     public int UserId { get; set; }

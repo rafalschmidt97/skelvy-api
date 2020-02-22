@@ -34,31 +34,29 @@ namespace Skelvy.Application.Relations.Commands.InviteFriendResponse
     {
       var invitation = await ValidateData(request);
 
-      using (var transaction = _relationsRepository.BeginTransaction())
+      await using var transaction = _relationsRepository.BeginTransaction();
+      if (request.IsAccepted)
       {
-        if (request.IsAccepted)
+        invitation.Accept();
+
+        var relations = new List<Relation>
         {
-          invitation.Accept();
+          new Relation(invitation.InvitingUserId, invitation.InvitedUserId, RelationType.Friend),
+          new Relation(invitation.InvitedUserId, invitation.InvitingUserId, RelationType.Friend),
+        };
 
-          var relations = new List<Relation>
-          {
-            new Relation(invitation.InvitingUserId, invitation.InvitedUserId, RelationType.Friend),
-            new Relation(invitation.InvitedUserId, invitation.InvitingUserId, RelationType.Friend),
-          };
-
-          await _relationsRepository.AddRange(relations);
-        }
-        else
-        {
-          invitation.Deny();
-        }
-
-        await _friendInvitationsRepository.Update(invitation);
-        transaction.Commit();
-
-        await _mediator.Publish(
-          new UserRespondedFriendInvitationEvent(invitation.Id, request.IsAccepted, invitation.InvitingUserId, invitation.InvitedUserId));
+        await _relationsRepository.AddRange(relations);
       }
+      else
+      {
+        invitation.Deny();
+      }
+
+      await _friendInvitationsRepository.Update(invitation);
+      transaction.Commit();
+
+      await _mediator.Publish(
+        new UserRespondedFriendInvitationEvent(invitation.Id, request.IsAccepted, invitation.InvitingUserId, invitation.InvitedUserId));
 
       return Unit.Value;
     }

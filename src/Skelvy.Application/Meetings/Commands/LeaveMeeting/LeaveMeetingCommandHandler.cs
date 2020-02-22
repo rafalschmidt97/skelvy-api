@@ -41,105 +41,103 @@ namespace Skelvy.Application.Meetings.Commands.LeaveMeeting
       var groupUsers = await _groupUsersRepository.FindAllByGroupId(meeting.GroupId);
       var groupUserDetails = groupUsers.First(x => x.UserId == request.UserId);
 
-      using (var transaction = _groupUsersRepository.BeginTransaction())
+      await using var transaction = _groupUsersRepository.BeginTransaction();
+      groupUserDetails.Leave();
+      await _groupUsersRepository.Update(groupUserDetails);
+
+      if (groupUserDetails.MeetingRequestId != null)
       {
-        groupUserDetails.Leave();
-        await _groupUsersRepository.Update(groupUserDetails);
+        var meetingRequest = await _meetingRequestsRepository.FindOne(groupUserDetails.MeetingRequestId.Value);
 
-        if (groupUserDetails.MeetingRequestId != null)
+        if (meetingRequest != null)
         {
-          var meetingRequest = await _meetingRequestsRepository.FindOne(groupUserDetails.MeetingRequestId.Value);
+          meetingRequest.Abort();
+          await _meetingRequestsRepository.Update(meetingRequest);
+        }
+      }
 
-          if (meetingRequest != null)
+      var meetingAborted = false;
+
+      if (groupUsers.Count == 2 && !meeting.IsPrivate)
+      {
+        meeting.Abort();
+        await _meetingsRepository.Update(meeting);
+
+        var anotherUserDetails = groupUsers.First(x => x.UserId != groupUserDetails.UserId);
+        anotherUserDetails.Abort();
+        await _groupUsersRepository.Update(anotherUserDetails);
+
+        if (anotherUserDetails.MeetingRequestId != null)
+        {
+          var anotherMeetingRequest = await _meetingRequestsRepository.FindOne(anotherUserDetails.MeetingRequestId.Value);
+
+          if (anotherMeetingRequest != null)
           {
-            meetingRequest.Abort();
-            await _meetingRequestsRepository.Update(meetingRequest);
+            anotherMeetingRequest.MarkAsSearching();
+            await _meetingRequestsRepository.Update(anotherMeetingRequest);
           }
         }
 
-        var meetingAborted = false;
+        var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
 
-        if (groupUsers.Count == 2 && !meeting.IsPrivate)
+        if (group != null)
         {
-          meeting.Abort();
-          await _meetingsRepository.Update(meeting);
+          group.Abort();
+          await _groupsRepository.Update(group);
+        }
 
-          var anotherUserDetails = groupUsers.First(x => x.UserId != groupUserDetails.UserId);
-          anotherUserDetails.Abort();
-          await _groupUsersRepository.Update(anotherUserDetails);
+        meetingAborted = true;
+      }
+      else if (groupUsers.Count == 1)
+      {
+        meeting.Abort();
+        await _meetingsRepository.Update(meeting);
 
-          if (anotherUserDetails.MeetingRequestId != null)
+        var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
+
+        if (group != null)
+        {
+          group.Abort();
+          await _groupsRepository.Update(group);
+        }
+
+        meetingAborted = true;
+      }
+      else
+      {
+        if (groupUserDetails.Role == GroupUserRoleType.Owner || groupUserDetails.Role == GroupUserRoleType.Admin)
+        {
+          var otherUsers = groupUsers.Where(x => x.UserId != request.UserId).ToList();
+
+          if (!otherUsers.Any(x => x.Role == GroupUserRoleType.Owner || x.Role == GroupUserRoleType.Admin))
           {
-            var anotherMeetingRequest = await _meetingRequestsRepository.FindOne(anotherUserDetails.MeetingRequestId.Value);
-
-            if (anotherMeetingRequest != null)
+            foreach (var otherUser in otherUsers)
             {
-              anotherMeetingRequest.MarkAsSearching();
-              await _meetingRequestsRepository.Update(anotherMeetingRequest);
+              otherUser.UpdateRole(GroupUserRoleType.Admin);
             }
+
+            await _groupUsersRepository.UpdateRange(otherUsers);
           }
-
-          var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
-
-          if (group != null)
-          {
-            group.Abort();
-            await _groupsRepository.Update(group);
-          }
-
-          meetingAborted = true;
         }
-        else if (groupUsers.Count == 1)
+      }
+
+      transaction.Commit();
+
+      if (!meetingAborted)
+      {
+        await _mediator.Publish(new UserLeftMeetingEvent(groupUserDetails.UserId, groupUserDetails.GroupId, meeting.Id));
+      }
+      else
+      {
+        if (groupUserDetails.ModifiedAt != null)
         {
-          meeting.Abort();
-          await _meetingsRepository.Update(meeting);
-
-          var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
-
-          if (group != null)
-          {
-            group.Abort();
-            await _groupsRepository.Update(group);
-          }
-
-          meetingAborted = true;
+          await _mediator.Publish(
+            new MeetingAbortedEvent(groupUserDetails.UserId, meeting.Id, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
         }
         else
         {
-          if (groupUserDetails.Role == GroupUserRoleType.Owner || groupUserDetails.Role == GroupUserRoleType.Admin)
-          {
-            var otherUsers = groupUsers.Where(x => x.UserId != request.UserId).ToList();
-
-            if (!otherUsers.Any(x => x.Role == GroupUserRoleType.Owner || x.Role == GroupUserRoleType.Admin))
-            {
-              foreach (var otherUser in otherUsers)
-              {
-                otherUser.UpdateRole(GroupUserRoleType.Admin);
-              }
-
-              await _groupUsersRepository.UpdateRange(otherUsers);
-            }
-          }
-        }
-
-        transaction.Commit();
-
-        if (!meetingAborted)
-        {
-          await _mediator.Publish(new UserLeftMeetingEvent(groupUserDetails.UserId, groupUserDetails.GroupId, meeting.Id));
-        }
-        else
-        {
-          if (groupUserDetails.ModifiedAt != null)
-          {
-            await _mediator.Publish(
-              new MeetingAbortedEvent(groupUserDetails.UserId, meeting.Id, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
-          }
-          else
-          {
-            throw new InternalServerErrorException(
-              $"{nameof(GroupUser)}(UserId = {groupUserDetails.UserId}) has modified date null after leaving.");
-          }
+          throw new InternalServerErrorException(
+            $"{nameof(GroupUser)}(UserId = {groupUserDetails.UserId}) has modified date null after leaving.");
         }
       }
 

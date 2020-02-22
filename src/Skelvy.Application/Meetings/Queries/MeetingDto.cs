@@ -9,7 +9,7 @@ using AutoMapperProfile = AutoMapper.Profile;
 
 namespace Skelvy.Application.Meetings.Queries
 {
-  public class MeetingDto : ICustomMapping
+  public class MeetingDto : IMapping<Meeting>
   {
     public int Id { get; set; }
     public DateTimeOffset Date { get; set; }
@@ -22,16 +22,16 @@ namespace Skelvy.Application.Meetings.Queries
     public int GroupId { get; set; }
     public ActivityDto Activity { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<Meeting, MeetingDto>()
+      profile.CreateMap<Meeting, MeetingDto>()
         .ForMember(
           destination => destination.City,
           options => options.Ignore());
     }
   }
 
-  public class MeetingWithUsersDto : ICustomMapping
+  public class MeetingWithUsersDto : IMapping<Meeting>
   {
     public int Id { get; set; }
     public DateTimeOffset Date { get; set; }
@@ -44,9 +44,9 @@ namespace Skelvy.Application.Meetings.Queries
     public ActivityDto Activity { get; set; }
     public IList<GroupUserDto> Users { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<Meeting, MeetingWithUsersDto>()
+      profile.CreateMap<Meeting, MeetingWithUsersDto>()
         .ForMember(
           destination => destination.Name,
           options => options.MapFrom(x => x.Group.Name))
@@ -59,7 +59,7 @@ namespace Skelvy.Application.Meetings.Queries
     }
   }
 
-  public class GroupDto
+  public class GroupDto : IMapping<Group>
   {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -68,16 +68,16 @@ namespace Skelvy.Application.Meetings.Queries
     public DateTimeOffset CreatedAt { get; set; }
   }
 
-  public class GroupUserDto : ICustomMapping
+  public class GroupUserDto : IMapping<GroupUser>
   {
     public int Id { get; set; }
     public string Role { get; set; }
     public string Name { get; set; }
     public ProfileDto Profile { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<GroupUser, GroupUserDto>()
+      profile.CreateMap<GroupUser, GroupUserDto>()
         .ForMember(
           destination => destination.Id,
           options => options.MapFrom(x => x.UserId))

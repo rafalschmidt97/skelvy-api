@@ -112,32 +112,30 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
 
     private async Task CreateUserWithProfile(User user, dynamic details)
     {
-      using (var transaction = _usersRepository.BeginTransaction())
-      {
-        _logger.LogInformation(
-          "Adding User from: {details} = {@User}",
-          (string)JsonConvert.SerializeObject(details),
-          user);
+      await using var transaction = _usersRepository.BeginTransaction();
+      _logger.LogInformation(
+        "Adding User from: {details} = {@User}",
+        (string)JsonConvert.SerializeObject(details),
+        user);
 
-        await _usersRepository.Add(user);
+      await _usersRepository.Add(user);
 
-        var birthday = details.birthday != null
-          ? DateTimeOffset.ParseExact(
-            (string)details.birthday,
-            "MM/dd/yyyy",
-            CultureInfo.CurrentCulture).ToUniversalTime()
-          : DateTimeOffset.UtcNow;
+      var birthday = details.birthday != null
+        ? DateTimeOffset.ParseExact(
+          (string)details.birthday,
+          "MM/dd/yyyy",
+          CultureInfo.CurrentCulture).ToUniversalTime()
+        : DateTimeOffset.UtcNow;
 
-        var profile = new Profile(
-          (string)details.first_name,
-          birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
-          details.gender == GenderType.Female ? GenderType.Female : GenderType.Male,
-          user.Id);
+      var profile = new Profile(
+        (string)details.first_name,
+        birthday <= DateTimeOffset.UtcNow.AddYears(-18) ? birthday : DateTimeOffset.UtcNow.AddYears(-18),
+        details.gender == GenderType.Female ? GenderType.Female : GenderType.Male,
+        user.Id);
 
-        await _profilesRepository.Add(profile);
+      await _profilesRepository.Add(profile);
 
-        transaction.Commit();
-      }
+      transaction.Commit();
     }
 
     private static void ValidateUser(User user)

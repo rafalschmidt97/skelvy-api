@@ -39,30 +39,28 @@ namespace Skelvy.Application.Meetings.Commands.RemoveExpiredMeetings
 
       if (meetingsToRemove.Any())
       {
-        using (var transaction = _meetingRequestsRepository.BeginTransaction())
+        await using var transaction = _meetingRequestsRepository.BeginTransaction();
+        var groupsId = meetingsToRemove.Select(x => x.GroupId).ToList();
+        var meetingsId = meetingsToRemove.Select(x => x.Id).ToList();
+        var groupUsers = await _groupUsersRepository.FindAllWithRequestByGroupsId(groupsId);
+
+        meetingsToRemove.ForEach(x => x.Expire());
+        await _meetingsRepository.UpdateRange(meetingsToRemove);
+        var groupUsersRequests = groupUsers.Select(x => x.MeetingRequest).Where(x => x != null).ToList();
+        groupUsersRequests.ForEach(x => x.Expire());
+        await _meetingRequestsRepository.UpdateRange(groupUsersRequests);
+
+        var invitations = await _meetingInvitationsRepository.FindAllByMeetingsId(meetingsId);
+
+        foreach (var invitation in invitations)
         {
-          var groupsId = meetingsToRemove.Select(x => x.GroupId).ToList();
-          var meetingsId = meetingsToRemove.Select(x => x.Id).ToList();
-          var groupUsers = await _groupUsersRepository.FindAllWithRequestByGroupsId(groupsId);
-
-          meetingsToRemove.ForEach(x => x.Expire());
-          await _meetingsRepository.UpdateRange(meetingsToRemove);
-          var groupUsersRequests = groupUsers.Select(x => x.MeetingRequest).Where(x => x != null).ToList();
-          groupUsersRequests.ForEach(x => x.Expire());
-          await _meetingRequestsRepository.UpdateRange(groupUsersRequests);
-
-          var invitations = await _meetingInvitationsRepository.FindAllByMeetingsId(meetingsId);
-
-          foreach (var invitation in invitations)
-          {
-            invitation.Abort();
-          }
-
-          await _meetingInvitationsRepository.UpdateRange(invitations);
-
-          transaction.Commit();
-          await _mediator.Publish(new MeetingsExpiredEvent(meetingsToRemove.Select(x => x.Id)));
+          invitation.Abort();
         }
+
+        await _meetingInvitationsRepository.UpdateRange(invitations);
+
+        transaction.Commit();
+        await _mediator.Publish(new MeetingsExpiredEvent(meetingsToRemove.Select(x => x.Id)));
       }
 
       return Unit.Value;

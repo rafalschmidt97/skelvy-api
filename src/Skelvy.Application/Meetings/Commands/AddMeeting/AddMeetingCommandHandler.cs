@@ -41,31 +41,29 @@ namespace Skelvy.Application.Meetings.Commands.AddMeeting
     {
       await ValidateData(request);
 
-      using (var transaction = _groupUsersRepository.BeginTransaction())
-      {
-        var group = new Group();
-        await _groupsRepository.Add(group);
+      await using var transaction = _groupUsersRepository.BeginTransaction();
+      var group = new Group();
+      await _groupsRepository.Add(group);
 
-        var meeting = new Meeting(
-          request.Date,
-          request.Latitude,
-          request.Longitude,
-          request.Size,
-          request.Description,
-          true,
-          request.IsHidden,
-          group.Id,
-          request.ActivityId);
+      var meeting = new Meeting(
+        request.Date,
+        request.Latitude,
+        request.Longitude,
+        request.Size,
+        request.Description,
+        true,
+        request.IsHidden,
+        group.Id,
+        request.ActivityId);
 
-        await _meetingsRepository.Add(meeting);
+      await _meetingsRepository.Add(meeting);
 
-        var groupUser = new GroupUser(meeting.GroupId, request.UserId, GroupUserRoleType.Owner);
-        await _groupUsersRepository.Add(groupUser);
+      var groupUser = new GroupUser(meeting.GroupId, request.UserId, GroupUserRoleType.Owner);
+      await _groupUsersRepository.Add(groupUser);
 
-        transaction.Commit();
+      transaction.Commit();
 
-        return _mapper.Map<MeetingDto>(meeting);
-      }
+      return _mapper.Map<MeetingDto>(meeting);
     }
 
     private async Task ValidateData(AddMeetingCommand request)

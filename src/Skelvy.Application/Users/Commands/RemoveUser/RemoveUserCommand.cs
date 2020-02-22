@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Commands.RemoveUser
@@ -7,6 +8,11 @@ namespace Skelvy.Application.Users.Commands.RemoveUser
     public RemoveUserCommand(int userId)
     {
       UserId = userId;
+    }
+
+    [JsonConstructor]
+    public RemoveUserCommand()
+    {
     }
 
     public int UserId { get; set; }

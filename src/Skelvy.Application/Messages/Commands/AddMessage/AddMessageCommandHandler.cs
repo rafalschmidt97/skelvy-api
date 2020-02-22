@@ -83,25 +83,23 @@ namespace Skelvy.Application.Messages.Commands.AddMessage
     {
       Message message;
 
-      using (var transaction = _messagesRepository.BeginTransaction())
+      await using var transaction = _messagesRepository.BeginTransaction();
+      if (request.Action == MessageActionType.Seen)
       {
-        if (request.Action == MessageActionType.Seen)
-        {
-          message = await AddOrUpdateSeenMessage(request.UserId, request.GroupId);
-        }
-        else
-        {
-          message = new Message(request.Type, DateTimeOffset.UtcNow, null, null, request.Action, request.UserId, request.GroupId);
-          await _messagesRepository.Add(message);
-        }
-
-        transaction.Commit();
-        await _mediator.Publish(new MessageSentEvent(
-          NotificationType.NoPush,
-          message.GroupId,
-          new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, null, message.Action, message.UserId, message.GroupId),
-          _mapper.Map<IList<MessageDto>>(new List<Message> { message })));
+        message = await AddOrUpdateSeenMessage(request.UserId, request.GroupId);
       }
+      else
+      {
+        message = new Message(request.Type, DateTimeOffset.UtcNow, null, null, request.Action, request.UserId, request.GroupId);
+        await _messagesRepository.Add(message);
+      }
+
+      transaction.Commit();
+      await _mediator.Publish(new MessageSentEvent(
+        NotificationType.NoPush,
+        message.GroupId,
+        new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, null, message.Action, message.UserId, message.GroupId),
+        _mapper.Map<IList<MessageDto>>(new List<Message> { message })));
 
       return message;
     }
@@ -132,29 +130,27 @@ namespace Skelvy.Application.Messages.Commands.AddMessage
       var messages = new List<Message>();
       Attachment attachment = null;
 
-      using (var transaction = _messagesRepository.BeginTransaction())
+      await using var transaction = _messagesRepository.BeginTransaction();
+      if (request.AttachmentUrl != null)
       {
-        if (request.AttachmentUrl != null)
-        {
-          attachment = new Attachment(AttachmentType.Image, request.AttachmentUrl);
-          await _attachmentsRepository.Add(attachment);
-        }
-
-        var message = new Message(request.Type, DateTimeOffset.UtcNow, request.Text, attachment?.Id, null, request.UserId, request.GroupId);
-        await _messagesRepository.Add(message);
-        var seenMessage = await AddOrUpdateSeenMessage(message.UserId, message.GroupId);
-
-        transaction.Commit();
-
-        await _mediator.Publish(new MessageSentEvent(
-          NotificationType.Regular,
-          message.GroupId,
-          new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, attachment?.Url, message.Action, message.UserId, message.GroupId),
-          _mapper.Map<IList<MessageDto>>(new List<Message> { message, seenMessage })));
-
-        messages.Add(message);
-        messages.Add(seenMessage);
+        attachment = new Attachment(AttachmentType.Image, request.AttachmentUrl);
+        await _attachmentsRepository.Add(attachment);
       }
+
+      var message = new Message(request.Type, DateTimeOffset.UtcNow, request.Text, attachment?.Id, null, request.UserId, request.GroupId);
+      await _messagesRepository.Add(message);
+      var seenMessage = await AddOrUpdateSeenMessage(message.UserId, message.GroupId);
+
+      transaction.Commit();
+
+      await _mediator.Publish(new MessageSentEvent(
+        NotificationType.Regular,
+        message.GroupId,
+        new MessageSentEventDto(message.Id, message.Type, message.Date, message.Text, attachment?.Url, message.Action, message.UserId, message.GroupId),
+        _mapper.Map<IList<MessageDto>>(new List<Message> { message, seenMessage })));
+
+      messages.Add(message);
+      messages.Add(seenMessage);
 
       return messages;
     }

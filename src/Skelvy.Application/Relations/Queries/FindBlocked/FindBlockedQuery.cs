@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Users.Queries;
 
@@ -12,7 +13,8 @@ namespace Skelvy.Application.Relations.Queries.FindBlocked
       Page = page;
     }
 
-    public FindBlockedQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public FindBlockedQuery()
     {
     }
 

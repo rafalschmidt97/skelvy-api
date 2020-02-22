@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Messages.Queries.FindMessages
@@ -13,7 +14,8 @@ namespace Skelvy.Application.Messages.Queries.FindMessages
       BeforeDate = beforeDate;
     }
 
-    public FindMessagesQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public FindMessagesQuery()
     {
     }
 

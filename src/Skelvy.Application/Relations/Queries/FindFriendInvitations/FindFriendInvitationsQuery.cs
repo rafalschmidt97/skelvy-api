@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Relations.Queries.FindFriendInvitations
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Relations.Queries.FindFriendInvitations
     public FindFriendInvitationsQuery(int userId)
     {
       UserId = userId;
+    }
+
+    [JsonConstructor]
+    public FindFriendInvitationsQuery()
+    {
     }
 
     public int UserId { get; set; }

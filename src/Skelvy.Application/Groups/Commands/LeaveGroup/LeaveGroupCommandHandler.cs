@@ -40,48 +40,46 @@ namespace Skelvy.Application.Groups.Commands.LeaveGroup
       var groupUsers = await _groupUsersRepository.FindAllByGroupId(request.GroupId);
       var groupUserDetails = groupUsers.First(x => x.UserId == request.UserId);
 
-      using (var transaction = _groupUsersRepository.BeginTransaction())
+      await using var transaction = _groupUsersRepository.BeginTransaction();
+      groupUserDetails.Leave();
+      await _groupUsersRepository.Update(groupUserDetails);
+
+      if (groupUserDetails.MeetingRequestId != null)
       {
-        groupUserDetails.Leave();
-        await _groupUsersRepository.Update(groupUserDetails);
+        var meetingRequest = await _meetingRequestsRepository.FindOne(groupUserDetails.MeetingRequestId.Value);
 
-        if (groupUserDetails.MeetingRequestId != null)
+        if (meetingRequest != null)
         {
-          var meetingRequest = await _meetingRequestsRepository.FindOne(groupUserDetails.MeetingRequestId.Value);
+          meetingRequest.Abort();
+          await _meetingRequestsRepository.Update(meetingRequest);
+        }
+      }
 
-          if (meetingRequest != null)
-          {
-            meetingRequest.Abort();
-            await _meetingRequestsRepository.Update(meetingRequest);
-          }
+      var groupAborted = false;
+
+      if (groupUsers.Count == 2)
+      {
+        var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
+
+        if (group != null)
+        {
+          group.Abort();
+          await _groupsRepository.Update(group);
         }
 
-        var groupAborted = false;
+        groupAborted = true;
+      }
 
-        if (groupUsers.Count == 2)
-        {
-          var group = await _groupsRepository.FindOne(groupUserDetails.GroupId);
+      transaction.Commit();
 
-          if (group != null)
-          {
-            group.Abort();
-            await _groupsRepository.Update(group);
-          }
-
-          groupAborted = true;
-        }
-
-        transaction.Commit();
-
-        if (!groupAborted)
-        {
-          await _mediator.Publish(new UserLeftGroupEvent(groupUserDetails.UserId, groupUserDetails.GroupId));
-        }
-        else if (groupUserDetails.ModifiedAt != null)
-        {
-          await _mediator.Publish(
-            new GroupAbortedEvent(groupUserDetails.UserId, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
-        }
+      if (!groupAborted)
+      {
+        await _mediator.Publish(new UserLeftGroupEvent(groupUserDetails.UserId, groupUserDetails.GroupId));
+      }
+      else if (groupUserDetails.ModifiedAt != null)
+      {
+        await _mediator.Publish(
+          new GroupAbortedEvent(groupUserDetails.UserId, groupUserDetails.GroupId, groupUserDetails.ModifiedAt.Value));
       }
 
       return Unit.Value;

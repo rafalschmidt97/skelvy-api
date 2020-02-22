@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Domain.Enums;
 
@@ -12,7 +13,8 @@ namespace Skelvy.Application.Meetings.Queries.FindMeeting
       Language = language;
     }
 
-    public FindMeetingQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public FindMeetingQuery()
     {
     }
 

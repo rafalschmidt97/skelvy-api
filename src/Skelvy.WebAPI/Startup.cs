@@ -3,7 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Skelvy.Application;
+using Skelvy.Infrastructure;
+using Skelvy.Persistence;
 using Skelvy.WebAPI.Extensions;
+using Skelvy.WebAPI.Hubs;
 using Skelvy.WebAPI.Infrastructure.Notifications;
 
 namespace Skelvy.WebAPI
@@ -11,43 +16,59 @@ namespace Skelvy.WebAPI
   public class Startup
   {
     private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _environment;
 
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
       _configuration = configuration;
+      _environment = environment;
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddSqlDatabase(_configuration);
-      services.AddRedisDatabase(_configuration);
-      services.AddCustomSwagger();
-      services.AddHealthChecks();
-      services.AddMediatr();
-      services.AddMapper();
-      services.AddValidators();
-      services.AddServices();
-      services.AddSchedulers();
-      services.AddCors();
-      services.AddAuth(_configuration);
-      services.AddSocket();
-      services.AddEmail();
-      services.AddCustomMvc();
-    }
+      services.AddWebAPI();
+      services.AddInfrastructure();
+      services.AddPersistence(_configuration);
+      services.AddApplication();
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider, SignalRBackplane backplane)
-    {
-      if (env.IsDevelopment())
+      if (_environment.IsDevelopment())
       {
-        app.UseCustomSwagger(provider);
+        services.AddCustomOpenApi();
       }
 
-      app.UseHealthChecks("/");
-      app.UseSchedulers();
+      services.AddHealthChecks().AddDbContextCheck<SkelvyContext>();
+
+      services.AddCors();
+
+      services.AddCustomRouting();
+      services.AddAuth(_configuration);
+    }
+
+    public void Configure(IApplicationBuilder app)
+    {
+      var versionProvider = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
+      var backplane = app.ApplicationServices.GetService<SignalRBackplane>();
+
+      app.UseWebAPI();
+
+      if (_environment.IsDevelopment())
+      {
+        app.UseDeveloperExceptionPage();
+        app.UseDatabaseErrorPage();
+        app.UseCustomOpenApi(versionProvider);
+      }
+
       app.UseCustomCors();
+
+      app.UseCustomRouting();
       app.UseAuth();
-      app.UseSocket();
-      app.UseCustomMvc();
+
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapHub<UsersHub>("/users");
+        endpoints.MapHealthChecks("/health");
+        endpoints.MapControllers();
+      });
 
       backplane.Start();
     }

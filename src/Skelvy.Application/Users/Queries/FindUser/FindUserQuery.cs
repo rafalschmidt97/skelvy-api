@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Queries.FindUser
@@ -7,6 +8,11 @@ namespace Skelvy.Application.Users.Queries.FindUser
     public FindUserQuery(int userId)
     {
       UserId = userId;
+    }
+
+    [JsonConstructor]
+    public FindUserQuery()
+    {
     }
 
     public int UserId { get; set; }

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace Skelvy.Persistence.Migrations.Scripts.DrinkTypesInsteadOfDrinks
+namespace Skelvy.Persistence.ManualMigrations.Example
 {
   public class ExampleMigration : IMigration
   {
@@ -20,18 +20,14 @@ namespace Skelvy.Persistence.Migrations.Scripts.DrinkTypesInsteadOfDrinks
 
     public async Task Migrate()
     {
-      using (var connection = new SqlConnection(_connectionString))
-      {
-        await connection.OpenAsync();
+      using var connection = new SqlConnection(_connectionString);
+      await connection.OpenAsync();
 
-        using (var transaction = connection.BeginTransaction())
-        {
-          await MeetingRequestDrinksToTypes(connection, transaction);
-          await MeetingsDrinkToTypes(connection, transaction);
+      using var transaction = connection.BeginTransaction();
+      await MeetingRequestDrinksToTypes(connection, transaction);
+      await MeetingsDrinkToTypes(connection, transaction);
 
-          transaction.Commit();
-        }
-      }
+      transaction.Commit();
     }
 
     private static async Task MeetingRequestDrinksToTypes(

@@ -1,8 +1,8 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS Base
+FROM microsoft/dotnet:3.1-aspnetcore-runtime AS Base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM microsoft/dotnet:3.1-sdk AS build
 
 # Restore dotnet before build to allow for caching
 WORKDIR /

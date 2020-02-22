@@ -123,15 +123,13 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
           IsBodyHtml = true,
         };
 
-        using (var smtp = new SmtpClient(_configuration["SKELVY_EMAIL_HOST"], int.Parse(_configuration["SKELVY_EMAIL_PORT"]))
+        using var smtp = new SmtpClient(_configuration["SKELVY_EMAIL_HOST"], int.Parse(_configuration["SKELVY_EMAIL_PORT"]))
         {
           EnableSsl = true,
           DeliveryMethod = SmtpDeliveryMethod.Network,
           Credentials = new NetworkCredential(_configuration["SKELVY_EMAIL_USERNAME"], _configuration["SKELVY_EMAIL_PASSWORD"]),
-        })
-        {
-          await smtp.SendMailExAsync(email);
-        }
+        };
+        await smtp.SendMailExAsync(email);
       }
       catch (Exception exception)
       {
@@ -148,15 +146,9 @@ namespace Skelvy.WebAPI.Infrastructure.Notifications
 
     private static string GetResourceAsString(Assembly assembly, string path)
     {
-      string result;
-
-      using (var stream = assembly.GetManifestResourceStream(path))
-      using (var reader = new StreamReader(stream ?? throw new InternalServerErrorException("Could not resolve email template")))
-      {
-        result = reader.ReadToEnd();
-      }
-
-      return result;
+      using var stream = assembly.GetManifestResourceStream(path);
+      using var reader = new StreamReader(stream ?? throw new InternalServerErrorException("Could not resolve email template"));
+      return reader.ReadToEnd();
     }
   }
 }

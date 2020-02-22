@@ -75,19 +75,22 @@ namespace Skelvy.Application.Test.Relations.Integration
 
       var invites = await handler.Handle(query);
 
-      return invites != null && invites.FirstOrDefault().InvitingUser.Id == UserOneId;
+      return invites != null && invites.FirstOrDefault()?.InvitingUser.Id == UserOneId;
     }
 
     private async Task UserTwoAcceptsInviteFromUserOne()
     {
       var invitation = _friendInvitationsRepository.FindAllWithInvitingDetailsByUserId(UserTwoId).Result.FirstOrDefault();
 
-      var userFriendsRequestResponseCommand =
-        new InviteFriendResponseCommand(UserTwoId, invitation.Id, true);
-      var userFriendsRequestResponseCommandHandler =
-        new InviteFriendResponseCommandHandler(_relationsRepository, _friendInvitationsRepository, _usersRepository, _mediator.Object);
+      if (invitation != null)
+      {
+        var userFriendsRequestResponseCommand =
+          new InviteFriendResponseCommand(UserTwoId, invitation.Id, true);
+        var userFriendsRequestResponseCommandHandler =
+          new InviteFriendResponseCommandHandler(_relationsRepository, _friendInvitationsRepository, _usersRepository, _mediator.Object);
 
-      await userFriendsRequestResponseCommandHandler.Handle(userFriendsRequestResponseCommand);
+        await userFriendsRequestResponseCommandHandler.Handle(userFriendsRequestResponseCommand);
+      }
     }
 
     private async Task<bool> InviteRemovedAfterAccepting()

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Maps.Infrastructure.GoogleMaps;
 using Skelvy.Domain.Enums;
@@ -14,7 +15,8 @@ namespace Skelvy.Application.Maps.Queries.ReverseLocations
       Language = language;
     }
 
-    public ReverseLocationsQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public ReverseLocationsQuery()
     {
     }
 

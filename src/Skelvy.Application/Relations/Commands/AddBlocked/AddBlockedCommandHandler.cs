@@ -37,33 +37,31 @@ namespace Skelvy.Application.Relations.Commands.AddBlocked
       var friendInvitation = await _friendInvitationsRepository
         .FindOneByInvitingIdAndInvitedIdTwoWay(request.UserId, request.BlockingUserId);
 
-      using (var transaction = _relationsRepository.BeginTransaction())
+      await using var transaction = _relationsRepository.BeginTransaction();
+      foreach (var relation in relations)
       {
-        foreach (var relation in relations)
-        {
-          relation.Abort();
-        }
+        relation.Abort();
+      }
 
-        await _relationsRepository.UpdateRange(relations);
+      await _relationsRepository.UpdateRange(relations);
 
-        if (friendInvitation != null)
-        {
-          friendInvitation.Abort();
-          await _friendInvitationsRepository.Update(friendInvitation);
-        }
+      if (friendInvitation != null)
+      {
+        friendInvitation.Abort();
+        await _friendInvitationsRepository.Update(friendInvitation);
+      }
 
-        var blockerRelation = new Relation(request.UserId, request.BlockingUserId, RelationType.Blocked);
-        await _relationsRepository.Add(blockerRelation);
+      var blockerRelation = new Relation(request.UserId, request.BlockingUserId, RelationType.Blocked);
+      await _relationsRepository.Add(blockerRelation);
 
-        transaction.Commit();
+      transaction.Commit();
 
-        var friendRelationUser = relations.FirstOrDefault(x =>
-          x.UserId == request.UserId && x.RelatedUserId == request.BlockingUserId && x.Type == RelationType.Friend);
+      var friendRelationUser = relations.FirstOrDefault(x =>
+        x.UserId == request.UserId && x.RelatedUserId == request.BlockingUserId && x.Type == RelationType.Friend);
 
-        if (friendRelationUser != null)
-        {
-          await _mediator.Publish(new FriendRemovedEvent(request.UserId, request.BlockingUserId));
-        }
+      if (friendRelationUser != null)
+      {
+        await _mediator.Publish(new FriendRemovedEvent(request.UserId, request.BlockingUserId));
       }
 
       return Unit.Value;

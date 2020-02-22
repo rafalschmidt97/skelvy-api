@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Users.Queries.CheckUserName
@@ -9,7 +10,8 @@ namespace Skelvy.Application.Users.Queries.CheckUserName
       Name = name;
     }
 
-    public CheckUserNameQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public CheckUserNameQuery()
     {
     }
 

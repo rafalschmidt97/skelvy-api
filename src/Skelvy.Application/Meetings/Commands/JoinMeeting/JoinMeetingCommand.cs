@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Commands.JoinMeeting
@@ -8,6 +9,11 @@ namespace Skelvy.Application.Meetings.Commands.JoinMeeting
     {
       UserId = userId;
       MeetingId = meetingId;
+    }
+
+    [JsonConstructor]
+    public JoinMeetingCommand()
+    {
     }
 
     public int UserId { get; set; }

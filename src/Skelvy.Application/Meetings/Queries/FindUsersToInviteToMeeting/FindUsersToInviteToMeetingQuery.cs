@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Application.Users.Queries;
 
@@ -13,7 +14,8 @@ namespace Skelvy.Application.Meetings.Queries.FindUsersToInviteToMeeting
       Page = page;
     }
 
-    public FindUsersToInviteToMeetingQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public FindUsersToInviteToMeetingQuery()
     {
     }
 

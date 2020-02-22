@@ -44,8 +44,11 @@ namespace Skelvy.Persistence
       users[3].RegisterFacebook("facebook4");
       users[3].RegisterGoogle("google4");
 
-      context.Users.AddRange(users);
-      context.SaveChanges();
+      foreach (var user in users)
+      {
+        context.Users.Add(user);
+        context.SaveChanges();
+      }
     }
 
     public static void SeedProfiles(SkelvyContext context)
@@ -81,8 +84,11 @@ namespace Skelvy.Persistence
           users[3].Id),
       };
 
-      context.Profiles.AddRange(profiles);
-      context.SaveChanges();
+      foreach (var profile in profiles)
+      {
+        context.Profiles.Add(profile);
+        context.SaveChanges();
+      }
 
       var attachments = new[]
       {
@@ -92,8 +98,11 @@ namespace Skelvy.Persistence
         new Attachment(AttachmentType.Image, "https://via.placeholder.com/1000/ebebf0/ffffff?text=4"),
       };
 
-      context.Attachments.AddRange(attachments);
-      context.SaveChanges();
+      foreach (var attachment in attachments)
+      {
+        context.Attachments.Add(attachment);
+        context.SaveChanges();
+      }
 
       var photos = new[]
       {
@@ -103,8 +112,11 @@ namespace Skelvy.Persistence
         new ProfilePhoto(attachments[3].Id, 1, profiles[3].Id),
       };
 
-      context.ProfilePhotos.AddRange(photos);
-      context.SaveChanges();
+      foreach (var photo in photos)
+      {
+        context.ProfilePhotos.Add(photo);
+        context.SaveChanges();
+      }
     }
 
     public static void SeedFriendInvitations(SkelvyContext context)
@@ -119,8 +131,11 @@ namespace Skelvy.Persistence
         new FriendInvitation(1, 2),
       };
 
-      context.FriendInvitations.AddRange(invitations);
-      context.SaveChanges();
+      foreach (var invitation in invitations)
+      {
+        context.FriendInvitations.Add(invitation);
+        context.SaveChanges();
+      }
     }
 
     public static void SeedRelations(SkelvyContext context)
@@ -137,8 +152,11 @@ namespace Skelvy.Persistence
         new Relation(2, 4, RelationType.Blocked),
       };
 
-      context.Relations.AddRange(relations);
-      context.SaveChanges();
+      foreach (var relation in relations)
+      {
+        context.Relations.Add(relation);
+        context.SaveChanges();
+      }
     }
 
     public static void SeedActivities(SkelvyContext context)
@@ -166,8 +184,11 @@ namespace Skelvy.Persistence
         new Activity("Other activity", ActivityType.Other, 4, 15),
       };
 
-      context.Activities.AddRange(activities);
-      context.SaveChanges();
+      foreach (var activity in activities)
+      {
+        context.Activities.Add(activity);
+        context.SaveChanges();
+      }
     }
 
     public static void SeedMeetingRequests(SkelvyContext context)
@@ -185,16 +206,22 @@ namespace Skelvy.Persistence
         new MeetingRequest(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1), 18, 25, 1, 1, users[0].Id),
       };
 
-      context.MeetingRequests.AddRange(requests);
-      context.SaveChanges();
+      foreach (var request in requests)
+      {
+        context.MeetingRequests.Add(request);
+        context.SaveChanges();
+      }
 
       var requestActivities = new[]
       {
         new MeetingRequestActivity(requests[0].Id, activities[0].Id),
       };
 
-      context.MeetingRequestActivities.AddRange(requestActivities);
-      context.SaveChanges();
+      foreach (var requestActivity in requestActivities)
+      {
+        context.MeetingRequestActivities.Add(requestActivity);
+        context.SaveChanges();
+      }
     }
 
     public static void SeedMeetings(SkelvyContext context)
@@ -216,8 +243,11 @@ namespace Skelvy.Persistence
       requests[0].MarkAsFound();
       requests[1].MarkAsFound();
 
-      context.MeetingRequests.AddRange(requests);
-      context.SaveChanges();
+      foreach (var request in requests)
+      {
+        context.MeetingRequests.Add(request);
+        context.SaveChanges();
+      }
 
       var requestActivities = new[]
       {
@@ -225,24 +255,34 @@ namespace Skelvy.Persistence
         new MeetingRequestActivity(requests[1].Id, activities[0].Id),
       };
 
-      context.MeetingRequestActivities.AddRange(requestActivities);
+      foreach (var requestActivity in requestActivities)
+      {
+        context.MeetingRequestActivities.Add(requestActivity);
+        context.SaveChanges();
+      }
 
       var groups = new[]
       {
-        new Group(),
-        new Group(),
+        new Group("Group1"),
+        new Group("Group2"),
       };
 
-      context.Groups.AddRange(groups);
-      context.SaveChanges();
+      foreach (var group in groups)
+      {
+        context.Groups.Add(group);
+        context.SaveChanges();
+      }
 
       var meetings = new[]
       {
         new Meeting(DateTimeOffset.UtcNow.AddDays(3), 1, 1, activities[0].Size, false, false, groups[0].Id, activities[0].Id),
       };
 
-      context.Meetings.AddRange(meetings);
-      context.SaveChanges();
+      foreach (var meeting in meetings)
+      {
+        context.Meetings.Add(meeting);
+        context.SaveChanges();
+      }
 
       var groupUsers = new[]
       {
@@ -252,8 +292,11 @@ namespace Skelvy.Persistence
         new GroupUser(groups[1].Id, users[3].Id, GroupUserRoleType.Admin),
       };
 
-      context.GroupUsers.AddRange(groupUsers);
-      context.SaveChanges();
+      foreach (var groupUser in groupUsers)
+      {
+        context.GroupUsers.Add(groupUser);
+        context.SaveChanges();
+      }
     }
 
     public static void SeedMessages(SkelvyContext context)
@@ -272,8 +315,11 @@ namespace Skelvy.Persistence
         new Message(MessageType.Action, DateTimeOffset.UtcNow.AddHours(-1), null, null, MessageActionType.Seen, users[2].Id, meetings[0].Id),
       };
 
-      context.Messages.AddRange(messages);
-      context.SaveChanges();
+      foreach (var message in messages)
+      {
+        context.Messages.Add(message);
+        context.SaveChanges();
+      }
     }
   }
 }

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Domain.Enums;
 
@@ -11,7 +12,8 @@ namespace Skelvy.Application.Users.Queries.Sync
       Language = language;
     }
 
-    public SyncQuery() // required for FromQuery attribute
+    [JsonConstructor]
+    public SyncQuery()
     {
     }
 

@@ -1,4 +1,5 @@
 using Destructurama.Attributed;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 using Skelvy.Domain.Enums;
 
@@ -12,7 +13,8 @@ namespace Skelvy.Application.Auth.Commands.SignInWithFacebook
       Language = language;
     }
 
-    public SignInWithFacebookCommand() // required for FromBody attribute to allow default values
+    [JsonConstructor]
+    public SignInWithFacebookCommand()
     {
     }
 

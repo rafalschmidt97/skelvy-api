@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using Skelvy.Application.Core.Bus;
 
 namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
@@ -16,6 +17,11 @@ namespace Skelvy.Application.Meetings.Commands.UpdateMeeting
       Description = description;
       ActivityId = activityId;
       IsHidden = isHidden;
+    }
+
+    [JsonConstructor]
+    public UpdateMeetingCommand()
+    {
     }
 
     public int UserId { get; set; }

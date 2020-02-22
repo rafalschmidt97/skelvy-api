@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Skelvy.Persistence.Migrations.Scripts
+namespace Skelvy.Persistence.ManualMigrations
 {
   public interface IMigration
   {
