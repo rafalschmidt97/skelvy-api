@@ -21,7 +21,7 @@ namespace Skelvy.WebAPI
           .AsMatchingInterface()
           .WithTransientLifetime());
 
-      services.AddSignalR();
+      services.AddSignalR().AddNewtonsoftJsonProtocol();
       services.AddSingleton<SignalRBackplane>();
 
       services.Scan(scan =>

@@ -16,7 +16,10 @@ namespace Skelvy.WebAPI.Extensions
           .AsSelf()
           .WithTransientLifetime());
 
-      services.AddControllers().AddMvcOptions(options =>
+      services
+        .AddControllers()
+        .AddNewtonsoftJson()
+        .AddMvcOptions(options =>
       {
         options.ModelMetadataDetailsProviders.Clear();
         options.ModelValidatorProviders.Clear();
