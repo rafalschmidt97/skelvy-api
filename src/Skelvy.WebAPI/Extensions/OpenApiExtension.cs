@@ -6,9 +6,9 @@ using Microsoft.OpenApi.Models;
 
 namespace Skelvy.WebAPI.Extensions
 {
-  public static class SwaggerExtension
+  public static class OpenApiExtension
   {
-    public static void AddCustomSwagger(this IServiceCollection services)
+    public static void AddCustomOpenApi(this IServiceCollection services)
     {
       services.AddSwaggerGen(configuration =>
       {
@@ -48,7 +48,7 @@ namespace Skelvy.WebAPI.Extensions
       });
     }
 
-    public static void UseCustomSwagger(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
+    public static void UseCustomOpenApi(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
     {
       app.UseSwagger();
       app.UseSwaggerUI(options =>

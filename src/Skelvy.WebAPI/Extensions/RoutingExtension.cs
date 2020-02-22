@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
-using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI.Extensions
 {
@@ -10,28 +10,31 @@ namespace Skelvy.WebAPI.Extensions
   {
     public static void AddCustomRouting(this IServiceCollection services)
     {
-      services.AddMvc(options =>
-        {
-          options.Filters.Add(typeof(CustomExceptionFilter));
-          options.Filters.Add(new AuthorizeFilter(
-            new AuthorizationPolicyBuilder()
-              .RequireAuthenticatedUser()
-              .Build()));
-        })
-        .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-        .AddMvcOptions(options =>
-        {
-          options.ModelMetadataDetailsProviders.Clear();
-          options.ModelValidatorProviders.Clear();
-        });
+      services.Scan(scan =>
+        scan.FromAssemblies(Assembly.GetExecutingAssembly())
+          .AddClasses(classes => classes.AssignableTo(typeof(IMiddleware)))
+          .AsSelf()
+          .WithTransientLifetime());
 
-      services.AddApiVersioning(o =>
+      services.AddControllers().AddMvcOptions(options =>
       {
-        o.DefaultApiVersion = new ApiVersion(2, 0);
-        o.AssumeDefaultVersionWhenUnspecified = true;
+        options.ModelMetadataDetailsProviders.Clear();
+        options.ModelValidatorProviders.Clear();
+      });
+
+      services.AddApiVersioning(options =>
+      {
+        options.DefaultApiVersion = new ApiVersion(2, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
       });
 
       services.AddVersionedApiExplorer();
+    }
+
+    public static void UseCustomRouting(this IApplicationBuilder app)
+    {
+      app.UseCustomExceptionHandler();
+      app.UseRouting();
     }
   }
 }

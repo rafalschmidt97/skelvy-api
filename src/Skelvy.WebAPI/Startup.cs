@@ -31,11 +31,17 @@ namespace Skelvy.WebAPI
       services.AddPersistence(_configuration);
       services.AddApplication();
 
-      services.AddCustomSwagger();
-      services.AddHealthChecks();
+      if (_environment.IsDevelopment())
+      {
+        services.AddCustomOpenApi();
+      }
+
+      services.AddHealthChecks().AddDbContextCheck<SkelvyContext>();
+
       services.AddCors();
-      services.AddAuth(_configuration);
+
       services.AddCustomRouting();
+      services.AddAuth(_configuration);
     }
 
     public void Configure(IApplicationBuilder app)
@@ -43,22 +49,24 @@ namespace Skelvy.WebAPI
       var versionProvider = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
       var backplane = app.ApplicationServices.GetService<SignalRBackplane>();
 
-      app.UseRouting();
+      app.UseWebAPI();
 
       if (_environment.IsDevelopment())
       {
-        app.UseCustomSwagger(versionProvider);
+        app.UseDeveloperExceptionPage();
+        app.UseDatabaseErrorPage();
+        app.UseCustomOpenApi(versionProvider);
       }
 
-      app.UseWebAPI();
-
-      app.UseHealthChecks("/");
       app.UseCustomCors();
+
+      app.UseCustomRouting();
       app.UseAuth();
 
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapHub<UsersHub>("/users");
+        endpoints.MapHealthChecks("/health");
         endpoints.MapControllers();
       });
 
