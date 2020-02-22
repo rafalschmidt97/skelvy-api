@@ -1,5 +1,8 @@
+using System;
+using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using Skelvy.Common.Extensions;
 
 namespace Skelvy.Application.Core.Mappers
 {
@@ -7,16 +10,35 @@ namespace Skelvy.Application.Core.Mappers
   {
     public MappingProfile()
     {
-      LoadCustomMappings();
+      ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    private void LoadCustomMappings()
+    private void ApplyMappingsFromAssembly(Assembly assembly)
     {
-      var mapsFrom = MappingProfileHelper.LoadCustomMappings(Assembly.GetExecutingAssembly());
+      var types = assembly.GetExportedTypes()
+        .Where(t => t.GetInterfaces().Any(i =>
+          i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapping<>)))
+        .ToList();
 
-      foreach (var map in mapsFrom)
+      foreach (var type in types)
       {
-        map.CreateMappings(this);
+        var instance = Activator.CreateInstance(type);
+        var methodInfo = type.GetMethod("Mapping");
+
+        if (methodInfo == null)
+        {
+          type.GetInterfaces()
+            .Where(x => x.Name.Contains("IMapping", StringComparison.Ordinal))
+            .ForEach(interfaceInstance =>
+            {
+              var interfaceMethodName = interfaceInstance.GetMethod("Mapping");
+              interfaceMethodName?.Invoke(instance, new object[] { this });
+            });
+        }
+        else
+        {
+          methodInfo.Invoke(instance, new object[] { this });
+        }
       }
     }
   }

@@ -5,7 +5,7 @@ using AutoMapperProfile = AutoMapper.Profile;
 
 namespace Skelvy.Application.Messages.Queries
 {
-  public class MessageDto : ICustomMapping
+  public class MessageDto : IMapping<Message>
   {
     public int Id { get; set; }
     public string Type { get; private set; }
@@ -16,9 +16,9 @@ namespace Skelvy.Application.Messages.Queries
     public int UserId { get; set; }
     public int GroupId { get; set; }
 
-    public void CreateMappings(AutoMapperProfile configuration)
+    public void Mapping(AutoMapperProfile profile)
     {
-      configuration.CreateMap<Message, MessageDto>()
+      profile.CreateMap<Message, MessageDto>()
         .ForMember(
           destination => destination.AttachmentUrl,
           options => options.MapFrom(x => x.Attachment != null ? x.Attachment.Url : null));
