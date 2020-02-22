@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Skelvy.Domain.Entities;
 
 namespace Skelvy.Persistence
@@ -31,6 +34,30 @@ namespace Skelvy.Persistence
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.ApplyConfigurationsFromAssembly(typeof(SkelvyContext).Assembly);
+      SqlLiteDateConvert(modelBuilder);
+    }
+
+    private void SqlLiteDateConvert(ModelBuilder builder)
+    {
+      if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+      {
+        // SQLite does not have proper support for DateTimeOffset via Entity Framework Core, see the limitations
+        // here: https://docs.microsoft.com/en-us/ef/core/providers/sqlite/limitations#query-limitations
+        // To work around this, when the Sqlite database provider is used, all model properties of type DateTimeOffset
+        // use the DateTimeOffsetToBinaryConverter
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+          var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(DateTimeOffset)
+                                                                         || p.PropertyType == typeof(DateTimeOffset?));
+          foreach (var property in properties)
+          {
+            builder
+              .Entity(entityType.Name)
+              .Property(property.Name)
+              .HasConversion(new DateTimeOffsetToBinaryConverter());
+          }
+        }
+      }
     }
   }
 }
