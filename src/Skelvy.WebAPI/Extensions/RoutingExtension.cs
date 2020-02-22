@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,9 +6,9 @@ using Skelvy.WebAPI.Filters;
 
 namespace Skelvy.WebAPI.Extensions
 {
-  public static class MvcExtension
+  public static class RoutingExtension
   {
-    public static void AddCustomMvc(this IServiceCollection services)
+    public static void AddCustomRouting(this IServiceCollection services)
     {
       services.AddMvc(options =>
         {
@@ -33,11 +32,6 @@ namespace Skelvy.WebAPI.Extensions
       });
 
       services.AddVersionedApiExplorer();
-    }
-
-    public static void UseCustomMvc(this IApplicationBuilder app)
-    {
-      app.UseStaticFiles();
     }
   }
 }
