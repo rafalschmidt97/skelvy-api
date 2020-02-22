@@ -24,7 +24,8 @@ namespace Skelvy.Persistence
       services.Scan(scan =>
         scan.FromAssemblies(Assembly.GetExecutingAssembly())
           .AddClasses()
-          .AsMatchingInterface());
+          .AsMatchingInterface()
+          .WithTransientLifetime());
 
       return services;
     }

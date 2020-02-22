@@ -10,7 +10,8 @@ namespace Skelvy.Infrastructure
       services.Scan(scan =>
         scan.FromAssemblies(Assembly.GetExecutingAssembly())
           .AddClasses()
-          .AsMatchingInterface());
+          .AsMatchingInterface()
+          .WithTransientLifetime());
 
       return services;
     }

@@ -18,7 +18,8 @@ namespace Skelvy.WebAPI
       services.Scan(scan =>
         scan.FromAssemblies(Assembly.GetExecutingAssembly())
           .AddClasses()
-          .AsMatchingInterface());
+          .AsMatchingInterface()
+          .WithTransientLifetime());
 
       services.AddSignalR();
       services.AddSingleton<SignalRBackplane>();
