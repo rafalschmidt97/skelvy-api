@@ -67,7 +67,7 @@ namespace Skelvy.WebAPI
       {
         endpoints.MapHub<UsersHub>("/users");
         endpoints.MapHealthChecks("/health");
-        endpoints.MapControllers();
+        endpoints.MapControllers().RequireAuthorization();
       });
 
       backplane.Start();

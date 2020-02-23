@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +45,13 @@ namespace Skelvy.WebAPI.Extensions
             },
           };
         });
+
+      services.AddAuthorization(options =>
+      {
+        options.DefaultPolicy = new AuthorizationPolicyBuilder()
+          .RequireAuthenticatedUser()
+          .Build();
+      });
     }
 
     public static void UseAuth(this IApplicationBuilder app)
