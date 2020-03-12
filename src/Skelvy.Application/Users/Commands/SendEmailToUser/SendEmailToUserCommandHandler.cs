@@ -17,8 +17,13 @@ namespace Skelvy.Application.Users.Commands.SendEmailToUser
 
     public override async Task<Unit> Handle(SendEmailToUserCommand request)
     {
-      await _emailService.BroadcastCustomMessage(
-        new CustomEmailNotification(request.To, request.Subject, request.Language, request.Message));
+      foreach (var email in request.To)
+      {
+        await _emailService.BroadcastCustomMessage(
+          new CustomEmailNotification(email, request.Subject, request.Language, request.Message));
+
+        await Task.Delay(1000);
+      }
 
       return Unit.Value;
     }

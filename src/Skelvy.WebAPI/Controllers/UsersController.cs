@@ -97,9 +97,9 @@ namespace Skelvy.WebAPI.Controllers
       await Mediator.Send(request);
     }
 
-    [HttpPost("send/single")]
+    [HttpPost("send/list")]
     [AuthorizeRole(RoleType.Admin)]
-    public async Task SendSingleEmail(SendEmailToUserCommand command)
+    public async Task SendListEmail(SendEmailToUserCommand command)
     {
       await Mediator.Send(command);
     }
