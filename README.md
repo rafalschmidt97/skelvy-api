@@ -39,6 +39,49 @@ The app is translated into 9 languages:
 - [English Youtube Video](https://youtu.be/_uS4fBgzgC4)
 - [Polish Youtube Video](https://youtu.be/kRucIyZtuGA)
 
+## Deployment setup
+
+- Buy AppStore license and configure the app within App Store Connect:
+  - Fill basic app information (category, tags, keywords, description, version release setup)
+  - Check pricing (Free?) and availability (it used to be configured for 38 of 175 countries and regions)
+  - Setup testers and TestFlight, app revision information
+  - Configure different localizations (currently English, Finnish, French, German, Italian, Polish, Russian and Spanish are supported)
+
+![App Store Connect](docs/appstore-connect.png)
+
+- Similarly pay registration fee for Google Play and configure in similar manner:
+
+![Google Play](docs/google-play.png)
+
+![Google Play Dashboard](docs/google-play-setup.png)
+
+- Create firebase app to configure push notifications. For Android you need to generate and fill SHA-1 certificate fingerprints.
+
+![Firebase](docs/firebase.png)
+
+- Prepare all necessary resources on azure:
+  - App Service + App Service Plan
+  - MSSQL Database
+  - Redis (for caching google maps requests)
+  - Blob Storage (+ add container) - for profile images
+  - (Optional) DDOS Protection Plan + Virtual Network
+ 
+![Azure](docs/azure.png)
+
+- Create API Key for Google Maps (same dashboard as config for Google Plus)
+
+- Configure authentication
+
+Facebook Auth:
+
+![Facebook](docs/facebook.png) 
+
+Google Plus Auth
+
+![Google](docs/google-auth-maps.png) 
+
+\+ Apple Auth (required from the newest version) - not implemented yet.
+
 ## Contributing guidelines
 
 We really hope that good instructions for contributing will make the history of our app more readable. 
